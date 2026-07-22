@@ -1,0 +1,70 @@
+import { createApp } from './app';
+import { connectRedis } from './config/redis';
+import { env } from './config/env';
+import { logger } from './utils/logger';
+import { prisma } from './config/prisma';
+
+const PORT = env.PORT;
+
+async function bootstrap() {
+  try {
+    // Verify MySQL connection via Prisma
+    await prisma.$connect();
+    logger.info('✅ MySQL (Prisma) connected successfully');
+
+    // Connect to Redis (optional — app works without it)
+    await connectRedis();
+
+    // Initialize MySQL tables/extensions if needed
+    const { initializeMysql } = await import('./config/mysql');
+    await initializeMysql();
+
+    // Create Express app
+    const app = createApp();
+
+    // Start server
+    const server = app.listen(PORT, () => {
+      logger.info(`
+╔═══════════════════════════════════════════════╗
+║          ADYAPAN API Server                   ║
+║  Environment : ${env.NODE_ENV.padEnd(28)}║
+║  Port        : ${String(PORT).padEnd(28)}║
+║  URL         : http://localhost:${String(PORT).padEnd(15)}║
+║  Database    : MySQL only (Prisma)             ║
+╚═══════════════════════════════════════════════╝
+      `);
+    });
+
+    // Graceful shutdown
+    const shutdown = async (signal: string) => {
+      logger.info(`${signal} received. Starting graceful shutdown...`);
+      server.close(async () => {
+        await prisma.$disconnect();
+        logger.info('Server shut down gracefully');
+        process.exit(0);
+      });
+
+      setTimeout(() => {
+        logger.error('Forced shutdown after timeout');
+        process.exit(1);
+      }, 10000);
+    };
+
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
+
+    process.on('unhandledRejection', (reason) => {
+      logger.error('Unhandled Rejection:', reason);
+    });
+
+    process.on('uncaughtException', (error) => {
+      logger.error('Uncaught Exception:', error);
+      process.exit(1);
+    });
+  } catch (error) {
+    logger.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+bootstrap();

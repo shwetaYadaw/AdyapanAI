@@ -1,0 +1,56 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    container_name: adyapan-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - MONGODB_URI=${MONGODB_URI}
+      - REDIS_URL=redis://redis:6379
+    env_file:
+      - apps/backend/.env
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - adyapan-network
+
+  ai-service:
+    build:
+      context: .
+      dockerfile: apps/ai-service/Dockerfile
+    container_name: adyapan-ai
+    ports:
+      - "8000:8000"
+    env_file:
+      - apps/ai-service/.env
+    restart: unless-stopped
+    networks:
+      - adyapan-network
+    volumes:
+      - ai-models:/app/models
+
+  redis:
+    image: redis:7-alpine
+    container_name: adyapan-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - adyapan-network
+    command: redis-server --appendonly yes
+
+volumes:
+  redis-data:
+  ai-models:
+
+networks:
+  adyapan-network:
+    driver: bridge

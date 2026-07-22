@@ -1,0 +1,28 @@
+{
+  "name": "adyapan",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev:web": "yarn workspace @adyapan/web dev",
+    "dev:backend": "yarn workspace @adyapan/backend dev",
+    "dev:ai": "yarn workspace @adyapan/ai-service dev",
+    "dev:mobile": "yarn workspace @adyapan/mobile start",
+    "build:web": "yarn workspace @adyapan/web build",
+    "build:backend": "yarn workspace @adyapan/backend build",
+    "lint": "yarn workspaces run lint",
+    "test": "yarn workspaces run test",
+    "setup-hooks": "cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit && echo '✅ Git hooks installed'",
+    "check:mysql-only": "node scripts/check-mysql-only.js"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "yarn": ">=1.22.0"
+  }
+}

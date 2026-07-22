@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="240" viewBox="0 0 420 240" role="img" aria-labelledby="title desc">
+  <title id="title">Word Search matrix with GEEK highlighted</title>
+  <desc id="desc">A three by three letter matrix. The path G, E, E, K is highlighted.</desc>
+  <rect width="420" height="240" rx="16" fill="#f8fafc"/>
+  <text x="24" y="38" fill="#0f172a" font-family="Arial, sans-serif" font-size="20" font-weight="700">Word: GEEK</text>
+  <text x="24" y="65" fill="#475569" font-family="Arial, sans-serif" font-size="15">Highlighted cells form the word.</text>
+  <g transform="translate(148 82)" stroke="#94a3b8" stroke-width="2">
+    <rect width="62" height="48" fill="#fff"/><rect x="62" width="62" height="48" fill="#dcfce7"/><rect x="124" width="62" height="48" fill="#dcfce7"/>
+    <rect y="48" width="62" height="48" fill="#fff"/><rect x="62" y="48" width="62" height="48" fill="#dcfce7"/><rect x="124" y="48" width="62" height="48" fill="#dcfce7"/>
+    <rect y="96" width="62" height="48" fill="#fff"/><rect x="62" y="96" width="62" height="48" fill="#fff"/><rect x="124" y="96" width="62" height="48" fill="#fff"/>
+  </g>
+  <g fill="#0f172a" font-family="Arial, sans-serif" font-size="25" font-weight="700" text-anchor="middle">
+    <text x="179" y="114">T</text><text x="241" y="114">E</text><text x="303" y="114">E</text>
+    <text x="179" y="162">S</text><text x="241" y="162">G</text><text x="303" y="162">K</text>
+    <text x="179" y="210">T</text><text x="241" y="210">E</text><text x="303" y="210">L</text>
+  </g>
+  <path d="M241 154 L241 106 L303 106 L303 154" fill="none" stroke="#16a34a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="241" cy="154" r="6" fill="#16a34a"/><circle cx="241" cy="106" r="6" fill="#16a34a"/><circle cx="303" cy="106" r="6" fill="#16a34a"/><circle cx="303" cy="154" r="6" fill="#16a34a"/>
+</svg>

@@ -1,0 +1,42 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    // ─── CRITICAL: MySQL-only Architecture Guard ─────────────────────────────
+    // This project uses MySQL + Prisma exclusively. MongoDB/Mongoose is BANNED.
+    // Any import of mongoose or related packages will fail linting and CI.
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["mongoose", "mongoose/*", "@typegoose/*", "typegoose", "mongoist", "mongodb"],
+            "message": "❌ MongoDB/Mongoose is BANNED. This project uses MySQL + Prisma exclusively. Use 'import { prisma } from '../config/prisma'' instead."
+          },
+          {
+            "group": ["../models/*", "./models/*", "../../models/*"],
+            "message": "❌ Mongoose model imports are BANNED. This project uses MySQL + Prisma exclusively. Use prisma.* queries instead."
+          }
+        ]
+      }
+    ],
+    // Standard TypeScript rules
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-console": ["warn", { "allow": ["warn", "error", "info", "log"] }]
+  },
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "ignorePatterns": ["dist/", "node_modules/", "*.js"]
+}

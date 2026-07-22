@@ -1,0 +1,299 @@
+import { Router } from 'express';
+import { prisma } from '../config/prisma';
+import { authenticate } from '../middleware/auth.middleware';
+import { JudgeService } from '../services/judge.service';
+import { queueService } from '../services/queue.service';
+import { sendSuccess } from '../utils/response.utils';
+import { AppError } from '../middleware/errorHandler.middleware';
+
+const router = Router();
+const judge = new JudgeService();
+
+// Helper to detect hardcoding outputs
+function detectHardcoding(code: string, expectedOutputs: string[]): boolean {
+  const normalizedCode = code.replace(/\s+/g, '');
+  for (const out of expectedOutputs) {
+    const cleanOut = String(out).trim();
+    if (!cleanOut || cleanOut.length === 0) continue;
+    const patterns = [
+      `return"${cleanOut}"`,
+      `return'${cleanOut}'`,
+      `return\`${cleanOut}\``,
+      `return${cleanOut}`,
+      `print("${cleanOut}")`,
+      `print('${cleanOut}')`,
+      `print(${cleanOut})`,
+      `console.log("${cleanOut}")`,
+      `console.log('${cleanOut}')`,
+      `console.log(${cleanOut})`,
+      `System.out.println("${cleanOut}")`,
+      `System.out.println('${cleanOut}')`,
+      `System.out.println(${cleanOut})`,
+      `cout<<"${cleanOut}"`,
+      `cout<<${cleanOut}`
+    ];
+    if (patterns.some(p => normalizedCode.includes(p))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// POST /problems — Create a new problem with test cases (uses Trusted Reference Solution to auto-generate expected outputs)
+router.post('/', authenticate, async (req, res, next) => {
+  try {
+    const {
+      title,
+      slug,
+      difficulty,
+      statement,
+      constraints,
+      inputFormat,
+      outputFormat,
+      timeLimit,
+      memoryLimit,
+      starterCode,
+      referenceSolution,
+      topics,
+      companies,
+      testCases, // array of { input, expectedOutput?, isHidden, type }
+    } = req.body;
+
+    const resolvedTestCases: any[] = [];
+
+    // Auto-generate expected output using Reference Solution if missing
+    for (const tc of testCases) {
+      let expectedOutput = tc.expectedOutput || '';
+      if (!expectedOutput) {
+        // Run reference solution using JavaScript/Python fallback or default executor
+        const result = await judge.runTestCase(
+          referenceSolution,
+          'javascript', // assuming js or matching language
+          tc.input,
+          '1',
+          timeLimit || 2000
+        );
+        expectedOutput = result.actualOutput;
+      }
+      resolvedTestCases.push({
+        input: tc.input,
+        expectedOutput,
+        isHidden: tc.isHidden ?? true,
+        type: tc.type || 'hidden',
+      });
+    }
+
+    // Save to PostgreSQL/MySQL via Prisma using transaction
+    const problem = await prisma.$transaction(async (tx) => {
+      const p = await tx.problem.create({
+        data: {
+          title,
+          slug,
+          difficulty: difficulty || 'easy',
+          statement,
+          constraints,
+          inputFormat,
+          outputFormat,
+          timeLimit: timeLimit || 2000,
+          memoryLimit: memoryLimit || 256,
+          starterCode,
+          referenceSolution,
+          topics: topics || '',
+          companies: companies || '',
+        },
+      });
+
+      for (const tc of resolvedTestCases) {
+        await tx.problemTestCase.create({
+          data: {
+            problemId: p.id,
+            input: tc.input,
+            expectedOutput: tc.expectedOutput,
+            isHidden: tc.isHidden,
+            type: tc.type,
+          },
+        });
+      }
+
+      return p;
+    });
+
+    sendSuccess({ res, message: 'Problem created successfully', data: problem });
+  } catch (err) { next(err); }
+});
+
+// GET /problems — Get list of all problems
+router.get('/', async (req, res, next) => {
+  try {
+    const problems = await prisma.problem.findMany({
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        difficulty: true,
+        topics: true,
+        companies: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    sendSuccess({ res, data: problems });
+  } catch (err) { next(err); }
+});
+
+// GET /problems/:id — Get details of a single problem (excluding reference solution and hidden testcases)
+router.get('/:id', async (req, res, next) => {
+  try {
+    const problem = await prisma.problem.findUnique({
+      where: { id: req.params.id },
+      include: {
+        testCases: {
+          where: { isHidden: false }, // Only return visible sample testcases to front-end
+        },
+      },
+    });
+
+    if (!problem) throw new AppError('Problem not found', 404);
+    
+    // Omit sensitive reference solution fields before returning
+    const { referenceSolution, ...safeProblem } = problem;
+
+    sendSuccess({ res, data: safeProblem });
+  } catch (err) { next(err); }
+});
+
+// POST /problems/:id/run — Execute code against ONLY visible/sample test cases
+router.post('/:id/run', authenticate, async (req, res, next) => {
+  try {
+    const { code, language } = req.body;
+    const problem = await prisma.problem.findUnique({
+      where: { id: req.params.id },
+      include: { testCases: { where: { isHidden: false } } },
+    });
+
+    if (!problem) throw new AppError('Problem not found', 404);
+
+    const sampleTestCase = problem.testCases[0];
+    if (!sampleTestCase) throw new AppError('No sample testcase found for this problem', 400);
+
+    const result = await judge.runTestCase(
+      code,
+      language,
+      sampleTestCase.input,
+      sampleTestCase.expectedOutput,
+      problem.timeLimit
+    );
+
+    sendSuccess({
+      res,
+      data: {
+        passed: result.passed,
+        actualOutput: result.actualOutput,
+        expectedOutput: sampleTestCase.expectedOutput,
+        input: sampleTestCase.input,
+        runtime: result.runtime,
+        errorMessage: result.errorMessage,
+      },
+    });
+  } catch (err) { next(err); }
+});
+
+// POST /problems/:id/submit — Submit solution to the Async Queue system
+router.post('/:id/submit', authenticate, async (req, res, next) => {
+  try {
+    const { code, language } = req.body;
+    const problem = await prisma.problem.findUnique({
+      where: { id: req.params.id },
+      include: { testCases: true },
+    });
+
+    if (!problem) throw new AppError('Problem not found', 404);
+
+    // Anti-cheat check: detect static hardcoding of outputs
+    const visibleOutputs = problem.testCases.filter(t => !t.isHidden).map(t => t.expectedOutput);
+    const expectedOutputs = Array.from(new Set(visibleOutputs));
+    const isCheating = detectHardcoding(code, expectedOutputs);
+
+    if (isCheating) {
+      const submission = await prisma.submission.create({
+        data: {
+          userId: req.user!.userId,
+          problemId: problem.id,
+          code,
+          language,
+          status: 'wrong_answer',
+          errorMessage: 'Cheat Detected: Hardcoded output values found.',
+        },
+      });
+
+      await prisma.submissionResult.create({
+        data: {
+          submissionId: submission.id,
+          status: 'wrong_answer',
+          errorMessage: 'Cheat Detected: Hardcoded output values found.',
+          totalCount: problem.testCases.length,
+          passedCount: 0,
+        },
+      });
+
+      return sendSuccess({
+        res,
+        message: 'Cheat detected, submission rejected.',
+        data: submission,
+      });
+    }
+
+    // Create pending submission record
+    const submission = await prisma.submission.create({
+      data: {
+        userId: req.user!.userId,
+        problemId: problem.id,
+        code,
+        language,
+        status: 'pending',
+      },
+    });
+
+    // Enqueue for background worker processing
+    await queueService.enqueue({
+      submissionId: submission.id,
+      problemId: problem.id,
+      code,
+      language,
+    });
+
+    sendSuccess({
+      res,
+      message: 'Submission enqueued successfully',
+      data: { submissionId: submission.id, status: 'pending' },
+    });
+  } catch (err) { next(err); }
+});
+
+// GET /problems/submissions/:id — Retrieve status of a queued/processed submission
+router.get('/submissions/:id', authenticate, async (req, res, next) => {
+  try {
+    const submission = await prisma.submission.findUnique({
+      where: { id: req.params.id },
+      include: { result: true },
+    });
+
+    if (!submission) throw new AppError('Submission not found', 404);
+
+    sendSuccess({ res, data: submission });
+  } catch (err) { next(err); }
+});
+
+// GET /problems/submissions/history — Retrieve student's submission history
+router.get('/submissions/history', authenticate, async (req, res, next) => {
+  try {
+    const history = await prisma.submission.findMany({
+      where: { userId: req.user!.userId },
+      include: { problem: true, result: true },
+      orderBy: { createdAt: 'desc' },
+    });
+    sendSuccess({ res, data: history });
+  } catch (err) { next(err); }
+});
+
+export default router;

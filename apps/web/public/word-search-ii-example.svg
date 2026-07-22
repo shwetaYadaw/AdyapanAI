@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="360" viewBox="0 0 520 360" role="img" aria-labelledby="title desc">
+  <title id="title">Word Search II example board</title>
+  <desc id="desc">A four-by-four letter board showing the paths for the words oath and eat.</desc>
+  <rect width="520" height="360" fill="#ffffff"/>
+  <text x="24" y="38" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#172033">Example 1: Find “oath” and “eat”</text>
+  <g transform="translate(24 64)" font-family="Arial, sans-serif" font-size="34" font-weight="700" text-anchor="middle" dominant-baseline="middle">
+    <g stroke="#1e293b" stroke-width="3">
+      <rect x="0" y="0" width="76" height="76" fill="#f59e0b"/><rect x="76" y="0" width="76" height="76" fill="#f59e0b"/><rect x="152" y="0" width="76" height="76" fill="#f8fafc"/><rect x="228" y="0" width="76" height="76" fill="#f8fafc"/>
+      <rect x="0" y="76" width="76" height="76" fill="#f8fafc"/><rect x="76" y="76" width="76" height="76" fill="#dc2626"/><rect x="152" y="76" width="76" height="76" fill="#dc2626"/><rect x="228" y="76" width="76" height="76" fill="#dc2626"/>
+      <rect x="0" y="152" width="76" height="76" fill="#f8fafc"/><rect x="76" y="152" width="76" height="76" fill="#f59e0b"/><rect x="152" y="152" width="76" height="76" fill="#f8fafc"/><rect x="228" y="152" width="76" height="76" fill="#f8fafc"/>
+      <rect x="0" y="228" width="76" height="76" fill="#f8fafc"/><rect x="76" y="228" width="76" height="76" fill="#f8fafc"/><rect x="152" y="228" width="76" height="76" fill="#f8fafc"/><rect x="228" y="228" width="76" height="76" fill="#f8fafc"/>
+    </g>
+    <g fill="#111827"><text x="38" y="38" fill="#fff">o</text><text x="114" y="38" fill="#fff">a</text><text x="190" y="38">a</text><text x="266" y="38">n</text><text x="38" y="114">e</text><text x="114" y="114" fill="#fff">t</text><text x="190" y="114" fill="#fff">a</text><text x="266" y="114" fill="#fff">e</text><text x="38" y="190">i</text><text x="114" y="190" fill="#fff">h</text><text x="190" y="190">k</text><text x="266" y="190">r</text><text x="38" y="266">i</text><text x="114" y="266">f</text><text x="190" y="266">l</text><text x="266" y="266">v</text></g>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="18" fill="#334155"><circle cx="370" cy="110" r="8" fill="#f59e0b"/><text x="388" y="116">oath</text><circle cx="370" cy="146" r="8" fill="#dc2626"/><text x="388" y="152">eat</text><text x="348" y="210" font-size="16">Output: [“eat”, “oath”]</text></g>
+</svg>
