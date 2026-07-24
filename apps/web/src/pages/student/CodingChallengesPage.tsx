@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Search, Trophy, Code2, Flame, BrainCircuit, Target, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { api } from '../../services/api';
 import Navbar from '../../components/layout/Navbar/Navbar';
@@ -49,8 +49,41 @@ const TOPIC_GROUPS = [
 ];
 
 export default function CodingChallengesPage() {
+  const location = useLocation();
   const [search, setSearch] = useState('');
-  const [expandedTopic, setExpandedTopic] = useState<string | null>('arrays');
+  
+  // Restore expanded topic from localStorage or default to 'arrays'
+  const [expandedTopic, setExpandedTopic] = useState<string | null>(() => {
+    const saved = sessionStorage.getItem('challenges-expanded-topic');
+    return saved || 'arrays';
+  });
+
+  // Restore scroll position when component mounts
+  useEffect(() => {
+    const savedScrollPos = sessionStorage.getItem('challenges-scroll-pos');
+    if (savedScrollPos) {
+      setTimeout(() => {
+        window.scrollTo(0, parseInt(savedScrollPos, 10));
+      }, 100);
+    }
+  }, []);
+
+  // Save scroll position and expanded topic when navigating away
+  useEffect(() => {
+    const handleScroll = () => {
+      sessionStorage.setItem('challenges-scroll-pos', window.scrollY.toString());
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Save expanded topic whenever it changes
+  useEffect(() => {
+    if (expandedTopic) {
+      sessionStorage.setItem('challenges-expanded-topic', expandedTopic);
+    }
+  }, [expandedTopic]);
 
   // Fetch coding questions
   const { data: questions, isLoading, isError } = useQuery<Question[]>({
@@ -105,14 +138,22 @@ export default function CodingChallengesPage() {
 
   const dailyChallenge = getDailyChallenge();
 
-  const columns = [
+  const getColumnsForTopic = (topicKey: string) => [
     {
       key: 'title',
       header: 'Problem Name',
       render: (r: Question) => (
         <div>
           <p className="font-semibold text-gray-900 dark:text-white hover:text-primary-600 transition-colors text-sm">
-            <Link to={`/student/challenges/${r.slug}`}>{r.title}</Link>
+            <Link 
+              to={`/student/challenges/${r.slug}`}
+              onClick={() => {
+                sessionStorage.setItem('challenges-expanded-topic', topicKey);
+                sessionStorage.setItem('challenges-scroll-pos', window.scrollY.toString());
+              }}
+            >
+              {r.title}
+            </Link>
           </p>
           <div className="flex flex-wrap gap-1.5 mt-1.5">
             {r.topics.slice(0, 3).map((t) => (
@@ -154,7 +195,13 @@ export default function CodingChallengesPage() {
       key: 'actions',
       header: '',
       render: (r: Question) => (
-        <Link to={`/student/challenges/${r.slug}`}>
+        <Link 
+          to={`/student/challenges/${r.slug}`}
+          onClick={() => {
+            sessionStorage.setItem('challenges-expanded-topic', topicKey);
+            sessionStorage.setItem('challenges-scroll-pos', window.scrollY.toString());
+          }}
+        >
           <button className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 dark:bg-primary-950/40 px-3 py-1.5 rounded-xl transition-all">
             Solve <ArrowRight className="w-3.5 h-3.5" />
           </button>
@@ -320,7 +367,7 @@ export default function CodingChallengesPage() {
                     {isExpanded && (
                       <div className="border-t border-gray-100 dark:border-gray-850 p-6 bg-gray-50/50 dark:bg-gray-950/20">
                         <Table
-                          columns={columns}
+                          columns={getColumnsForTopic(group.key)}
                           data={topicQuestions}
                           keyExtractor={(r: Question) => r._id}
                           loading={isLoading}
