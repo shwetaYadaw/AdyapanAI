@@ -292,6 +292,56 @@ ${pythonSol}
 - **Follow-up Interview Questions:** ${followUpQuestions.join(', ')}
   `.trim();
 
+  // Parse templates from JSON string to array format expected by frontend
+  let templates = [];
+  if (question.templates) {
+    try {
+      const templatesObj = typeof question.templates === 'string' 
+        ? JSON.parse(question.templates) 
+        : question.templates;
+      
+      // Convert object format { python: "code", javascript: "code" } 
+      // to array format [{ language: "python", code: "code" }, ...]
+      if (typeof templatesObj === 'object' && !Array.isArray(templatesObj)) {
+        templates = Object.entries(templatesObj).map(([language, code]) => ({
+          language,
+          code: code as string
+        }));
+      } else if (Array.isArray(templatesObj)) {
+        templates = templatesObj;
+      }
+    } catch (e) {
+      console.error('Error parsing templates:', e);
+      templates = [];
+    }
+  }
+
+  // Parse testCases from JSON string to array
+  let testCases = [];
+  if (question.testCases) {
+    try {
+      testCases = typeof question.testCases === 'string' 
+        ? JSON.parse(question.testCases) 
+        : question.testCases;
+    } catch (e) {
+      console.error('Error parsing testCases:', e);
+      testCases = [];
+    }
+  }
+
+  // Parse topics from JSON string to array
+  let topics = [];
+  if (question.topics) {
+    try {
+      topics = typeof question.topics === 'string' 
+        ? JSON.parse(question.topics) 
+        : question.topics;
+    } catch (e) {
+      console.error('Error parsing topics:', e);
+      topics = [];
+    }
+  }
+
   return {
     ...question,
     statement: markdownVersion,
@@ -299,6 +349,9 @@ ${pythonSol}
     outputFormat: outputFormat,
     constraints: constraints,
     structuredJson: JSON.stringify(structuredJson),
+    templates,
+    testCases,
+    topics
   };
 }
 
