@@ -371,8 +371,9 @@ export default function CodingPortalPage() {
       <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 py-2 flex items-center justify-between shadow-xs z-10 flex-shrink-0">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate('/student/placement')}
+            onClick={() => navigate(-1)}
             className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-all border border-gray-200 dark:border-gray-700"
+            title="Go back"
           >
             <ArrowLeft className="w-3.5 h-3.5 text-gray-600 dark:text-gray-400" />
           </button>
