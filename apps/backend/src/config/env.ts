@@ -25,9 +25,9 @@ export const env = {
   CLIENT_URL: optionalEnv('CLIENT_URL', 'http://localhost:3000'),
   MOBILE_URL: optionalEnv('MOBILE_URL', ''),
 
-  // ── Database: MySQL ONLY (Prisma) ───────────────────────────────────────
-  // MONGODB_URI is intentionally removed. This application uses MySQL exclusively.
+  // ── Database: PostgreSQL (Supabase) ─────────────────────────────────────
   DATABASE_URL: requireEnv('DATABASE_URL'),
+  DIRECT_URL:   optionalEnv('DIRECT_URL', ''), // Optional: for migrations
   REDIS_URL:    optionalEnv('REDIS_URL', 'redis://localhost:6379'),
 
   JWT_ACCESS_SECRET:  optionalEnv('JWT_ACCESS_SECRET', 'adyapan_dev_access_secret_minimum_32_chars_here'),
@@ -72,12 +72,6 @@ export const env = {
 
   JUDGE0_API_URL:     optionalEnv('JUDGE0_API_URL',     'http://localhost:2358'),
   JUDGE0_API_KEY:     optionalEnv('JUDGE0_API_KEY',     ''),
-
-  MYSQL_HOST:         optionalEnv('MYSQL_HOST',         'localhost'),
-  MYSQL_PORT:         parseInt(optionalEnv('MYSQL_PORT', '3306'), 10),
-  MYSQL_USER:         optionalEnv('MYSQL_USER',         'root'),
-  MYSQL_PASSWORD:     optionalEnv('MYSQL_PASSWORD',     ''),
-  MYSQL_DATABASE:     optionalEnv('MYSQL_DATABASE',     'adyapan'),
 
   isProduction:  () => process.env.NODE_ENV === 'production',
   isDevelopment: () => process.env.NODE_ENV !== 'production',
