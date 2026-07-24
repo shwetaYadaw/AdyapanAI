@@ -114,14 +114,18 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        {/* Collapse toggle */}
+        {/* Collapse toggle - HIGHLY VISIBLE */}
         <button
           onClick={() => dispatch(toggleSidebar())}
-          className="absolute -right-3 top-20 w-6 h-6 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm hover:shadow-md transition-shadow z-10"
+          className="absolute -right-5 top-24 w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 border-4 border-white dark:border-gray-900 flex items-center justify-center shadow-2xl hover:shadow-3xl hover:scale-110 active:scale-95 transition-all duration-200 z-50 cursor-pointer animate-pulse-glow"
           aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
         >
-          <motion.span animate={{ rotate: sidebarOpen ? 0 : 180 }}>
-            <ChevronLeft className="w-3.5 h-3.5 text-gray-500" />
+          <motion.span 
+            animate={{ rotate: sidebarOpen ? 0 : 180 }}
+            transition={{ duration: 0.3, type: 'spring', stiffness: 200 }}
+            className="flex items-center justify-center"
+          >
+            <ChevronLeft className="w-7 h-7 text-white drop-shadow-lg" strokeWidth={4} />
           </motion.span>
         </button>
       </motion.aside>
