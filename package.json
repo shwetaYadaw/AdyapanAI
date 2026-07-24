@@ -19,6 +19,7 @@
     "check:mysql-only": "node scripts/check-mysql-only.js"
   },
   "devDependencies": {
+    "prisma": "^7.9.0",
     "typescript": "^5.4.5"
   },
   "engines": {
