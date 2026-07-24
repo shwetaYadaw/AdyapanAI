@@ -93,3 +93,5 @@ venv/
 
 *.out.log
 *.err.log
+
+/generated/prisma
