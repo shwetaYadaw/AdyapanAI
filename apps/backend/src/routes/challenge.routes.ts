@@ -123,6 +123,150 @@ function enrichQuestionDescription(question: any) {
     interviewTips = `Be ready to explain how sorting guarantees that the contiguous window contains the optimal subset.`;
     relatedProblems = [`Sliding Window Maximum`, `Minimum Window Substring`];
     followUpQuestions = [`Can we solve this without sorting if the range of chocolates is very small?`];
+  } else if (title === 'Palindromic Substrings') {
+    statement = `Given a string s, return the number of **palindromic substrings** in it.\n\nA string is a **palindrome** when it reads the same backward as forward.\nA **substring** is a contiguous sequence of characters within the string.`;
+    inputFormat = `Single line containing string s (lowercase English letters)`;
+    outputFormat = `Single integer: count of palindromic substrings`;
+    constraints = `1 <= s.length <= 1000\ns consists of lowercase English letters`;
+    explanation = `Three palindromic strings: "a", "b", "c".`;
+    timeComplexity = `O(n²) where n is the length of string - for each of n centers, we expand up to n times`;
+    spaceComplexity = `O(1) - no additional data structures needed`;
+    hints = [
+      `How can we reuse a previously computed palindrome to compute a larger palindrome?`,
+      `If "aba" is a palindrome, is "xabax" a palindrome? Similarly is "xabay" a palindrome?`,
+      `Complexity based hint: If we use brute force and check whether for every start and end position a substring is a palindrome we have O(n²) start-end pairs and O(n) palindromic checks. Can we reduce the time for palindromic checks to O(1) by reusing some previous computation?`
+    ];
+    bruteForceEditorial = `Test every possible substring (O(n²) start-end pairs) with O(n) palindrome check for each = O(n³) total complexity. For each pair (i,j), check if s[i:j+1] is palindrome by comparing characters from both ends.`;
+    optimizedEditorial = `Use "expand around center" approach. Every palindrome has a center - either a single character (odd-length like "aba") or a gap between two characters (even-length like "abba"). For each of the n positions, expand outward as long as characters match, counting each valid palindrome found. This reduces time to O(n²) with O(1) space.`;
+    correctnessProof = `Every palindrome has a unique center point. By checking each possible center (n single-character centers + n-1 gap centers), and expanding while characters match, we're guaranteed to find all palindromic substrings exactly once. No palindrome can be missed because we check all possible centers.`;
+    pythonSol = `def count_palindromic_substrings(s):
+    def expand_around_center(left, right):
+        count = 0
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            count += 1
+            left -= 1
+            right += 1
+        return count
+    
+    if not s:
+        return 0
+    
+    total_count = 0
+    for i in range(len(s)):
+        # Odd-length palindromes (single character center)
+        total_count += expand_around_center(i, i)
+        # Even-length palindromes (gap between characters)
+        total_count += expand_around_center(i, i + 1)
+    
+    return total_count
+
+s = input().strip()
+result = count_palindromic_substrings(s)
+print(result)`;
+    javaSol = `import java.util.*;
+
+public class Solution {
+    public static int countPalindromicSubstrings(String s) {
+        if (s == null || s.length() == 0) {
+            return 0;
+        }
+        
+        int totalCount = 0;
+        for (int i = 0; i < s.length(); i++) {
+            totalCount += expandAroundCenter(s, i, i);
+            totalCount += expandAroundCenter(s, i, i + 1);
+        }
+        return totalCount;
+    }
+    
+    private static int expandAroundCenter(String s, int left, int right) {
+        int count = 0;
+        while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+            count++;
+            left--;
+            right++;
+        }
+        return count;
+    }
+    
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine().trim();
+        System.out.println(countPalindromicSubstrings(s));
+        sc.close();
+    }
+}`;
+    cppSol = `#include <iostream>
+#include <string>
+using namespace std;
+
+int expandAroundCenter(const string& s, int left, int right) {
+    int count = 0;
+    while (left >= 0 && right < s.length() && s[left] == s[right]) {
+        count++;
+        left--;
+        right++;
+    }
+    return count;
+}
+
+int countPalindromicSubstrings(string s) {
+    if (s.empty()) {
+        return 0;
+    }
+    
+    int totalCount = 0;
+    for (int i = 0; i < s.length(); i++) {
+        totalCount += expandAroundCenter(s, i, i);
+        totalCount += expandAroundCenter(s, i, i + 1);
+    }
+    return totalCount;
+}
+
+int main() {
+    string s;
+    getline(cin, s);
+    cout << countPalindromicSubstrings(s) << endl;
+    return 0;
+}`;
+    jsSol = `function countPalindromicSubstrings(s) {
+    function expandAroundCenter(left, right) {
+        let count = 0;
+        while (left >= 0 && right < s.length && s[left] === s[right]) {
+            count++;
+            left--;
+            right++;
+        }
+        return count;
+    }
+    
+    if (!s || s.length === 0) {
+        return 0;
+    }
+    
+    let totalCount = 0;
+    for (let i = 0; i < s.length; i++) {
+        totalCount += expandAroundCenter(i, i);
+        totalCount += expandAroundCenter(i, i + 1);
+    }
+    return totalCount;
+}
+
+const readline = require('readline');
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+rl.on('line', (line) => {
+    const s = line.trim();
+    console.log(countPalindromicSubstrings(s));
+    rl.close();
+});`;
+    commonMistakes = `Forgetting to check even-length palindromes (only checking odd-length with single center), not handling single character edge case, or trying to use DP with O(n²) space when O(1) space solution exists.`;
+    interviewTips = `Explain why expand-around-center is better than DP for this problem (O(1) space vs O(n²) space). Mention that there are 2n-1 possible centers (n single-char centers + n-1 gaps). Discuss the tradeoff with Manacher's algorithm which is O(n) time but more complex.`;
+    relatedProblems = [`Longest Palindromic Substring`, `Count Palindromic Subsequences`, `Palindrome Partitioning`];
+    followUpQuestions = [`Can we solve this in O(n) time using Manacher's algorithm?`, `How would the solution change if we needed to find the longest palindromic substring instead?`];
   } else {
     // Prefer the complete MySQL problem definition. The previous generic
     // description hid carefully authored statements, samples, and diagrams.
@@ -832,7 +976,16 @@ router.get('/stats', authenticate, async (req, res, next) => {
     const topicStats: Record<string, { total: number; solved: number }> = {};
 
     questions.forEach(q => {
-      const topics = (q.topics as string[]) || [];
+      // Parse topics if it's stored as JSON string
+      let topics: string[] = [];
+      if (q.topics) {
+        try {
+          topics = typeof q.topics === 'string' ? JSON.parse(q.topics) : (q.topics as string[]);
+        } catch (e) {
+          topics = [];
+        }
+      }
+      
       const isSolved = solvedQuestionIds.has(q.id);
 
       topics.forEach(t => {
