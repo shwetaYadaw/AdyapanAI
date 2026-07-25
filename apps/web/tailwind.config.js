@@ -3,6 +3,14 @@ module.exports = {
   darkMode: 'class',
   content: ['./index.html', './src/**/*.{ts,tsx,js,jsx}'],
   theme: {
+    screens: {
+      'xs': '360px',  // Small mobile
+      'sm': '640px',  // Standard mobile
+      'md': '768px',  // Tablet
+      'lg': '1024px', // Small laptop
+      'xl': '1280px', // Desktop
+      '2xl': '1536px', // Large desktop
+    },
     extend: {
       colors: {
         // ADYAPAN Brand Colors — Orange/Amber palette

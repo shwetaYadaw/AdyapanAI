@@ -75,25 +75,40 @@ export default function Sidebar() {
   const user = useAppSelector(selectUser);
   const navItems = NAV_MAP[user?.role ?? 'student'] ?? STUDENT_NAV;
 
+  // Mobile: Show sidebar as overlay when open
+  // Tablet+: Show as collapsible sidebar
   return (
     <AnimatePresence initial={false}>
+      {/* Mobile Overlay (hidden on md+) */}
+      {sidebarOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => dispatch(toggleSidebar())}
+          className="fixed inset-0 bg-black/30 md:hidden z-40"
+        />
+      )}
+
+      {/* Sidebar Panel */}
       <motion.aside
         initial={false}
-        animate={{ width: sidebarOpen ? 240 : 72 }}
+        animate={{ 
+          width: sidebarOpen ? 240 : 72,
+          x: sidebarOpen ? 0 : 0
+        }}
         transition={{ type: 'spring', stiffness: 300, damping: 35 }}
         className="hidden md:flex flex-col h-full bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 overflow-hidden flex-shrink-0 relative"
       >
-
-
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-0.5 scrollbar-thin">
+        <nav className="flex-1 overflow-y-auto py-3 md:py-4 px-2 space-y-0.5 scrollbar-thin">
           {navItems.map((item) => (
             <NavLink
               key={item.href}
               to={item.href}
               className={({ isActive }) =>
                 clsx(
-                  'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group',
+                  'flex items-center gap-2 md:gap-3 px-2 md:px-3 py-2 md:py-2.5 rounded-lg md:rounded-xl text-xs md:text-sm font-medium transition-all duration-150 group',
                   isActive
                     ? 'bg-primary-50 dark:bg-primary-950/60 text-primary-600 dark:text-primary-400'
                     : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200'
@@ -103,10 +118,10 @@ export default function Sidebar() {
             >
               <item.icon className="w-5 h-5 flex-shrink-0" />
               {sidebarOpen && (
-                <span className="whitespace-nowrap overflow-hidden">{item.label}</span>
+                <span className="whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
               )}
               {item.badge && sidebarOpen && (
-                <span className="ml-auto text-xs bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-full px-1.5 py-0.5">
+                <span className="ml-auto text-xs bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-full px-1.5 py-0.5 flex-shrink-0">
                   {item.badge}
                 </span>
               )}
@@ -117,7 +132,7 @@ export default function Sidebar() {
         {/* Collapse toggle - HIGHLY VISIBLE */}
         <button
           onClick={() => dispatch(toggleSidebar())}
-          className="absolute -right-5 top-24 w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 border-4 border-white dark:border-gray-900 flex items-center justify-center shadow-2xl hover:shadow-3xl hover:scale-110 active:scale-95 transition-all duration-200 z-50 cursor-pointer animate-pulse-glow"
+          className="absolute -right-5 top-24 md:top-28 w-10 md:w-12 h-10 md:h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 border-4 border-white dark:border-gray-900 flex items-center justify-center shadow-2xl hover:shadow-3xl hover:scale-110 active:scale-95 transition-all duration-200 z-50 cursor-pointer animate-pulse-glow"
           aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
         >
           <motion.span 
@@ -125,7 +140,7 @@ export default function Sidebar() {
             transition={{ duration: 0.3, type: 'spring', stiffness: 200 }}
             className="flex items-center justify-center"
           >
-            <ChevronLeft className="w-7 h-7 text-white drop-shadow-lg" strokeWidth={4} />
+            <ChevronLeft className="w-6 md:w-7 h-6 md:h-7 text-white drop-shadow-lg" strokeWidth={4} />
           </motion.span>
         </button>
       </motion.aside>
