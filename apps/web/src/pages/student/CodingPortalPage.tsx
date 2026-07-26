@@ -466,6 +466,7 @@ export default function CodingPortalPage() {
                       {question.difficulty || 'Easy'}
                     </span>
 
+                  </div>
                 </div>
 
                 {/* Main Problem statement */}
