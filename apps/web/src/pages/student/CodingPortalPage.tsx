@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Editor from '@monaco-editor/react';
@@ -552,10 +552,10 @@ export default function CodingPortalPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { type: 'explain', label: 'ðŸ“– Explain', desc: 'Break down the problem' },
-                    { type: 'hint', label: 'ðŸ’¡ Hint', desc: 'Guided nudge toward solution' },
-                    { type: 'complexity', label: 'â±ï¸ Complexity', desc: 'Analyse your code complexity' },
-                    { type: 'review', label: 'ðŸ” Review', desc: 'Full code review + fix' },
+                    { type: 'explain', label: '📖 Explain', desc: 'Break down the problem' },
+                    { type: 'hint', label: '💡 Hint', desc: 'Guided nudge toward solution' },
+                    { type: 'complexity', label: '⏱️ Complexity', desc: 'Analyse your code complexity' },
+                    { type: 'review', label: '🔍 Review', desc: 'Full code review + fix' },
                   ].map(({ type, label, desc }) => (
                     <button
                       key={type}
@@ -577,10 +577,10 @@ export default function CodingPortalPage() {
                 <div className="bg-gradient-to-r from-purple-500/5 to-indigo-500/5 border border-purple-100 dark:border-purple-900/20 rounded-xl p-3.5 shadow-xs">
                   <div className="flex items-center gap-2 mb-2 text-xs font-bold text-purple-700 dark:text-purple-300">
                     <Sparkles className={`w-3.5 h-3.5 ${askAiMentor.isPending ? 'animate-spin' : ''}`} />
-                    {aiPromptType === 'explain' ? 'ðŸ“– PROBLEM EXPLANATION'
-                      : aiPromptType === 'hint' ? 'ðŸ’¡ HINTS'
-                      : aiPromptType === 'complexity' ? 'â±ï¸ COMPLEXITY ANALYSIS'
-                      : 'ðŸ” CODE REVIEW'}
+                    {aiPromptType === 'explain' ? '📖 PROBLEM EXPLANATION'
+                      : aiPromptType === 'hint' ? '💡 HINTS'
+                      : aiPromptType === 'complexity' ? '⏱️ COMPLEXITY ANALYSIS'
+                      : '🔍 CODE REVIEW'}
                   </div>
                   <div className="text-xs leading-relaxed">
                     {askAiMentor.isPending ? (

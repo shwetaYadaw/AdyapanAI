@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env';
-import { getRedisClient } from '../config/redis';
+import { getRedisClient, isRedisAvailable } from '../config/redis';
 
 export interface TokenPayload {
   userId: string;
@@ -42,6 +42,7 @@ export function verifyEmailToken(token: string): { userId: string; email: string
 }
 
 export async function blacklistToken(token: string, expiresInSeconds: number): Promise<void> {
+  if (!isRedisAvailable()) return;
   try {
     const client = getRedisClient();
     await client.setex(`blacklist:${token}`, expiresInSeconds, '1');
@@ -49,6 +50,7 @@ export async function blacklistToken(token: string, expiresInSeconds: number): P
 }
 
 export async function isTokenBlacklisted(token: string): Promise<boolean> {
+  if (!isRedisAvailable()) return false;
   try {
     const client = getRedisClient();
     const result = await client.get(`blacklist:${token}`);
@@ -61,6 +63,7 @@ export async function storeRefreshToken(
   token: string,
   ttlSeconds = 7 * 24 * 60 * 60
 ): Promise<void> {
+  if (!isRedisAvailable()) return;
   try {
     const client = getRedisClient();
     await client.setex(`refresh:${userId}:${token.slice(-20)}`, ttlSeconds, token);
@@ -68,6 +71,7 @@ export async function storeRefreshToken(
 }
 
 export async function revokeAllRefreshTokens(userId: string): Promise<void> {
+  if (!isRedisAvailable()) return;
   try {
     const client = getRedisClient();
     const keys = await client.keys(`refresh:${userId}:*`);

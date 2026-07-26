@@ -35,8 +35,8 @@ async function showUpdatedContent() {
     console.log(`   Difficulty: ${problem.difficulty}`);
     console.log(`   XP Reward: ${problem.xpReward}`);
     
-    console.log(`\n📂 TOPICS: ${problem.topics.join(', ')}`);
-    console.log(`\n🏢 COMPANIES: ${problem.companies.join(', ')}`);
+    console.log(`\n📂 TOPICS: ${(problem.topics as string[] || []).join(', ')}`);
+    console.log(`\n🏢 COMPANIES: ${(problem.companies as string[] || []).join(', ')}`);
     
     console.log(`\n${'='.repeat(80)}`);
     console.log('PROBLEM STATEMENT (First 500 chars):');
@@ -51,24 +51,24 @@ async function showUpdatedContent() {
     console.log(`\n${'='.repeat(80)}`);
     console.log('CODE TEMPLATES:');
     console.log('='.repeat(80));
-    const templates = Array.isArray(problem.templates) ? problem.templates : [];
+    const templates = Array.isArray(problem.templates) ? problem.templates as any[] : [];
     for (let i = 0; i < templates.length; i++) {
-      const t = templates[i];
-      console.log(`\n${i + 1}. ${t.language.toUpperCase()}`);
+      const t = templates[i] as any;
+      console.log(`\n${i + 1}. ${t?.language?.toUpperCase() ?? 'UNKNOWN'}`);
       console.log('-'.repeat(40));
-      const code = typeof t.code === 'string' ? t.code : JSON.stringify(t.code);
+      const code = typeof t?.code === 'string' ? t.code : JSON.stringify(t?.code);
       console.log(code.substring(0, 300) + (code.length > 300 ? '\n   ...' : ''));
     }
     
     console.log(`\n${'='.repeat(80)}`);
     console.log('TEST CASES:');
     console.log('='.repeat(80));
-    const testCases = Array.isArray(problem.testCases) ? problem.testCases : [];
+    const testCases = Array.isArray(problem.testCases) ? problem.testCases as any[] : [];
     console.log(`Total: ${testCases.length} test cases`);
     
     let visibleCount = 0, hiddenCount = 0;
     for (const tc of testCases) {
-      if (tc.isHidden) hiddenCount++;
+      if (tc?.isHidden) hiddenCount++;
       else visibleCount++;
     }
     
@@ -79,11 +79,11 @@ async function showUpdatedContent() {
     console.log('\nFirst 3 Test Cases:');
     console.log('-'.repeat(40));
     for (let i = 0; i < Math.min(3, testCases.length); i++) {
-      const tc = testCases[i];
+      const tc = testCases[i] as any;
       console.log(`\n  Test Case ${i + 1}:`);
-      console.log(`    Input: ${tc.input.substring(0, 50)}${tc.input.length > 50 ? '...' : ''}`);
-      console.log(`    Output: ${tc.output}`);
-      console.log(`    Type: ${tc.isHidden ? 'Hidden' : 'Visible'}`);
+      console.log(`    Input: ${String(tc?.input ?? '').substring(0, 50)}${String(tc?.input ?? '').length > 50 ? '...' : ''}`);
+      console.log(`    Output: ${tc?.output}`);
+      console.log(`    Type: ${tc?.isHidden ? 'Hidden' : 'Visible'}`);
     }
     
     console.log(`\n\n${'='.repeat(80)}`);

@@ -85,6 +85,10 @@ const QUESTIONS = [
 async function seed() {
   await initializeMysql();
   const pool = getMysqlPool();
+  if (!pool) {
+    logger.error('❌ MySQL pool not available. Cannot seed.');
+    process.exit(1);
+  }
 
   try {
     logger.info('🌱 Seeding MySQL coding roadmap...');

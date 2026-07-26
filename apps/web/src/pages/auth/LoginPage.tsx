@@ -28,6 +28,7 @@ const ORANGE = '#E85D04';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
+  const [gsiReady, setGsiReady] = useState(false);
   const dispatch   = useAppDispatch();
   const isLoading  = useAppSelector(selectAuthLoading);
   const authError  = useAppSelector(selectAuthError);
@@ -64,6 +65,7 @@ export default function LoginPage() {
           document.getElementById('google-signin-btn-container'),
           { theme: 'outline', size: 'large', type: 'standard', shape: 'pill', text: 'signin_with', width: '280' }
         );
+        setGsiReady(true);
       }
     };
 
@@ -76,7 +78,12 @@ export default function LoginPage() {
           clearInterval(interval);
         }
       }, 100);
-      return () => clearInterval(interval);
+      // After 3s if GSI still not loaded, show fallback button
+      const timeout = setTimeout(() => {
+        clearInterval(interval);
+        if (!window.google?.accounts?.id) setGsiReady(false);
+      }, 3000);
+      return () => { clearInterval(interval); clearTimeout(timeout); };
     }
   }, [dispatch]);
 
