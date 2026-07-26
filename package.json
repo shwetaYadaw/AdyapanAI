@@ -27,6 +27,7 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0"
   }
 }

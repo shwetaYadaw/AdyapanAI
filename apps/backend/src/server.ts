@@ -8,16 +8,34 @@ const PORT = env.PORT;
 
 async function bootstrap() {
   try {
-    // Verify MySQL connection via Prisma
-    await prisma.$connect();
-    logger.info('✅ MySQL (Prisma) connected successfully');
+    // Verify MySQL connection via Prisma (with timeout)
+    try {
+      await Promise.race([
+        prisma.$connect(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('DB connection timeout')), 3000)
+        )
+      ]);
+      logger.info('✅ MySQL (Prisma) connected successfully');
+    } catch (dbError) {
+      logger.warn('⚠️  Database connection failed, continuing without database');
+      logger.warn(`Reason: ${dbError}`);
+    }
 
     // Connect to Redis (optional — app works without it)
-    await connectRedis();
+    try {
+      await connectRedis();
+    } catch (redisError) {
+      logger.warn('⚠️  Redis connection failed, app will work without caching');
+    }
 
-    // Initialize MySQL tables/extensions if needed
-    const { initializeMysql } = await import('./config/mysql');
-    await initializeMysql();
+    // Initialize MySQL tables/extensions if needed (skip if DB unavailable)
+    try {
+      const { initializeMysql } = await import('./config/mysql');
+      await initializeMysql();
+    } catch (initError) {
+      logger.warn('⚠️  MySQL initialization failed, skipping');
+    }
 
     // Create Express app
     const app = createApp();
