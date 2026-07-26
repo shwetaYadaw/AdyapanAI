@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { registerThunk, selectAuthLoading, selectAuthError, clearError } from '../../features/auth/authSlice';
 import { getPasswordStrength } from '@adyapan/shared';
 import toast from 'react-hot-toast';
+import Navbar from '../../components/layout/Navbar/Navbar';
 
 const schema = z.object({
   firstName: z.string().min(2, 'Required').max(50),
@@ -66,8 +67,10 @@ export default function RegisterPage() {
 
   if (registered) {
     return (
-      <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center',
-        background:'#FFFAF6', fontFamily:'Inter,sans-serif' }}>
+      <>
+        <Navbar />
+        <div style={{ minHeight:'calc(100vh - 64px)', display:'flex', alignItems:'center', justifyContent:'center',
+          background:'#FFFAF6', fontFamily:'Inter,sans-serif' }}>
         <motion.div initial={{ opacity:0, scale:0.95 }} animate={{ opacity:1, scale:1 }}
           style={{ background:'#fff', borderRadius:20, padding:48, maxWidth:420, width:'100%',
             textAlign:'center', border:'1px solid #F5E4D4', boxShadow:'0 8px 40px rgba(232,93,4,0.1)' }}>
@@ -87,12 +90,15 @@ export default function RegisterPage() {
             Go to Sign In
           </button>
         </motion.div>
-      </div>
+        </div>
+      </>
     );
   }
 
   return (
-    <div style={{ minHeight:'100vh', display:'flex', fontFamily:'Inter,sans-serif' }}>
+    <>
+      <Navbar />
+      <div style={{ minHeight:'100vh', display:'flex', fontFamily:'Inter,sans-serif' }}>
 
       {/* ── Left brand panel ── */}
       <div style={{ width:'38%', background:`linear-gradient(145deg,${ORANGE} 0%,${AMBER} 100%)`,
@@ -231,6 +237,7 @@ export default function RegisterPage() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 768px) { .hidden-mobile { display: none !important; } }
       `}</style>
-    </div>
+      </div>
+    </>
   );
 }

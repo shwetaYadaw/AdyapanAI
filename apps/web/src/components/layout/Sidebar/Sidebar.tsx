@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 import {
   LayoutDashboard, BookOpen, Briefcase, Award, Users, Brain, Target,
   FileText, MessageSquare, GraduationCap, BarChart2, Settings, ChevronLeft,
-  UserCheck, Building2, ClipboardList, TrendingUp, CreditCard, ShieldCheck, Code2, Trophy
+  UserCheck, Building2, ClipboardList, TrendingUp, CreditCard, ShieldCheck, Code2, Trophy, Home
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { toggleSidebar } from '../../../features/ui/uiSlice';
@@ -18,13 +18,14 @@ interface NavItem {
 }
 
 const STUDENT_NAV: NavItem[] = [
+  { label: 'Home', href: '/student/home', icon: Home },
   { label: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
-  { label: 'Resume Builder', href: '/student/resume', icon: FileText },
-  { label: 'AI Features', href: '/student/ai', icon: Brain },
+  { label: 'Resume Builder', href: '/student/resume-builder', icon: FileText },
+  { label: 'AI Features', href: '/student/ai-features', icon: Brain },
   { label: 'Certificates', href: '/student/certificates', icon: Award },
-  { label: 'Coding Arena', href: '/student/challenges', icon: Code2 },
-  { label: 'TCS NQT Prep', href: '/student/tcs-nqt', icon: Trophy },
-  { label: 'Aptitude Prep', href: '/student/aptitude', icon: BookOpen },
+  { label: 'Coding Arena', href: '/student/coding-arena', icon: Code2 },
+  { label: 'TCS NQT Prep', href: '/student/tcs-nqt-prep', icon: Trophy },
+  { label: 'Aptitude Prep', href: '/student/aptitude-prep', icon: BookOpen },
   { label: 'Contests', href: '/student/contests', icon: Trophy },
   { label: 'My Profile', href: '/student/profile', icon: Users },
 ];
