@@ -229,7 +229,7 @@ export default function AdminCoursesPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="page-wrapper space-y-6">
       {/* Upper header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>

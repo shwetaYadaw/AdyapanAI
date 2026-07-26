@@ -2,9 +2,9 @@ import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import {
-  LayoutDashboard, BookOpen, Briefcase, Award, Users, Brain, Target,
-  FileText, MessageSquare, GraduationCap, BarChart2, Settings, ChevronLeft,
-  UserCheck, Building2, ClipboardList, TrendingUp, CreditCard, ShieldCheck, Code2, Trophy, Home
+  LayoutDashboard, BookOpen, Briefcase, Award, Users, Target,
+  MessageSquare, GraduationCap, BarChart2, Settings, ChevronLeft,
+  UserCheck, Building2, ClipboardList, TrendingUp, ShieldCheck, Code2, Trophy
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { toggleSidebar } from '../../../features/ui/uiSlice';
@@ -18,16 +18,13 @@ interface NavItem {
 }
 
 const STUDENT_NAV: NavItem[] = [
-  { label: 'Home', href: '/student/home', icon: Home },
-  { label: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
-  { label: 'Resume Builder', href: '/student/resume-builder', icon: FileText },
-  { label: 'AI Features', href: '/student/ai-features', icon: Brain },
+  { label: 'Dashboard',    href: '/student/dashboard',  icon: LayoutDashboard },
   { label: 'Certificates', href: '/student/certificates', icon: Award },
-  { label: 'Coding Arena', href: '/student/coding-arena', icon: Code2 },
-  { label: 'TCS NQT Prep', href: '/student/tcs-nqt-prep', icon: Trophy },
-  { label: 'Aptitude Prep', href: '/student/aptitude-prep', icon: BookOpen },
-  { label: 'Contests', href: '/student/contests', icon: Trophy },
-  { label: 'My Profile', href: '/student/profile', icon: Users },
+  { label: 'Coding Arena', href: '/student/challenges',  icon: Code2 },
+  { label: 'TCS NQT Prep', href: '/student/tcs-nqt',    icon: Trophy },
+  { label: 'Aptitude Prep',href: '/student/aptitude',   icon: BookOpen },
+  { label: 'Contests',     href: '/student/contests',   icon: Trophy },
+  { label: 'My Profile',   href: '/student/profile',    icon: Users },
 ];
 
 const TEACHER_NAV: NavItem[] = [
@@ -115,18 +112,18 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        {/* Collapse toggle - HIGHLY VISIBLE */}
+        {/* Collapse toggle */}
         <button
           onClick={() => dispatch(toggleSidebar())}
-          className="absolute -right-5 top-24 w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 border-4 border-white dark:border-gray-900 flex items-center justify-center shadow-2xl hover:shadow-3xl hover:scale-110 active:scale-95 transition-all duration-200 z-50 cursor-pointer animate-pulse-glow"
+          className="absolute -right-3.5 top-24 w-7 h-7 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 active:scale-95 transition-all duration-200 z-50 cursor-pointer"
           aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
         >
-          <motion.span 
+          <motion.span
             animate={{ rotate: sidebarOpen ? 0 : 180 }}
             transition={{ duration: 0.3, type: 'spring', stiffness: 200 }}
             className="flex items-center justify-center"
           >
-            <ChevronLeft className="w-7 h-7 text-white drop-shadow-lg" strokeWidth={4} />
+            <ChevronLeft className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" strokeWidth={2.5} />
           </motion.span>
         </button>
       </motion.aside>

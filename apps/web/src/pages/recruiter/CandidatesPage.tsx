@@ -22,7 +22,7 @@ export default function CandidatesPage() {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="page-wrapper space-y-5">
       <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Search Candidates</h1>
       <div className="relative">
         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />

@@ -20,7 +20,7 @@ export default function RecruiterJobsPage() {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="page-wrapper space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Manage Jobs</h1>
         <Button leftIcon={<Plus className="w-4 h-4" />} onClick={() => setModal(true)}>Post Job</Button>

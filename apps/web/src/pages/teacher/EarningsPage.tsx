@@ -40,7 +40,7 @@ export default function EarningsPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="page-wrapper space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Earnings</h1>

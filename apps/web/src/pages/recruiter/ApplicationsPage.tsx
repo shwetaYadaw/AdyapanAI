@@ -12,7 +12,7 @@ export default function ApplicationsPage() {
   });
 
   return (
-    <div className="space-y-5">
+    <div className="page-wrapper space-y-5">
       <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Applications</h1>
       <p className="text-gray-500 text-sm">Select a job to view its applications.</p>
       <div className="space-y-3">

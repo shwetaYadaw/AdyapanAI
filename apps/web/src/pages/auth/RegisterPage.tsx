@@ -107,9 +107,8 @@ export default function RegisterPage() {
         <div style={{ position:'absolute', width:350, height:350, borderRadius:'50%', background:'rgba(255,255,255,0.08)', top:-100, right:-80 }} />
         <div style={{ position:'absolute', width:200, height:200, borderRadius:'50%', background:'rgba(255,255,255,0.06)', bottom:-60, left:-60 }} />
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} style={{ textAlign:'center', position:'relative', zIndex:1 }}>
-          <div style={{ width:88, height:88, borderRadius:'50%', background:'linear-gradient(135deg,#FAA307,#FFCF5C)',
-            display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 20px', boxShadow:'0 8px 32px rgba(0,0,0,0.2)' }}>
-            <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:20, color:'#7C2D00' }}>ady.</span>
+          <div style={{ width:88, height:88, borderRadius:'50%', margin:'0 auto 20px', boxShadow:'0 8px 32px rgba(0,0,0,0.2)', overflow:'hidden' }}>
+            <img src="/logo.svg" alt="ADYAPAN" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
           </div>
           <h1 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:32, color:'#fff', letterSpacing:3, marginBottom:10 }}>ADYAPAN</h1>
           <p style={{ color:'rgba(255,255,255,0.85)', fontSize:14, lineHeight:1.7, maxWidth:240, margin:'0 auto 32px' }}>
@@ -133,9 +132,7 @@ export default function RegisterPage() {
 
           <div style={{ textAlign:'center', marginBottom:28 }}>
             <Link to="/" style={{ textDecoration:'none', display:'inline-flex', alignItems:'center', gap:8 }}>
-              <div style={{ width:40, height:40, borderRadius:'50%', background:`linear-gradient(135deg,${ORANGE},${AMBER})`, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:11, color:'#fff' }}>ady.</span>
-              </div>
+              <img src="/logo.svg" alt="ADYAPAN" style={{ width:40, height:40, borderRadius:'50%', objectFit:'cover' }} />
               <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:18, color:'#1A0A00' }}>ADYAPAN</span>
             </Link>
             <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:700, fontSize:22, color:'#1A0A00', margin:'14px 0 4px' }}>Create your free account</h2>

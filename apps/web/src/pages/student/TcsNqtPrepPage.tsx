@@ -169,7 +169,7 @@ export default function TcsNqtPrepPage() {
     .filter((question): question is TCSQuestion => Boolean(question));
 
   return (
-    <div className="space-y-6">
+    <div className="page-wrapper">
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
         <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">

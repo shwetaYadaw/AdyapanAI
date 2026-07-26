@@ -23,7 +23,7 @@ export default function AnalyticsPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="page-wrapper space-y-6">
       <div>
         <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Analytics Overview</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">Deep dive into student engagement, course performance, and learning metrics.</p>
