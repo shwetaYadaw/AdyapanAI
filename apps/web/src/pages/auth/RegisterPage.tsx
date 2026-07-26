@@ -61,7 +61,9 @@ export default function RegisterPage() {
     }));
     if (registerThunk.fulfilled.match(result)) {
       setRegistered(true);
-      toast.success(import.meta.env.DEV ? 'Account created! You can now sign in.' : 'Account created! Check your email.');
+      toast.success('Account created! You can now sign in.');
+      // Auto-redirect to login after 3 seconds
+      setTimeout(() => navigate('/login'), 3000);
     }
   };
 
@@ -79,12 +81,10 @@ export default function RegisterPage() {
             <CheckCircle2 size={36} color="#fff" />
           </div>
           <h2 style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:24, color:'#1A0A00', marginBottom:10 }}>
-            {import.meta.env.DEV ? 'Account created!' : 'Check your email!'}
+            Account created!
           </h2>
           <p style={{ color:'#7C4A1E', fontSize:14, lineHeight:1.6, marginBottom:28 }}>
-            {import.meta.env.DEV
-              ? 'Your account is ready. Sign in to start learning.'
-              : "We've sent a verification link to your email address. Click it to activate your account and start learning."}
+            Your account is ready. You'll be redirected to sign in shortly, or click below.
           </p>
           <button onClick={() => navigate('/login')} className="btn-primary" style={{ width:'100%', padding:14, fontSize:15 }}>
             Go to Sign In
@@ -142,9 +142,13 @@ export default function RegisterPage() {
           {authError && (
             <div style={{ background:'#FFF0E0', border:`1px solid ${ORANGE}`, borderRadius:12,
               padding:'12px 16px', marginBottom:18, color:ORANGE, fontSize:13 }}>
-              ⚠️ {authError.includes('503') || authError.includes('Network') 
-                ? 'Server is starting up. Please wait a moment and try again.' 
-                : authError}
+              {authError.includes('503') || authError.includes('Network') 
+                ? '⚠️ Server is starting up. Please wait a moment and try again.' 
+                : authError.toLowerCase().includes('already registered') || authError.includes('409')
+                  ? (<>⚠️ You already have an account with this email.{' '}
+                      <Link to="/login" style={{ color: ORANGE, fontWeight: 700, textDecoration: 'underline' }}>Sign in instead</Link>
+                    </>)
+                  : `⚠️ ${authError}`}
             </div>
           )}
 

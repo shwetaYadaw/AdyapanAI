@@ -67,6 +67,7 @@ export const env = {
   AI_SERVICE_URL:     optionalEnv('AI_SERVICE_URL',     'http://localhost:8000'),
   AI_SERVICE_API_KEY: optionalEnv('AI_SERVICE_API_KEY', 'adyapan_internal_ai_key_2024'),
 
+  ADMIN_EMAIL:        optionalEnv('ADMIN_EMAIL',        ''),
   FRONTEND_URL:       optionalEnv('FRONTEND_URL',       'http://localhost:3000'),
   CERTIFICATE_SECRET: optionalEnv('CERTIFICATE_SECRET', 'adyapan_cert_secret_2024'),
 

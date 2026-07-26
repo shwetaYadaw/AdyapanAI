@@ -98,6 +98,33 @@ export class EmailService {
     await this.send(to, `Enrollment Confirmed: ${courseName} — ADYAPAN`, html);
   }
 
+  async sendNewUserSignupNotification(
+    userEmail: string,
+    firstName: string,
+    lastName: string,
+    role: string
+  ): Promise<void> {
+    const adminEmail = env.ADMIN_EMAIL;
+    if (!adminEmail) {
+      logger.warn('ADMIN_EMAIL not configured — skipping signup notification');
+      return;
+    }
+
+    const html = this.buildEmailTemplate({
+      title: 'New User Signup',
+      greeting: 'Hi Admin,',
+      body: `A new user has signed up on ADYAPAN.<br/><br/>
+        <strong>Name:</strong> ${firstName} ${lastName}<br/>
+        <strong>Email:</strong> ${userEmail}<br/>
+        <strong>Role:</strong> ${role}<br/>
+        <strong>Time:</strong> ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}`,
+      ctaLabel: 'View Dashboard',
+      ctaUrl: `${env.FRONTEND_URL}/admin/dashboard`,
+      footer: 'This is an automated notification from ADYAPAN.',
+    });
+    await this.send(adminEmail, `New Signup: ${firstName} ${lastName} (${role}) — ADYAPAN`, html);
+  }
+
   async sendJobApplicationNotification(
     to: string,
     firstName: string,

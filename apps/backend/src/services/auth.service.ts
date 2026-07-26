@@ -47,6 +47,11 @@ export class AuthService {
       await prisma.studentProfile.create({ data: { userId: user.id } });
     }
 
+    // Notify admin about the new signup (non-blocking)
+    emailService
+      .sendNewUserSignupNotification(user.email, user.firstName, user.lastName, user.role)
+      .catch(() => {}); // silently ignore admin notification failures
+
     // In development: auto-verify email so users can login immediately
     if (env.isDevelopment()) {
       await prisma.user.update({
