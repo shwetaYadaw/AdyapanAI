@@ -189,14 +189,15 @@ export default function GetStartedPage() {
               }}>ADYAPAN</h2>
               <p style={{
                 fontSize: 12,
-                color: '#7C4A1E',
-                margin: '0 0 4px',
-              }}>Welcome Back</p>
+                color: '#1A0A00',
+                fontWeight: 700,
+                margin: '16px 0 6px',
+              }}>Create your free account</p>
               <p style={{
                 fontSize: 12,
                 color: '#B88A6A',
                 margin: 0,
-              }}>Sign in to continue your journey</p>
+              }}>Start your career journey today</p>
             </div>
 
             {/* Error */}
@@ -222,6 +223,66 @@ export default function GetStartedPage() {
               flexDirection: 'column',
               gap: 14,
             }}>
+              {/* First Name & Last Name */}
+              <div style={{ display: 'flex', gap: 14 }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{
+                    display: 'block',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: '#4A2800',
+                    marginBottom: 6,
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.5,
+                  }}>
+                    First name <span style={{ color: ORANGE }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Rahul"
+                    className="input-field"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: '1px solid #E5D4C1',
+                      borderRadius: 8,
+                      fontSize: 13,
+                      fontFamily: 'Inter, sans-serif',
+                      backgroundColor: '#FFFAF6',
+                      color: '#1A0A00',
+                    }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{
+                    display: 'block',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: '#4A2800',
+                    marginBottom: 6,
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.5,
+                  }}>
+                    Last name <span style={{ color: ORANGE }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Sharma"
+                    className="input-field"
+                    style={{
+                      width: '100%',
+                      padding: '12px 14px',
+                      border: '1px solid #E5D4C1',
+                      borderRadius: 8,
+                      fontSize: 13,
+                      fontFamily: 'Inter, sans-serif',
+                      backgroundColor: '#FFFAF6',
+                      color: '#1A0A00',
+                    }}
+                  />
+                </div>
+              </div>
+
               {/* Email */}
               <div>
                 <label style={{
@@ -255,7 +316,6 @@ export default function GetStartedPage() {
                 {errors.email && <p style={{
                   color: ORANGE,
                   fontSize: 11,
-                  marginTop: 4,
                   margin: '4px 0 0',
                 }}>{errors.email.message}</p>}
               </div>
@@ -276,8 +336,8 @@ export default function GetStartedPage() {
                 <div style={{ position: 'relative' }}>
                   <input
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Your password"
-                    autoComplete="current-password"
+                    placeholder="Min. 8 characters"
+                    autoComplete="new-password"
                     className="input-field"
                     style={{
                       width: '100%',
@@ -315,23 +375,31 @@ export default function GetStartedPage() {
                 {errors.password && <p style={{
                   color: ORANGE,
                   fontSize: 11,
-                  marginTop: 4,
                   margin: '4px 0 0',
                 }}>{errors.password.message}</p>}
               </div>
 
-              {/* Forgot */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -6 }}>
-                <Link to="/forgot-password" style={{
-                  fontSize: 11,
-                  color: ORANGE,
-                  fontWeight: 700,
-                  textDecoration: 'none',
-                  textTransform: 'uppercase',
-                  letterSpacing: 0.5,
+              {/* Checkbox */}
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginTop: 4 }}>
+                <input
+                  type="checkbox"
+                  id="terms"
+                  style={{
+                    marginTop: 4,
+                    width: 18,
+                    height: 18,
+                    cursor: 'pointer',
+                    accentColor: ORANGE,
+                  }}
+                />
+                <label htmlFor="terms" style={{
+                  fontSize: 12,
+                  color: '#7C4A1E',
+                  margin: 0,
+                  cursor: 'pointer',
                 }}>
-                  Forgot password?
-                </Link>
+                  I agree to the <span style={{ color: ORANGE, fontWeight: 700 }}>Terms of Service</span> and <span style={{ color: ORANGE, fontWeight: 700 }}>Privacy Policy</span>
+                </label>
               </div>
 
               {/* Submit */}
@@ -354,7 +422,7 @@ export default function GetStartedPage() {
                   gap: 8,
                   transition: 'all 0.2s',
                   opacity: isLoading ? 0.7 : 1,
-                  marginTop: 4,
+                  marginTop: 8,
                 }}
                 onMouseEnter={(e) => !isLoading && (e.currentTarget.style.transform = 'translateY(-2px)')}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
@@ -370,10 +438,10 @@ export default function GetStartedPage() {
                       animation: 'spin 0.8s linear infinite',
                       display: 'inline-block',
                     }} />
-                    Signing in...
+                    Creating account...
                   </span>
                 ) : (
-                  <><LogIn size={16} /> Sign In</>
+                  <>Create Account →</>
                 )}
               </button>
             </form>
@@ -404,13 +472,13 @@ export default function GetStartedPage() {
               marginTop: 16,
               margin: '16px 0 0',
             }}>
-              Don't have an account?{' '}
-              <Link to="/register" style={{
+              Already have an account?{' '}
+              <Link to="/login" style={{
                 color: ORANGE,
                 fontWeight: 800,
                 textDecoration: 'none',
               }}>
-                Sign up free →
+                Log in
               </Link>
             </p>
           </motion.div>

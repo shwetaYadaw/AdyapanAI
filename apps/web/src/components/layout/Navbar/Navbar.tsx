@@ -9,7 +9,20 @@ import Avatar from '../../common/Avatar/Avatar';
 import Badge from '../../common/Badge/Badge';
 import toast from 'react-hot-toast';
 
-const NAV_LINKS: { label: string; href: string }[] = [];
+const PUBLIC_NAV_LINKS: { label: string; href: string }[] = [
+  { label: 'Home', href: '/' },
+];
+
+const AUTH_NAV_LINKS: { label: string; href: string }[] = [
+  { label: 'Dashboard', href: '/student/dashboard' },
+  { label: 'Resume Builder', href: '/student/resume-builder' },
+  { label: 'AI Features', href: '/student/ai-features' },
+  { label: 'Certificates', href: '/student/certificates' },
+  { label: 'Coding Arena', href: '/student/coding-arena' },
+  { label: 'TCS NQT Prep', href: '/student/tcs-nqt-prep' },
+  { label: 'Aptitude Prep', href: '/student/aptitude-prep' },
+  { label: 'Contests', href: '/student/contests' },
+];
 
 const DASHBOARD_LINKS: Record<string, string> = {
   student: '/student/dashboard',
@@ -56,7 +69,7 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
-            {NAV_LINKS.map((link) => (
+            {(isAuthenticated ? AUTH_NAV_LINKS : PUBLIC_NAV_LINKS).map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
@@ -148,10 +161,10 @@ export default function Navbar() {
                   to="/login"
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
-                  Sign in
+                  Log in
                 </Link>
                 <Link
-                  to="/register"
+                  to="/get-started"
                   className="btn-primary !py-2 !px-4 !text-sm"
                 >
                   Get Started Free
@@ -181,7 +194,7 @@ export default function Navbar() {
             className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1">
-              {NAV_LINKS.map((link) => (
+              {(isAuthenticated ? AUTH_NAV_LINKS : PUBLIC_NAV_LINKS).map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
@@ -194,9 +207,9 @@ export default function Navbar() {
               {!isAuthenticated && (
                 <div className="pt-2 flex flex-col gap-2">
                   <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full text-center">
-                    Sign in
+                    Log in
                   </Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="btn-primary w-full text-center">
+                  <Link to="/get-started" onClick={() => setMobileOpen(false)} className="btn-primary w-full text-center">
                     Get Started Free
                   </Link>
                 </div>
