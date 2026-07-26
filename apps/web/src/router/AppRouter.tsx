@@ -65,6 +65,7 @@ const AdminCertificatesPage = lazy(() => import('../pages/admin/CertificatesPage
 // Public
 const CertVerifyPage     = lazy(() => import('../pages/public/CertificateVerifyPage'));
 const NotFoundPage       = lazy(() => import('../pages/public/NotFoundPage'));
+const GetStartedPage     = lazy(() => import('../pages/GetStartedPage'));
 
 export default function AppRouter() {
   return (
@@ -78,6 +79,7 @@ export default function AppRouter() {
           <Route path="/verify/:certificateId" element={<CertVerifyPage />} />
 
           {/* Auth */}
+          <Route path="/get-started" element={<GetStartedPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />

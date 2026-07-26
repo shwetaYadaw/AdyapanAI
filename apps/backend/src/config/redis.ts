@@ -5,6 +5,10 @@ import { logger } from '../utils/logger';
 let redisClient: Redis | null = null;
 let redisAvailable = false;
 
+export function isRedisAvailable(): boolean {
+  return redisAvailable;
+}
+
 export function getRedisClient(): Redis {
   if (!redisClient) {
     redisClient = new Redis(env.REDIS_URL, {

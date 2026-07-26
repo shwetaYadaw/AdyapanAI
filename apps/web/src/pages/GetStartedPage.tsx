@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
+import { Eye, EyeOff, LogIn, Book, Brain, Zap, Trophy } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { loginThunk, selectAuthLoading, selectAuthError, clearError, googleLoginThunk } from '../features/auth/authSlice';
 import { useEffect } from 'react';
