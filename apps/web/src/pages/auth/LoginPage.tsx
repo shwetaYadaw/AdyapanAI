@@ -25,10 +25,10 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const ORANGE = '#E85D04';
+const AMBER  = '#F48C06';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
-  const [gsiReady, setGsiReady] = useState(false);
   const dispatch   = useAppDispatch();
   const isLoading  = useAppSelector(selectAuthLoading);
   const authError  = useAppSelector(selectAuthError);
@@ -65,7 +65,6 @@ export default function LoginPage() {
           document.getElementById('google-signin-btn-container'),
           { theme: 'outline', size: 'large', type: 'standard', shape: 'pill', text: 'signin_with', width: '280' }
         );
-        setGsiReady(true);
       }
     };
 
@@ -78,12 +77,7 @@ export default function LoginPage() {
           clearInterval(interval);
         }
       }, 100);
-      // After 3s if GSI still not loaded, show fallback button
-      const timeout = setTimeout(() => {
-        clearInterval(interval);
-        if (!window.google?.accounts?.id) setGsiReady(false);
-      }, 3000);
-      return () => { clearInterval(interval); clearTimeout(timeout); };
+      return () => clearInterval(interval);
     }
   }, [dispatch]);
 
@@ -112,183 +106,90 @@ export default function LoginPage() {
         minHeight:'calc(100vh - 64px)',
         display:'flex',
         fontFamily:'Inter,sans-serif',
-        backgroundColor: '#fff',
-        position: 'relative',
+        backgroundImage: 'url(/login-bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        position:'relative',
+        overflow:'hidden',
       }}>
         
-        {/* Left Orange Panel */}
-        <motion.div
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          style={{
-            flex: '0 0 45%',
-            background: `linear-gradient(135deg, ${ORANGE} 0%, #F48C06 100%)`,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '60px 40px',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          {/* Decorative circles */}
-          <div style={{
-            position: 'absolute',
-            width: 300,
-            height: 300,
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.1)',
-            top: -100,
-            left: -100,
-          }} />
-          <div style={{
-            position: 'absolute',
-            width: 200,
-            height: 200,
-            borderRadius: '50%',
-            background: 'rgba(255,255,255,0.08)',
-            bottom: -60,
-            right: -60,
-          }} />
+        {/* ── Full-page dark overlay for readability ── */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'rgba(60, 60, 60, 0.6)',
+          zIndex: 0,
+        }} />
 
-          <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: 300 }}>
-            {/* Logo Circle */}
-            <div style={{
-              width: 80,
-              height: 80,
-              borderRadius: '50%',
-              background: 'rgba(255,255,255,0.2)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 32px',
+        {/* ── Main Container ── */}
+        <div style={{
+          position: 'relative',
+          zIndex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          padding: '40px 60px',
+          maxWidth: '1400px',
+          margin: '0 auto',
+        }}>
+
+          {/* ── Center Form Card ── */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            style={{
+              background: 'rgba(255, 250, 246, 0.75)',
               backdropFilter: 'blur(10px)',
-            }}>
-              <span style={{
-                fontFamily: 'Poppins,sans-serif',
-                fontWeight: 900,
-                fontSize: 20,
-                color: '#fff',
-              }}>ady.</span>
-            </div>
-
-            {/* Heading */}
-            <h1 style={{
-              fontFamily: 'Poppins,sans-serif',
-              fontWeight: 900,
-              fontSize: 40,
-              color: '#fff',
-              margin: '0 0 20px',
-              letterSpacing: 2,
-            }}>
-              ADYAPAN
-            </h1>
-
-            {/* Description */}
-            <p style={{
-              color: 'rgba(255,255,255,0.95)',
-              fontSize: 14,
-              lineHeight: 1.7,
-              margin: '0 0 32px',
-              fontWeight: 500,
-            }}>
-              Hub for Smarter Connections, Stronger Relationships, Better Results.
-            </p>
-
-            {/* Features */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 14,
-            }}>
-              {[
-                'AI-Powered Career Development',
-                '200+ Expert-Led Courses',
-                'Placement Ready in 90 Days',
-              ].map((feature) => (
-                <div key={feature} style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 10,
-                  color: 'rgba(255,255,255,0.9)',
-                  fontSize: 13,
-                  fontWeight: 500,
-                }}>
-                  <div style={{
-                    width: 6,
-                    height: 6,
-                    borderRadius: '50%',
-                    background: '#fff',
-                    flexShrink: 0,
-                  }} />
-                  {feature}
-                </div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Right Form Panel */}
-        <motion.div
-          initial={{ opacity: 0, x: 40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          style={{
-            flex: '0 0 55%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '40px 60px',
-            backgroundColor: '#f9f9f9',
-          }}
-        >
-          <div style={{ width: '100%', maxWidth: 380 }}>
-            {/* Header */}
-            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              borderRadius: 20,
+              padding: 40,
+              width: '100%',
+              maxWidth: 420,
+              boxShadow: '0 20px 60px rgba(0,0,0,0.3), 0 0 1px rgba(255,255,255,0.1) inset',
+              border: '1px solid rgba(255,255,255,0.2)',
+              zIndex: 10,
+              position: 'relative',
+            }}
+          >
+            {/* Logo */}
+            <div style={{ textAlign: 'center', marginBottom: 28 }}>
               <div style={{
                 width: 48,
                 height: 48,
                 borderRadius: '50%',
-                background: `linear-gradient(135deg, ${ORANGE}, #F48C06)`,
+                background: `linear-gradient(135deg,${ORANGE},${AMBER})`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                margin: '0 auto 16px',
+                margin: '0 auto 12px',
+                boxShadow: '0 8px 24px rgba(232, 93, 4, 0.3)',
               }}>
                 <span style={{
                   fontFamily: 'Poppins,sans-serif',
                   fontWeight: 900,
-                  fontSize: 14,
+                  fontSize: 12,
                   color: '#fff',
                 }}>ady.</span>
               </div>
               <h2 style={{
                 fontFamily: 'Poppins,sans-serif',
                 fontWeight: 800,
-                fontSize: 22,
-                color: '#1A0A00',
-                margin: '0 0 8px',
-              }}>
-                ADYAPAN
-              </h2>
-              <h3 style={{
-                fontFamily: 'Poppins,sans-serif',
-                fontWeight: 700,
                 fontSize: 18,
                 color: '#1A0A00',
-                margin: '0 0 6px',
-              }}>
-                Welcome Back
-              </h3>
+                margin: '0 0 4px',
+              }}>ADYAPAN</h2>
               <p style={{
-                fontSize: 13,
-                color: ORANGE,
+                fontSize: 12,
+                color: '#7C4A1E',
+                margin: '0 0 4px',
+              }}>Welcome Back</p>
+              <p style={{
+                fontSize: 12,
+                color: '#B88A6A',
                 margin: 0,
-              }}>
-                Sign in to continue your journey
-              </p>
+              }}>Sign in to continue your journey</p>
             </div>
 
             {/* Error */}
@@ -297,13 +198,13 @@ export default function LoginPage() {
                 background: '#FFF0E0',
                 border: `1px solid ${ORANGE}`,
                 borderRadius: 12,
-                padding: '12px 16px',
-                marginBottom: 20,
+                padding: '10px 12px',
+                marginBottom: 16,
                 color: ORANGE,
                 fontSize: 12,
                 display: 'flex',
                 alignItems: 'center',
-                gap: 8,
+                gap: 6,
               }}>
                 ⚠️ {authError}
               </div>
@@ -312,16 +213,16 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit(onSubmit)} style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: 16,
+              gap: 14,
             }}>
               {/* Email */}
               <div>
                 <label style={{
                   display: 'block',
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 700,
                   color: '#4A2800',
-                  marginBottom: 8,
+                  marginBottom: 6,
                   textTransform: 'uppercase',
                   letterSpacing: 0.5,
                 }}>
@@ -339,7 +240,7 @@ export default function LoginPage() {
                     borderRadius: 8,
                     fontSize: 13,
                     fontFamily: 'Inter, sans-serif',
-                    backgroundColor: '#fff',
+                    backgroundColor: '#FFFAF6',
                     color: '#1A0A00',
                   }}
                   {...register('email')}
@@ -347,7 +248,7 @@ export default function LoginPage() {
                 {errors.email && <p style={{
                   color: ORANGE,
                   fontSize: 11,
-                  margin: '6px 0 0',
+                  margin: '4px 0 0',
                 }}>{errors.email.message}</p>}
               </div>
 
@@ -355,10 +256,10 @@ export default function LoginPage() {
               <div>
                 <label style={{
                   display: 'block',
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: 700,
                   color: '#4A2800',
-                  marginBottom: 8,
+                  marginBottom: 6,
                   textTransform: 'uppercase',
                   letterSpacing: 0.5,
                 }}>
@@ -378,7 +279,7 @@ export default function LoginPage() {
                       borderRadius: 8,
                       fontSize: 13,
                       fontFamily: 'Inter, sans-serif',
-                      backgroundColor: '#fff',
+                      backgroundColor: '#FFFAF6',
                       color: '#1A0A00',
                     }}
                     {...register('password')}
@@ -406,17 +307,19 @@ export default function LoginPage() {
                 {errors.password && <p style={{
                   color: ORANGE,
                   fontSize: 11,
-                  margin: '6px 0 0',
+                  margin: '4px 0 0',
                 }}>{errors.password.message}</p>}
               </div>
 
               {/* Forgot */}
-              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: -6 }}>
                 <Link to="/forgot-password" style={{
-                  fontSize: 12,
+                  fontSize: 11,
                   color: ORANGE,
                   fontWeight: 700,
                   textDecoration: 'none',
+                  textTransform: 'uppercase',
+                  letterSpacing: 0.5,
                 }}>
                   Forgot password?
                 </Link>
@@ -428,11 +331,11 @@ export default function LoginPage() {
                 disabled={isLoading}
                 style={{
                   width: '100%',
-                  padding: '14px',
-                  fontSize: 15,
+                  padding: '12px',
+                  fontSize: 14,
                   fontWeight: 700,
                   color: '#fff',
-                  background: `linear-gradient(135deg, ${ORANGE}, #F48C06)`,
+                  background: `linear-gradient(135deg, ${ORANGE}, ${AMBER})`,
                   border: 'none',
                   borderRadius: 8,
                   cursor: isLoading ? 'not-allowed' : 'pointer',
@@ -442,7 +345,7 @@ export default function LoginPage() {
                   gap: 8,
                   transition: 'all 0.2s',
                   opacity: isLoading ? 0.7 : 1,
-                  marginTop: 8,
+                  marginTop: 4,
                 }}
                 onMouseEnter={(e) => !isLoading && (e.currentTarget.style.transform = 'translateY(-2px)')}
                 onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
@@ -470,28 +373,27 @@ export default function LoginPage() {
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 12,
-              margin: '24px 0',
+              gap: 10,
+              margin: '16px 0',
             }}>
-              <div style={{ flex: 1, height: 1, background: '#E5D4C1' }} />
-              <span style={{ fontSize: 12, color: '#B88A6A', fontWeight: 500 }}>or continue with</span>
-              <div style={{ flex: 1, height: 1, background: '#E5D4C1' }} />
+              <div style={{ flex: 1, height: 1, background: '#F0D9C8' }} />
+              <span style={{ fontSize: 11, color: '#B88A6A', fontWeight: 500 }}>or continue with</span>
+              <div style={{ flex: 1, height: 1, background: '#F0D9C8' }} />
             </div>
 
             {/* Google Button */}
             <div id="google-signin-btn-container" style={{
               display: 'flex',
               justifyContent: 'center',
-              minHeight: 44,
+              minHeight: 40,
             }} />
 
-            {/* Sign up link */}
             <p style={{
               textAlign: 'center',
-              fontSize: 13,
+              fontSize: 12,
               color: '#7C4A1E',
-              marginTop: 24,
-              margin: '24px 0 0',
+              marginTop: 16,
+              margin: '16px 0 0',
             }}>
               Don't have an account?{' '}
               <Link to="/register" style={{
@@ -502,19 +404,20 @@ export default function LoginPage() {
                 Sign up free →
               </Link>
             </p>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 1200px) {
+          div[style*="maxWidth: '45%'"] { display: none; }
+          div[style*="maxWidth: '30%'"] { display: none; }
+        }
         input:focus {
           outline: none;
           border-color: ${ORANGE} !important;
           box-shadow: 0 0 0 3px rgba(232, 93, 4, 0.1) !important;
-        }
-        @media (max-width: 768px) {
-          div { flex-direction: column !important; }
         }
       `}</style>
     </>

@@ -161,10 +161,10 @@ export default function Navbar() {
                   to="/login"
                   className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
-                  Sign in
+                  Log in
                 </Link>
                 <Link
-                  to="/register"
+                  to="/get-started"
                   className="btn-primary !py-2 !px-4 !text-sm"
                 >
                   Get Started Free
@@ -207,9 +207,9 @@ export default function Navbar() {
               {!isAuthenticated && (
                 <div className="pt-2 flex flex-col gap-2">
                   <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full text-center">
-                    Sign in
+                    Log in
                   </Link>
-                  <Link to="/register" onClick={() => setMobileOpen(false)} className="btn-primary w-full text-center">
+                  <Link to="/get-started" onClick={() => setMobileOpen(false)} className="btn-primary w-full text-center">
                     Get Started Free
                   </Link>
                 </div>
