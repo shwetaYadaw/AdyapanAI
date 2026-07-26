@@ -1,459 +1,313 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Code, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, Code2, BookOpen, Video, Trophy } from 'lucide-react';
 import Navbar from '../../components/layout/Navbar/Navbar';
 import { Toaster } from 'react-hot-toast';
-import { useAppSelector } from '../../app/hooks';
-import { selectIsAuthenticated } from '../../features/auth/authSlice';
+
+const ORANGE = '#E85D04';
 
 export default function LandingPage() {
-  const isAuthenticated = useAppSelector(selectIsAuthenticated);
-  const [terminalText, setTerminalText] = React.useState('');
-  const fullText = 'Generate a React component for a responsive dashboard with dark mode and user authentication — include a top navigation bar and a sidebar that adapts on mobile |';
-
-  React.useEffect(() => {
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index < fullText.length) {
-        setTerminalText(fullText.slice(0, index + 1));
-        index++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 25);
-    return () => clearInterval(interval);
-  }, []);
-
-  const stats = [
-    { icon: '👥', value: '50,000+', label: 'Active Students' },
-    { icon: '💻', value: '1,000+', label: 'Practice Problems' },
-    { icon: '📈', value: '95%', label: 'Placement Rate' },
-    { icon: '🏢', value: '500+', label: 'Hiring Partners' },
+  const features = [
+    { icon: Code2, label: 'DSA', color: '#2E7D32' },
+    { icon: Code2, label: 'C++', color: '#1976D2' },
+    { icon: Code2, label: 'Java', color: '#F57C00' },
+    { icon: Code2, label: 'Python', color: '#455A64' },
+    { icon: Code2, label: 'Web Dev', color: '#D32F2F' },
+    { icon: Code2, label: 'Full Stack', color: '#7B1FA2' },
   ];
 
   return (
-    <div style={{ fontFamily: 'Inter, sans-serif', backgroundColor: '#FFFFFF', display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Navbar />
-        <Toaster position="top-right" />
+    <div style={{
+      fontFamily: 'Inter, sans-serif',
+      display: 'flex',
+      flexDirection: 'column',
+      minHeight: '100vh',
+      backgroundColor: '#0F0F0F',
+    }}>
+      <Navbar />
+      <Toaster position="top-right" />
 
-      {/* ── HERO SECTION ────────────────────────────────────────────────── */}
+      {/* Hero Section */}
       <section style={{
-        background: 'linear-gradient(135deg, #FDF5F0 0%, #F5EAFF 50%, #EBD5FF 100%)',
-        paddingTop: 80,
-        paddingBottom: 80,
-        overflow: 'hidden',
-        position: 'relative',
-        minHeight: '100vh',
+        flex: 1,
+        backgroundImage: 'url(/mainpage-bg.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
         display: 'flex',
         alignItems: 'center',
-        flex: 1
+        justifyContent: 'flex-start',
+        position: 'relative',
+        overflow: 'hidden',
+        padding: '60px 80px',
       }}>
-        {/* Decorative shapes */}
+        {/* Overlay */}
         <div style={{
           position: 'absolute',
-          top: -100,
-          right: -100,
-          width: 400,
-          height: 400,
-          borderRadius: '50%',
-          background: 'rgba(200, 150, 255, 0.1)',
-          filter: 'blur(80px)',
-          pointerEvents: 'none'
-        }} />
-        <div style={{
-          position: 'absolute',
-          bottom: -100,
-          left: -100,
-          width: 300,
-          height: 300,
-          borderRadius: '50%',
-          background: 'rgba(100, 150, 255, 0.08)',
-          filter: 'blur(70px)',
-          pointerEvents: 'none'
+          inset: 0,
+          background: 'rgba(15, 15, 15, 0.3)',
+          zIndex: 0,
         }} />
 
-        <div className="page-container" style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '1300px', marginLeft: 'auto', marginRight: 'auto', paddingLeft: '20px', paddingRight: '20px' }}>
+        {/* Content Container */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          style={{
+            position: 'relative',
+            zIndex: 1,
+            maxWidth: '600px',
+          }}
+        >
+          {/* Badge */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr 1.1fr',
-            gap: 60,
+            display: 'inline-flex',
             alignItems: 'center',
-            maxWidth: '100%',
-            width: '100%'
+            gap: 8,
+            background: 'rgba(232, 93, 4, 0.15)',
+            border: '1px solid rgba(232, 93, 4, 0.3)',
+            borderRadius: 999,
+            padding: '8px 16px',
+            marginBottom: 32,
+            fontSize: 13,
+            fontWeight: 600,
+            color: ORANGE,
           }}>
-
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              {/* Badge */}
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 8,
-                background: 'rgba(255, 107, 53, 0.1)',
-                border: '1px solid rgba(255, 107, 53, 0.3)',
-                borderRadius: 999,
-                padding: '8px 16px',
-                marginBottom: 32,
-                fontSize: 12,
-                fontWeight: 600,
-                color: '#FF6B35'
-              }}>
-                ✨ India's #1 AI-Powered Career Platform
-              </div>
-
-              {/* Main Headline */}
-              <h1 style={{
-                fontFamily: 'Poppins, sans-serif',
-                fontWeight: 900,
-                fontSize: 64,
-                lineHeight: 1.1,
-                marginBottom: 24,
-                color: '#1A0A2E'
-              }}>
-                From{' '}
-                <span style={{ color: '#FF6B35' }}>Learning</span>
-                {' '}to{' '}
-                <span style={{ color: '#FF6B35' }}>Placement</span>
-              </h1>
-
-              {/* Description */}
-              <p style={{
-                fontSize: 16,
-                color: '#4A3B5C',
-                lineHeight: 1.8,
-                marginBottom: 32,
-                maxWidth: 480
-              }}>
-                ADYAPAN is an AI-powered DSA practice and placement preparation ecosystem. Aiming for top MNCs like TCS? Master your coding challenges, aptitude tests, and get hired.
-              </p>
-
-              {/* CTA Buttons */}
-              <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 40 }}>
-                <Link
-                  to="/register"
-                  className="btn-primary"
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 600,
-                    padding: '14px 32px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    textDecoration: 'none',
-                    background: '#FF6B35',
-                    color: '#fff',
-                    borderRadius: 50,
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                  onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-                >
-                  Start for Free <ArrowRight size={18} />
-                </Link>
-
-                <Link
-                  to="/student/challenges"
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 600,
-                    padding: '14px 32px',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    textDecoration: 'none',
-                    background: 'transparent',
-                    color: '#FF6B35',
-                    border: '2px solid #FF6B35',
-                    borderRadius: 50,
-                    cursor: 'pointer',
-                    transition: 'all 0.3s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.background = '#FF6B35';
-                    e.currentTarget.style.color = '#fff';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = '#FF6B35';
-                  }}
-                >
-                  <Code size={18} /> Solve DSA Problems
-                </Link>
-              </div>
-
-              {/* Trust Indicators */}
-              <div style={{ display: 'flex', gap: 20, flexWrap: 'wrap', fontSize: 13, color: '#4A3B5C' }}>
-                {['No credit card required', '1,000+ DSA problems', '95% placement rate'].map((text) => (
-                  <div key={text} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <CheckCircle2 size={16} color="#22c55e" />
-                    {text}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Right Side - Terminal */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              style={{ position: 'relative' }}
-            >
-              {/* Terminal Card */}
-              <div style={{
-                background: '#1E1B3F',
-                borderRadius: 16,
-                overflow: 'hidden',
-                boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-                border: '1px solid rgba(255, 107, 53, 0.2)',
-                backdropFilter: 'blur(10px)'
-              }}>
-                {/* Terminal Header */}
-                <div style={{
-                  background: '#16132A',
-                  padding: '14px 16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  borderBottom: '1px solid rgba(255, 107, 53, 0.1)'
-                }}>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FF5F57' }} />
-                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FEBC2E' }} />
-                    <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#28C940' }} />
-                  </div>
-                  <span style={{ fontSize: 11, color: '#999', fontWeight: 500 }}>ADYAPAN Terminal</span>
-                  <div />
-                </div>
-
-                {/* Terminal Tabs */}
-                <div style={{
-                  display: 'flex',
-                  gap: 24,
-                  padding: '12px 16px',
-                  borderBottom: '1px solid rgba(255, 107, 53, 0.1)',
-                  background: '#1E1B3F'
-                }}>
-                  {['AI Writer', 'Templates', 'Shorten', 'Rephrase'].map((tab, i) => (
-                    <span
-                      key={tab}
-                      style={{
-                        fontSize: 13,
-                        color: i === 0 ? '#FF6B35' : '#999',
-                        borderBottom: i === 0 ? '2px solid #FF6B35' : 'none',
-                        paddingBottom: 6,
-                        cursor: 'pointer',
-                        transition: 'all 0.2s',
-                        fontWeight: i === 0 ? 600 : 400
-                      }}
-                    >
-                      {tab}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Terminal Content */}
-                <div style={{
-                  padding: '20px 16px',
-                  minHeight: 120,
-                  fontFamily: 'Monaco, monospace',
-                  fontSize: 13,
-                  lineHeight: 1.6
-                }}>
-                  <span style={{ color: '#FF6B35' }}>{terminalText}</span>
-                </div>
-
-                {/* Language Selector */}
-                <div style={{
-                  display: 'flex',
-                  gap: 12,
-                  padding: '16px',
-                  borderTop: '1px solid rgba(255, 107, 53, 0.1)',
-                  background: '#16132A'
-                }}>
-                  {[
-                    { label: '⚛️ React', active: true },
-                    { label: '📝 Concise', active: false },
-                    { label: '🔹 TypeScript', active: false }
-                  ].map((btn) => (
-                    <button
-                      key={btn.label}
-                      style={{
-                        flex: 1,
-                        padding: '10px 12px',
-                        borderRadius: 8,
-                        fontSize: 12,
-                        fontWeight: 500,
-                        border: btn.active ? '1px solid #FF6B35' : '1px solid rgba(255, 107, 53, 0.2)',
-                        background: btn.active ? 'rgba(255, 107, 53, 0.1)' : 'transparent',
-                        color: btn.active ? '#FF6B35' : '#999',
-                        cursor: 'pointer',
-                        transition: 'all 0.2s'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!btn.active) {
-                          e.currentTarget.style.borderColor = '#FF6B35';
-                          e.currentTarget.style.color = '#FF6B35';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!btn.active) {
-                          e.currentTarget.style.borderColor = 'rgba(255, 107, 53, 0.2)';
-                          e.currentTarget.style.color = '#999';
-                        }
-                      }}
-                    >
-                      {btn.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Floating elements */}
-              <div style={{
-                position: 'absolute',
-                bottom: -40,
-                right: -40,
-                width: 200,
-                height: 200,
-                background: 'rgba(255, 107, 53, 0.05)',
-                borderRadius: '50%',
-                filter: 'blur(40px)',
-                pointerEvents: 'none'
-              }} />
-            </motion.div>
-
+            <span style={{ fontSize: 16 }}>●</span> Learn. Code. Succeed.
           </div>
 
-          {/* Stats Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+          {/* Main Headline */}
+          <h1 style={{
+            fontFamily: 'Poppins, sans-serif',
+            fontWeight: 900,
+            fontSize: 72,
+            lineHeight: 1.1,
+            marginBottom: 24,
+            color: '#000',
+            margin: '0 0 24px 0',
+          }}>
+            Master <span style={{ color: ORANGE }}>Coding.</span>
+            <br />
+            Build Your Future.
+          </h1>
+
+          {/* Description */}
+          <p style={{
+            fontSize: 16,
+            color: '#333',
+            lineHeight: 1.7,
+            marginBottom: 40,
+            maxWidth: 500,
+            margin: '0 0 40px 0',
+          }}>
+            From DSA to Full Stack Development – everything you need to become a top developer.
+          </p>
+
+          {/* CTA Button */}
+          <Link
+            to="/get-started"
             style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, 1fr)',
-              gap: 16,
-              marginTop: 80,
-              width: '100%',
-              maxWidth: '100%'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '14px 32px',
+              background: `linear-gradient(135deg, ${ORANGE}, #F48C06)`,
+              color: '#fff',
+              textDecoration: 'none',
+              borderRadius: 50,
+              fontWeight: 700,
+              fontSize: 15,
+              border: 'none',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              boxShadow: '0 4px 15px rgba(232, 93, 4, 0.3)',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px)';
+              e.currentTarget.style.boxShadow = '0 8px 25px rgba(232, 93, 4, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 15px rgba(232, 93, 4, 0.3)';
             }}
           >
-            {stats.map((stat) => (
+            Start Learning Now <ArrowRight size={18} />
+          </Link>
+
+          {/* Feature Icons */}
+          <div style={{
+            display: 'flex',
+            gap: 24,
+            marginTop: 48,
+            alignItems: 'center',
+          }}>
+            {[
+              { icon: '🎓', label: 'Students Learning' },
+              { icon: '</>', label: 'Coding Problems' },
+              { icon: '🎥', label: 'Detailed Video Courses' },
+              { icon: '🏆', label: 'Placement Success' },
+            ].map((item, i) => (
               <div
-                key={stat.label}
+                key={i}
                 style={{
-                  background: '#FFFFFF',
-                  borderRadius: 16,
-                  padding: '28px 20px',
-                  textAlign: 'center',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.05)',
-                  border: '1px solid rgba(0, 0, 0, 0.05)',
-                  transition: 'all 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-8px)';
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(255, 107, 53, 0.15)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.05)';
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 8,
                 }}
               >
                 <div style={{
-                  width: 56,
-                  height: 56,
-                  margin: '0 auto 12px',
-                  borderRadius: 12,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: 24,
-                  background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(100, 150, 255, 0.1))'
+                  fontSize: 28,
+                  marginBottom: 4,
                 }}>
-                  {stat.icon}
+                  {item.icon}
                 </div>
-                <h3 style={{
-                  fontSize: 24,
-                  fontWeight: 800,
-                  color: '#1A0A2E',
-                  margin: '0 0 6px',
-                  fontFamily: 'Poppins, sans-serif'
-                }}>
-                  {stat.value}
-                </h3>
                 <p style={{
-                  fontSize: 13,
-                  color: '#999',
+                  fontSize: 12,
+                  color: '#666',
+                  textAlign: 'center',
                   margin: 0,
-                  fontWeight: 500
+                  fontWeight: 500,
                 }}>
-                  {stat.label}
+                  {item.label}
                 </p>
               </div>
             ))}
-          </motion.div>
-        </div>
-      </section>
+          </div>
 
-      {/* ── FOOTER ────────────────────────────────────────────────────── */}
-      <footer style={{
-        background: '#1A0A2E',
-        color: 'rgba(255,255,255,0.7)',
-        padding: '48px 0 24px'
-      }}>
-        <div className="page-container">
+          {/* Quote Section */}
           <div style={{
-            display: 'grid',
-            gridTemplateColumns: '2fr 1fr 1fr 1fr',
-            gap: 40,
-            marginBottom: 32
+            marginTop: 48,
+            display: 'flex',
+            gap: 16,
+            alignItems: 'center',
           }}>
+            <div style={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              background: `linear-gradient(135deg, ${ORANGE}, #F48C06)`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 24,
+              color: '#fff',
+            }}>
+              "
+            </div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 14 }}>
-                <div style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: 8,
-                  background: '#FF6B35',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: 14,
-                  color: '#fff'
-                }}>
-                  ady.
-                </div>
-                <span style={{ fontFamily: 'Poppins,sans-serif', fontWeight: 800, fontSize: 16, color: '#fff' }}>
-                  ADYAPAN
-                </span>
-              </div>
-              <p style={{ fontSize: 13, lineHeight: 1.6, color: 'rgba(255,255,255,0.5)' }}>
-                AI-Powered Career Development Ecosystem. From learning to placement.
+              <p style={{
+                fontSize: 15,
+                color: '#333',
+                fontStyle: 'italic',
+                margin: '0 0 8px 0',
+              }}>
+                Code today, conquer tomorrow.
               </p>
+              <div style={{
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                background: ORANGE,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+              }}>
+                <ArrowRight size={20} color="#fff" />
+              </div>
             </div>
           </div>
-          <div style={{
-            borderTop: '1px solid rgba(255,255,255,0.08)',
-            paddingTop: 20,
-            display: 'flex',
-            justifyContent: 'space-between',
-            fontSize: 12
-          }}>
-            <p style={{ margin: 0 }}>© {new Date().getFullYear()} ADYAPAN. All rights reserved.</p>
-          </div>
+        </motion.div>
+      </section>
+
+      {/* Bottom Feature Bar */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        style={{
+          background: 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(10px)',
+          border: '1px solid rgba(232, 93, 4, 0.2)',
+          borderRadius: '16px 16px 0 0',
+          padding: '24px 40px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 0,
+        }}
+      >
+        {/* Course Tags */}
+        <div style={{
+          display: 'flex',
+          gap: 12,
+          alignItems: 'center',
+        }}>
+          {['DSA', 'C++', 'Java', 'Python', 'Web Dev', 'Full Stack'].map((course, i) => (
+            <div
+              key={i}
+              style={{
+                padding: '8px 14px',
+                background: 'rgba(232, 93, 4, 0.1)',
+                border: `1px solid rgba(232, 93, 4, 0.3)`,
+                borderRadius: 8,
+                color: ORANGE,
+                fontSize: 12,
+                fontWeight: 600,
+              }}
+            >
+              {course}
+            </div>
+          ))}
         </div>
-      </footer>
-      </div>
+
+        {/* Explore Button */}
+        <Link
+          to="/student/coding-arena"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            padding: '10px 24px',
+            background: `linear-gradient(135deg, ${ORANGE}, #F48C06)`,
+            color: '#fff',
+            textDecoration: 'none',
+            borderRadius: 8,
+            fontWeight: 700,
+            fontSize: 14,
+            border: 'none',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+          }}
+        >
+          Explore Courses <ArrowRight size={16} />
+        </Link>
+      </motion.div>
+
+      {/* Additional Hero Section with Full Image */}
+      <section style={{
+        backgroundImage: 'url(/hero-section.png)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        width: '100%',
+        height: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+      </section>
     </div>
   );
 }
