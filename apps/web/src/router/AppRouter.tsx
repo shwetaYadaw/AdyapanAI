@@ -30,6 +30,8 @@ const CodingPortalPage     = lazy(() => import('../pages/student/CodingPortalPag
 const ContestsPage         = lazy(() => import('../pages/student/ContestsPage'));
 const TcsNqtPrepPage       = lazy(() => import('../pages/student/TcsNqtPrepPage'));
 const AptitudePage         = lazy(() => import('../pages/student/AptitudePage'));
+const AptitudeQuizPage     = lazy(() => import('../pages/student/AptitudeQuizPage'));
+const CodingTopicPage      = lazy(() => import('../pages/student/CodingTopicPage'));
 
 // Teacher
 const TeacherDashboard   = lazy(() => import('../pages/teacher/DashboardPage'));
@@ -96,10 +98,12 @@ export default function AppRouter() {
             <Route path="community" element={<Navigate to="/student/dashboard" replace />} />
             <Route path="ai" element={<AIFeaturesPage />} />
             <Route path="challenges" element={<CodingChallengesPage />} />
+            <Route path="challenges/topic/:topicKey" element={<CodingTopicPage />} />
             <Route path="challenges/:slug" element={<CodingPortalPage />} />
             <Route path="contests" element={<ContestsPage />} />
             <Route path="tcs-nqt" element={<TcsNqtPrepPage />} />
             <Route path="aptitude" element={<AptitudePage />} />
+            <Route path="aptitude/:module/:topicSlug" element={<AptitudeQuizPage />} />
           </Route>
 
           {/* Teacher */}

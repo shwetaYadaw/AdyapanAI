@@ -1,23 +1,24 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, ChevronDown, ChevronUp, Lock, HelpCircle, GraduationCap, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+﻿import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Brain, Lock, GraduationCap, ArrowRight, BookOpen } from 'lucide-react';
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
+import { topicSlug } from './aptitudeData';
 
-interface Question {
+export interface Question {
   question: string;
   options: string[];
   answer: string;
   explanation: string;
 }
 
-interface Topic {
+export interface Topic {
   name: string;
   pageNumber: number;
   questions: Question[];
 }
 
-const TCS_NUMERICAL_TOPICS: Topic[] = [
+export const TCS_NUMERICAL_TOPICS: Topic[] = [
   {
     name: 'Percentage',
     pageNumber: 4,
@@ -196,19 +197,19 @@ const TCS_NUMERICAL_TOPICS: Topic[] = [
         explanation: '72 = 2^3 * 3^2. Number of factors = (3+1)*(2+1) = 12. Product of factors = N^(F/2) = 72^(12/2) = 72^6.'
       },
       {
-        question: "Consider the expression: (999….9)² , if there are a total of 2020 9's, find the total number of digits and the digit sum of the result.",
+        question: "Consider the expression: (999â€¦.9)Â² , if there are a total of 2020 9's, find the total number of digits and the digit sum of the result.",
         options: ['Digits: 4040, Digit Sum: 18180', 'Digits: 2020, Digit Sum: 9090', 'Digits: 4040, Digit Sum: 18171', 'Digits: 4039, Digit Sum: 18180'],
         answer: 'Digits: 4040, Digit Sum: 18180',
         explanation: '(999...9)^2 has a pattern: N-1 nines, one 8, N-1 zeros, one 1. Digits = 2020 * 2 = 4040. Sum of digits = 2019 * 9 + 8 + 0 + 1 = 18180.'
       },
       {
-        question: "Consider the expression: (999….9)³ , if there are a total of 2020 9's, find the total number of digits and the digit sum of the result.",
+        question: "Consider the expression: (999â€¦.9)Â³ , if there are a total of 2020 9's, find the total number of digits and the digit sum of the result.",
         options: ['Digits: 6060, Digit Sum: 36360', 'Digits: 6060, Digit Sum: 18180', 'Digits: 4040, Digit Sum: 36360', 'Digits: 6059, Digit Sum: 36359'],
         answer: 'Digits: 6060, Digit Sum: 36360',
         explanation: 'For N nines, (99..9)^3 has 3N digits (6060 here). Sum of digits = 18 * N = 18 * 2020 = 36360.'
       },
       {
-        question: 'The square root of 12345678987654321 is nnnnnn…. upto ‘p’ times, find the sum of n and p.',
+        question: 'The square root of 12345678987654321 is nnnnnnâ€¦. upto â€˜pâ€™ times, find the sum of n and p.',
         options: ['9', '10', '11', '12'],
         answer: '10',
         explanation: 'The square root of 12345678987654321 is 111111111 (nine 1s). So n = 1, p = 9. Sum = 1 + 9 = 10.'
@@ -333,16 +334,16 @@ const TCS_NUMERICAL_TOPICS: Topic[] = [
         explanation: 'Sum of interior angles of a pentagon is (5-2)*180 = 540 degrees. Summing the variables solves to x+y = 180.'
       },
       {
-        question: 'One angle of a regular polygon measures 177°. This polygon has a total of ‘n’ sides, ‘n’ is a multiple of which of the following numbers?',
+        question: 'One angle of a regular polygon measures 177Â°. This polygon has a total of â€˜nâ€™ sides, â€˜nâ€™ is a multiple of which of the following numbers?',
         options: ['5', '8', '10', '12'],
         answer: '8',
-        explanation: 'Each interior angle = 177° => Each exterior angle = 180° - 177° = 3°. Number of sides n = 360 / 3 = 120. 120 is a multiple of 8.'
+        explanation: 'Each interior angle = 177Â° => Each exterior angle = 180Â° - 177Â° = 3Â°. Number of sides n = 360 / 3 = 120. 120 is a multiple of 8.'
       },
       {
         question: 'Find the sum of the measures of one interior and one exterior angle of a regular 940-gon.',
-        options: ['180°', '360°', '540°', '940°'],
-        answer: '180°',
-        explanation: 'The sum of an interior angle and its adjacent exterior angle at any vertex of any polygon is always 180°.'
+        options: ['180Â°', '360Â°', '540Â°', '940Â°'],
+        answer: '180Â°',
+        explanation: 'The sum of an interior angle and its adjacent exterior angle at any vertex of any polygon is always 180Â°.'
       },
       {
         question: 'What is the measure of the radius of the circle inscribed in a triangle whose sides measure 8, 15 and 17 units?',
@@ -441,7 +442,7 @@ const TCS_NUMERICAL_TOPICS: Topic[] = [
         explanation: 'Using the properties of ratios, (mp+nr+ot)/(mq+ns+ou) = p/q = 2 : 3.'
       },
       {
-        question: 'If a : b = c : d = 2 : 3, then what is the value of (ab + cd) / (b² + d²)?',
+        question: 'If a : b = c : d = 2 : 3, then what is the value of (ab + cd) / (bÂ² + dÂ²)?',
         options: ['2/3', '4/9', '2', '3/2'],
         answer: '2/3',
         explanation: 'Substitute a = (2/3)b and c = (2/3)d. Numerator = (2/3)b^2 + (2/3)d^2 = (2/3)(b^2 + d^2). Ratios match: 2/3.'
@@ -525,13 +526,13 @@ const TCS_NUMERICAL_TOPICS: Topic[] = [
     pageNumber: 291,
     questions: [
       {
-        question: 'If 22³ + 23³ + 24³ + ….. + 87³ + 88³ is divided by 110, then the remainder will be:',
+        question: 'If 22Â³ + 23Â³ + 24Â³ + â€¦.. + 87Â³ + 88Â³ is divided by 110, then the remainder will be:',
         options: ['0', '1', '55', '109'],
         answer: '0',
         explanation: 'Pair terms: (22^3 + 88^3) + (23^3 + 87^3) ... Each pair (x^3 + y^3) is divisible by (x+y) = 110. Hence the remainder is 0.'
       },
       {
-        question: 'If 16⁷ + 17⁷ + 18⁷ + 19⁷ is divided by 5, 7, 14 and 35 and remainder thus obtained are R1, R2, R3 and R4 respectively. Find R1 + R2 + R3 + R4.',
+        question: 'If 16â· + 17â· + 18â· + 19â· is divided by 5, 7, 14 and 35 and remainder thus obtained are R1, R2, R3 and R4 respectively. Find R1 + R2 + R3 + R4.',
         options: ['0', '7', '14', '35'],
         answer: '0',
         explanation: 'For sum of odd powers: 16^7 + 19^7 is divisible by 35 (and hence 5, 7). 17^7 + 18^7 is also divisible by 35. Therefore the sum is divisible by all dividers, rendering R1=R2=R3=R4=0. Sum is 0.'
@@ -669,7 +670,7 @@ const TCS_NUMERICAL_TOPICS: Topic[] = [
         explanation: 'Number of ways = 10P4 = 10 * 9 * 8 * 7 = 5040.'
       },
       {
-        question: 'In how many ways can we form a 5 lettered word with no repetition, starting with ‘a’ and ending with ‘z’?',
+        question: 'In how many ways can we form a 5 lettered word with no repetition, starting with â€˜aâ€™ and ending with â€˜zâ€™?',
         options: ['12144', '13824', '15600', '12000'],
         answer: '12144',
         explanation: 'Remaining 3 letters must be chosen from 24 remaining alphabets. Number of ways = 24 * 23 * 22 = 12144.'
@@ -969,7 +970,7 @@ const TCS_NUMERICAL_TOPICS: Topic[] = [
         explanation: 'Total distance = 150 + 110 = 260m. Speed = 90 * 5/18 = 25 m/s. Time = 260 / 25 = 10.4 seconds.'
       },
       {
-        question: 'Hemkunt Express is travelling at a speed of 72 kmph. It crosses Kala Bakra Station’s platform of length 220 meters in 15 seconds. Find the length of the train in meters.',
+        question: 'Hemkunt Express is travelling at a speed of 72 kmph. It crosses Kala Bakra Stationâ€™s platform of length 220 meters in 15 seconds. Find the length of the train in meters.',
         options: ['80m', '100m', '120m', '150m'],
         answer: '80m',
         explanation: 'Speed = 72 * 5/18 = 20 m/s. Total distance = Speed * Time = 20 * 15 = 300m. Train length = 300 - 220 = 80 meters.'
@@ -990,7 +991,7 @@ const TCS_NUMERICAL_TOPICS: Topic[] = [
   }
 ];
 
-const TCS_REASONING_TOPICS: Topic[] = [
+export const TCS_REASONING_TOPICS: Topic[] = [
   {
     name: 'Logical Deduction',
     pageNumber: 5,
@@ -1254,7 +1255,7 @@ const TCS_REASONING_TOPICS: Topic[] = [
         explanation: 'B and R are siblings (children of A). Since C is B\'s child, C is R\'s niece or nephew.'
       },
       {
-        question: 'Pointing to a photograph, Asha said, “His mother\'s only daughter is my mother.” How is Asha related to the man in the photograph?',
+        question: 'Pointing to a photograph, Asha said, â€œHis mother\'s only daughter is my mother.â€ How is Asha related to the man in the photograph?',
         options: ['Sister', 'Mother', 'Niece', 'Cousin'],
         answer: 'Niece',
         explanation: 'The man\'s mother\'s only daughter is the man\'s sister. Since the man\'s sister is Asha\'s mother, Asha is the man\'s niece.'
@@ -1438,231 +1439,110 @@ const TCS_REASONING_TOPICS: Topic[] = [
 ];
 
 export default function AptitudePage() {
+  const navigate = useNavigate();
   const [selectedSubModule, setSelectedSubModule] = useState<'tcs-numerical' | 'tcs-reasoning'>('tcs-numerical');
-  const [expandedTopic, setExpandedTopic] = useState<string | null>(null);
-
-  // States to track student selections
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [showExplanations, setShowExplanations] = useState<Record<string, boolean>>({});
-
-  const toggleTopic = (topicName: string) => {
-    setExpandedTopic(expandedTopic === topicName ? null : topicName);
-  };
-
-  const handleSelectOption = (key: string, option: string) => {
-    if (selectedAnswers[key]) return; // Answer already locked
-    setSelectedAnswers((prev) => ({ ...prev, [key]: option }));
-  };
 
   const currentTopics = selectedSubModule === 'tcs-numerical' ? TCS_NUMERICAL_TOPICS : TCS_REASONING_TOPICS;
 
+  const handleTopicClick = (topicName: string) => {
+    const slug = topicSlug(topicName);
+    navigate(`/student/aptitude/${selectedSubModule}/${slug}`);
+  };
+
   return (
-    <div className="space-y-6 max-w-6xl mx-auto p-4 sm:p-6">
-        
-        {/* Header Banner */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
-          <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
-            <Brain className="w-96 h-96 text-white" />
-          </div>
-          <div className="relative z-10 max-w-2xl space-y-4">
-            <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
-              Aptitude Preparation
-            </h1>
-            <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-              Master quantitative ability, logical reasoning, and verbal skills chapter-wise to ace top MNC placement assessments.
-            </p>
-          </div>
+    <div className="page-wrapper">
+
+      {/* Header Banner */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
+        <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
+          <Brain className="w-96 h-96 text-white" />
         </div>
-
-        {/* Sub-modules Selector */}
-        <div className="flex gap-4 border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto">
-          <button
-            onClick={() => {
-              setSelectedSubModule('tcs-numerical');
-              setExpandedTopic(null);
-            }}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
-              selectedSubModule === 'tcs-numerical'
-                ? 'bg-primary-500 text-white shadow'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            TCS Numerical Ability
-          </button>
-          <button
-            onClick={() => {
-              setSelectedSubModule('tcs-reasoning');
-              setExpandedTopic(null);
-            }}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
-              selectedSubModule === 'tcs-reasoning'
-                ? 'bg-primary-500 text-white shadow'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            TCS Reasoning Ability
-          </button>
-          <button
-            disabled
-            className="px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 dark:text-gray-600 cursor-not-allowed flex items-center gap-1.5 whitespace-nowrap"
-          >
-            <Lock className="w-3.5 h-3.5" /> Verbal Ability (Locked)
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
-                <GraduationCap className="w-5 h-5 text-primary-500" /> {selectedSubModule === 'tcs-numerical' ? 'TCS Numerical Ability' : 'TCS Reasoning Ability'} Chapters
-              </h2>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Select a chapter below to view questions and start practicing.</p>
-            </div>
-            <Badge variant="primary">{currentTopics.length} Chapters</Badge>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {currentTopics.map((topic) => {
-              const isExpanded = expandedTopic === topic.name;
-              return (
-                <Card key={topic.name} padding="none" className="overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm transition-all duration-200">
-                  <button
-                    onClick={() => toggleTopic(topic.name)}
-                    className="w-full flex items-center justify-between p-5 text-left hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/30 flex items-center justify-center font-bold text-xs text-primary-600 dark:text-primary-400">
-                        Ch
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-sm text-gray-900 dark:text-white text-wrap pr-2">{topic.name}</h3>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 flex-shrink-0">
-                      <Badge variant="gray" className="text-xxs font-semibold">
-                        {topic.questions.length} Questions
-                      </Badge>
-                      {isExpanded ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
-                    </div>
-                  </button>
-
-                  <AnimatePresence>
-                    {isExpanded && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="border-t border-gray-50 dark:border-gray-800/60 p-5 bg-gray-50/50 dark:bg-gray-900/10 space-y-6"
-                      >
-                        {topic.questions.length === 0 ? (
-                          <div className="text-center py-8 space-y-2">
-                            <HelpCircle className="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto" />
-                            <p className="text-xs font-medium text-gray-600 dark:text-gray-400">No questions added yet</p>
-                            <p className="text-xxs text-gray-400 max-w-xs mx-auto">
-                              Once you share the questions for the **{topic.name}** chapter, they will be loaded here for you to practice.
-                            </p>
-                          </div>
-                        ) : (
-                          <div className="space-y-6">
-                            {topic.questions.map((q, qIdx) => {
-                              const questionKey = `${topic.name}-${qIdx}`;
-                              const selected = selectedAnswers[questionKey];
-                              const isExplanationOpen = showExplanations[questionKey];
-
-                              return (
-                                <div key={qIdx} className="space-y-3 p-4 rounded-2xl bg-white dark:bg-gray-950 border border-gray-100 dark:border-gray-800/70 shadow-2xs">
-                                  <div className="flex gap-2">
-                                    <span className="text-xs font-bold text-primary-500 mt-0.5">Q{qIdx + 1}.</span>
-                                    <h4 className="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-relaxed">
-                                      {q.question}
-                                    </h4>
-                                  </div>
-
-                                  {/* Options Grid */}
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1.5">
-                                    {q.options.map((opt) => {
-                                      const isSelected = selected === opt;
-                                      const isCorrect = opt === q.answer;
-                                      const showResult = selected !== undefined;
-
-                                      let btnClass = "border-gray-200 hover:border-gray-300 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950 text-gray-700 dark:text-gray-300";
-                                      let icon = null;
-
-                                      if (isSelected) {
-                                        if (isCorrect) {
-                                          btnClass = "border-green-500 bg-green-50/40 dark:bg-green-950/20 text-green-700 dark:text-green-400";
-                                          icon = <CheckCircle2 className="w-4 h-4 text-green-500" />;
-                                        } else {
-                                          btnClass = "border-red-500 bg-red-50/40 dark:bg-red-950/20 text-red-700 dark:text-red-400";
-                                          icon = <XCircle className="w-4 h-4 text-red-500" />;
-                                        }
-                                      } else if (showResult && isCorrect) {
-                                        btnClass = "border-green-500 bg-green-50/20 dark:bg-green-950/10 text-green-600 dark:text-green-400";
-                                      }
-
-                                      return (
-                                        <button
-                                          key={opt}
-                                          disabled={showResult}
-                                          onClick={() => handleSelectOption(questionKey, opt)}
-                                          className={`w-full p-3 rounded-xl border text-xxs font-medium transition-all flex items-center justify-between text-left ${btnClass}`}
-                                        >
-                                          <span>{opt}</span>
-                                          {icon}
-                                        </button>
-                                      );
-                                    })}
-                                  </div>
-
-                                  {/* Action row & Explanation */}
-                                  {selected !== undefined && (
-                                    <div className="pt-2 border-t border-gray-50 dark:border-gray-800/40 mt-3 space-y-3">
-                                      <div className="flex items-center justify-between">
-                                        <div className="flex items-center gap-1.5">
-                                          {selected === q.answer ? (
-                                            <span className="text-xxs font-bold text-green-600 flex items-center gap-1">
-                                              <CheckCircle2 className="w-3.5 h-3.5" /> Correct Answer
-                                            </span>
-                                          ) : (
-                                            <span className="text-xxs font-bold text-red-500 flex items-center gap-1">
-                                              <AlertCircle className="w-3.5 h-3.5" /> Incorrect (Correct: {q.answer})
-                                            </span>
-                                          )}
-                                        </div>
-                                        <button
-                                          onClick={() => setShowExplanations((prev) => ({ ...prev, [questionKey]: !isExplanationOpen }))}
-                                          className="text-xxs font-bold text-primary-500 hover:text-primary-600 transition-colors"
-                                        >
-                                          {isExplanationOpen ? 'Hide Solution' : 'View Solution'}
-                                        </button>
-                                      </div>
-
-                                      {isExplanationOpen && (
-                                        <motion.div
-                                          initial={{ opacity: 0, y: -5 }}
-                                          animate={{ opacity: 1, y: 0 }}
-                                          className="p-3.5 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800/60 text-xxs text-gray-600 dark:text-gray-400 leading-relaxed space-y-1"
-                                        >
-                                          <p className="font-bold text-gray-800 dark:text-gray-200">Step-by-Step Explanation:</p>
-                                          <p className="whitespace-pre-wrap">{q.explanation}</p>
-                                        </motion.div>
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </Card>
-              );
-            })}
-          </div>
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
+            Aptitude Preparation
+          </h1>
+          <p className="text-white/90 text-sm sm:text-base leading-relaxed">
+            Master quantitative ability, logical reasoning, and verbal skills chapter-wise to ace top MNC placement assessments.
+          </p>
         </div>
       </div>
+
+      {/* Sub-module Selector */}
+      <div className="flex gap-4 border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto">
+        <button
+          onClick={() => setSelectedSubModule('tcs-numerical')}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
+            selectedSubModule === 'tcs-numerical'
+              ? 'bg-primary-500 text-white shadow'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+          }`}
+        >
+          TCS Numerical Ability
+        </button>
+        <button
+          onClick={() => setSelectedSubModule('tcs-reasoning')}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
+            selectedSubModule === 'tcs-reasoning'
+              ? 'bg-primary-500 text-white shadow'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+          }`}
+        >
+          TCS Reasoning Ability
+        </button>
+        <button
+          disabled
+          className="px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 dark:text-gray-600 cursor-not-allowed flex items-center gap-1.5 whitespace-nowrap"
+        >
+          <Lock className="w-3.5 h-3.5" /> Verbal Ability (Locked)
+        </button>
+      </div>
+
+      {/* Chapter Grid */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
+              <GraduationCap className="w-5 h-5 text-primary-500" />
+              {selectedSubModule === 'tcs-numerical' ? 'TCS Numerical Ability' : 'TCS Reasoning Ability'} Chapters
+            </h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+              Click a chapter to open the question set and start practising.
+            </p>
+          </div>
+          <Badge variant="primary">{currentTopics.length} Chapters</Badge>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {currentTopics.map((topic, idx) => (
+            <Card
+              key={topic.name}
+              padding="none"
+              className="overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 cursor-pointer group"
+              onClick={() => handleTopicClick(topic.name)}
+            >
+              <div className="p-5 flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3 flex-1 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/30 flex items-center justify-center font-bold text-xs text-primary-600 dark:text-primary-400 flex-shrink-0">
+                    {idx + 1}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="font-semibold text-sm text-gray-900 dark:text-white leading-snug">
+                      {topic.name}
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
+                      <BookOpen className="w-3 h-3" /> {topic.questions.length} Questions
+                    </p>
+                  </div>
+                </div>
+                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-colors">
+                  <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
+

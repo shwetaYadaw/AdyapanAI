@@ -47,7 +47,7 @@ export default function ResumeBuilderPage() {
   const scoreBg = (score: number) => score >= 80 ? 'from-green-500 to-emerald-400' : score >= 60 ? 'from-yellow-500 to-amber-400' : 'from-red-500 to-rose-400';
 
   return (
-    <div className="space-y-6">
+    <div className="page-wrapper space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Resume Builder</h1>

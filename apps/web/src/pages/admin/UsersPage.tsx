@@ -65,7 +65,7 @@ export default function AdminUsersPage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="page-wrapper space-y-5">
       <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Manage Users</h1>
       <div className="flex flex-wrap gap-3">
         <div className="relative flex-1 min-w-48">

@@ -257,6 +257,15 @@
     .page-container { padding-left: 32px; padding-right: 32px; }
   }
 
+  /* ── Page Wrapper — full-width top, padded content ── */
+  .page-wrapper {
+    width: 100%;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 24px 20px 64px;
+  }
+
   /* ── Skeleton ── */
   .skeleton {
     background: linear-gradient(90deg, #F5E4D4 25%, #FFF0E0 50%, #F5E4D4 75%);

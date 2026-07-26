@@ -116,11 +116,7 @@ export default function LoginPage() {
         <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}
           style={{ textAlign:'center', position:'relative', zIndex:1 }}>
           {/* Logo */}
-          <div style={{ width:96, height:96, borderRadius:'50%', background:'linear-gradient(135deg,#FAA307,#FFCF5C)',
-            display:'flex', alignItems:'center', justifyContent:'center', margin:'0 auto 24px',
-            boxShadow:'0 8px 32px rgba(0,0,0,0.2)' }}>
-            <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:22, color:'#7C2D00' }}>ady.</span>
-          </div>
+          <img src="/logo.svg" alt="ADYAPAN" style={{ width:96, height:96, borderRadius:'50%', margin:'0 auto 24px', display:'block', boxShadow:'0 8px 32px rgba(0,0,0,0.2)', objectFit:'cover' }} />
           <h1 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:36, color:'#fff',
             letterSpacing:4, marginBottom:12 }}>ADYAPAN</h1>
           <p style={{ color:'rgba(255,255,255,0.85)', fontSize:15, lineHeight:1.6, maxWidth:260, margin:'0 auto' }}>
@@ -147,10 +143,7 @@ export default function LoginPage() {
           <div style={{ textAlign:'center', marginBottom:32 }}>
             <Link to="/" style={{ textDecoration:'none', display:'inline-block' }}>
               <div style={{ display:'inline-flex', alignItems:'center', gap:10 }}>
-                <div style={{ width:44, height:44, borderRadius:'50%', background:`linear-gradient(135deg,${ORANGE},${AMBER})`,
-                  display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:12, color:'#fff' }}>ady.</span>
-                </div>
+                <img src="/logo.svg" alt="ADYAPAN" style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover' }} />
                 <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:20, color:'#1A0A00' }}>ADYAPAN</span>
               </div>
             </Link>

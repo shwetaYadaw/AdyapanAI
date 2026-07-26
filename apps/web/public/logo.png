@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FBB040"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </radialGradient>
+    <radialGradient id="shine" cx="40%" cy="25%" r="50%">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.5)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+    </radialGradient>
+    <clipPath id="circle">
+      <circle cx="100" cy="100" r="95"/>
+    </clipPath>
+  </defs>
+  <!-- Main circle -->
+  <circle cx="100" cy="100" r="95" fill="url(#bg)"/>
+  <!-- Glossy shine overlay -->
+  <ellipse cx="85" cy="62" rx="55" ry="38" fill="url(#shine)" clip-path="url(#circle)" opacity="0.6"/>
+  <!-- "ady." text -->
+  <text x="100" y="108" font-family="Arial, sans-serif" font-weight="900" font-size="46" fill="#7C2D12" text-anchor="middle" letter-spacing="-1">ady.</text>
+  <!-- "ADYAPAN" text -->
+  <text x="100" y="135" font-family="Arial, sans-serif" font-weight="600" font-size="16" fill="#92400E" text-anchor="middle" letter-spacing="3">ADYAPAN</text>
+</svg>
