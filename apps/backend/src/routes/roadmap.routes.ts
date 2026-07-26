@@ -8,10 +8,18 @@ import { AppError } from '../middleware/errorHandler.middleware';
 const router = Router();
 const judge = new JudgeService();
 
+function getPool() {
+  const pool = getMysqlPool();
+  if (!pool) {
+    throw new AppError('MySQL pool is not available. Roadmap routes require MySQL or migration to Prisma.', 503);
+  }
+  return pool;
+}
+
 // GET /api/v1/roadmap/phases
 router.get('/phases', authenticate, async (req, res, next) => {
   try {
-    const pool = getMysqlPool();
+    const pool = getPool();
     const [phases]: any = await pool.query('SELECT * FROM roadmap_phases ORDER BY phase_number ASC');
     
     // Also attach completion/progress counters if possible
@@ -44,7 +52,7 @@ router.get('/phases', authenticate, async (req, res, next) => {
 // GET /api/v1/roadmap/phases/:phaseNumber/questions
 router.get('/phases/:phaseNumber/questions', authenticate, async (req, res, next) => {
   try {
-    const pool = getMysqlPool();
+    const pool = getPool();
     const phaseNum = parseInt(req.params.phaseNumber, 10);
 
     const [phaseRows]: any = await pool.query('SELECT id FROM roadmap_phases WHERE phase_number = ?', [phaseNum]);
@@ -73,7 +81,7 @@ router.get('/phases/:phaseNumber/questions', authenticate, async (req, res, next
 // GET /api/v1/roadmap/questions/:slug
 router.get('/questions/:slug', authenticate, async (req, res, next) => {
   try {
-    const pool = getMysqlPool();
+    const pool = getPool();
     const [rows]: any = await pool.query(
       'SELECT id, title, slug, statement, difficulty, topics, companies, time_limit as timeLimit, memory_limit as memoryLimit, input_format as inputFormat, output_format as outputFormat, constraints, sample_input as sampleInput, sample_output as sampleOutput, templates, xp_reward as xpReward FROM roadmap_questions WHERE slug = ?',
       [req.params.slug]
@@ -95,7 +103,7 @@ router.get('/questions/:slug', authenticate, async (req, res, next) => {
 router.post('/questions/:id/run', authenticate, async (req, res, next) => {
   try {
     const { code, language } = req.body;
-    const pool = getMysqlPool();
+    const pool = getPool();
 
     const [rows]: any = await pool.query(
       'SELECT sample_input, sample_output, time_limit FROM roadmap_questions WHERE id = ?',
@@ -131,7 +139,7 @@ router.post('/questions/:id/run', authenticate, async (req, res, next) => {
 router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
   try {
     const { code, language } = req.body;
-    const pool = getMysqlPool();
+    const pool = getPool();
 
     const [rows]: any = await pool.query(
       'SELECT test_cases, time_limit, xp_reward FROM roadmap_questions WHERE id = ?',

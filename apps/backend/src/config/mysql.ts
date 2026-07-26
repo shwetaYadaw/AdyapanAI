@@ -11,7 +11,7 @@ export async function initializeMysql(): Promise<void> {
   }
 }
 
-export function getMysqlPool(): null {
+export function getMysqlPool(): any {
   logger.warn('⚠️ getMysqlPool called but MySQL is no longer used - use Prisma client instead');
   return null;
 }

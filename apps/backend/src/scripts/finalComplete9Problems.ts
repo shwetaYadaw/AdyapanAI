@@ -82,7 +82,7 @@ async function finalComplete9() {
 
     console.log('\n🟡 DATA STRUCTURES & ALGORITHMS (Medium):');
     sorted.filter((p: any) => p.difficulty === 'medium').forEach(p => {
-      const primaryTopic = p.topics[0];
+      const primaryTopic = Array.isArray(p.topics) ? p.topics[0] : p.topics;
       console.log(`   • ${p.title} (${p.xpReward} XP) - ${primaryTopic} - ${p.slug}`);
     });
 
