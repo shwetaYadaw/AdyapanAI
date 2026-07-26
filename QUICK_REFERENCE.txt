@@ -1,0 +1,332 @@
+╔════════════════════════════════════════════════════════════════╗
+║           ADYAPAN - QUICK REFERENCE CARD                       ║
+║                                                                ║
+║  Error: "Something went wrong"                                 ║
+║  Cause: Backend (port 5000) not running                        ║
+║  Fix:   Start both backend AND frontend                        ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+FASTEST FIX (30 seconds):
+════════════════════════════════════════════════════════════════
+
+1. Open PowerShell
+2. Run:
+   
+   cd c:\Users\HP\Downloads\AdyapanAI
+   .\start-adyapan.ps1
+
+3. Wait 2 minutes for browser to open
+4. Done! ✅
+
+
+MANUAL FIX (if script doesn't work):
+════════════════════════════════════════════════════════════════
+
+Terminal 1:
+  cd c:\Users\HP\Downloads\AdyapanAI
+  yarn dev:backend
+  [Wait for "port 5000" message]
+  [KEEP THIS WINDOW OPEN]
+
+Terminal 2 (NEW):
+  cd c:\Users\HP\Downloads\AdyapanAI
+  yarn dev:web
+  [Wait for "port 3000" message]
+  [KEEP THIS WINDOW OPEN]
+
+Browser:
+  http://localhost:3000
+  [You should see login page ✅]
+
+
+PORTS & SERVICES:
+════════════════════════════════════════════════════════════════
+
+Port 5000 → Backend API (Express.js + TypeScript)
+Port 3000 → Frontend (React + Vite)
+Port 51213 → Database (PostgreSQL via Prisma)
+
+All must be running!
+
+
+KILL STUCK PROCESSES:
+════════════════════════════════════════════════════════════════
+
+Port 5000 stuck:
+  netstat -ano | findstr :5000
+  taskkill /PID [PID] /F
+
+Port 3000 stuck:
+  netstat -ano | findstr :3000
+  taskkill /PID [PID] /F
+
+Kill all node:
+  Get-Process node | Stop-Process -Force
+
+
+INSTALL DEPENDENCIES:
+════════════════════════════════════════════════════════════════
+
+cd c:\Users\HP\Downloads\AdyapanAI
+yarn install
+
+[Wait 2-3 minutes]
+
+
+DIAGNOSTICS:
+════════════════════════════════════════════════════════════════
+
+Run:
+  .\diagnose-error.ps1
+
+Tells you what's wrong and how to fix it.
+
+
+HELPFUL FILES:
+════════════════════════════════════════════════════════════════
+
+📄 FIX_NOW.md                  - Ultra quick 5-min fix
+📄 startup-guide.md            - Step-by-step detailed guide
+📄 QUICK_FIX_NOT_WORKING.md    - Troubleshooting & common errors
+📄 ERROR_FIX_SUMMARY.md        - Complete reference
+📄 VISUAL_STARTUP_GUIDE.txt    - Diagrams & visual explanation
+🔧 diagnose-error.ps1          - Automated diagnostic
+🚀 start-adyapan.ps1           - Automated startup
+
+
+TEST CONNECTIVITY:
+════════════════════════════════════════════════════════════════
+
+Backend running?
+  curl http://localhost:5000/api/health
+
+Frontend running?
+  curl http://localhost:3000
+
+
+ENVIRONMENT:
+════════════════════════════════════════════════════════════════
+
+View config:
+  cat .env
+
+Must have:
+  DATABASE_URL="..."
+
+
+COMMON ERRORS & FIXES:
+════════════════════════════════════════════════════════════════
+
+Error: "Failed to fetch dynamically imported module"
+  → Backend not running
+  → Fix: yarn dev:backend in Terminal 1
+
+Error: "Cannot connect to database"
+  → DATABASE_URL invalid or missing in .env
+  → Fix: Check .env file
+
+Error: "Port already in use"
+  → Something else using port 5000 or 3000
+  → Fix: Kill process (see above)
+
+Error: "Cannot find module"
+  → Dependencies not installed
+  → Fix: yarn install
+
+Error: Vite errors
+  → Frontend not starting
+  → Fix: Check Terminal 2, look for error message
+
+
+PROJECT STRUCTURE:
+════════════════════════════════════════════════════════════════
+
+apps/backend/    - Express.js API server
+apps/web/        - React frontend app
+apps/ai-service/ - AI microservice
+packages/shared/ - Shared utilities
+.env             - Environment variables
+
+
+WORKFLOW:
+════════════════════════════════════════════════════════════════
+
+1. Open Terminal 1
+2. cd c:\Users\HP\Downloads\AdyapanAI
+3. yarn dev:backend
+   → Wait for "port 5000" message
+
+4. Open Terminal 2
+5. cd c:\Users\HP\Downloads\AdyapanAI
+6. yarn dev:web
+   → Wait for "port 3000" message
+
+7. Open Browser
+8. Go to http://localhost:3000
+   → Should see login page ✅
+
+
+STOPPING SERVICES:
+════════════════════════════════════════════════════════════════
+
+In Terminal 1:
+  Press Ctrl+C
+
+In Terminal 2:
+  Press Ctrl+C
+
+Services will shut down gracefully.
+
+
+RESTARTING:
+════════════════════════════════════════════════════════════════
+
+After stopping:
+
+Terminal 1:
+  yarn dev:backend
+
+Terminal 2:
+  yarn dev:web
+
+Browser:
+  http://localhost:3000
+
+
+PRODUCTION COMMANDS:
+════════════════════════════════════════════════════════════════
+
+Build frontend:
+  yarn build:web
+
+Build backend:
+  yarn build:backend
+
+Run tests:
+  yarn test
+
+Run linter:
+  yarn lint
+
+
+NODE & YARN VERSIONS:
+════════════════════════════════════════════════════════════════
+
+Check Node:
+  node --version
+  (Should be v20+)
+
+Check Yarn:
+  yarn --version
+  (Should be 1.22+)
+
+Update Yarn:
+  npm install -g yarn@latest
+
+
+DEBUGGING TIPS:
+════════════════════════════════════════════════════════════════
+
+1. Check browser console (F12)
+   Look for red errors and network failures
+
+2. Check Terminal 1 (Backend)
+   Look for error messages starting with ❌
+
+3. Check Terminal 2 (Frontend)
+   Look for build errors or warning messages
+
+4. Check .env file
+   Verify DATABASE_URL is correct
+
+5. Run diagnostic
+   .\diagnose-error.ps1
+
+
+WHEN YOU'RE STUCK:
+════════════════════════════════════════════════════════════════
+
+Option 1 (Quick):
+  Read FIX_NOW.md (5 minutes)
+
+Option 2 (Detailed):
+  Read startup-guide.md (15 minutes)
+
+Option 3 (Comprehensive):
+  Read QUICK_FIX_NOT_WORKING.md (30 minutes)
+
+Option 4 (Automated):
+  Run .\diagnose-error.ps1
+
+
+DATABASE OPERATIONS:
+════════════════════════════════════════════════════════════════
+
+Check problem count:
+  cd apps/backend
+  npx ts-node --transpile-only src/scripts/checkDbCount.ts
+
+Update a problem:
+  npx ts-node --transpile-only src/scripts/updateJumpGameProblem.ts
+
+View database:
+  npx prisma studio
+
+
+KEY RULES TO REMEMBER:
+════════════════════════════════════════════════════════════════
+
+✅ Backend starts FIRST
+✅ Frontend starts SECOND
+✅ Keep both terminals OPEN
+✅ Browser opens LAST
+✅ Never close Terminal 1 or 2 while developing
+✅ Always check port 5000 is ready before port 3000
+
+
+SUCCESS CHECKLIST:
+════════════════════════════════════════════════════════════════
+
+☑ Terminal 1: Backend running on port 5000
+☑ Terminal 2: Frontend running on port 3000
+☑ Browser: Opens http://localhost:3000
+☑ Browser: Shows login page (no errors)
+☑ Console (F12): No red error messages
+☑ Both terminals: Still running
+
+
+TECH STACK:
+════════════════════════════════════════════════════════════════
+
+Backend:    Express.js, TypeScript, Node.js
+Frontend:   React 18, Vite, TailwindCSS
+Database:   PostgreSQL (via Prisma)
+Build:      Yarn workspaces
+API Style:  RESTful
+
+
+CONTACT / HELP:
+════════════════════════════════════════════════════════════════
+
+If still stuck after all guides:
+
+1. Run: .\diagnose-error.ps1
+   (Tells you exactly what's wrong)
+
+2. Read the error message it shows
+
+3. Follow the suggested fix
+
+4. If still stuck, check the detailed guides
+
+
+═══════════════════════════════════════════════════════════════
+
+                    QUICK START COMMAND:
+
+                 .\start-adyapan.ps1
+
+              (Does everything automatically!)
+
+═══════════════════════════════════════════════════════════════

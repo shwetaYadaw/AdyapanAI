@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { getInitials } from '@adyapan/shared';
+import { useState } from 'react';
 
 type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl';
 
@@ -21,6 +22,15 @@ const sizeMap: Record<AvatarSize, string> = {
   '2xl': 'w-24 h-24 text-2xl',
 };
 
+const gradients = [
+  'from-primary-400 to-primary-600',
+  'from-blue-400 to-blue-600',
+  'from-purple-400 to-purple-600',
+  'from-pink-400 to-pink-600',
+  'from-green-400 to-green-600',
+  'from-orange-400 to-orange-600',
+];
+
 export default function Avatar({
   src,
   firstName = 'U',
@@ -29,27 +39,34 @@ export default function Avatar({
   className,
   ring = false,
 }: AvatarProps) {
+  const [imageError, setImageError] = useState(false);
   const initials = getInitials(firstName, lastName);
+  
+  // Generate consistent gradient based on name
+  const gradientIndex = (firstName?.charCodeAt(0) ?? 0) % gradients.length;
+  const gradient = gradients[gradientIndex];
 
   return (
     <div
       className={clsx(
         'relative inline-flex items-center justify-center rounded-full overflow-hidden flex-shrink-0',
         sizeMap[size],
-        ring && 'ring-2 ring-primary-500 ring-offset-2',
+        ring && 'ring-2 ring-primary-500 ring-offset-2 dark:ring-offset-gray-950',
         className
       )}
       aria-label={`${firstName} ${lastName ?? ''}`.trim()}
+      title={`${firstName} ${lastName ?? ''}`.trim()}
     >
-      {src ? (
+      {src && !imageError ? (
         <img
           src={src}
           alt={`${firstName} ${lastName ?? ''}`.trim()}
           className="w-full h-full object-cover"
           loading="lazy"
+          onError={() => setImageError(true)}
         />
       ) : (
-        <div className="w-full h-full bg-gradient-to-br from-primary-400 to-purple-500 flex items-center justify-center text-white font-semibold">
+        <div className={`w-full h-full bg-gradient-to-br ${gradient} flex items-center justify-center text-white font-semibold`}>
           {initials}
         </div>
       )}

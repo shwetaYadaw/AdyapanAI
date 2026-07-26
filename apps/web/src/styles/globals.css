@@ -66,6 +66,9 @@
     text-decoration: none;
     white-space: nowrap;
   }
+  @media (max-width: 640px) {
+    .btn-primary { padding: 10px 16px; font-size: 12px; gap: 6px; }
+  }
   .btn-primary:hover {
     background: linear-gradient(135deg, #C44D02 0%, #E85D04 100%);
     box-shadow: 0 6px 24px rgba(232, 93, 4, 0.40);
@@ -90,6 +93,9 @@
     transition: all 0.2s ease;
     text-decoration: none;
     white-space: nowrap;
+  }
+  @media (max-width: 640px) {
+    .btn-secondary { padding: 9px 16px; font-size: 12px; gap: 6px; }
   }
   .btn-secondary:hover {
     background: rgba(232, 93, 4, 0.08);
@@ -144,6 +150,9 @@
     font-size: 14px;
     transition: all 0.2s ease;
     outline: none;
+  }
+  @media (max-width: 640px) {
+    .input-field { padding: 10px 12px; font-size: 13px; }
   }
   .input-field::placeholder { color: #B88A6A; }
   .input-field:focus {
@@ -230,13 +239,22 @@
     line-height: 1.2;
   }
 
-  /* ── Page Container ── */
+/* ─── Page Container ── */
   .page-container {
     max-width: 1280px;
     margin-left: auto;
     margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+  @media (min-width: 480px) {
+    .page-container { padding-left: 16px; padding-right: 16px; }
+  }
+  @media (min-width: 768px) {
+    .page-container { padding-left: 24px; padding-right: 24px; }
+  }
+  @media (min-width: 1024px) {
+    .page-container { padding-left: 32px; padding-right: 32px; }
   }
 
   /* ── Page Wrapper — full-width top, padded content ── */

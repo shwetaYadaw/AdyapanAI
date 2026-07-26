@@ -123,6 +123,93 @@ function enrichQuestionDescription(question: any) {
     interviewTips = `Be ready to explain how sorting guarantees that the contiguous window contains the optimal subset.`;
     relatedProblems = [`Sliding Window Maximum`, `Minimum Window Substring`];
     followUpQuestions = [`Can we solve this without sorting if the range of chocolates is very small?`];
+  } else if (title === 'Find Smallest and Second Smallest Distinct Elements in Array') {
+    statement = question.statement || `Given an array \`arr[]\` of integers, find the **smallest and second smallest distinct elements** in the array.\n\nReturn them in **ascending order**. If no valid second smallest exists, return \`[-1]\`.`;
+    inputFormat = `First line contains integer n (size of array).\nSecond line contains n space-separated integers.`;
+    outputFormat = `Return an array [smallest, secondSmallest] or [-1].`;
+    constraints = `1 ≤ n ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9`;
+    explanation = `For [12, 25, 8, 55, 10, 33, 17, 11], smallest=8, second smallest=10.`;
+    timeComplexity = `O(n) - Single pass approach`;
+    spaceComplexity = `O(1) - Constant extra space`;
+    hints = [
+      `Start by thinking about edge cases: arrays with < 2 elements or all same elements.`,
+      `Do you need to sort? Can you solve in one pass?`,
+      `Keep track of at most 2 values as you iterate.`,
+      `What happens when you encounter a duplicate of your smallest?`
+    ];
+    bruteForceEditorial = `Sort the array O(n log n). Then iterate to find the first two distinct elements.`;
+    optimizedEditorial = `Use two variables: \`first\` and \`second\`. Iterate through the array once. Update these variables as you find smaller numbers. Ensure elements are distinct by skipping duplicates of first.`;
+    correctnessProof = `By maintaining only two tracking variables and updating them based on comparisons, we capture the two smallest distinct elements. Since we skip duplicates of the first element, we guarantee distinctness.`;
+    pythonSol = `def findSmallestSecond(arr):
+    if len(arr) < 2:
+        return [-1]
+    
+    first = float('inf')
+    second = float('inf')
+    
+    for num in arr:
+        if num < first:
+            second = first
+            first = num
+        elif num < second and num != first:
+            second = num
+    
+    return [-1] if second == float('inf') else [first, second]`;
+    javaSol = `public static int[] findSmallestSecond(int[] arr) {
+    if (arr.length < 2) return new int[]{-1};
+    
+    int first = Integer.MAX_VALUE;
+    int second = Integer.MAX_VALUE;
+    
+    for (int num : arr) {
+        if (num < first) {
+            second = first;
+            first = num;
+        } else if (num < second && num != first) {
+            second = num;
+        }
+    }
+    
+    return second == Integer.MAX_VALUE ? new int[]{-1} : new int[]{first, second};
+}`;
+    cppSol = `vector<int> findSmallestSecond(vector<int>& arr) {
+    if (arr.size() < 2) return {-1};
+    
+    int first = INT_MAX;
+    int second = INT_MAX;
+    
+    for (int num : arr) {
+        if (num < first) {
+            second = first;
+            first = num;
+        } else if (num < second && num != first) {
+            second = num;
+        }
+    }
+    
+    return second == INT_MAX ? vector<int>{-1} : vector<int>{first, second};
+}`;
+    jsSol = `function findSmallestSecond(arr) {
+    if (arr.length < 2) return [-1];
+    
+    let first = Infinity;
+    let second = Infinity;
+    
+    for (let num of arr) {
+        if (num < first) {
+            second = first;
+            first = num;
+        } else if (num < second && num !== first) {
+            second = num;
+        }
+    }
+    
+    return second === Infinity ? [-1] : [first, second];
+}`;
+    commonMistakes = `Not handling duplicates correctly. Forgetting edge cases (array < 2 elements, all same elements).`;
+    interviewTips = `Explain how you handle distinctness. Discuss why a single pass is optimal. Be ready to compare with sorting approaches.`;
+    relatedProblems = [`Find Min and Max`, `Kth Smallest Element`, `Top K Elements`];
+    followUpQuestions = [`Can you find the 3rd smallest distinct element using the same approach?`];
   } else if (title === 'Palindromic Substrings') {
     statement = `Given a string s, return the number of **palindromic substrings** in it.\n\nA string is a **palindrome** when it reads the same backward as forward.\nA **substring** is a contiguous sequence of characters within the string.`;
     inputFormat = `Single line containing string s (lowercase English letters)`;

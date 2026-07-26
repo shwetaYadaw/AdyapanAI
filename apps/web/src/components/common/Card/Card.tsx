@@ -10,7 +10,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   animate?: boolean;
 }
 
-const paddingMap = { none: '', sm: 'p-4', md: 'p-5 md:p-6', lg: 'p-6 md:p-8' };
+const paddingMap = { none: '', sm: 'p-3 xs:p-4', md: 'p-4 xs:p-5 md:p-6', lg: 'p-5 xs:p-6 md:p-8' };
 
 export default function Card({
   hover = false,

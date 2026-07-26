@@ -9,7 +9,7 @@
   "scripts": {
     "dev:web": "yarn workspace @adyapan/web dev",
     "dev:backend": "yarn workspace @adyapan/backend dev",
-    "dev:ai": "yarn workspace @adyapan/ai-service dev",
+    "dev:ai": "cd apps/ai-service && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
     "dev:mobile": "yarn workspace @adyapan/mobile start",
     "build:web": "yarn workspace @adyapan/web build",
     "build:backend": "yarn workspace @adyapan/backend build",
@@ -27,6 +27,7 @@
     "yarn": ">=1.22.0"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.9.0",
     "@prisma/client": "^7.9.0"
   }
 }

@@ -256,11 +256,12 @@ export default function CodingPortalPage() {
     };
   }, [isDragging]);
 
-  // Adjust height preset options
+  // Adjust height preset options - smaller on mobile
   useEffect(() => {
-    if (consoleSize === 'small') setConsoleHeight(120);
-    else if (consoleSize === 'medium') setConsoleHeight(200);
-    else if (consoleSize === 'large') setConsoleHeight(320);
+    const isSmallScreen = window.innerHeight < 800;
+    if (consoleSize === 'small') setConsoleHeight(isSmallScreen ? 100 : 120);
+    else if (consoleSize === 'medium') setConsoleHeight(isSmallScreen ? 150 : 200);
+    else if (consoleSize === 'large') setConsoleHeight(isSmallScreen ? 250 : 320);
   }, [consoleSize]);
 
   // Mutation: Run Code (sample tests)
