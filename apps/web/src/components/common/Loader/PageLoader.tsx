@@ -9,9 +9,11 @@ export default function PageLoader() {
         className="flex flex-col items-center gap-4"
       >
         {/* Logo */}
-        <div className="w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
-          <span className="text-white font-display font-bold text-xl">ady.</span>
-        </div>
+        <img
+          src="/logo.svg"
+          alt="ADYAPAN"
+          className="w-16 h-16 rounded-full shadow-lg object-cover"
+        />
         {/* Animated dots */}
         <div className="flex gap-1.5">
           {[0, 1, 2].map((i) => (

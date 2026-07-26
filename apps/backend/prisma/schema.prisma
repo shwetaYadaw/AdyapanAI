@@ -1,6 +1,6 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -9,53 +9,53 @@ generator client {
 }
 
 model User {
-  id                  String              @id @default(uuid())
-  email               String              @unique
-  password            String?
-  firstName           String
-  lastName            String
-  role                String              @default("student")
-  isVerified          Boolean             @default(false)
-  isEmailVerified     Boolean             @default(false)
-  isActive            Boolean             @default(true)
-  avatar              String?
-  googleId            String?             @unique
-  phone               String?
-  phoneVerified       Boolean             @default(false)
-  lastLogin           DateTime?
-  loginCount          Int                 @default(0)
-  deviceTokens        Json?               // Array of strings
-  preferences         Json?               // { language, darkMode, emailNotifications, pushNotifications }
-  createdAt           DateTime            @default(now())
-  updatedAt           DateTime            @updatedAt
-  studentProfile      StudentProfile?
-  enrollments         Enrollment[]
-  payments            Payment[]
-  submissions         Submission[]
-  certificates        Certificate[]
-  badges              Badge[]
-  mentorProfile       Mentor?
-  mentorSessions      MentorSession[]     @relation("StudentSessions")
-  notifications       Notification[]
-  jobApplications     JobApplication[]
-  forumPosts          ForumPost[]
-  forumReplies        ForumReply[]
+  id                   String                 @id @default(uuid())
+  email                String                 @unique
+  password             String?
+  firstName            String
+  lastName             String
+  role                 String                 @default("student")
+  isVerified           Boolean                @default(false)
+  isEmailVerified      Boolean                @default(false)
+  isActive             Boolean                @default(true)
+  avatar               String?
+  googleId             String?                @unique
+  phone                String?
+  phoneVerified        Boolean                @default(false)
+  lastLogin            DateTime?
+  loginCount           Int                    @default(0)
+  deviceTokens         Json?
+  preferences          Json?
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  studentProfile       StudentProfile?
+  enrollments          Enrollment[]
+  payments             Payment[]
+  submissions          Submission[]
+  certificates         Certificate[]
+  badges               Badge[]
+  mentorProfile        Mentor?
+  mentorSessions       MentorSession[]        @relation("StudentSessions")
+  notifications        Notification[]
+  jobApplications      JobApplication[]
+  forumPosts           ForumPost[]
+  forumReplies         ForumReply[]
   interviewExperiences InterviewExperience[]
-  mockInterviews      MockInterviewSession[]
-  resume              Resume?
-  auditLogs           AuditLog[]
+  mockInterviews       MockInterviewSession[]
+  resume               Resume?
+  auditLogs            AuditLog[]
 }
 
 model StudentProfile {
-  id          String   @id @default(uuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  xp          Int      @default(0)
-  level       Int      @default(1)
-  skills      Json?
-  resumeUrl   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  xp        Int      @default(0)
+  level     Int      @default(1)
+  skills    Json?
+  resumeUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Course {
@@ -75,9 +75,9 @@ model Course {
   rating           Float         @default(0)
   ratingCount      Int           @default(0)
   enrollmentCount  Int           @default(0)
-  requirements     Json?         // Array of strings
-  learningOutcomes Json?         // Array of strings
-  tags             Json?         // Array of strings
+  requirements     Json?
+  learningOutcomes Json?
+  tags             Json?
   sections         Section[]
   enrollments      Enrollment[]
   certificates     Certificate[]
@@ -105,23 +105,23 @@ model Lecture {
   videoUrl    String?
   duration    Int      @default(0)
   order       Int      @default(0)
-  type        String   @default("video")   // video, text, quiz, assignment
+  type        String   @default("video")
   isPreview   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
 
 model Enrollment {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   courseId    String
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  progress    Int      @default(0)
-  isCompleted Boolean  @default(false)
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress    Int       @default(0)
+  isCompleted Boolean   @default(false)
   completedAt DateTime?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@unique([userId, courseId])
 }
@@ -199,19 +199,19 @@ model Contest {
 }
 
 model Certificate {
-  id              String   @id @default(uuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  courseId        String
-  course          Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  certificateUrl  String   @default("")
-  studentName     String   @default("")
-  courseName      String   @default("")
-  instructorName  String   @default("")
-  skills          Json?    // Array of strings
-  qrData          String?  @db.Text
-  isRevoked       Boolean  @default(false)
-  issuedAt        DateTime @default(now())
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId       String
+  course         Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  certificateUrl String   @default("")
+  studentName    String   @default("")
+  courseName     String   @default("")
+  instructorName String   @default("")
+  skills         Json?
+  qrData         String?  @db.Text
+  isRevoked      Boolean  @default(false)
+  issuedAt       DateTime @default(now())
 }
 
 model Badge {
@@ -295,23 +295,21 @@ model ExecutionLog {
   createdAt    DateTime @default(now())
 }
 
-// ─── Mentor ────────────────────────────────────────────────────────────────
-
 model Mentor {
   id              String          @id @default(uuid())
   userId          String          @unique
   user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   headline        String?
   bio             String?         @db.Text
-  expertise       Json?           // Array of strings
-  industries      Json?           // Array of strings
+  expertise       Json?
+  industries      Json?
   experience      Int?
   currentCompany  String?
   currentRole     String?
   sessionRate     Float?
   currency        String          @default("INR")
   sessionDuration Int             @default(60)
-  availability    Json?           // Array of { dayOfWeek, slots }
+  availability    Json?
   rating          Float           @default(0)
   totalSessions   Int             @default(0)
   linkedinUrl     String?
@@ -323,26 +321,24 @@ model Mentor {
 }
 
 model MentorSession {
-  id             String   @id @default(uuid())
-  mentorId       String
-  mentor         Mentor   @relation(fields: [mentorId], references: [id], onDelete: Cascade)
-  studentId      String
-  student        User     @relation("StudentSessions", fields: [studentId], references: [id], onDelete: Cascade)
-  scheduledAt    DateTime?
-  duration       Int?
-  status         String   @default("scheduled") // scheduled, completed, cancelled, no_show
-  meetingLink    String?
-  topic          String?
-  notes          String?  @db.Text
-  studentRating  Float?
-  studentReview  String?  @db.Text
-  mentorNotes    String?  @db.Text
-  paymentId      String?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id            String    @id @default(uuid())
+  mentorId      String
+  mentor        Mentor    @relation(fields: [mentorId], references: [id], onDelete: Cascade)
+  studentId     String
+  student       User      @relation("StudentSessions", fields: [studentId], references: [id], onDelete: Cascade)
+  scheduledAt   DateTime?
+  duration      Int?
+  status        String    @default("scheduled")
+  meetingLink   String?
+  topic         String?
+  notes         String?   @db.Text
+  studentRating Float?
+  studentReview String?   @db.Text
+  mentorNotes   String?   @db.Text
+  paymentId     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
-
-// ─── Job Portal ────────────────────────────────────────────────────────────
 
 model Job {
   id                  String           @id @default(uuid())
@@ -350,15 +346,15 @@ model Job {
   title               String
   slug                String           @unique
   description         String?          @db.Text
-  requirements        Json?            // Array of strings
-  responsibilities    Json?            // Array of strings
-  type                String?          // full-time, part-time, internship, contract, remote
+  requirements        Json?
+  responsibilities    Json?
+  type                String?
   location            String?
   isRemote            Boolean          @default(false)
   salaryMin           Float?
   salaryMax           Float?
   currency            String           @default("INR")
-  skills              Json?            // Array of strings
+  skills              Json?
   experienceMin       Int?
   experienceMax       Int?
   openings            Int?
@@ -374,63 +370,59 @@ model Job {
 }
 
 model JobApplication {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   jobId          String
-  job            Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  job            Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
   studentId      String
-  student        User     @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student        User      @relation(fields: [studentId], references: [id], onDelete: Cascade)
   resumeUrl      String?
-  coverLetter    String?  @db.Text
-  status         String   @default("applied") // applied, shortlisted, interview_scheduled, rejected, offered, accepted
-  appliedAt      DateTime @default(now())
-  statusHistory  Json?    // Array of { status, changedAt, note }
+  coverLetter    String?   @db.Text
+  status         String    @default("applied")
+  appliedAt      DateTime  @default(now())
+  statusHistory  Json?
   interviewDate  DateTime?
   interviewLink  String?
-  recruiterNotes String?  @db.Text
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  recruiterNotes String?   @db.Text
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 
   @@unique([jobId, studentId])
 }
 
-// ─── Forum ─────────────────────────────────────────────────────────────────
-
 model ForumPost {
-  id          String       @id @default(uuid())
-  courseId    String?
-  authorId    String
-  author      User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  title       String
-  content     String       @db.Text
-  tags        Json?        // Array of strings
-  category    String?
-  upvotes     Int          @default(0)
-  upvotedBy   Json?        // Array of userId strings
-  views       Int          @default(0)
-  replyCount  Int          @default(0)
-  isPinned    Boolean      @default(false)
-  isClosed    Boolean      @default(false)
-  isResolved  Boolean      @default(false)
-  replies     ForumReply[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id         String       @id @default(uuid())
+  courseId   String?
+  authorId   String
+  author     User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  title      String
+  content    String       @db.Text
+  tags       Json?
+  category   String?
+  upvotes    Int          @default(0)
+  upvotedBy  Json?
+  views      Int          @default(0)
+  replyCount Int          @default(0)
+  isPinned   Boolean      @default(false)
+  isClosed   Boolean      @default(false)
+  isResolved Boolean      @default(false)
+  replies    ForumReply[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model ForumReply {
-  id          String    @id @default(uuid())
-  postId      String
-  post        ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  authorId    String
-  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  content     String    @db.Text
-  upvotes     Int       @default(0)
-  upvotedBy   Json?     // Array of userId strings
-  isAccepted  Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id         String    @id @default(uuid())
+  postId     String
+  post       ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId   String
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  content    String    @db.Text
+  upvotes    Int       @default(0)
+  upvotedBy  Json?
+  isAccepted Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
-
-// ─── Notifications ─────────────────────────────────────────────────────────
 
 model Notification {
   id        String    @id @default(uuid())
@@ -442,40 +434,38 @@ model Notification {
   data      Json?
   isRead    Boolean   @default(false)
   readAt    DateTime?
-  channel   String    @default("in-app") // in-app, email, push
+  channel   String    @default("in-app")
   createdAt DateTime  @default(now())
 }
 
-// ─── Placement ─────────────────────────────────────────────────────────────
-
 model AptitudeTest {
-  id          String   @id @default(uuid())
-  title       String
-  category    String?  // aptitude, reasoning, verbal, quantitative, coding
-  difficulty  String?  // easy, medium, hard
-  duration    Int?
-  questions   Json?    // Array of { text, options, explanation, marks }
-  totalMarks  Int?
-  company     String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         String   @id @default(uuid())
+  title      String
+  category   String?
+  difficulty String?
+  duration   Int?
+  questions  Json?
+  totalMarks Int?
+  company    String?
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model InterviewExperience {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   company    String?
   role       String?
   authorId   String
-  author     User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author     User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   date       DateTime?
   difficulty String?
-  rounds     Json?    // Array of { type, questions, tips }
-  outcome    String?  // selected, rejected, pending
-  upvotes    Int      @default(0)
-  isVerified Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  rounds     Json?
+  outcome    String?
+  upvotes    Int       @default(0)
+  isVerified Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
 model MockInterviewSession {
@@ -490,24 +480,20 @@ model MockInterviewSession {
   answers      Json?
   feedback     Json?
   overallScore Float?
-  status       String   @default("active") // active, completed
+  status       String   @default("active")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
-
-// ─── Resume ────────────────────────────────────────────────────────────────
 
 model Resume {
   id            String   @id @default(uuid())
   userId        String   @unique
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  versions      Json?    // Array of { name, data, atsScore, suggestions, pdfUrl, createdAt }
+  versions      Json?
   activeVersion Int      @default(0)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
-
-// ─── Audit Log ─────────────────────────────────────────────────────────────
 
 model AuditLog {
   id         String   @id @default(uuid())

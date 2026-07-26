@@ -268,31 +268,106 @@ rl.on('line', (line) => {
     relatedProblems = [`Longest Palindromic Substring`, `Count Palindromic Subsequences`, `Palindrome Partitioning`];
     followUpQuestions = [`Can we solve this in O(n) time using Manacher's algorithm?`, `How would the solution change if we needed to find the longest palindromic substring instead?`];
   } else {
-    // Prefer the complete MySQL problem definition. The previous generic
-    // description hid carefully authored statements, samples, and diagrams.
-    statement = question.statement || `Implement the algorithm to solve **${title}**. Design your solution to handle standard test parameters as well as edge cases such as empty input, maximum boundaries, and singular inputs.`;
-    inputFormat = question.inputFormat || `A single line containing the primary input sequence or value.`;
+    // Use actual data from the database
+    statement = question.statement || `Implement the algorithm to solve **${title}**.`;
+    inputFormat = question.inputFormat || `A single line containing the primary input sequence.`;
     outputFormat = question.outputFormat || `The computed result formatted according to the problem constraints.`;
     constraints = question.constraints || `1 <= input.length <= 10^5`;
     explanation = `The sample output matches the expected result of applying the algorithm on the sample input.`;
-    timeComplexity = `O(N) or O(N \\log N) depending on optimal data structure choice.`;
-    spaceComplexity = `O(1) or O(N) auxiliary space.`;
+
+    // Derive complexity from the stored reference solution
+    const refSol = question.referenceSolution || '';
+    const hasSort = /\.sort|Arrays\.sort|sort\(|sorted\(/.test(refSol);
+    const hasTwoLoop = (refSol.match(/for\s*\(/g) || []).length >= 2;
+    const hasDP = /dp\[|memo\[|cache/.test(refSol);
+    timeComplexity = hasDP ? `O(N²) DP approach` : hasSort ? `O(N log N) — sorting-based approach` : hasTwoLoop ? `O(N²) — nested iteration` : `O(N) — single-pass linear scan`;
+    spaceComplexity = hasDP ? `O(N) auxiliary DP table` : /HashMap|dict\s*=|map</.test(refSol) ? `O(N) hash map` : `O(1) constant space`;
+
     hints = [
-      `Identify the core sub-problems.`,
-      `Consider standard techniques such as sorting, sliding window, or recursion.`,
-      `Handle constraints and boundary inputs first.`
+      `Read the constraints carefully — they hint at the expected time complexity.`,
+      `Try a brute-force approach first, then optimize using standard data structure techniques.`,
+      `Consider edge cases: empty input, single element, duplicate values, and maximum bounds.`
     ];
-    bruteForceEditorial = `Test every possible configuration or value. Time complexity: O(N^2) or O(2^N).`;
-    optimizedEditorial = `Apply greedy, sorting, or dynamic programming properties to decrease complexity to O(N log N) or O(N).`;
-    correctnessProof = `Optimal substructure allows building the global solution from solved local substructures.`;
-    pythonSol = `def solveQuestion(input_val):\n    return input_val`;
-    javaSol = `public static String solveQuestion(String inputVal) {\n    return inputVal;\n}`;
-    cppSol = `string solveQuestion(string inputVal) {\n    return inputVal;\n}`;
-    jsSol = `function solveQuestion(inputVal) {\n    return inputVal;\n}`;
-    commonMistakes = `Overlooking integer overflow and zero/negative bounds.`;
-    interviewTips = `Always state the assumptions on limits and data types before coding.`;
-    relatedProblems = [`Two Sum`, `Reverse Array`];
-    followUpQuestions = [`Can we optimize the space complexity further to O(1)?`];
+
+    // Use referenceSolution from DB if available, otherwise generate topic-specific solution
+    const dbRef = question.referenceSolution || '';
+    const topic0 = (Array.isArray(question.topics) ? question.topics[0] : question.topics) || 'arrays';
+    const titleLower = title.toLowerCase();
+
+    // Set generic defaults first — title/topic matching below will override these
+    correctnessProof = `The approach leverages the problem's optimal substructure — solving smaller sub-instances leads to the globally optimal answer.`;
+    commonMistakes = `Off-by-one errors in loop bounds, missing edge cases (empty array, single element), and integer overflow for large inputs.`;
+    interviewTips = `State your approach and complexity before coding. Mention edge cases proactively. Walk through the example before writing the full solution.`;
+    relatedProblems = question.topics
+      ? (Array.isArray(question.topics) ? question.topics : JSON.parse(question.topics as string)).slice(0, 3).map((t: string) => t.charAt(0).toUpperCase() + t.slice(1) + ' Problems')
+      : [`Two Sum`, `Sliding Window Maximum`];
+    followUpQuestions = [`Can you solve this in O(1) space?`, `What if the input is a stream (online algorithm)?`];
+    bruteForceEditorial = `**Brute Force:** Try all configurations exhaustively. Time: O(N²) or O(2^N) — suitable only for small N.`;
+    optimizedEditorial = `**Optimized:** Use ${hasSort ? 'sorting + sliding window' : hasDP ? 'dynamic programming' : 'single-pass linear scan'} to achieve ${timeComplexity}. This is the expected approach for the given constraints.`;
+    jsSol = `function solve(nums) {\n    // Time: ${timeComplexity} | Space: ${spaceComplexity}\n    let result = nums[0];\n    for (let i = 1; i < nums.length; i++) {\n        result = Math.max(result, nums[i]);\n    }\n    return result;\n}`;
+    pythonSol = `# ${title} — ${timeComplexity}\ndef solve(nums):\n    # Space: ${spaceComplexity}\n    result = 0\n    for x in nums:\n        result = max(result, x)\n    return result`;
+    javaSol = `// ${title} — ${timeComplexity}\npublic static int solve(int[] nums) {\n    int result = 0;\n    for (int x : nums) result = Math.max(result, x);\n    return result;\n}`;
+    cppSol = `// ${title} — ${timeComplexity}\nint solve(vector<int>& nums) {\n    int result = 0;\n    for (int x : nums) result = max(result, x);\n    return result;\n}`;
+
+    // Title/topic-specific overrides
+    if (dbRef) {
+      jsSol = dbRef;
+    } else if (titleLower.includes('two sum')) {
+      jsSol = `function twoSum(nums, target) {\n    const map = new Map();\n    for (let i = 0; i < nums.length; i++) {\n        const complement = target - nums[i];\n        if (map.has(complement)) return [map.get(complement), i];\n        map.set(nums[i], i);\n    }\n    return [];\n}`;
+      bruteForceEditorial = `Check all pairs (i, j) with i < j and return when nums[i] + nums[j] === target. Time: O(N²).`;
+      optimizedEditorial = `Use a hash map to store visited numbers. For each number, check if its complement (target - num) exists in the map. Time: O(N), Space: O(N).`;
+    } else if (titleLower.includes('maximum subarray') || titleLower.includes('kadane')) {
+      jsSol = `function maxSubArray(nums) {\n    let maxSum = nums[0], curr = nums[0];\n    for (let i = 1; i < nums.length; i++) {\n        curr = Math.max(nums[i], curr + nums[i]);\n        maxSum = Math.max(maxSum, curr);\n    }\n    return maxSum;\n}`;
+      bruteForceEditorial = `Try all subarrays [i, j] and compute their sums. Track the maximum. Time: O(N²), Space: O(1).`;
+      optimizedEditorial = `Kadane's Algorithm: maintain a running sum. At each index either extend the current subarray or start fresh. Time: O(N), Space: O(1).`;
+    } else if (titleLower.includes('reverse') && (topic0 === 'arrays' || topic0 === 'strings')) {
+      jsSol = `function reverse(arr) {\n    let left = 0, right = arr.length - 1;\n    while (left < right) {\n        [arr[left], arr[right]] = [arr[right], arr[left]];\n        left++; right--;\n    }\n    return arr;\n}`;
+      bruteForceEditorial = `Create a new array and fill it in reverse order. Time: O(N), Space: O(N).`;
+      optimizedEditorial = `Two-pointer in-place swap: swap elements from both ends moving inward. Time: O(N), Space: O(1).`;
+    } else if (titleLower.includes('binary search') || (titleLower.includes('search') && topic0 === 'binary-search')) {
+      jsSol = `function binarySearch(nums, target) {\n    let lo = 0, hi = nums.length - 1;\n    while (lo <= hi) {\n        const mid = (lo + hi) >> 1;\n        if (nums[mid] === target) return mid;\n        if (nums[mid] < target) lo = mid + 1;\n        else hi = mid - 1;\n    }\n    return -1;\n}`;
+      bruteForceEditorial = `Linear scan through array. Time: O(N), Space: O(1).`;
+      optimizedEditorial = `Binary search on sorted array: eliminate half the search space each iteration. Time: O(log N), Space: O(1).`;
+    } else if (titleLower.includes('anagram')) {
+      jsSol = `function isAnagram(s, t) {\n    if (s.length !== t.length) return false;\n    const count = {};\n    for (const c of s) count[c] = (count[c] || 0) + 1;\n    for (const c of t) {\n        if (!count[c]) return false;\n        count[c]--;\n    }\n    return true;\n}`;
+      bruteForceEditorial = `Sort both strings and compare. Time: O(N log N), Space: O(1).`;
+      optimizedEditorial = `Count character frequencies using a hash map. Compare counts for both strings. Time: O(N), Space: O(1).`;
+    } else if (titleLower.includes('palindrome')) {
+      jsSol = `function isPalindrome(s) {\n    let l = 0, r = s.length - 1;\n    while (l < r) {\n        if (s[l] !== s[r]) return false;\n        l++; r--;\n    }\n    return true;\n}`;
+      bruteForceEditorial = `Reverse the string and compare with original. Time: O(N), Space: O(N).`;
+      optimizedEditorial = `Two pointers from both ends — compare characters inward. Time: O(N), Space: O(1).`;
+    } else if (topic0 === 'dynamic-programming' || titleLower.includes('dp') || titleLower.includes('ways')) {
+      jsSol = `function solve(n) {\n    // Bottom-up DP approach\n    const dp = new Array(n + 1).fill(0);\n    dp[0] = 1; // base case\n    for (let i = 1; i <= n; i++) {\n        // dp[i] = dp[i-1] + ... (fill based on transitions)\n        dp[i] = dp[i - 1]; // placeholder transition\n    }\n    return dp[n];\n}`;
+      bruteForceEditorial = `Recursive solution with exponential branching. Time: O(2^N), Space: O(N) call stack.`;
+      optimizedEditorial = `Bottom-up DP: build the solution table from base cases. Time: O(N²) or O(N), Space: O(N).`;
+    } else if (topic0 === 'graphs' || topic0 === 'dfs-bfs') {
+      jsSol = `function bfs(graph, start) {\n    const visited = new Set([start]);\n    const queue = [start];\n    const result = [];\n    while (queue.length) {\n        const node = queue.shift();\n        result.push(node);\n        for (const neighbor of (graph[node] || [])) {\n            if (!visited.has(neighbor)) {\n                visited.add(neighbor);\n                queue.push(neighbor);\n            }\n        }\n    }\n    return result;\n}`;
+      bruteForceEditorial = `DFS/BFS with visited set tracking. Time: O(V + E), Space: O(V).`;
+      optimizedEditorial = `BFS for shortest paths, DFS for connected components. Use adjacency list for O(V + E) traversal.`;
+    } else if (topic0 === 'trees') {
+      jsSol = `function inorder(root) {\n    const result = [];\n    const stack = [];\n    let curr = root;\n    while (curr || stack.length) {\n        while (curr) { stack.push(curr); curr = curr.left; }\n        curr = stack.pop();\n        result.push(curr.val);\n        curr = curr.right;\n    }\n    return result;\n}`;
+      bruteForceEditorial = `Recursive DFS traversal. Time: O(N), Space: O(H) where H is tree height.`;
+      optimizedEditorial = `Iterative inorder using explicit stack. Time: O(N), Space: O(H) — avoids call stack overflow on deep trees.`;
+    } else if (topic0 === 'linked-list') {
+      jsSol = `function reverseList(head) {\n    let prev = null, curr = head;\n    while (curr) {\n        const next = curr.next;\n        curr.next = prev;\n        prev = curr;\n        curr = next;\n    }\n    return prev;\n}`;
+      bruteForceEditorial = `Collect values in array, rebuild list in reverse. Time: O(N), Space: O(N).`;
+      optimizedEditorial = `Iterative pointer reversal: track prev, curr, next. Time: O(N), Space: O(1).`;
+    } else if (topic0 === 'stack') {
+      jsSol = `function isValid(s) {\n    const stack = [];\n    const map = { ')': '(', '}': '{', ']': '[' };\n    for (const c of s) {\n        if ('([{'.includes(c)) stack.push(c);\n        else if (stack.pop() !== map[c]) return false;\n    }\n    return stack.length === 0;\n}`;
+      bruteForceEditorial = `Try all permutations of matching brackets. Exponential time — not feasible.`;
+      optimizedEditorial = `Use a stack: push opening brackets, pop on closing and verify match. Time: O(N), Space: O(N).`;
+    } else if (topic0 === 'hashing') {
+      jsSol = `function longestConsecutive(nums) {\n    const set = new Set(nums);\n    let longest = 0;\n    for (const n of set) {\n        if (!set.has(n - 1)) {\n            let curr = n, streak = 1;\n            while (set.has(curr + 1)) { curr++; streak++; }\n            longest = Math.max(longest, streak);\n        }\n    }\n    return longest;\n}`;
+      bruteForceEditorial = `Sort array, iterate and find longest consecutive run. Time: O(N log N).`;
+      optimizedEditorial = `Hash set lookup: only start a sequence from its smallest element. Time: O(N), Space: O(N).`;
+    } else {
+      jsSol = `function solve(nums) {\n    // Time: ${timeComplexity} | Space: ${spaceComplexity}\n    let result = nums[0];\n    for (let i = 1; i < nums.length; i++) {\n        result = Math.max(result, nums[i]);\n    }\n    return result;\n}`;
+      bruteForceEditorial = `Try all configurations exhaustively. Time: O(N²) or higher — suitable only for small N.`;
+      optimizedEditorial = `Apply ${topic0}-specific optimization: single or double pass with appropriate data structure. Time: ${timeComplexity}.`;
+    }
+    pythonSol = `# ${title} — ${timeComplexity}\ndef solve(nums):\n    # Space: ${spaceComplexity}\n    result = 0\n    for x in nums:\n        result = max(result, x)\n    return result`;
+    javaSol = `// ${title} — ${timeComplexity}\npublic static int solve(int[] nums) {\n    int result = 0;\n    for (int x : nums) {\n        result = Math.max(result, x);\n    }\n    return result;\n}`;
+    cppSol = `// ${title} — ${timeComplexity}\nint solve(vector<int>& nums) {\n    int result = 0;\n    for (int x : nums) result = max(result, x);\n    return result;\n}`;
   }
 
   const structuredJson = {
@@ -399,33 +474,6 @@ ${explanation || 'The sample output matches the expected result of processing th
 
 ## 🔑 Hints
 ${hints.map((h, i) => `**Hint ${i + 1}:** ${h}`).join('\n\n')}
-
----
-
-## 📖 Editorial / Solution Walkthrough
-
-### Brute Force Approach
-${bruteForceEditorial}
-
-### Optimized Approach
-${optimizedEditorial}
-
-### Proof of Correctness
-${correctnessProof}
-
----
-
-## 💻 Reference Solutions
-
-### JavaScript
-\`\`\`javascript
-${jsSol}
-\`\`\`
-
-### Python
-\`\`\`python
-${pythonSol}
-\`\`\`
 
 ---
 
@@ -1055,20 +1103,58 @@ router.post('/ai-mentor', authenticate, async (req, res, next) => {
     const title = question.title;
 
     let systemPrompt = '';
+    const topics = Array.isArray(question.topics) ? question.topics.join(', ') : String(question.topics || '');
+    const difficulty = question.difficulty || 'medium';
+
     if (requestType === 'explain') {
-      systemPrompt = `Explain the coding problem "${title}" clearly to a student. Describe the logic, constraints, and standard input/output formatting. Do not show the solution code yet.`;
+      systemPrompt = `You are an expert DSA tutor. Explain the coding problem "${title}" (Difficulty: ${difficulty}, Topics: ${topics}) clearly to a student.
+- Describe what the problem is asking in plain English
+- Break down the input/output requirements  
+- Highlight the key constraints and what they imply about complexity
+- Give an intuitive real-world analogy if helpful
+- Do NOT reveal the solution or code yet.
+Problem Statement: ${question.statement?.slice(0, 500) || title}`;
+
     } else if (requestType === 'hint') {
-      systemPrompt = `Give a helpful, progressive conceptual hint to solve the coding problem "${title}" without writing any code. Check the student's current code if provided:\n\`\`\`\n${code || 'No code written yet'}\n\`\`\``;
+      systemPrompt = `You are a competitive programming mentor for the problem "${title}" (${difficulty}).
+The student has written this code so far:
+\`\`\`
+${code || '// No code written yet'}
+\`\`\`
+Give 2-3 progressive, conceptual hints that guide the student toward the solution WITHOUT writing any code or revealing the full approach. 
+- Hint 1: General direction (what technique/pattern to think about)
+- Hint 2: More specific guidance on the key insight
+- Hint 3: Edge case or optimization to keep in mind
+Topics involved: ${topics}`;
+
     } else if (requestType === 'complexity') {
-      systemPrompt = `Analyze the time and space complexity of the student's current code for problem "${title}":\n\`\`\`\n${code}\n\`\`\`\nSuggest how they can optimize it if possible.`;
+      systemPrompt = `Analyze the time and space complexity of this student's code for the problem "${title}" (${difficulty}):
+\`\`\`
+${code || '// No code provided'}
+\`\`\`
+- State the current Time Complexity with justification
+- State the current Space Complexity with justification
+- If suboptimal, explain what the optimal complexity should be for this problem (Topics: ${topics})
+- Suggest a specific optimization strategy to achieve better complexity
+- Keep the explanation clear and educational`;
+
     } else {
-      systemPrompt = `You are an expert competitive programming tutor. Provide a detailed, production-quality review of the student's code for the problem "${title}".
-Analyze what is wrong with the student's code, list logical bugs, syntax errors, or complexity issues.
-Provide a complete, correct, optimized reference solution in the same language. Explain step-by-step why the student's code failed and how the correct solution fixes it. Refer to standard patterns from LeetCode, GeeksforGeeks, or Codeforces if helpful.
+      // review
+      systemPrompt = `You are an expert competitive programming tutor reviewing code for "${title}" (${difficulty}, Topics: ${topics}).
+
 Student's Code:
 \`\`\`
-${code || '// No code written'}
-\`\`\n`;
+${code || '// No code written yet'}
+\`\`\`
+
+Provide a thorough code review covering:
+1. **Correctness** — Does the logic correctly solve the problem? Point out any bugs or wrong assumptions.
+2. **Edge Cases** — What inputs could break this code? (empty array, negative numbers, overflow, etc.)
+3. **Complexity** — Current time/space complexity vs optimal
+4. **Code Quality** — Variable naming, readability, redundant operations
+5. **Reference Solution** — Provide a clean, optimal, well-commented solution in the same programming language the student used
+
+Be specific, educational, and constructive.`;
     }
 
     // Call OpenAI/AI microservice
@@ -1087,20 +1173,53 @@ ${code || '// No code written'}
       );
       aiResponse = response.data?.response || response.data?.choices?.[0]?.message?.content || aiResponse;
     } catch {
-      aiResponse = getFallbackAIMentorResponse(title, code || '');
+      // Fallback: generate a question-specific response
+      aiResponse = getFallbackAIMentorResponse(title, code || '', requestType, String(question.topics || ''), question.difficulty || 'medium');
     }
 
     sendSuccess({ res, data: { response: aiResponse } });
   } catch (err) { next(err); }
 });
 
-function getFallbackAIMentorResponse(questionTitle: string, studentCode: string): string {
+function getFallbackAIMentorResponse(questionTitle: string, studentCode: string, requestType = 'review', topics = '', difficulty = 'medium'): string {
   let lang = 'javascript';
   const codeStr = String(studentCode);
   if (codeStr.includes('def ') || codeStr.includes('import sys')) lang = 'python';
   else if (codeStr.includes('#include')) lang = 'cpp';
-  else if (codeStr.includes('class Main')) lang = 'java';
+  else if (codeStr.includes('class Main') || codeStr.includes('public static void main')) lang = 'java';
 
+  const titleLower = questionTitle.toLowerCase();
+
+  if (requestType === 'explain') {
+    return `### 📖 Problem Explanation: ${questionTitle}\n\n**Difficulty:** ${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} | **Topics:** ${topics || 'DSA'}\n\n**What the problem is asking:**\nThis problem requires you to apply algorithmic thinking to process the given input and produce the expected output according to the stated constraints.\n\n**Key observations:**\n- Read the constraints carefully — they define the expected time complexity\n- Understand what the input represents and what transformation is needed\n- Consider edge cases: empty input, single elements, duplicates, and maximum bounds\n\n**Approach:**\n1. Understand the problem fully before writing any code\n2. Work through the example test case manually\n3. Identify the pattern or technique required\n4. Code, test, optimize\n\n> 💡 Try to solve this without looking at hints first!`;
+  }
+
+  if (requestType === 'hint') {
+    const isArray = titleLower.includes('array') || titleLower.includes('subarray') || titleLower.includes('sum');
+    const isString = titleLower.includes('string') || titleLower.includes('palindrome') || titleLower.includes('anagram');
+    const isDP = titleLower.includes('subsequence') || titleLower.includes('path') || titleLower.includes('ways');
+    
+    let hint1 = '**Hint 1:** Start by understanding what you need to track — is it a running total, a window, or a pattern?';
+    let hint2 = isArray ? '**Hint 2:** Consider using a two-pointer or sliding window approach on the array.' 
+                : isString ? '**Hint 2:** Consider processing characters with a frequency map or a stack.'
+                : isDP ? '**Hint 2:** Think about breaking the problem into overlapping subproblems — DP might help.'
+                : '**Hint 2:** Sorting the input often simplifies comparison or search problems.';
+    let hint3 = '**Hint 3:** What happens with an empty input or a single element? Handle these edge cases first.';
+    
+    return `### 💡 Hints for: ${questionTitle}\n\n${hint1}\n\n${hint2}\n\n${hint3}\n\n> 🔒 Try implementing with these hints before asking for a full review!`;
+  }
+
+  if (requestType === 'complexity') {
+    const hasLoop = (codeStr.match(/for\s*\(/g) || codeStr.match(/for\s+\w/g) || []).length;
+    const hasNestedLoop = hasLoop >= 2;
+    const hasSort = /\.sort|sort\(|sorted\(/.test(codeStr);
+    const currTime = hasNestedLoop ? 'O(N²)' : hasSort ? 'O(N log N)' : 'O(N)';
+    const currSpace = /HashMap|dict|map<|{}/.test(codeStr) ? 'O(N)' : 'O(1)';
+    
+    return `### ⏱️ Complexity Analysis: ${questionTitle}\n\n**Your Current Code:**\n- **Time Complexity:** ${currTime}\n- **Space Complexity:** ${currSpace}\n\n**Expected for ${difficulty} difficulty:**\n- Time: O(N) or O(N log N) is typically expected\n- Space: O(1) auxiliary is ideal unless hashing is needed\n\n**Optimization suggestions:**\n${hasNestedLoop ? '- The nested loops make this O(N²). Consider if you can reduce to a single pass with a hash map or sliding window.' : hasSort ? '- Sorting is appropriate here. The O(N log N) is likely optimal.' : '- Your linear approach looks efficient! Verify the space usage doesn\'t add hidden overhead.'}\n\n> 📊 Always mention complexity tradeoffs in interviews!`;
+  }
+
+  // review fallback
   const cleanTitle = questionTitle.replace(/[^a-zA-Z0-9]/g, ' ');
   const camelCase = cleanTitle
     .toLowerCase()
@@ -1120,8 +1239,8 @@ function getFallbackAIMentorResponse(questionTitle: string, studentCode: string)
     refSolution = `function ${camelCase || 'solve'}(input) {\n    // Optimal solution for ${questionTitle}\n    // Time Complexity: O(N)\n    // Space Complexity: O(1)\n    return 0;\n}`;
   }
 
-  const titleLower = questionTitle.toLowerCase();
-  if (titleLower.includes('smallest') || titleLower.includes('largest')) {
+  const qTitleLower = questionTitle.toLowerCase();
+  if (qTitleLower.includes('smallest') || qTitleLower.includes('largest')) {
     const smallestSolutions = {
       python: `def getSecondSmallestAndLargest(arr):\n    if len(arr) < 2:\n        return -1\n    small = float('inf')\n    second_small = float('inf')\n    large = float('-inf')\n    second_large = float('-inf')\n    \n    for x in arr:\n        if x < small:\n            second_small = small\n            small = x\n        elif x < second_small and x != small:\n            second_small = x\n            \n        if x > large:\n            second_large = large\n            large = x\n        elif x > second_large and x != large:\n            second_large = x\n            \n    return [second_small, second_large]`,
       javascript: `function getSecondSmallestAndLargest(arr) {\n    if (arr.length < 2) return -1;\n    let small = Infinity, secondSmall = Infinity;\n    let large = -Infinity, secondLarge = -Infinity;\n    \n    for (let x of arr) {\n        if (x < small) {\n            secondSmall = small;\n            small = x;\n        } else if (x < secondSmall && x !== small) {\n            secondSmall = x;\n        }\n        \n        if (x > large) {\n            secondLarge = large;\n            large = x;\n        } else if (x > secondLarge && x !== large) {\n            secondLarge = x;\n        }\n    }\n    return [secondSmall, secondLarge];\n}`,
@@ -1129,7 +1248,7 @@ function getFallbackAIMentorResponse(questionTitle: string, studentCode: string)
       java: `public static int[] getSecondSmallestAndLargest(int[] arr) {\n    if (arr.length < 2) return new int[]{-1, -1};\n    int small = Integer.MAX_VALUE, secondSmall = Integer.MAX_VALUE;\n    int large = Integer.MIN_VALUE, secondLarge = Integer.MIN_VALUE;\n    for (int x : arr) {\n        if (x < small) {\n            secondSmall = small;\n            small = x;\n        } else if (x < secondSmall && x != small) {\n            secondSmall = x;\n        }\n        if (x > large) {\n            secondLarge = large;\n            large = x;\n        } else if (x > secondLarge && x != large) {\n            secondLarge = x;\n        }\n    }\n    return new int[]{secondSmall, secondLarge};\n}`
     };
     refSolution = smallestSolutions[lang as keyof typeof smallestSolutions] || smallestSolutions.javascript;
-  } else if (titleLower.includes('maximum subarray') || titleLower.includes('kadane')) {
+  } else if (qTitleLower.includes('maximum subarray') || qTitleLower.includes('kadane')) {
     const solutions = {
       python: `def maxSubarray(nums):\n    max_sum = nums[0]\n    curr_sum = nums[0]\n    for x in nums[1:]:\n        curr_sum = max(x, curr_sum + x)\n        max_sum = max(max_sum, curr_sum)\n    return max_sum`,
       javascript: `function maxSubarray(nums) {\n    let max = nums[0], curr = nums[0];\n    for (let i = 1; i < nums.length; i++) {\n        curr = Math.max(nums[i], curr + nums[i]);\n        max = Math.max(max, curr);\n    }\n    return max;\n}`,
@@ -1137,7 +1256,7 @@ function getFallbackAIMentorResponse(questionTitle: string, studentCode: string)
       java: `public static int maxSubarray(int[] nums) {\n    int maxSum = nums[0], currSum = nums[0];\n    for (int i = 1; i < nums.length; ++i) {\n        currSum = Math.max(nums[i], currSum + nums[i]);\n        maxSum = Math.max(maxSum, currSum);\n    }\n    return maxSum;\n}`
     };
     refSolution = solutions[lang as keyof typeof solutions] || solutions.javascript;
-  } else if (titleLower.includes('chocolate distribution')) {
+  } else if (qTitleLower.includes('chocolate distribution')) {
     const solutions = {
       python: `def chocolateDistributionProblem(nums, m):\n    nums.sort()\n    min_diff = float('inf')\n    for i in range(len(nums) - m + 1):\n        min_diff = min(min_diff, nums[i+m-1] - nums[i])\n    return min_diff`,
       javascript: `function chocolateDistributionProblem(nums, m) {\n    nums.sort((a, b) => a - b);\n    let minDiff = Infinity;\n    for (let i = 0; i <= nums.length - m; i++) {\n        minDiff = Math.min(minDiff, nums[i + m - 1] - nums[i]);\n    }\n    return minDiff;\n}`,
@@ -1147,7 +1266,7 @@ function getFallbackAIMentorResponse(questionTitle: string, studentCode: string)
     refSolution = solutions[lang as keyof typeof solutions] || solutions.javascript;
   }
 
-  return `### **AI Mentor Code Review & Reference Solution**\n\n**1. Analysis of Your Code:**\n* Ensure your function correctly parses input parameters and returns the target type.\n* Common pitfalls include off-by-one errors in loop boundaries and incorrect variable initializations.\n\n**2. Correct Reference Implementation (${lang.toUpperCase()}):**\n\`\`\`${lang}\n${refSolution}\n\`\`\``;
+  return `### 🔍 Code Review: ${questionTitle}\n\n**Language Detected:** ${lang.toUpperCase()}\n\n**1. Analysis of Your Code:**\n${studentCode ? '* Review your loop boundaries and return values carefully.\n* Check for off-by-one errors in index-based operations.\n* Ensure all edge cases (empty input, single element) are handled.' : '* No code provided yet. Write your initial solution and ask for a review!'}\n\n**2. Common Pitfalls for this Problem:**\n* Integer overflow when summing large values\n* Incorrect variable initialization before loops\n* Missing return statement for edge cases\n\n**3. Reference Implementation (${lang.toUpperCase()}):**\n\`\`\`${lang}\n${refSolution}\n\`\`\`\n\n> 💪 Compare your approach with the reference and identify differences!`;
 }
 
 export default router;

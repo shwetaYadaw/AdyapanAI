@@ -41,7 +41,7 @@ export default function AdminAnalyticsPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="page-wrapper space-y-6">
       <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Analytics</h1>
 
       {/* KPI cards */}

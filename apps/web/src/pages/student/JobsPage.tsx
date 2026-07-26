@@ -39,7 +39,7 @@ export default function JobsPage() {
   const JOB_TYPES = ['', 'full-time', 'internship', 'remote', 'part-time'];
 
   return (
-    <div className="space-y-5">
+    <div className="page-wrapper space-y-5">
       <div>
         <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Jobs & Internships</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm">500+ curated opportunities from top companies</p>

@@ -100,7 +100,7 @@ export default function AdminCertificatesPage() {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="page-wrapper space-y-5">
       <div>
         <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Track Certificates</h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">View and verify issued student completion certificates.</p>

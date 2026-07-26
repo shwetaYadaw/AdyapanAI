@@ -6,11 +6,8 @@ import PageLoader from '../components/common/Loader/PageLoader';
 
 // Lazy-loaded pages
 const LandingPage        = lazy(() => import('../pages/Landing/LandingPage'));
-const HomePage           = lazy(() => import('../pages/Home/HomePage'));
-const StudentHomePage    = lazy(() => import('../pages/student/HomePage'));
 const LoginPage          = lazy(() => import('../pages/auth/LoginPage'));
 const RegisterPage       = lazy(() => import('../pages/auth/RegisterPage'));
-const GetStartedPage     = lazy(() => import('../pages/GetStartedPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/auth/ForgotPasswordPage'));
 const ResetPasswordPage  = lazy(() => import('../pages/auth/ResetPasswordPage'));
 const VerifyEmailPage    = lazy(() => import('../pages/auth/VerifyEmailPage'));
@@ -33,6 +30,8 @@ const CodingPortalPage     = lazy(() => import('../pages/student/CodingPortalPag
 const ContestsPage         = lazy(() => import('../pages/student/ContestsPage'));
 const TcsNqtPrepPage       = lazy(() => import('../pages/student/TcsNqtPrepPage'));
 const AptitudePage         = lazy(() => import('../pages/student/AptitudePage'));
+const AptitudeQuizPage     = lazy(() => import('../pages/student/AptitudeQuizPage'));
+const CodingTopicPage      = lazy(() => import('../pages/student/CodingTopicPage'));
 
 // Teacher
 const TeacherDashboard   = lazy(() => import('../pages/teacher/DashboardPage'));
@@ -74,7 +73,6 @@ export default function AppRouter() {
         <Routes>
            {/* Public */}
           <Route path="/" element={<LandingPage />} />
-          <Route path="/home" element={<HomePage />} />
           <Route path="/courses" element={<Navigate to="/student/dashboard" replace />} />
           <Route path="/courses/:slug" element={<Navigate to="/student/dashboard" replace />} />
           <Route path="/verify/:certificateId" element={<CertVerifyPage />} />
@@ -82,7 +80,6 @@ export default function AppRouter() {
           {/* Auth */}
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/get-started" element={<GetStartedPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
@@ -90,29 +87,23 @@ export default function AppRouter() {
           {/* Student */}
           <Route path="/student" element={<ProtectedRoute><RoleRoute roles={['student']} /></ProtectedRoute>}>
             <Route index element={<Navigate to="/student/dashboard" replace />} />
-            <Route path="home" element={<StudentHomePage />} />
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="profile" element={<ProfilePage />} />
-            <Route path="resume-builder" element={<ResumeBuilderPage />} />
-            <Route path="ai-features" element={<AIFeaturesPage />} />
-            <Route path="certificates" element={<CertificatesPage />} />
-            <Route path="coding-arena" element={<CodingChallengesPage />} />
-            <Route path="coding-arena/:slug" element={<CodingPortalPage />} />
-            <Route path="tcs-nqt-prep" element={<TcsNqtPrepPage />} />
-            <Route path="aptitude-prep" element={<AptitudePage />} />
-            <Route path="contests" element={<ContestsPage />} />
-            {/* Legacy routes for backward compatibility */}
-            <Route path="resume" element={<Navigate to="/student/resume-builder" replace />} />
-            <Route path="ai" element={<Navigate to="/student/ai-features" replace />} />
-            <Route path="challenges" element={<Navigate to="/student/coding-arena" replace />} />
-            <Route path="challenges/:slug" element={<Navigate to="/student/coding-arena/:slug" replace />} />
-            <Route path="tcs-nqt" element={<Navigate to="/student/tcs-nqt-prep" replace />} />
-            <Route path="aptitude" element={<Navigate to="/student/aptitude-prep" replace />} />
             <Route path="learn/:courseId" element={<Navigate to="/student/dashboard" replace />} />
             <Route path="placement" element={<Navigate to="/student/dashboard" replace />} />
+            <Route path="resume" element={<ResumeBuilderPage />} />
             <Route path="jobs" element={<Navigate to="/student/dashboard" replace />} />
+            <Route path="certificates" element={<CertificatesPage />} />
             <Route path="mentors" element={<Navigate to="/student/dashboard" replace />} />
             <Route path="community" element={<Navigate to="/student/dashboard" replace />} />
+            <Route path="ai" element={<AIFeaturesPage />} />
+            <Route path="challenges" element={<CodingChallengesPage />} />
+            <Route path="challenges/topic/:topicKey" element={<CodingTopicPage />} />
+            <Route path="challenges/:slug" element={<CodingPortalPage />} />
+            <Route path="contests" element={<ContestsPage />} />
+            <Route path="tcs-nqt" element={<TcsNqtPrepPage />} />
+            <Route path="aptitude" element={<AptitudePage />} />
+            <Route path="aptitude/:module/:topicSlug" element={<AptitudeQuizPage />} />
           </Route>
 
           {/* Teacher */}

@@ -9,20 +9,7 @@ import Avatar from '../../common/Avatar/Avatar';
 import Badge from '../../common/Badge/Badge';
 import toast from 'react-hot-toast';
 
-const ORANGE = '#E85D04';
-const AMBER  = '#F48C06';
-
-const STUDENT_NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'Dashboard', href: '/student/dashboard' },
-  { label: 'Resume Builder', href: '/student/resume-builder' },
-  { label: 'AI Features', href: '/student/ai-features' },
-  { label: 'Certificates', href: '/student/certificates' },
-  { label: 'Coding Arena', href: '/student/coding-arena' },
-  { label: 'TCS NQT Prep', href: '/student/tcs-nqt-prep' },
-  { label: 'Aptitude Prep', href: '/student/aptitude-prep' },
-  { label: 'Contests', href: '/student/contests' },
-];
+const NAV_LINKS: { label: string; href: string }[] = [];
 
 const DASHBOARD_LINKS: Record<string, string> = {
   student: '/student/dashboard',
@@ -57,9 +44,11 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <div className="w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-sm">
-              <span className="text-white font-display font-bold text-sm leading-none">ady.</span>
-            </div>
+            <img
+              src="/logo.svg"
+              alt="ADYAPAN"
+              className="w-9 h-9 rounded-full shadow-sm object-cover"
+            />
             <span className="font-display font-bold text-lg text-gray-900 dark:text-white hidden sm:block">
               ADYAPAN
             </span>
@@ -67,33 +56,15 @@ export default function Navbar() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
-            {STUDENT_NAV_LINKS.map((link) => {
-              // Show Home link only if NOT authenticated
-              if (link.label === 'Home') {
-                return isAuthenticated ? null : (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/50 transition-all"
-                  >
-                    {link.label}
-                  </Link>
-                );
-              }
-              // Show other links only if authenticated
-              if (isAuthenticated) {
-                return (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/50 transition-all"
-                  >
-                    {link.label}
-                  </Link>
-                );
-              }
-              return null;
-            })}
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className="px-3 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-950/50 transition-all"
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
           {/* Right Controls */}
@@ -210,35 +181,16 @@ export default function Navbar() {
             className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1">
-              {STUDENT_NAV_LINKS.map((link) => {
-                // Show Home link only if NOT authenticated
-                if (link.label === 'Home') {
-                  return isAuthenticated ? null : (
-                    <Link
-                      key={link.href}
-                      to={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                }
-                // Show other links only if authenticated
-                if (isAuthenticated) {
-                  return (
-                    <Link
-                      key={link.href}
-                      to={link.href}
-                      onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                }
-                return null;
-              })}
+              {NAV_LINKS.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="block px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
               {!isAuthenticated && (
                 <div className="pt-2 flex flex-col gap-2">
                   <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full text-center">

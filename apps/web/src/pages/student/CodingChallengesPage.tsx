@@ -1,13 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useLocation } from 'react-router-dom';
-import { Search, Trophy, Code2, Flame, BrainCircuit, Target, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Search, Trophy, Code2, Flame, BrainCircuit, Target, ArrowRight } from 'lucide-react';
 import { api } from '../../services/api';
-import Navbar from '../../components/layout/Navbar/Navbar';
-import Badge from '../../components/common/Badge/Badge';
 import Card from '../../components/common/Card/Card';
-import Table from '../../components/common/Table/Table';
-
 interface Question {
   _id: string;
   title: string;
@@ -49,50 +45,14 @@ const TOPIC_GROUPS = [
 ];
 
 export default function CodingChallengesPage() {
-  const location = useLocation();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
-  
-  // Restore expanded topic from localStorage or default to 'arrays'
-  const [expandedTopic, setExpandedTopic] = useState<string | null>(() => {
-    const saved = sessionStorage.getItem('challenges-expanded-topic');
-    return saved || 'arrays';
-  });
 
-  // Restore scroll position when component mounts
-  useEffect(() => {
-    const savedScrollPos = sessionStorage.getItem('challenges-scroll-pos');
-    if (savedScrollPos) {
-      setTimeout(() => {
-        window.scrollTo(0, parseInt(savedScrollPos, 10));
-      }, 100);
-    }
-  }, []);
-
-  // Save scroll position and expanded topic when navigating away
-  useEffect(() => {
-    const handleScroll = () => {
-      sessionStorage.setItem('challenges-scroll-pos', window.scrollY.toString());
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Save expanded topic whenever it changes
-  useEffect(() => {
-    if (expandedTopic) {
-      sessionStorage.setItem('challenges-expanded-topic', expandedTopic);
-    }
-  }, [expandedTopic]);
-
-  // Fetch coding questions
-  const { data: questions, isLoading, isError } = useQuery<Question[]>({
-    queryKey: ['codingQuestions', search],
+  // Fetch all questions (used for per-topic counts + daily challenge)
+  const { data: questions, isLoading } = useQuery<Question[]>({
+    queryKey: ['codingQuestions', ''],
     queryFn: async () => {
-      const params = new URLSearchParams();
-      if (search) params.set('search', search);
-      const { data } = await api.get(`/challenges/questions?${params}`);
-      // Normalize Prisma/MySQL response: map `id` -> `_id`, parse JSON string fields
+      const { data } = await api.get('/challenges/questions');
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,
@@ -112,15 +72,11 @@ export default function CodingChallengesPage() {
   });
 
   // Fetch coding stats
-  const { data: stats } = useQuery<{
-    solvedCount: number;
-    totalQuestions: number;
-    topicStats?: Record<string, { total: number; solved: number }>;
-  }>({
+  const { data: stats } = useQuery<{ solvedCount: number; totalQuestions: number }>({
     queryKey: ['codingStats'],
     queryFn: async () => {
       const { data } = await api.get('/challenges/stats');
-      return data.data ?? { solvedCount: 0, totalQuestions: 0, topicStats: {} };
+      return data.data ?? { solvedCount: 0, totalQuestions: 0 };
     },
   });
 
@@ -132,103 +88,39 @@ export default function CodingChallengesPage() {
     for (let i = 0; i < dateStr.length; i++) {
       hash = dateStr.charCodeAt(i) + ((hash << 5) - hash);
     }
-    const index = Math.abs(hash) % questions.length;
-    return questions[index];
+    return questions[Math.abs(hash) % questions.length];
   };
 
   const dailyChallenge = getDailyChallenge();
 
-  const getColumnsForTopic = (topicKey: string) => [
-    {
-      key: 'title',
-      header: 'Problem Name',
-      render: (r: Question) => (
-        <div>
-          <p className="font-semibold text-gray-900 dark:text-white hover:text-primary-600 transition-colors text-sm">
-            <Link 
-              to={`/student/challenges/${r.slug}`}
-              onClick={() => {
-                sessionStorage.setItem('challenges-expanded-topic', topicKey);
-                sessionStorage.setItem('challenges-scroll-pos', window.scrollY.toString());
-              }}
-            >
-              {r.title}
-            </Link>
-          </p>
-          <div className="flex flex-wrap gap-1.5 mt-1.5">
-            {r.topics.slice(0, 3).map((t) => (
-              <span key={t} className="text-xxs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 capitalize">
-                {t}
-              </span>
-            ))}
-          </div>
-        </div>
-      ),
-    },
-    {
-      key: 'difficulty',
-      header: 'Difficulty',
-      render: (r: Question) => {
-        const colors = { easy: 'success', medium: 'warning', hard: 'danger' };
-        return <Badge variant={colors[r.difficulty] as any} className="capitalize">{r.difficulty}</Badge>;
-      },
-    },
-    {
-      key: 'companies',
-      header: 'Target Companies',
-      render: (r: Question) => (
-        <div className="flex flex-wrap gap-1">
-          {r.companies.slice(0, 3).map((c) => (
-            <span key={c} className="text-xxs px-1.5 py-0.5 rounded bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 capitalize font-medium">
-              {c}
-            </span>
-          ))}
-        </div>
-      ),
-    },
-    {
-      key: 'xp',
-      header: 'XP Reward',
-      render: (r: Question) => <span className="text-sm font-semibold text-amber-500">+{r.xpReward} XP</span>,
-    },
-    {
-      key: 'actions',
-      header: '',
-      render: (r: Question) => (
-        <Link 
-          to={`/student/challenges/${r.slug}`}
-          onClick={() => {
-            sessionStorage.setItem('challenges-expanded-topic', topicKey);
-            sessionStorage.setItem('challenges-scroll-pos', window.scrollY.toString());
-          }}
-        >
-          <button className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700 bg-primary-50 dark:bg-primary-950/40 px-3 py-1.5 rounded-xl transition-all">
-            Solve <ArrowRight className="w-3.5 h-3.5" />
-          </button>
-        </Link>
-      ),
-    },
-  ];
-
-  const handleToggleTopic = (topicKey: string) => {
-    setExpandedTopic(expandedTopic === topicKey ? null : topicKey);
-  };
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
 
+      {/* Search bar — above the hero */}
+      <div className="page-container pt-6">
+        <div className="flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 shadow-sm max-w-lg">
+          <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search topics..."
+            className="flex-1 bg-transparent text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 outline-none"
+          />
+        </div>
+      </div>
+
       {/* Hero */}
-      <div className="page-container pt-8">
+      <div className="page-container pt-3">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
           <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
             <Code2 className="w-96 h-96 text-white" />
           </div>
-          <div className="relative z-10 max-w-2xl space-y-4">
-            <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight flex items-center gap-2">
+          <div className="relative z-10 space-y-2 max-w-2xl">
+            <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
               ADYAPAN Coding Arena
             </h1>
             <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-              Master your Data Structures & Algorithms, crack placement coding rounds, and prepare for top product companies.
+              Master your Data Structures &amp; Algorithms, crack placement coding rounds, and prepare for top product companies.
             </p>
           </div>
         </div>
@@ -283,99 +175,38 @@ export default function CodingChallengesPage() {
         {/* Main Content Split */}
         <div className="grid lg:grid-cols-3 gap-8 items-start">
           <div className="lg:col-span-2 space-y-6">
-            {/* Search Bar */}
-            <Card padding="sm" className="flex items-center gap-3 border border-gray-100 dark:border-gray-800">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search problem name..."
-                  className="w-full py-2 pl-9 pr-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500"
-                />
-              </div>
-            </Card>
-
-            {/* Topic Groups Accordions */}
-            {isError && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                Unable to load coding questions from MySQL. Please make sure the backend and database are running.
-              </div>
-            )}
-            {!isError && !isLoading && (questions?.length ?? 0) === 0 && (
-              <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                No Coding Arena questions are currently stored in MySQL.
-              </div>
-            )}
-            <div className="space-y-4">
-              {TOPIC_GROUPS.map((group) => {
-                const topicQuestions = (questions ?? []).filter((q) =>
+            {/* Topic Grid — click to navigate */}
+            <div className="space-y-3">
+              {TOPIC_GROUPS.filter((g) =>
+                !search || g.title.toLowerCase().includes(search.toLowerCase())
+              ).map((group, idx) => {
+                const topicCount = (questions ?? []).filter((q) =>
                   q.topics.some((t) => t.toLowerCase() === group.key)
-                );
-                const isExpanded = expandedTopic === group.key;
+                ).length;
 
                 return (
-                  <div key={group.key} className="border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden bg-white dark:bg-gray-900 shadow-sm transition-all duration-200">
-                    {/* Collapsible Header */}
-                    <button
-                      onClick={() => handleToggleTopic(group.key)}
-                      className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors"
-                    >
-                      <div className="flex-1 pr-4">
-                        <h3 className="font-display font-bold text-base text-gray-900 dark:text-white flex items-center gap-2">
+                  <button
+                    key={group.key}
+                    onClick={() => navigate(`/student/challenges/topic/${group.key}`)}
+                    className="w-full text-left border border-gray-100 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 group overflow-hidden"
+                  >
+                    <div className="px-6 py-4 flex items-center justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-display font-bold text-base text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                           {group.title}
                         </h3>
-                        <p className="text-xs text-gray-400 mt-1">{group.description}</p>
+                        <p className="text-xs text-gray-400 mt-1 line-clamp-1">{group.description}</p>
                       </div>
-                      
-                      <div className="flex items-center gap-4">
-                        {/* Progress Bar */}
-                        <div className="hidden sm:flex items-center gap-3">
-                          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                            {topicQuestions.length} Questions
-                          </span>
-                          <div className="w-24 bg-gray-100 dark:bg-gray-800 h-2 rounded-full overflow-hidden">
-                            <div
-                              className="bg-orange-500 h-full transition-all duration-300"
-                              style={{
-                                width: `${
-                                  topicQuestions.length > 0
-                                    ? Math.min(
-                                        100,
-                                        Math.round(
-                                          ((stats?.topicStats?.[group.key]?.solved ?? 0) /
-                                            topicQuestions.length) *
-                                            100
-                                        )
-                                      )
-                                    : 0
-                                }%`,
-                              }}
-                            />
-                          </div>
+                      <div className="flex items-center gap-3 flex-shrink-0">
+                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                          {isLoading ? '...' : topicCount} Problems
+                        </span>
+                        <div className="w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-colors">
+                          <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
                         </div>
-
-                        {isExpanded ? (
-                          <ChevronUp className="w-5 h-5 text-gray-500" />
-                        ) : (
-                          <ChevronDown className="w-5 h-5 text-gray-500" />
-                        )}
                       </div>
-                    </button>
-
-                    {/* Collapsible Content */}
-                    {isExpanded && (
-                      <div className="border-t border-gray-100 dark:border-gray-850 p-6 bg-gray-50/50 dark:bg-gray-950/20">
-                        <Table
-                          columns={getColumnsForTopic(group.key)}
-                          data={topicQuestions}
-                          keyExtractor={(r: Question) => r._id}
-                          loading={isLoading}
-                          emptyMessage="No coding challenges found in this topic."
-                        />
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  </button>
                 );
               })}
             </div>

@@ -23,7 +23,7 @@ export default function CourseEditorPage() {
   });
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="page-wrapper space-y-6 max-w-3xl">
       <div className="flex items-center gap-3">
         <Link to="/teacher/courses"><Button variant="ghost" size="sm" leftIcon={<ArrowLeft className="w-4 h-4" />}>Back</Button></Link>
         <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">{isNew ? 'Create Course' : 'Edit Course'}</h1>

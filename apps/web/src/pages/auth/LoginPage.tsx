@@ -10,7 +10,6 @@ import { loginThunk, selectAuthLoading, selectAuthError, clearError, googleLogin
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { env } from '../../config/env';
-import Navbar from '../../components/layout/Navbar/Navbar';
 
 declare global {
   interface Window {
@@ -101,75 +100,50 @@ export default function LoginPage() {
   };
 
   return (
-    <>
-      <Navbar />
-      <div style={{
-        minHeight:'calc(100vh - 64px)',
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'center',
-        fontFamily:'Inter,sans-serif',
-        backgroundImage: 'url(/login-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        position:'relative',
-        overflow:'hidden',
-      }}>
-      
-      {/* ── Full-page dark overlay for readability ── */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'rgba(0, 0, 0, 0.5)',
-        zIndex: 0,
-      }} />
+    <div style={{ minHeight:'100vh', display:'flex', fontFamily:'Inter,sans-serif' }}>
 
-      {/* ── Decorative circles */}
-      {[{size:400,x:-100,y:-100,op:0.08},{size:300,x:'calc(100% - 150px)',y:'calc(100% - 150px)',op:0.08},{size:200,x:'50%',y:'30%',op:0.06}].map((c,i)=>(
-        <div key={i} style={{
-          position:'absolute',
-          width:c.size,
-          height:c.size,
-          borderRadius:'50%',
-          background:'rgba(255,255,255,0.05)',
-          left:c.x,
-          top:c.y,
-          opacity:c.op,
-          zIndex:1,
-        }} />
-      ))}
-
-      {/* ── Center form container ── */}
+      {/* ── Left panel — brand ── */}
       <div style={{
-        position:'relative',
-        zIndex:2,
-        display:'flex',
-        alignItems:'center',
-        justifyContent:'center',
-        padding:32,
-        width:'100%',
-      }}>
+        width:'42%', background:`linear-gradient(145deg, ${ORANGE} 0%, ${AMBER} 100%)`,
+        display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+        padding:48, position:'relative', overflow:'hidden',
+      }} className="hidden-mobile">
+        {/* decorative circles */}
+        {[{size:300,x:-80,y:-80,op:0.1},{size:200,x:120,y:60,op:0.08},{size:150,x:-40,y:200,op:0.08}].map((c,i)=>(
+          <div key={i} style={{ position:'absolute', width:c.size, height:c.size, borderRadius:'50%',
+            background:'rgba(255,255,255,0.15)', left:c.x, top:c.y, opacity:c.op }} />
+        ))}
+        <motion.div initial={{ opacity:0, y:20 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.6 }}
+          style={{ textAlign:'center', position:'relative', zIndex:1 }}>
+          {/* Logo */}
+          <img src="/logo.svg" alt="ADYAPAN" style={{ width:96, height:96, borderRadius:'50%', margin:'0 auto 24px', display:'block', boxShadow:'0 8px 32px rgba(0,0,0,0.2)', objectFit:'cover' }} />
+          <h1 style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:36, color:'#fff',
+            letterSpacing:4, marginBottom:12 }}>ADYAPAN</h1>
+          <p style={{ color:'rgba(255,255,255,0.85)', fontSize:15, lineHeight:1.6, maxWidth:260, margin:'0 auto' }}>
+            Hub for Smarter Connections,<br/>Stronger Relationships, Better Results.
+          </p>
+          <div style={{ marginTop:40, display:'flex', flexDirection:'column', gap:12 }}>
+            {['AI-Powered Career Development','200+ Expert-Led Courses','Placement Ready in 90 Days'].map(t=>(
+              <div key={t} style={{ display:'flex', alignItems:'center', gap:10, color:'rgba(255,255,255,0.9)', fontSize:14 }}>
+                <span style={{ width:6, height:6, borderRadius:'50%', background:'#FFE58A', flexShrink:0 }} />
+                {t}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* ── Right panel — form ── */}
+      <div style={{ flex:1, display:'flex', alignItems:'center', justifyContent:'center',
+        backgroundColor:'#FFFAF6', padding:32 }}>
         <motion.div initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }} transition={{ duration:0.5 }}
-          style={{
-            width:'100%',
-            maxWidth:420,
-            background:'rgba(255, 250, 246, 0.75)',
-            backdropFilter:'blur(10px)',
-            borderRadius:20,
-            padding:40,
-            boxShadow:'0 20px 60px rgba(0,0,0,0.3), 0 0 1px rgba(255,255,255,0.1) inset',
-            border:'1px solid rgba(255,255,255,0.2)',
-          }}>
+          style={{ width:'100%', maxWidth:420 }}>
 
           {/* Mobile logo */}
           <div style={{ textAlign:'center', marginBottom:32 }}>
             <Link to="/" style={{ textDecoration:'none', display:'inline-block' }}>
               <div style={{ display:'inline-flex', alignItems:'center', gap:10 }}>
-                <div style={{ width:44, height:44, borderRadius:'50%', background:`linear-gradient(135deg,${ORANGE},${AMBER})`,
-                  display:'flex', alignItems:'center', justifyContent:'center' }}>
-                  <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:900, fontSize:12, color:'#fff' }}>ady.</span>
-                </div>
+                <img src="/logo.svg" alt="ADYAPAN" style={{ width:44, height:44, borderRadius:'50%', objectFit:'cover' }} />
                 <span style={{ fontFamily:'Poppins,sans-serif', fontWeight:800, fontSize:20, color:'#1A0A00' }}>ADYAPAN</span>
               </div>
             </Link>
@@ -269,13 +243,8 @@ export default function LoginPage() {
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 768px) {
-          div[style*="maxWidth:420"] {
-            margin: 0 auto;
-          }
-        }
+        @media (max-width: 768px) { .hidden-mobile { display: none !important; } }
       `}</style>
-      </div>
-    </>
+    </div>
   );
 }
