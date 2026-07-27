@@ -26,7 +26,7 @@ export class JudgeService {
     language: string,
     input: string,
     expectedOutput: string | undefined,
-    timeLimitMs = 2000
+    timeLimitMs = 5000
   ): Promise<{
     passed: boolean;
     actualOutput: string;
@@ -93,6 +93,9 @@ export class JudgeService {
 
       // Runtime is returned in seconds (string) by Judge0, convert to ms
       const runtime = result.time ? Math.round(parseFloat(result.time) * 1000) : 0;
+
+      // Debug log for Judge0 response
+      logger.debug(`[JUDGE0] Status: ${statusId}, Runtime: ${runtime}ms, Code: ${result.status?.description || 'unknown'}`);
 
       if (statusId === 3) {
         // Accepted
@@ -219,11 +222,39 @@ export class JudgeService {
         });
         const runtime = Date.now() - startTime;
 
+        // Enhanced output comparison that handles multiple formats
+        const compareOutputs = (actual: string, expected: string): boolean => {
+          if (!expected) return false;
+          
+          // Method 1: Exact trim match
+          if (actual.trim() === expected.trim()) return true;
+          
+          // Method 2: Line-by-line comparison ignoring empty lines and leading/trailing spaces
+          const actualLines = actual.trim().split('\n').map(l => l.trim()).filter(l => l);
+          const expectedLines = expected.trim().split('\n').map(l => l.trim()).filter(l => l);
+          
+          if (actualLines.length === expectedLines.length) {
+            return actualLines.every((line, i) => line === expectedLines[i]);
+          }
+          
+          // Method 3: Normalize whitespace and compare
+          const normalizeSpaces = (str: string) => str.trim().replace(/\s+/g, ' ');
+          if (normalizeSpaces(actual) === normalizeSpaces(expected)) return true;
+          
+          // Method 4: Compare as numbers (for numeric output)
+          const actualNum = parseFloat(actual.trim());
+          const expectedNum = parseFloat(expected.trim());
+          if (!isNaN(actualNum) && !isNaN(expectedNum) && actualNum === expectedNum) return true;
+          
+          return false;
+        };
+
         const cleanStdout = stdout.trim();
-        const cleanExpected = expectedOutput?.trim();
-        // A custom run has no expected result. It is successful when the code
-        // executes; submissions always provide an expected result.
-        const passed = cleanExpected === undefined || cleanStdout === cleanExpected;
+        const cleanExpected = expectedOutput?.trim() || '';
+        
+        // A custom run has no expected result. It is successful when the code executes.
+        // Submissions always provide an expected result.
+        const passed = !expectedOutput || compareOutputs(cleanStdout, cleanExpected);
 
         return {
           passed,

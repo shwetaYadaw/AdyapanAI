@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { prisma } from '../config/prisma';
 import { authenticate } from '../middleware/auth.middleware';
 import { JudgeService } from '../services/judge.service';
+import { testCaseGeneratorService } from '../services/testCaseGenerator.service';
 import { queueService } from '../services/queue.service';
 import { sendSuccess } from '../utils/response.utils';
 import { AppError } from '../middleware/errorHandler.middleware';
@@ -280,8 +281,51 @@ router.get('/submissions/:id', authenticate, async (req, res, next) => {
 
     if (!submission) throw new AppError('Submission not found', 404);
 
-    sendSuccess({ res, data: submission });
-  } catch (err) { next(err); }
+    // Check if user owns this submission
+    if (submission.userId !== req.user!.userId) {
+      throw new AppError('Unauthorized: You can only view your own submissions', 403);
+    }
+
+    // Fetch execution logs for detailed debugging
+    const executionLogs = await prisma.executionLog.findMany({
+      where: { submissionId: submission.id },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    // Format response with comprehensive details
+    const enhancedResponse = {
+      id: submission.id,
+      status: submission.status,
+      language: submission.language,
+      runtime: submission.runtime,
+      passedCount: submission.passedCount,
+      totalCount: submission.totalCount,
+      score: submission.result?.score || 0,
+      verdict:
+        submission.status === 'accepted'
+          ? '✅ ACCEPTED'
+          : submission.status === 'wrong_answer'
+            ? '❌ WRONG ANSWER'
+            : submission.status === 'compile_error'
+              ? '❌ COMPILE ERROR'
+              : submission.status === 'runtime_error'
+                ? '❌ RUNTIME ERROR'
+                : submission.status === 'time_limit_exceeded'
+                  ? '⏱️ TIME LIMIT EXCEEDED'
+                  : `❌ ${submission.status.toUpperCase()}`,
+      errorMessage: submission.errorMessage,
+      result: submission.result,
+      executionLogs: executionLogs.map((log) => ({
+        timestamp: log.createdAt,
+        message: log.logMessage,
+      })),
+      createdAt: submission.createdAt,
+    };
+
+    sendSuccess({ res, data: enhancedResponse });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // GET /problems/submissions/history — Retrieve student's submission history
@@ -294,6 +338,120 @@ router.get('/submissions/history', authenticate, async (req, res, next) => {
     });
     sendSuccess({ res, data: history });
   } catch (err) { next(err); }
+});
+
+// POST /problems/generate-test-cases — Generate dynamic test cases for a problem (e.g., "Find Smallest Number")
+router.post('/generate-test-cases', authenticate, async (req, res, next) => {
+  try {
+    const { problemSlug, visibleCount = 6, hiddenCount = 18 } = req.body;
+
+    if (!problemSlug) {
+      throw new AppError('problemSlug is required', 400);
+    }
+
+    // Currently supports only "smallest-number-with-given-digit-sum"
+    if (problemSlug !== 'smallest-number-with-given-digit-sum') {
+      throw new AppError(
+        `Dynamic test case generation not supported for problem slug: ${problemSlug}`,
+        400
+      );
+    }
+
+    // Generate test cases using the test case generator service
+    const testCases = testCaseGeneratorService.generateAndVerifyTestCases({
+      problemSlug,
+      visibleCount,
+      hiddenCount,
+    });
+
+    // Find the problem
+    const problem = await prisma.problem.findUnique({
+      where: { slug: problemSlug },
+      include: { testCases: true },
+    });
+
+    if (!problem) {
+      throw new AppError(`Problem not found for slug: ${problemSlug}`, 404);
+    }
+
+    // Delete existing test cases
+    await prisma.problemTestCase.deleteMany({
+      where: { problemId: problem.id },
+    });
+
+    // Create new test cases
+    const createdTestCases = await Promise.all(
+      testCases.map((tc) =>
+        prisma.problemTestCase.create({
+          data: {
+            problemId: problem.id,
+            input: tc.input,
+            expectedOutput: tc.expectedOutput,
+            isHidden: tc.isHidden,
+            type: tc.type,
+          },
+        })
+      )
+    );
+
+    sendSuccess({
+      res,
+      message: 'Test cases generated and updated successfully',
+      data: {
+        problemSlug,
+        testCaseCount: createdTestCases.length,
+        visibleCount: createdTestCases.filter((tc) => !tc.isHidden).length,
+        hiddenCount: createdTestCases.filter((tc) => tc.isHidden).length,
+        testCases: testCases,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /problems/execution-logs/:submissionId — Get detailed execution logs for a submission
+router.get('/execution-logs/:submissionId', authenticate, async (req, res, next) => {
+  try {
+    const { submissionId } = req.params;
+
+    // Verify the submission belongs to the current user
+    const submission = await prisma.submission.findUnique({
+      where: { id: submissionId },
+    });
+
+    if (!submission) {
+      throw new AppError('Submission not found', 404);
+    }
+
+    if (submission.userId !== req.user!.userId) {
+      throw new AppError('Unauthorized: You can only view your own submissions', 403);
+    }
+
+    // Fetch all execution logs for this submission
+    const logs = await prisma.executionLog.findMany({
+      where: { submissionId },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    // Format logs with proper structure
+    const formattedLogs = logs.map((log) => ({
+      timestamp: log.createdAt,
+      message: log.logMessage,
+    }));
+
+    sendSuccess({
+      res,
+      message: 'Execution logs retrieved successfully',
+      data: {
+        submissionId,
+        totalLogs: formattedLogs.length,
+        logs: formattedLogs,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 export default router;
