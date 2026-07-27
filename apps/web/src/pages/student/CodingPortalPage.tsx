@@ -668,7 +668,7 @@ export default function CodingPortalPage() {
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
         </div>
 
