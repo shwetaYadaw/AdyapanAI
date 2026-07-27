@@ -123,6 +123,7 @@ export default function AptitudeQuizPage() {
                   <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{q.question}</p>
                 </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 
                 {/* Question Image */}
                 {q.questionImage && (
@@ -233,6 +234,8 @@ export default function AptitudeQuizPage() {
                     </motion.div>
                   </AnimatePresence>
                 )}
+=======
+>>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
 =======
 >>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
               </div>
