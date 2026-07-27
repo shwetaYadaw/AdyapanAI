@@ -118,6 +118,30 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         options: ['A is smaller than B', 'A is greater than B', 'Relationship between A and B cannot be determined', 'If x is smaller than y, then A is greater than B', 'None of these'],
         answer: 'None of these',
         explanation: 'x% of y = (x/100) × y = xy/100. y% of x = (y/100) × x = xy/100. Therefore A = B. So "None of these" (A equals B) is correct.'
+      },
+      {
+        question: 'If 20% of a = b, then b % of 20 is the same as:',
+        options: ['4% of a', '5% of a', '20% of a', 'None of these'],
+        answer: '4% of a',
+        explanation: '20% of a = b => (20/100) × a = b. b% of 20 = (b/100) × 20 = (20a/100 × 1/100) × 20 = (4/100) × a = 4% of a.'
+      },
+      {
+        question: 'In a certain school, 20% of students are below 8 years of age. The number of students above 8 years of age is 2/3 of the number of students of 8 years of age which is 48. What is the total number of students in the school?',
+        options: ['72', '80', '120', '150', '100'],
+        answer: '100',
+        explanation: 'Let total students = x. Students above 8 = 80% of x. Students of age 8 = 48. Students above 8 = (2/3) × 48 = 32. So 80% of x = 48 + 32 = 80. => (80/100) × x = 80 => x = 100.'
+      },
+      {
+        question: 'Two numbers A and B are such that the sum of 5% of A and 4% of B is two-third of the sum of 6% of A and 8% of B. Find the ratio of A : B.',
+        options: ['2 : 3', '1 : 1', '3 : 4', '4 : 3'],
+        answer: '4 : 3',
+        explanation: '5% of A + 4% of B = (2/3)(6% of A + 8% of B). => (1/20)A + (1/25)B = (1/25)A + (4/75)B. => (1/20 - 1/25)A = (4/75 - 1/25)B. => (1/100)A = (1/75)B. => A/B = 100/75 = 4/3. Required ratio = 4 : 3.'
+      },
+      {
+        question: 'A student multiplied a number by 3/5 instead of 5/3. What is the percentage error in the calculation?',
+        options: ['34%', '44%', '54%', '64%'],
+        answer: '64%',
+        explanation: 'Let the number be x. Error = (5/3)x - (3/5)x = (16/15)x. Error% = [(16/15)x / (5/3)x] × 100 = [(16/15) × (3/5)] × 100 = (48/75) × 100 = 64%.'
       }
     ]
   },
