@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Editor from '@monaco-editor/react';
 import {
-  ArrowLeft, Play, Send, BrainCircuit, BookOpen, Clock, ShieldAlert, Sparkles,
+  ArrowLeft, Play, Send, BookOpen, Clock, ShieldAlert,
   ThumbsUp, ThumbsDown, MessageSquare, Star, Share2, HelpCircle, Code, FileText, CheckCircle,
   Award
 } from 'lucide-react';
@@ -176,7 +176,7 @@ export default function CodingPortalPage() {
   const queryClient = useQueryClient();
   
   // Left Panel tabs
-  const [leftTab, setLeftTab] = useState<'description' | 'ai-mentor' | 'comments'>('description');
+  const [leftTab, setLeftTab] = useState<'description' | 'comments'>('description');
   
   // Code editor states
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
@@ -195,10 +195,6 @@ export default function CodingPortalPage() {
 
   // Responsive mobile views
   const [mobileTab, setMobileTab] = useState<'description' | 'code' | 'console'>('description');
-
-  // AI Mentor Prompt type
-  const [aiPromptType, setAiPromptType] = useState<'explain' | 'hint' | 'complexity' | 'review'>('explain');
-  const [aiMentorResponse, setAiMentorResponse] = useState('');
 
   // Like / Dislike / Star states
   const [liked, setLiked] = useState(false);
@@ -367,18 +363,6 @@ export default function CodingPortalPage() {
     onError: () => toast.error('Failed to submit code'),
   });
 
-  // Mutation: AI Mentor Prompt
-  const askAiMentor = useMutation({
-    mutationFn: (payload: { questionSlug: string; code: string; requestType: string }) =>
-      api.post('/challenges/ai-mentor', payload),
-    onSuccess: (res) => {
-      setAiMentorResponse(res.data.data.response);
-    },
-    onError: () => {
-      setAiMentorResponse('AI Mentor is temporarily offline. Please check your network and try again.');
-    },
-  });
-
   if (isLoading) return <PageLoader />;
   if (!question) return <div className="p-8 text-center text-gray-500">Problem not found.</div>;
 
@@ -415,17 +399,6 @@ export default function CodingPortalPage() {
     } else {
       toast.error('Editor is still loading...');
     }
-  };
-
-  const handleAskMentor = (type: 'explain' | 'hint' | 'complexity' | 'review') => {
-    setAiPromptType(type);
-    setLeftTab('ai-mentor');
-    setAiMentorResponse('AI Mentor is compiling thoughts... âš¡');
-    askAiMentor.mutate({
-      questionSlug: slug!,
-      code: editorCode,
-      requestType: type
-    });
   };
 
   return (
@@ -497,17 +470,6 @@ export default function CodingPortalPage() {
             >
               <BookOpen className="w-3.5 h-3.5" />
               Description
-            </button>
-            <button
-              onClick={() => handleAskMentor('explain')}
-              className={`px-3 py-2 font-semibold text-xxs border-b-2 flex items-center gap-1.5 transition-all ${
-                leftTab === 'ai-mentor'
-                  ? 'border-primary-500 text-primary-600 dark:text-primary-400 font-bold'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              <BrainCircuit className="w-3.5 h-3.5 text-purple-500 animate-pulse" />
-              AI Code Mentor
             </button>
             <button
               onClick={() => setLeftTab('comments')}
@@ -704,54 +666,6 @@ export default function CodingPortalPage() {
                       </div>
                     </div>
                   ))}
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { type: 'explain', label: '📖 Explain', desc: 'Break down the problem' },
-                    { type: 'hint', label: '💡 Hint', desc: 'Guided nudge toward solution' },
-                    { type: 'complexity', label: '⏱️ Complexity', desc: 'Analyse your code complexity' },
-                    { type: 'review', label: '🔍 Review', desc: 'Full code review + fix' },
-                  ].map(({ type, label, desc }) => (
-                    <button
-                      key={type}
-                      onClick={() => handleAskMentor(type as any)}
-                      className={`text-left px-3 py-2.5 rounded-xl border transition-all ${
-                        aiPromptType === type
-                          ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-300 dark:border-purple-700 shadow-sm'
-                          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
-                      }`}
-                    >
-                      <div className={`text-xs font-bold ${aiPromptType === type ? 'text-purple-700 dark:text-purple-300' : 'text-gray-700 dark:text-gray-300'}`}>
-                        {label}
-                      </div>
-                      <div className="text-[10px] text-gray-400 mt-0.5">{desc}</div>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="bg-gradient-to-r from-purple-500/5 to-indigo-500/5 border border-purple-100 dark:border-purple-900/20 rounded-xl p-3.5 shadow-xs">
-                  <div className="flex items-center gap-2 mb-2 text-xs font-bold text-purple-700 dark:text-purple-300">
-                    <Sparkles className={`w-3.5 h-3.5 ${askAiMentor.isPending ? 'animate-spin' : ''}`} />
-                    {aiPromptType === 'explain' ? '📖 PROBLEM EXPLANATION'
-                      : aiPromptType === 'hint' ? '💡 HINTS'
-                      : aiPromptType === 'complexity' ? '⏱️ COMPLEXITY ANALYSIS'
-                      : '🔍 CODE REVIEW'}
-                  </div>
-                  <div className="text-xs leading-relaxed">
-                    {askAiMentor.isPending ? (
-                      <div className="flex items-center gap-2 text-purple-400 text-xs py-2">
-                        <Sparkles className="w-3.5 h-3.5 animate-spin" />
-                        <span>AI Mentor is analysing...</span>
-                      </div>
-                    ) : aiMentorResponse ? (
-                      <MarkdownRenderer text={aiMentorResponse} />
-                    ) : (
-                      <p className="text-gray-400 text-xs">Select a mode above and the AI Mentor will respond based on your current code.</p>
-                    )}
-                  </div>
                 </div>
               </div>
             )}
