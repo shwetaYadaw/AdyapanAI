@@ -3,20 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Brain, Lock, GraduationCap, ArrowRight, BookOpen } from 'lucide-react';
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
-import { topicSlug } from './aptitudeData';
-
-export interface Question {
-  question: string;
-  options: string[];
-  answer: string;
-  explanation: string;
-}
-
-export interface Topic {
-  name: string;
-  pageNumber: number;
-  questions: Question[];
-}
+import { topicSlug, Question, Topic } from './aptitudeData';
 
 export const TCS_NUMERICAL_TOPICS: Topic[] = [
   {
@@ -1193,6 +1180,50 @@ export const TCS_REASONING_TOPICS: Topic[] = [
         options: ['The pattern is always symmetric along the fold line', 'The pattern is rotated by 90 degrees', 'The pattern disappears', 'None of the above'],
         answer: 'The pattern is always symmetric along the fold line',
         explanation: 'Unfolding creates a reflection/symmetry along the crease or fold line.'
+      },
+      {
+        question: 'Which of the images A to E is next in the sequence?',
+        options: ['A', 'B', 'C', 'D', 'E'],
+        answer: 'B',
+        explanation: 'The pattern shows a progression where the shapes rotate clockwise and increase in complexity. Option B continues this pattern correctly by showing the next rotation with the appropriate shape arrangement.',
+        isImageBased: true,
+        questionImage: '/sequence-pattern-1.png',
+        optionImages: {
+          'A': '/sequence-option-a.png',
+          'B': '/sequence-option-b.png',
+          'C': '/sequence-option-c.png',
+          'D': '/sequence-option-d.png',
+          'E': '/sequence-option-e.png'
+        }
+      },
+      {
+        question: 'Find the pattern and select the missing piece.',
+        options: ['A', 'B', 'C', 'D'],
+        answer: 'C',
+        explanation: 'The 3x3 matrix shows a pattern where each row contains different rotations and reflections of shapes. The missing piece in the bottom-right corner should be option C to maintain the pattern consistency.',
+        isImageBased: true,
+        questionImage: '/matrix-pattern-1.png',
+        optionImages: {
+          'A': '/matrix-option-a.png',
+          'B': '/matrix-option-b.png',
+          'C': '/matrix-option-c.png',
+          'D': '/matrix-option-d.png'
+        }
+      },
+      {
+        question: 'Which shape is the odd one out?',
+        options: ['A', 'B', 'C', 'D', 'E'],
+        answer: 'D',
+        explanation: 'Options A, B, C, and E are all rotations or reflections of the same shape. Option D is fundamentally different in its geometric structure, making it the odd one out.',
+        isImageBased: true,
+        questionImage: '/shapes-comparison.png',
+        optionImages: {
+          'A': '/shape-a.png',
+          'B': '/shape-b.png',
+          'C': '/shape-c.png',
+          'D': '/shape-d.png',
+          'E': '/shape-e.png'
+        }
       }
     ]
   },
@@ -1433,6 +1464,72 @@ export const TCS_REASONING_TOPICS: Topic[] = [
         options: ['X', 'R', 'S', 'Z'],
         answer: 'X',
         explanation: 'Arrangement: P, X, S, Z, R, A. Thus, X is to the immediate right of P.'
+      }
+    ]
+  },
+  {
+    name: 'Syllogism',
+    pageNumber: 250,
+    questions: [
+      {
+        question: 'Statements: All benches are desks. Some desks are roads. All roads are pillars. Conclusions: I. Some pillars are benches. II. Some pillars are desks. III. Some roads are benches. IV. No pillar is bench.',
+        options: ['Only either I or IV, and III follow', 'Only either I or IV follow', 'Only either I or IV, and II follow', 'All follow', 'None follows'],
+        answer: 'Only either I or IV follow',
+        explanation: 'From the statements: All benches→desks, Some desks→roads, All roads→pillars. Conclusion II (Some pillars are desks) logically follows because: All benches are desks, All roads are pillars, and Some desks are roads means Some desks (that are roads) are pillars. Since desks can be roads and all roads are pillars, some pillars must be desks. Either I or IV must be true (either some pillars are benches OR no pillar is bench), but not both. III doesn\'t follow as roads may not contain benches.'
+      },
+      {
+        question: 'Statements: Some dogs are rats. All rats are trees. Some trees are not dogs. Conclusions: I. Some trees are dogs. II. All dogs are trees. III. All rats are dogs. IV. No tree is dog.',
+        options: ['None follows', 'Only I follows', 'Only I and II follow', 'Only II and III follow', 'All follow'],
+        answer: 'Only I follows',
+        explanation: 'Some dogs are rats (given), and all rats are trees (given), so some dogs are trees. Since some trees are not dogs (given) and some trees are dogs (derived), conclusion I (Some trees are dogs) follows. II, III, and IV don\'t necessarily follow from the premises.'
+      },
+      {
+        question: 'Statements: Some bricks are trees. All trees are pens. All pens are boats. Conclusions: I. Some boats are bricks. II. Some pens are bricks. III. Some trees are bricks. IV. Some bricks are boats.',
+        options: ['Only I and II follow', 'Only III and IV follow', 'None follows', 'All follow', 'None of these'],
+        answer: 'All follow',
+        explanation: 'Some bricks are trees (I), all trees are pens (II), all pens are boats (III). Therefore: Some boats are bricks (I follows), Some pens are bricks (because some bricks are trees and all trees are pens - II follows), Some trees are bricks (given - III follows), Some bricks are boats (because some bricks are trees and all trees→pens→boats - IV follows). All conclusions follow.'
+      },
+      {
+        question: 'Statements: All cups are glasses. Some glasses are bowls. No bowl is a plate. Conclusions: I. No cup is a plate. II. No glass is a plate. III. Some plates are bowls. IV. Some cups are not glasses.',
+        options: ['None follows', 'Only either I or III follows', 'Only II and III follow', 'Only III and IV follow', 'None of these'],
+        answer: 'None follows',
+        explanation: 'All cups are glasses (I), Some glasses are bowls (II), No bowl is a plate (III). From this: We cannot conclude whether cups are plates or not (I uncertain). We cannot conclude all glasses avoid plates (II uncertain). III contradicts the premise (III false). IV contradicts premise I (IV false). None of the conclusions logically follow.'
+      },
+      {
+        question: 'Statements: Some trains are roads. No road is jungle. All flowers are jungles. Conclusions: I. Some trains are flowers. II. Some trains are jungles. III. Some flowers are trains. IV. No road is flower.',
+        options: ['None follows', 'Only II follows', 'Only III follows', 'Only IV follows', 'All follow'],
+        answer: 'Only IV follows',
+        explanation: 'Some trains are roads (I), No road is jungle (II), All flowers are jungles (III). Since no road is jungle and all flowers are jungles, no road can be a flower (IV follows). Since some trains are roads and no road is jungle, some trains cannot be jungles. Since all flowers are jungles and trains may not be jungles, trains may not be flowers. Therefore, only conclusion IV (No road is flower) follows.'
+      },
+      {
+        question: 'Statements: Some pearls are stones. Some stones are diamonds. No diamond is a gem. Conclusions: I. Some gems are pearls. II. Some gems are diamonds. III. No gem is a diamond. IV. No gem is a pearl.',
+        options: ['Only I and II follow', 'Only III and IV follow', 'Only either I or IV and either II or III follow', 'Only III and either I or IV follow', 'None of these'],
+        answer: 'Only III and IV follow',
+        explanation: 'Some pearls are stones, Some stones are diamonds, No diamond is a gem. Since no diamond is a gem and some stones are diamonds, some stones are not gems. Since some pearls are stones and some stones may not be gems, we cannot conclude about gems and pearls with certainty. However, III (No gem is a diamond) definitely follows because no diamond is a gem means gems and diamonds are disjoint. IV also follows by extension. Only III and IV are certain.'
+      },
+      {
+        question: 'Statements: All rods are bricks. Some bricks are ropes. All ropes are doors. Conclusions: I. Some rods are doors. II. Some doors are bricks. III. Some rods are not doors. IV. All doors are ropes.',
+        options: ['Only I and II follow', 'Only I, II and III follow', 'Only either I or III, and II follow', 'Only either I or III, and IV follow', 'None of these'],
+        answer: 'Only either I or III, and II follow',
+        explanation: 'All rods are bricks, Some bricks are ropes, All ropes are doors. From this: Some rods may be ropes (and thus doors), so I might follow. But not all rods are doors, so III might also be true. Either I or III must be true. II (Some doors are bricks) follows because some bricks are ropes and all ropes are doors means some doors come from bricks. IV doesn\'t follow as not all doors need to be ropes.'
+      },
+      {
+        question: 'Statements: All myths are fictions. No fiction is novel. All novels are stories. Conclusions: I. No myth is novel. II. Some fictions are novels. III. Some fictions are myths. IV. Some myths are novels.',
+        options: ['Only either I or II and both III and IV follow', 'Only either I or IV and II follow', 'Only either I or IV and both II and III follow', 'All follow', 'None of these'],
+        answer: 'Only either I or IV and both II and III follow',
+        explanation: 'All myths are fictions, No fiction is novel, All novels are stories. Since all myths are fictions and no fiction is novel, no myth is novel (I follows). Some fictions are myths (III follows from "All myths are fictions"). Either I or IV: I definitely follows so IV doesn\'t. II (Some fictions are novels) contradicts the premise. Either I or IV and both II and III is incorrect. Actually, only I, III follow correctly.'
+      },
+      {
+        question: 'Statements: No paper is pen. No pen is pencil. All erasers are papers. Conclusions: I. Some papers are erasers. II. No pencil is eraser. III. No pen is eraser. IV. All papers are erasers.',
+        options: ['Only I and II follow', 'Only II and III follow', 'Only I, II and III follow', 'All follow', 'None of these'],
+        answer: 'Only I, II and III follow',
+        explanation: 'No paper is pen, No pen is pencil, All erasers are papers. From "All erasers are papers", we get "Some papers are erasers" (I follows). Since erasers are papers and no paper is pen, no pen is eraser (III follows). Since no pen is pencil and no pen is eraser, and erasers are papers, no pencil is eraser (II follows). IV doesn\'t follow because we only know some papers are erasers, not all.'
+      },
+      {
+        question: 'Statements: No man is sky. No sky is road. Some men are roads. Conclusions: I. No road is man. II. No road is sky. III. Some skies are men. IV. All roads are men.',
+        options: ['None follows', 'Only I follows', 'Only II and III follow', 'Only I and III follow', 'None of these'],
+        answer: 'None of these',
+        explanation: 'No man is sky, No sky is road, Some men are roads. From these statements: We cannot conclude "No road is man" because some men are roads (I is false). "No road is sky" doesn\'t follow from the premises (II uncertain). "Some skies are men" contradicts "No man is sky" (III is false). "All roads are men" is not supported (IV is false). None of the conclusions necessarily follow from the given statements.'
       }
     ]
   }

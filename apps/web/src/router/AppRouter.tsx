@@ -31,6 +31,7 @@ const ContestsPage         = lazy(() => import('../pages/student/ContestsPage'))
 const TcsNqtPrepPage       = lazy(() => import('../pages/student/TcsNqtPrepPage'));
 const AptitudePage         = lazy(() => import('../pages/student/AptitudePage'));
 const AptitudeQuizPage     = lazy(() => import('../pages/student/AptitudeQuizPage'));
+const TestAttemptPage      = lazy(() => import('../pages/student/TestAttemptPage'));
 const CodingTopicPage      = lazy(() => import('../pages/student/CodingTopicPage'));
 
 // Teacher
@@ -92,7 +93,7 @@ export default function AppRouter() {
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="learn/:courseId" element={<Navigate to="/student/dashboard" replace />} />
-            <Route path="placement" element={<Navigate to="/student/dashboard" replace />} />
+            <Route path="placement" element={<PlacementPage />} />
             <Route path="resume" element={<ResumeBuilderPage />} />
             <Route path="jobs" element={<Navigate to="/student/dashboard" replace />} />
             <Route path="certificates" element={<CertificatesPage />} />
@@ -106,6 +107,7 @@ export default function AppRouter() {
             <Route path="tcs-nqt" element={<TcsNqtPrepPage />} />
             <Route path="aptitude" element={<AptitudePage />} />
             <Route path="aptitude/:module/:topicSlug" element={<AptitudeQuizPage />} />
+            <Route path="tests/:testId" element={<TestAttemptPage />} />
           </Route>
 
           {/* Teacher */}

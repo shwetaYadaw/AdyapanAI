@@ -42,6 +42,8 @@ model User {
   mockInterviews      MockInterviewSession[]
   resume              Resume?
   auditLogs           AuditLog[]
+  puzzleAttempts      PuzzleAttempt[]
+  puzzleReviews       PuzzleReview[]
 }
 
 model StudentProfile {
@@ -518,4 +520,65 @@ model AuditLog {
   ipAddress  String?
   userAgent  String?
   createdAt  DateTime @default(now())
+}
+
+// ─── Puzzles ────────────────────────────────────────────────────────────────
+
+model Puzzle {
+  id              String           @id @default(uuid())
+  title           String
+  description     String?          @db.Text
+  puzzleType      String           // pattern, sequence, logic, shape, odd-one-out
+  difficulty      String           @default("medium") // easy, medium, hard
+  question        String           @db.Text
+  options         Json             // Array of { id, description, imageUrl }
+  correctAnswer   String
+  explanation     String?          @db.Text
+  category        String?
+  topic           String?
+  tags            Json?            // Array of strings
+  estimatedTime   Int?             // seconds
+  isPublished     Boolean          @default(false)
+  rating          Float            @default(0)
+  ratingCount     Int              @default(0)
+  completionRate  Float            @default(0)
+  createdBy       String?
+  attempts        PuzzleAttempt[]
+  reviews         PuzzleReview[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model PuzzleAttempt {
+  id              String   @id @default(uuid())
+  puzzleId        String
+  puzzle          Puzzle   @relation(fields: [puzzleId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  selectedAnswer  String
+  isCorrect       Boolean
+  timeSpent       Int      // seconds
+  confidence      Float?   // 0-1
+  aiAnalysis      Json?    // { reasoning, stepByStep, explanation }
+  score           Int?
+  xpEarned        Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([puzzleId, userId, createdAt])
+}
+
+model PuzzleReview {
+  id        String   @id @default(uuid())
+  puzzleId  String
+  puzzle    Puzzle   @relation(fields: [puzzleId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating    Int      // 1-5
+  comment   String?  @db.Text
+  helpful   Boolean?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([puzzleId, userId])
 }

@@ -92,8 +92,8 @@ export default function PlacementPage() {
 
       {activeSection === 'aptitude' && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {(tests ?? []).map((test: { _id: string; title: string; category: string; difficulty: string; duration: number; totalMarks: number }, i: number) => (
-            <motion.div key={test._id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
+          {(tests ?? []).map((test: any, i: number) => (
+            <motion.div key={test.id || test._id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
               <Card padding="md">
                 <div className="flex items-start justify-between mb-3">
                   <Badge variant="primary" className="capitalize">{test.category}</Badge>
@@ -106,7 +106,9 @@ export default function PlacementPage() {
                   <span>⏱ {test.duration} min</span>
                   <span>📊 {test.totalMarks} marks</span>
                 </div>
-                <Button size="sm" fullWidth leftIcon={<Play className="w-3.5 h-3.5" />}>Start Test</Button>
+                <Link to={`/student/tests/${test.id || test._id}`}>
+                  <Button size="sm" fullWidth leftIcon={<Play className="w-3.5 h-3.5" />}>Start Test</Button>
+                </Link>
               </Card>
             </motion.div>
           ))}

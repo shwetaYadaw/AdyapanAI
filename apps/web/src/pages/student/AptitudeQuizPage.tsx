@@ -129,12 +129,24 @@ export default function AptitudeQuizPage() {
                   </p>
                 </div>
 
+                {/* Question Image */}
+                {q.questionImage && (
+                  <div className="w-full rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
+                    <img
+                      src={q.questionImage}
+                      alt="Question visualization"
+                      className="w-full h-auto object-contain max-h-64"
+                    />
+                  </div>
+                )}
+
                 {/* Options */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                <div className={q.isImageBased ? "grid grid-cols-1 gap-3" : "grid grid-cols-1 sm:grid-cols-2 gap-2.5"}>
                   {q.options.map((opt) => {
                     const isSelected = selected === opt;
                     const isCorrect = opt === q.answer;
                     const answered = selected !== undefined;
+                    const optionImage = q.optionImages?.[opt];
 
                     let cls =
                       'border-gray-200 hover:border-primary-300 dark:border-gray-700 dark:hover:border-primary-700 bg-white dark:bg-gray-950 text-gray-700 dark:text-gray-300 cursor-pointer';
@@ -160,10 +172,21 @@ export default function AptitudeQuizPage() {
                         key={opt}
                         disabled={!!selected}
                         onClick={() => handleSelectOption(key, opt)}
-                        className={`flex items-center gap-2 w-full text-left px-4 py-3 rounded-xl border text-xs font-medium transition-all ${cls}`}
+                        className={`flex flex-col items-center justify-center gap-2 w-full text-left px-4 py-3 rounded-xl border text-xs font-medium transition-all ${cls}`}
                       >
-                        {icon && <span>{icon}</span>}
-                        <span className="flex-1">{opt}</span>
+                        {optionImage && (
+                          <div className="w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <img
+                              src={optionImage}
+                              alt={`Option ${opt}`}
+                              className="w-full h-auto object-contain max-h-48"
+                            />
+                          </div>
+                        )}
+                        <div className="flex items-center gap-2 w-full">
+                          {icon && <span>{icon}</span>}
+                          <span className="flex-1">{opt}</span>
+                        </div>
                       </button>
                     );
                   })}
