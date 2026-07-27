@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth.middleware';
 import { prisma } from '../config/prisma';
 import { JudgeService } from '../services/judge.service';
+import { executionEngineService } from '../services/executionEngine.service';
 import { sendSuccess } from '../utils/response.utils';
 import { AppError } from '../middleware/errorHandler.middleware';
 import { logger } from '../utils/logger';
@@ -657,25 +658,38 @@ router.post('/questions/:id/run', authenticate, async (req, res, next) => {
 
     const runInput = typeof input === 'string' ? input : question.sampleInput;
     const isCustomRun = typeof input === 'string' && input !== question.sampleInput;
-    const results = await judge.runTestCase(
+    
+    // Use Execution Engine instead of Judge0
+    const result = await executionEngineService.runCode(
       code,
       language,
       runInput,
-      isCustomRun ? undefined : question.sampleOutput,
-      question.timeLimit
+      question.timeLimit,
+      question.memoryLimit
     );
+
+    // Check if output matches expected (only for non-custom runs)
+    let passed = result.verdict === 'AC';
+    if (!isCustomRun && question.sampleOutput) {
+      const normalizeOutput = (str: string) => str.trim().replace(/\s+/g, ' ');
+      passed = normalizeOutput(result.output) === normalizeOutput(question.sampleOutput);
+    }
 
     sendSuccess({
       res,
       data: {
-        passed: results.passed,
-        actualOutput: results.actualOutput,
+        passed,
+        actualOutput: result.output,
         expectedOutput: isCustomRun ? undefined : question.sampleOutput,
         input: runInput,
         isCustomRun,
-        runtime: results.runtime,
-        errorType: results.errorType,
-        errorMessage: results.errorMessage,
+        runtime: result.runtime,
+        memory: result.memory,
+        verdict: result.verdict,
+        errorType: result.verdict === 'CE' ? 'compile_error' : 
+                   result.verdict === 'RE' ? 'runtime_error' : 
+                   result.verdict === 'TLE' ? 'time_limit_exceeded' : undefined,
+        errorMessage: result.error || undefined,
       },
     });
   } catch (err) { next(err); }
@@ -730,6 +744,25 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
     return max;
   };
 
+  const solveDivisibleK = (nums: number[], k: number) => {
+    const map = new Map<number, number>();
+    map.set(0, 1); // Frequency map: remainder → count
+    let prefixSum = 0;
+    let count = 0;
+    
+    for (let num of nums) {
+      prefixSum += num;
+      // Handle negative numbers correctly
+      let rem = ((prefixSum % k) + k) % k;
+      
+      if (map.has(rem)) {
+        count += map.get(rem)!; // Add frequency of this remainder
+      }
+      map.set(rem, (map.get(rem) || 0) + 1); // Increment frequency
+    }
+    return count;
+  };
+
   const solveTwoSum = (nums: number[], target: number) => {
     const map = new Map();
     for (let i = 0; i < nums.length; i++) {
@@ -751,16 +784,33 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
     return minDiff;
   };
 
+  const solveSpaceOptimization = (a: number, b: number) => {
+    const result: number[] = [];
+    for (let i = a; i <= b; i++) {
+      if (i % 2 === 0 || i % 5 === 0) {
+        result.push(i);
+      }
+    }
+    return result.join(' ');
+  };
+
   const isKadane = title.includes("Subarray") || title.includes("Kadane");
+  const isDivisibleK = title.includes("Divisible K") || title.includes("Divisible k");
   const isTwoSum = title.toLowerCase().includes("two sum");
   const isChocolate = title.includes("Chocolate");
   const isSmallest = title.toLowerCase().includes("smallest");
+  const isSpaceOptimization = title.includes("Space Optimization");
 
   // 5 Visible Cases
   for (let i = 1; i <= 5; i++) {
     let input = '';
     let output = '';
-    if (isKadane) {
+    if (isDivisibleK) {
+      const arr = Array.from({ length: 5 + i }, () => Math.floor(Math.random() * 20) - 10);
+      const k = [2, 3, 5, 7][i % 4];
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(solveDivisibleK(arr, k));
+    } else if (isKadane) {
       const arr = Array.from({ length: 5 + i }, () => Math.floor(Math.random() * 20) - 10);
       input = arr.join(' ');
       output = String(solveKadane(arr));
@@ -779,6 +829,11 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       const testArr = Array.from({ length: 5 + i }, () => Math.floor(Math.random() * 100) + 1);
       input = testArr.join(' ');
       output = String(Math.min(...testArr));
+    } else if (isSpaceOptimization) {
+      const a = Math.floor(Math.random() * 10) + 1;
+      const b = a + Math.floor(Math.random() * 20) + 10;
+      input = `${a} ${b}`;
+      output = solveSpaceOptimization(a, b);
     } else {
       input = `${sampleInput} ${i}`;
       output = sampleOutput;
@@ -786,11 +841,16 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
     cases.push({ input, output, isHidden: false, type: 'visible' });
   }
 
-  // 20 Hidden Cases
-  for (let i = 1; i <= 20; i++) {
+  // 10 Hidden Cases
+  for (let i = 1; i <= 10; i++) {
     let input = '';
     let output = '';
-    if (isKadane) {
+    if (isDivisibleK) {
+      const arr = Array.from({ length: 15 + i }, () => Math.floor(Math.random() * 100) - 50);
+      const k = [2, 3, 5, 7, 11][i % 5];
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(solveDivisibleK(arr, k));
+    } else if (isKadane) {
       const arr = Array.from({ length: 15 + i }, () => Math.floor(Math.random() * 100) - 50);
       input = arr.join(' ');
       output = String(solveKadane(arr));
@@ -804,6 +864,11 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       const m = Math.floor(Math.random() * 5) + 2;
       input = `${arr.join(' ')}\n${m}`;
       output = String(solveChocolate(arr, m));
+    } else if (isSpaceOptimization) {
+      const a = Math.floor(Math.random() * 50) + 1;
+      const b = a + Math.floor(Math.random() * 100) + 50;
+      input = `${a} ${b}`;
+      output = solveSpaceOptimization(a, b);
     } else {
       input = `${sampleInput} ${10 + i}`;
       output = sampleOutput;
@@ -811,11 +876,21 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
     cases.push({ input, output, isHidden: true, type: 'hidden' });
   }
 
-  // 10 Edge Cases
-  for (let i = 1; i <= 10; i++) {
+  // 5 Edge Cases
+  for (let i = 1; i <= 5; i++) {
     let input = '';
     let output = '';
-    if (isKadane) {
+    if (isDivisibleK) {
+      let arr: number[] = [];
+      let k = 3;
+      if (i === 1) { arr = [2, 3, -1, 1, -3, -1]; k = 5; }
+      else if (i === 2) { arr = [4, 5, 0, -2, -3, 1]; k = 5; }
+      else if (i === 3) { arr = [-1, -1, -1]; k = 2; }
+      else if (i === 4) { arr = [0, 0, 0]; k = 3; }
+      else { arr = Array.from({ length: 10 }, () => (i % 2 === 0 ? 10 : -10)); k = 5; }
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(solveDivisibleK(arr, k));
+    } else if (isKadane) {
       let arr: number[] = [];
       if (i === 1) arr = [-5];
       else if (i === 2) arr = [-10, -2, -3, -4, -1, -9];
@@ -844,6 +919,16 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       const testArr = Array.from({ length: 10 + i }, () => Math.floor(Math.random() * 1000) + 1);
       input = testArr.join(' ');
       output = String(Math.min(...testArr));
+    } else if (isSpaceOptimization) {
+      let a = 1, b = 10;
+      if (i === 1) { a = 1; b = 5; }
+      else if (i === 2) { a = 10; b = 20; }
+      else if (i === 3) { a = 50; b = 100; }
+      else if (i === 4) { a = 1; b = 2; }
+      else if (i === 5) { a = 100; b = 200; }
+      else { a = i * 10; b = a + 50; }
+      input = `${a} ${b}`;
+      output = solveSpaceOptimization(a, b);
     } else {
       input = `${sampleInput} ${100 + i}`;
       output = sampleOutput;
@@ -855,7 +940,12 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
   for (let i = 1; i <= 5; i++) {
     let input = '';
     let output = '';
-    if (isKadane) {
+    if (isDivisibleK) {
+      const arr = Array.from({ length: 500 + i * 100 }, () => Math.floor(Math.random() * 1000) - 500);
+      const k = [2, 3, 5, 7, 11][i % 5];
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(solveDivisibleK(arr, k));
+    } else if (isKadane) {
       const arr = Array.from({ length: 500 + i * 100 }, () => Math.floor(Math.random() * 1000) - 500);
       input = arr.join(' ');
       output = String(solveKadane(arr));
@@ -873,6 +963,11 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       const testArr = Array.from({ length: 500 + i * 100 }, () => Math.floor(Math.random() * 10000) + 1);
       input = testArr.join(' ');
       output = String(Math.min(...testArr));
+    } else if (isSpaceOptimization) {
+      const a = Math.floor(Math.random() * 1000) + 1;
+      const b = a + Math.floor(Math.random() * 10000) + 5000;
+      input = `${a} ${b}`;
+      output = solveSpaceOptimization(a, b);
     } else {
       input = `${sampleInput} ${1000 + i}`;
       output = sampleOutput;
@@ -915,6 +1010,16 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
     let finalStatus: 'accepted' | 'wrong_answer' | 'time_limit_exceeded' | 'compile_error' | 'runtime_error' = 'accepted';
     let errorMessage = '';
     let maxRuntime = 0;
+    const testCaseResults: Array<{
+      testCaseNumber: number;
+      passed: boolean;
+      isHidden: boolean;
+      input?: string;
+      expectedOutput?: string;
+      actualOutput?: string;
+      runtime?: number;
+      errorMessage?: string;
+    }> = [];
 
     if (isCheating) {
       finalStatus = 'wrong_answer';
@@ -942,31 +1047,75 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
         return false;
       };
 
-      // Execute all test cases to get accurate counts
+      // Execute all test cases using Execution Engine
       for (let idx = 0; idx < testCases.length; idx++) {
         const tc = testCases[idx];
-        const result = await judge.runTestCase(
-          code,
-          language,
-          tc.input,
-          tc.output,
-          question.timeLimit
-        );
+        
+        try {
+          // Use Execution Engine instead of Judge0
+          const result = await executionEngineService.runCode(
+            code,
+            language,
+            tc.input,
+            question.timeLimit,
+            question.memoryLimit
+          );
 
-        // Use the enhanced comparison
-        const passed = result.passed || compareOutputs(result.actualOutput, tc.output);
+          // Use the enhanced comparison
+          const passed = result.verdict === 'AC' || compareOutputs(result.output, tc.output);
 
-        logger.info(`[TC ${idx + 1}/${testCases.length}] Input: "${tc.input.substring(0,20)}", Expected: "${tc.output}", Got: "${result.actualOutput.substring(0,20)}", Passed: ${passed}`);
+          logger.info(`[TC ${idx + 1}/${testCases.length}] Input: "${tc.input.substring(0,20)}", Expected: "${tc.output}", Got: "${result.output.substring(0,20)}", Passed: ${passed}, Verdict: ${result.verdict}`);
 
-        if (passed) {
-          passedCount++;
-          maxRuntime = Math.max(maxRuntime, result.runtime);
-        } else {
-          if (finalStatus === 'accepted') {
-            finalStatus = (result.errorType as any) || 'wrong_answer';
-            errorMessage = result.errorMessage || `Wrong Answer on testcase ${passedCount + 1}`;
-            logger.warn(`[FAILED] TC ${idx + 1}: Expected "${tc.output}", Got "${result.actualOutput}"`);
+          // Store test case result
+          testCaseResults.push({
+            testCaseNumber: idx + 1,
+            passed,
+            isHidden: tc.isHidden,
+            // Only include input/output for non-hidden test cases
+            input: tc.isHidden ? undefined : tc.input,
+            expectedOutput: tc.isHidden ? undefined : tc.output,
+            actualOutput: tc.isHidden ? undefined : result.output,
+            runtime: result.runtime,
+            errorMessage: result.error || undefined,
+          });
+
+          if (passed) {
+            passedCount++;
+            maxRuntime = Math.max(maxRuntime, result.runtime);
+          } else {
+            if (finalStatus === 'accepted') {
+              // Map execution engine verdict to status
+              if (result.verdict === 'TLE') {
+                finalStatus = 'time_limit_exceeded';
+              } else if (result.verdict === 'CE') {
+                finalStatus = 'compile_error';
+              } else if (result.verdict === 'RE') {
+                finalStatus = 'runtime_error';
+              } else {
+                finalStatus = 'wrong_answer';
+              }
+              errorMessage = result.error || `Wrong Answer on testcase ${passedCount + 1}`;
+              logger.warn(`[FAILED] TC ${idx + 1}: Expected "${tc.output}", Got "${result.output}"`);
+            }
+            break;
           }
+        } catch (error: any) {
+          logger.error(`[EXECUTION ERROR] TC ${idx + 1}:`, error.message);
+          
+          // Store error result
+          testCaseResults.push({
+            testCaseNumber: idx + 1,
+            passed: false,
+            isHidden: tc.isHidden,
+            input: tc.isHidden ? undefined : tc.input,
+            expectedOutput: tc.isHidden ? undefined : tc.output,
+            actualOutput: undefined,
+            runtime: 0,
+            errorMessage: error.message,
+          });
+          
+          finalStatus = 'runtime_error';
+          errorMessage = error.message || 'Execution failed';
           break;
         }
       }
@@ -1054,48 +1203,31 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
           // Check topic-wise completion
           const currentTopics = (question.topics as string[]) || [];
           for (const topicKey of currentTopics) {
-            const allQuestions = await prisma.question.findMany();
-            const topicQuestions = allQuestions.filter(q => {
-              const qt = (q.topics as string[]) || [];
-              return qt.includes(topicKey);
-            });
-            const topicQuestionIds = topicQuestions.map(q => q.id);
+            try {
+              const allQuestions = await prisma.question.findMany();
+              const topicQuestions = allQuestions.filter(q => {
+                const qt = (q.topics as string[]) || [];
+                return qt.includes(topicKey);
+              });
+              const topicQuestionIds = topicQuestions.map(q => q.id);
 
-            const solvedTopicSubmissions = await prisma.submission.findMany({
-              where: {
-                userId: req.user!.userId,
-                status: 'accepted',
-                questionId: { in: topicQuestionIds }
-              },
-              distinct: ['questionId']
-            });
+              const solvedTopicSubmissions = await prisma.submission.findMany({
+                where: {
+                  userId: req.user!.userId,
+                  status: 'accepted',
+                  questionId: { in: topicQuestionIds }
+                },
+                distinct: ['questionId']
+              });
 
-            if (solvedTopicSubmissions.length === topicQuestions.length && topicQuestions.length > 0) {
-              try {
-                const { CertificateService } = require('../services/certificate.service');
-                const certService = new CertificateService();
-                const User = require('../models/user.model').default;
-                const Course = require('../models/course.model').default;
-                const mongoUser = await User.findOne({ email: req.user!.email });
-                if (mongoUser) {
-                  let dsaCourse = await Course.findOne({ slug: `dsa-topic-${topicKey}` });
-                  if (!dsaCourse) {
-                    dsaCourse = await Course.create({
-                      title: `DSA Topic: ${topicKey.toUpperCase()}`,
-                      slug: `dsa-topic-${topicKey}`,
-                      shortDescription: `Crack any coding interview with comprehensive DSA preparation for ${topicKey}`,
-                      description: `Master Data Structures and Algorithms with ${topicKey} problems.`,
-                      category: 'placement',
-                      subCategory: 'DSA',
-                      skillsTaught: [topicKey],
-                      certificateEnabled: true,
-                    });
-                  }
-                  await certService.generateDSACertificate(mongoUser._id.toString(), dsaCourse._id.toString(), topicKey);
-                }
-              } catch (certErr) {
-                console.error(`Auto certificate generation for topic ${topicKey} failed:`, certErr);
+              // TODO: Certificate generation for topic completion
+              // Disabled temporarily - needs MongoDB to Prisma migration
+              if (solvedTopicSubmissions.length === topicQuestions.length && topicQuestions.length > 0) {
+                logger.info(`User ${req.user!.userId} completed all questions for topic: ${topicKey}`);
+                // Certificate generation would go here
               }
+            } catch (topicErr) {
+              logger.error(`Topic completion check failed for ${topicKey}:`, topicErr);
             }
           }
         }
@@ -1117,7 +1249,20 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
         passedCount: submission.passedCount,
         totalCount: submission.totalCount,
         createdAt: submission.createdAt,
-        unlockedBadge
+        unlockedBadge,
+        testCaseResults: testCaseResults.map(tc => ({
+          testCaseNumber: tc.testCaseNumber,
+          passed: tc.passed,
+          isHidden: tc.isHidden,
+          // Only show details for visible test cases
+          ...(tc.isHidden ? {} : {
+            input: tc.input,
+            expectedOutput: tc.expectedOutput,
+            actualOutput: tc.actualOutput,
+          }),
+          runtime: tc.runtime,
+          errorMessage: tc.errorMessage,
+        })),
       },
       message: finalStatus === 'accepted' ? 'Accepted!' : 'Failed',
     });

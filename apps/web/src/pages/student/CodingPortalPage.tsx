@@ -336,7 +336,11 @@ export default function CodingPortalPage() {
         toast.error('Sample test cases failed.');
       }
     },
-    onError: () => toast.error('Failed to run code'),
+    onError: (error: any) => {
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to run code';
+      toast.error(`Execution Error: ${errorMessage}`);
+      console.error('Run code error:', error);
+    },
   });
 
   // Mutation: Submit Code (all tests)
@@ -360,7 +364,11 @@ export default function CodingPortalPage() {
         toast.error(`Solution Rejected: ${payload.status.toUpperCase().replace(/_/g, ' ')}`);
       }
     },
-    onError: () => toast.error('Failed to submit code'),
+    onError: (error: any) => {
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to submit code';
+      toast.error(`Submission Error: ${errorMessage}`);
+      console.error('Submit code error:', error);
+    },
   });
 
   if (isLoading) return <PageLoader />;

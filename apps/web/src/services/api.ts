@@ -3,7 +3,7 @@ import { env } from '../config/env';
 
 export const api = axios.create({
   baseURL: `${env.API_URL}/api/v1`,
-  timeout: 8000,
+  timeout: 120000, // 120 seconds for code submissions (40 test cases can take time)
   headers: { 'Content-Type': 'application/json' },
 });
 
