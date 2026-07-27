@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from . import chat, tutor, quiz, flashcards, mindmap, notes, career, resume, interview, summarize, ocr, translate, speech, assignment
+from . import chat, tutor, quiz, flashcards, mindmap, notes, career, resume, interview, summarize, ocr, translate, speech, assignment, puzzle
 
 api_router = APIRouter(prefix="/api/v1")
 
@@ -17,3 +17,4 @@ api_router.include_router(ocr.router,         tags=["OCR"])
 api_router.include_router(translate.router,   tags=["Translate"])
 api_router.include_router(speech.router,      tags=["Speech"])
 api_router.include_router(assignment.router,  tags=["Assignment"])
+api_router.include_router(puzzle.router,      tags=["Puzzle"])
