@@ -1881,8 +1881,6 @@ export const TCS_REASONING_TOPICS: Topic[] = [
   {
     name: 'Non-Verbal Reasoning',
     pageNumber: 58,
-<<<<<<< HEAD
-<<<<<<< HEAD
     questions: [
       {
         question: 'Choose the correct mirror image of a clock displaying 3:00.',
@@ -1941,12 +1939,6 @@ export const TCS_REASONING_TOPICS: Topic[] = [
         }
       }
     ]
-=======
-    questions: []
->>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
-=======
-    questions: []
->>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
   },
   {
     name: 'Syllogism',
@@ -2001,8 +1993,6 @@ export const TCS_REASONING_TOPICS: Topic[] = [
   {
     name: 'Seating Arrangement',
     pageNumber: 235,
-<<<<<<< HEAD
-<<<<<<< HEAD
     questions: [
       {
         question: 'A, B, C, D and E are sitting on a bench. A sits next to B, C next to D. D is not sitting with E (who is on the left end). C is second from the right. A is to the right of B and E. A and C sit together. What position is A sitting in?',
@@ -2083,12 +2073,6 @@ export const TCS_REASONING_TOPICS: Topic[] = [
         explanation: 'No man is sky, No sky is road, Some men are roads. From these statements: We cannot conclude "No road is man" because some men are roads (I is false). "No road is sky" doesn\'t follow from the premises (II uncertain). "Some skies are men" contradicts "No man is sky" (III is false). "All roads are men" is not supported (IV is false). None of the conclusions necessarily follow from the given statements.'
       }
     ]
-=======
-    questions: []
->>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
-=======
-    questions: []
->>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
   }
 ];
 
