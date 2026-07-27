@@ -10,15 +10,20 @@
     "dev:web": "yarn workspace @adyapan/web dev",
     "dev:backend": "yarn workspace @adyapan/backend dev",
     "dev:ai": "cd apps/ai-service && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload",
+    "dev:execution": "yarn workspace @adyapan/execution-engine dev",
     "dev:mobile": "yarn workspace @adyapan/mobile start",
+    "dev:all": "concurrently \"npm:dev:backend\" \"npm:dev:web\" \"npm:dev:execution\"",
     "build:web": "yarn workspace @adyapan/web build",
     "build:backend": "yarn workspace @adyapan/backend build",
+    "build:execution": "yarn workspace @adyapan/execution-engine build",
+    "build:docker-runners": "cd apps/execution-engine && npm run docker:build-runners",
     "lint": "yarn workspaces run lint",
     "test": "yarn workspaces run test",
     "setup-hooks": "cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit && echo '✅ Git hooks installed'",
     "check:mysql-only": "node scripts/check-mysql-only.js"
   },
   "devDependencies": {
+    "concurrently": "^8.2.2",
     "prisma": "^7.9.0",
     "typescript": "^5.4.5"
   },
