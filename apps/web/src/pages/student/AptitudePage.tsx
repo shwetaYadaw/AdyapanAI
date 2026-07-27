@@ -88,6 +88,36 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         options: ['80', '100', '120', '150'],
         answer: '80',
         explanation: 'Difference in percentage = 60% - 45% = 15%. Difference in marks = 8 - (-4) = 12. 15% of Maximum Marks = 12 => Maximum Marks = 12 / 0.15 = 80.'
+      },
+      {
+        question: 'A batsman scored 110 runs which included 3 boundaries and 8 sixes. What percent of his total score did he make by running between the wickets?',
+        options: ['45%', '45 5/11%', '54 6/11%', '55%'],
+        answer: '45 5/11%',
+        explanation: 'Number of runs made by running = 110 - (3 × 4 + 8 × 6) = 110 - (12 + 48) = 110 - 60 = 50. Required percentage = (50/110) × 100 = 500/11 = 45 5/11%.'
+      },
+      {
+        question: 'Two students appeared at an examination. One of them secured 9 marks more than the other and his marks was 56% of the sum of their marks. The marks obtained by them are:',
+        options: ['39, 30', '41, 32', '42, 33', '43, 34'],
+        answer: '42, 33',
+        explanation: 'Let their marks be (x + 9) and x. Then x + 9 = (56/100)(2x + 9) => 25(x + 9) = 14(2x + 9) => 25x + 225 = 28x + 126 => 3x = 99 => x = 33. So marks are 42 and 33.'
+      },
+      {
+        question: 'A fruit seller had some apples. He sells 40% apples and still has 420 apples. Originally, he had:',
+        options: ['588 apples', '600 apples', '672 apples', '700 apples'],
+        answer: '700 apples',
+        explanation: 'Suppose originally he had x apples. Then (100 - 40)% of x = 420. => (60/100) × x = 420 => x = (420 × 100)/60 = 700.'
+      },
+      {
+        question: 'What percentage of numbers from 1 to 70 have 1 or 9 in the unit\'s digit?',
+        options: ['1', '14', '20', '21'],
+        answer: '20',
+        explanation: 'Numbers with 1 or 9 in units digit from 1 to 70: 1, 9, 11, 19, 21, 29, 31, 39, 41, 49, 51, 59, 61, 69 = 14 numbers. Required percentage = (14/70) × 100 = 20%.'
+      },
+      {
+        question: 'If A = x% of y and B = y% of x, then which of the following is true?',
+        options: ['A is smaller than B', 'A is greater than B', 'Relationship between A and B cannot be determined', 'If x is smaller than y, then A is greater than B', 'None of these'],
+        answer: 'None of these',
+        explanation: 'x% of y = (x/100) × y = xy/100. y% of x = (y/100) × x = xy/100. Therefore A = B. So "None of these" (A equals B) is correct.'
       }
     ]
   },

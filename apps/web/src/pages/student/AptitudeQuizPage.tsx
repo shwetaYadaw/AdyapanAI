@@ -112,110 +112,86 @@ export default function AptitudeQuizPage() {
           const selected = selectedAnswers[key];
           const isExplanationOpen = showExplanations[key];
 
+          const optionLabels = ['A', 'B', 'C', 'D', 'E'];
+
           return (
-            <Card
-              key={qIdx}
-              padding="md"
-              className="border border-gray-100 dark:border-gray-800 shadow-sm"
-            >
-              <div className="space-y-4">
-                {/* Question text */}
-                <div className="flex gap-2.5">
-                  <span className="text-sm font-bold text-primary-500 mt-0.5 flex-shrink-0">
-                    Q{qIdx + 1}.
-                  </span>
-                  <p className="text-sm font-semibold text-gray-800 dark:text-gray-200 leading-relaxed">
-                    {q.question}
-                  </p>
+            <Card key={qIdx} padding="none" className="border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
+              {/* Question header */}
+              <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+                <div className="flex gap-3">
+                  <span className="text-sm font-bold text-gray-500 dark:text-gray-400 shrink-0">{qIdx + 1}.</span>
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{q.question}</p>
                 </div>
-
-                {/* Options */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {q.options.map((opt) => {
-                    const isSelected = selected === opt;
-                    const isCorrect = opt === q.answer;
-                    const answered = selected !== undefined;
-
-                    let cls =
-                      'border-gray-200 hover:border-primary-300 dark:border-gray-700 dark:hover:border-primary-700 bg-white dark:bg-gray-950 text-gray-700 dark:text-gray-300 cursor-pointer';
-                    let icon: React.ReactNode = null;
-
-                    if (answered) {
-                      if (isCorrect) {
-                        cls =
-                          'border-green-500 bg-green-50/60 dark:bg-green-950/20 text-green-800 dark:text-green-300 cursor-default';
-                        icon = <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />;
-                      } else if (isSelected) {
-                        cls =
-                          'border-red-500 bg-red-50/60 dark:bg-red-950/20 text-red-700 dark:text-red-400 cursor-default';
-                        icon = <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />;
-                      } else {
-                        cls =
-                          'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-950 text-gray-400 dark:text-gray-600 cursor-default';
-                      }
-                    }
-
-                    return (
-                      <button
-                        key={opt}
-                        disabled={!!selected}
-                        onClick={() => handleSelectOption(key, opt)}
-                        className={`flex items-center gap-2 w-full text-left px-4 py-3 rounded-xl border text-xs font-medium transition-all ${cls}`}
-                      >
-                        {icon && <span>{icon}</span>}
-                        <span className="flex-1">{opt}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {/* Result + explanation */}
-                {selected !== undefined && (
-                  <AnimatePresence>
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      className="space-y-2 pt-1 border-t border-gray-100 dark:border-gray-800"
-                    >
-                      <div className="flex items-center justify-between pt-2">
-                        {selected === q.answer ? (
-                          <span className="text-xs font-bold text-green-600 flex items-center gap-1">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Correct!
-                          </span>
-                        ) : (
-                          <span className="text-xs font-bold text-red-500 flex items-center gap-1">
-                            <AlertCircle className="w-3.5 h-3.5" />
-                            Incorrect — Correct answer: <span className="text-green-600">{q.answer}</span>
-                          </span>
-                        )}
-                        <button
-                          onClick={() =>
-                            setShowExplanations((p) => ({ ...p, [key]: !p[key] }))
-                          }
-                          className="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors"
-                        >
-                          {isExplanationOpen ? 'Hide' : 'Show'} Explanation
-                        </button>
-                      </div>
-
-                      {isExplanationOpen && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -4 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="rounded-xl bg-blue-50 dark:bg-blue-950/20 border border-blue-100 dark:border-blue-800/50 px-4 py-3"
-                        >
-                          <p className="text-xs font-bold text-blue-800 dark:text-blue-300 mb-1">
-                            Step-by-step explanation:
-                          </p>
-                          <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
-                            {q.explanation}
-                          </p>
-                        </motion.div>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-                )}
               </div>
+
+              {/* Options */}
+              <div className="px-5 py-3 space-y-2">
+                {q.options.map((opt, oIdx) => {
+                  const isSelected = selected === opt;
+                  const isCorrect = opt === q.answer;
+                  const answered = selected !== undefined;
+                  const label = optionLabels[oIdx] ?? String(oIdx + 1);
+
+                  let containerCls = 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700 bg-white dark:bg-gray-900 cursor-pointer';
+                  let labelCls = 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400';
+                  let textCls = 'text-gray-700 dark:text-gray-300';
+
+                  if (answered) {
+                    if (isCorrect) {
+                      containerCls = 'border-green-400 bg-green-50 dark:bg-green-950/30 cursor-default';
+                      labelCls = 'bg-green-500 text-white';
+                      textCls = 'text-green-800 dark:text-green-300 font-semibold';
+                    } else if (isSelected) {
+                      containerCls = 'border-red-400 bg-red-50 dark:bg-red-950/20 cursor-default';
+                      labelCls = 'bg-red-500 text-white';
+                      textCls = 'text-red-700 dark:text-red-400';
+                    } else {
+                      containerCls = 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 cursor-default opacity-60';
+                    }
+                  }
+
+                  return (
+                    <button key={opt} disabled={!!selected} onClick={() => handleSelectOption(key, opt)}
+                      className={`flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-all ${containerCls}`}>
+                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all ${labelCls}`}>
+                        {label}
+                      </span>
+                      <span className={`flex-1 ${textCls}`}>{opt}</span>
+                      {answered && isCorrect && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
+                      {answered && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-red-500 shrink-0" />}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Answer + Explanation */}
+              {selected !== undefined && (
+                <AnimatePresence>
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+                    className="px-5 pb-4 space-y-3 border-t border-gray-100 dark:border-gray-800 pt-3">
+
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm font-bold flex items-center gap-1.5 ${selected === q.answer ? 'text-green-600' : 'text-red-500'}`}>
+                        {selected === q.answer
+                          ? <><CheckCircle2 className="w-4 h-4" /> Correct! Well done.</>
+                          : <><AlertCircle className="w-4 h-4" /> Incorrect. Answer: <span className="text-green-600 ml-1">{q.answer}</span></>}
+                      </span>
+                      <button onClick={() => setShowExplanations(p => ({ ...p, [key]: !p[key] }))}
+                        className="text-xs font-semibold text-primary-600 hover:text-primary-700 px-2 py-1 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all">
+                        {isExplanationOpen ? 'Hide' : 'Show'} Explanation
+                      </button>
+                    </div>
+
+                    {isExplanationOpen && (
+                      <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
+                        className="rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 px-4 py-3">
+                        <p className="text-xs font-bold text-amber-800 dark:text-amber-300 mb-1.5">Explanation:</p>
+                        <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">{q.explanation}</p>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+              )}
             </Card>
           );
         })}
