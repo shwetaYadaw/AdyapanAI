@@ -24,7 +24,6 @@ const STUDENT_NAV: NavItem[] = [
   { label: 'TCS NQT Prep', href: '/student/tcs-nqt',    icon: Trophy },
   { label: 'Aptitude Prep',href: '/student/aptitude',   icon: BookOpen },
   { label: 'Contests',     href: '/student/contests',   icon: Trophy },
-  { label: 'My Profile',   href: '/student/profile',    icon: Users },
 ];
 
 const TEACHER_NAV: NavItem[] = [
