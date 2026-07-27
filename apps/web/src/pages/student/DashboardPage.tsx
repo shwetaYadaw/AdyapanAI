@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import {
-  BookOpen, Target, Award, TrendingUp, Brain, Briefcase,
-  ArrowRight, Flame, Zap, Clock
+  BookOpen, Award, ArrowRight, Flame, Zap, Clock
 } from 'lucide-react';
 import { useAppSelector } from '../../app/hooks';
 import { selectUser } from '../../features/auth/authSlice';
@@ -49,13 +48,6 @@ export default function StudentDashboard() {
     { label: 'Day Streak', value: profile?.streak ?? 0, icon: Flame, color: 'from-orange-500 to-red-400', href: '/student/profile' },
   ];
 
-  const QUICK_LINKS = [
-    { label: 'Mock Interview', icon: Target, href: '/student/placement', color: 'text-purple-500', bg: 'bg-purple-50 dark:bg-purple-950/30' },
-    { label: 'Resume Builder', icon: BookOpen, href: '/student/resume', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-950/30' },
-    { label: 'AI Tutor', icon: Brain, href: '/student/ai', color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-950/30' },
-    { label: 'Browse Jobs', icon: Briefcase, href: '/student/jobs', color: 'text-orange-500', bg: 'bg-orange-50 dark:bg-orange-950/30' },
-  ];
-
   const inProgress = enrollments?.filter((e: { progress: number; isCompleted: boolean }) => e.progress > 0 && !e.isCompleted) ?? [];
 
   return (
@@ -63,11 +55,11 @@ export default function StudentDashboard() {
       {/* Welcome */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">
+          <div className="min-w-0">
+            <h1 className="font-display font-bold text-xl sm:text-2xl text-gray-900 dark:text-white truncate">
               Welcome back, {user?.firstName}! 👋
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">
+            <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mt-0.5">
               {new Date().toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}
             </p>
           </div>
@@ -76,7 +68,7 @@ export default function StudentDashboard() {
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {stats.map((stat, i) => (
           <motion.div
             key={stat.label}
@@ -154,24 +146,7 @@ export default function StudentDashboard() {
             ))
           )}
 
-          {/* Quick Links */}
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-white mb-3">Quick Actions</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {QUICK_LINKS.map((ql) => (
-                <Link key={ql.label} to={ql.href}>
-                  <motion.div
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className={`${ql.bg} rounded-2xl p-4 text-center cursor-pointer border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-all`}
-                  >
-                    <ql.icon className={`w-6 h-6 ${ql.color} mx-auto mb-2`} />
-                    <p className="text-xs font-medium text-gray-700 dark:text-gray-300">{ql.label}</p>
-                  </motion.div>
-                </Link>
-              ))}
-            </div>
-          </div>
+          {/* Quick Links removed */}
         </div>
 
         {/* Right column */}

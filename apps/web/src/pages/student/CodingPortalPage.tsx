@@ -176,7 +176,7 @@ export default function CodingPortalPage() {
   const queryClient = useQueryClient();
   
   // Left Panel tabs
-  const [leftTab, setLeftTab] = useState<'description' | 'ai-mentor'>('description');
+  const [leftTab, setLeftTab] = useState<'description' | 'ai-mentor' | 'comments'>('description');
   
   // Code editor states
   const [selectedLanguage, setSelectedLanguage] = useState('javascript');
@@ -199,6 +199,68 @@ export default function CodingPortalPage() {
   // AI Mentor Prompt type
   const [aiPromptType, setAiPromptType] = useState<'explain' | 'hint' | 'complexity' | 'review'>('explain');
   const [aiMentorResponse, setAiMentorResponse] = useState('');
+
+  // Like / Dislike / Star states
+  const [liked, setLiked] = useState(false);
+  const [disliked, setDisliked] = useState(false);
+  const [starred, setStarred] = useState(false);
+  const [likeCount, setLikeCount] = useState(223);
+  const [dislikeCount, setDislikeCount] = useState(10);
+
+  // Comments state
+  const [comments, setComments] = useState([
+    { id: 1, author: 'Rahul S.', avatar: 'RS', text: 'Great problem! The sliding window approach works perfectly here.', time: '2h ago', likes: 12 },
+    { id: 2, author: 'Priya M.', avatar: 'PM', text: 'Took me a while to understand the edge cases. The constraints are tricky!', time: '5h ago', likes: 7 },
+    { id: 3, author: 'Arjun K.', avatar: 'AK', text: 'O(n) solution is possible using a monotonic deque. Try it!', time: '1d ago', likes: 24 },
+  ]);
+  const [newComment, setNewComment] = useState('');
+
+  const handleLike = () => {
+    if (liked) {
+      setLiked(false);
+      setLikeCount(c => c - 1);
+    } else {
+      setLiked(true);
+      setLikeCount(c => c + 1);
+      if (disliked) { setDisliked(false); setDislikeCount(c => c - 1); }
+    }
+  };
+
+  const handleDislike = () => {
+    if (disliked) {
+      setDisliked(false);
+      setDislikeCount(c => c - 1);
+    } else {
+      setDisliked(true);
+      setDislikeCount(c => c + 1);
+      if (liked) { setLiked(false); setLikeCount(c => c - 1); }
+    }
+  };
+
+  const handleStar = () => {
+    setStarred(s => !s);
+    toast.success(starred ? 'Removed from bookmarks' : 'Added to bookmarks ⭐');
+  };
+
+  const handleShare = () => {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({ title: question?.title ?? 'DSA Problem', url });
+    } else {
+      navigator.clipboard.writeText(url).then(() => toast.success('Link copied to clipboard!'));
+    }
+  };
+
+  const handlePostComment = () => {
+    const text = newComment.trim();
+    if (!text) return;
+    setComments(prev => [
+      { id: Date.now(), author: 'You', avatar: 'YO', text, time: 'Just now', likes: 0 },
+      ...prev,
+    ]);
+    setNewComment('');
+    toast.success('Comment posted!');
+  };
 
   // Fetch question details
   const { data: question, isLoading } = useQuery<Question>({
@@ -447,6 +509,18 @@ export default function CodingPortalPage() {
               <BrainCircuit className="w-3.5 h-3.5 text-purple-500 animate-pulse" />
               AI Code Mentor
             </button>
+            <button
+              onClick={() => setLeftTab('comments')}
+              className={`px-3 py-2 font-semibold text-xxs border-b-2 flex items-center gap-1.5 transition-all ${
+                leftTab === 'comments'
+                  ? 'border-primary-500 text-primary-600 dark:text-primary-400 font-bold'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              Comments
+              <span className="px-1 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 text-[9px] font-bold">{comments.length}</span>
+            </button>
           </div>
 
           {/* Left Panel Content */}
@@ -518,34 +592,118 @@ export default function CodingPortalPage() {
                 </div>
 
                 {/* Bottom Stats row */}
-                <div className="border-t border-gray-100 dark:border-gray-850 pt-3 flex flex-wrap items-center gap-y-2 justify-between text-gray-400 text-xxs">
-                  <div className="flex items-center gap-3 flex-wrap">
-                    <button className="flex items-center gap-1 hover:text-gray-600 dark:hover:text-white transition-all">
-                      <ThumbsUp className="w-3.5 h-3.5" />
-                      <span>223</span>
-                    </button>
-                    <button className="flex items-center gap-1 hover:text-gray-600 dark:hover:text-white transition-all">
-                      <ThumbsDown className="w-3.5 h-3.5" />
-                      <span>10</span>
-                    </button>
-                    <button className="flex items-center gap-1 hover:text-gray-600 dark:hover:text-white transition-all">
-                      <MessageSquare className="w-3.5 h-3.5" />
-                      <span>126</span>
-                    </button>
-                    <button className="hover:text-amber-500 transition-all">
-                      <Star className="w-3.5 h-3.5" />
-                    </button>
-                    <button className="hover:text-gray-600 dark:hover:text-white transition-all">
-                      <Share2 className="w-3.5 h-3.5" />
+                <div className="border-t border-gray-100 dark:border-gray-850 pt-2 mt-1">
+                  <div className="flex items-center justify-between flex-wrap gap-y-1">
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-0.5 sm:gap-1">
+                      <button
+                        onClick={handleLike}
+                        className={`flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-lg transition-all text-xxs font-medium
+                          ${liked ? 'bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700 dark:hover:text-white'}`}
+                        title="Like"
+                      >
+                        <ThumbsUp className={`w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 ${liked ? 'fill-primary-500 text-primary-500' : ''}`} />
+                        <span>{likeCount}</span>
+                      </button>
+                      <button
+                        onClick={handleDislike}
+                        className={`flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-lg transition-all text-xxs font-medium
+                          ${disliked ? 'bg-red-50 dark:bg-red-950/40 text-red-500' : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700 dark:hover:text-white'}`}
+                        title="Dislike"
+                      >
+                        <ThumbsDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 ${disliked ? 'fill-red-500 text-red-500' : ''}`} />
+                        <span>{dislikeCount}</span>
+                      </button>
+                      <button
+                        onClick={() => setLeftTab('comments')}
+                        className="flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-white text-gray-400 transition-all text-xxs font-medium"
+                        title="Comments"
+                      >
+                        <MessageSquare className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                        <span>{comments.length}</span>
+                      </button>
+                      <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 mx-0.5 sm:mx-1" />
+                      <button
+                        onClick={handleStar}
+                        className={`p-1.5 rounded-lg transition-all
+                          ${starred ? 'bg-amber-50 dark:bg-amber-950/30 text-amber-500' : 'hover:bg-amber-50 dark:hover:bg-amber-950/30 text-gray-400 hover:text-amber-500'}`}
+                        title={starred ? 'Remove bookmark' : 'Bookmark'}
+                      >
+                        <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${starred ? 'fill-amber-400 text-amber-500' : ''}`} />
+                      </button>
+                      <button
+                        onClick={handleShare}
+                        className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-white text-gray-400 transition-all"
+                        title="Share"
+                      >
+                        <Share2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      </button>
+                    </div>
+                    {/* Online count */}
+                    <div className="flex items-center gap-1 text-green-500 font-semibold text-xxs shrink-0">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                      <span>{(() => {
+                        const base = (slug || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+                        return (800 + (base % 4200)).toLocaleString();
+                      })()} <span className="hidden sm:inline">Online</span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : leftTab === 'comments' ? (
+              /* Comments Panel */
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-bold text-gray-800 dark:text-white">{comments.length} Comments</h3>
+                  <button
+                    onClick={() => setLeftTab('description')}
+                    className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-primary-500 transition-all"
+                  >
+                    <ArrowLeft className="w-3 h-3" /> Back to Description
+                  </button>
+                </div>
+
+                {/* New comment input */}
+                <div className="mb-4">
+                  <textarea
+                    value={newComment}
+                    onChange={e => setNewComment(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) handlePostComment(); }}
+                    placeholder="Share your thoughts or approach… (Ctrl+Enter to post)"
+                    rows={3}
+                    className="w-full text-xs p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 resize-none"
+                  />
+                  <div className="flex justify-end mt-1.5">
+                    <button
+                      onClick={handlePostComment}
+                      disabled={!newComment.trim()}
+                      className="px-3 py-1.5 rounded-lg bg-primary-500 text-white text-xxs font-bold hover:bg-primary-600 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                    >
+                      Post Comment
                     </button>
                   </div>
-                  <div className="flex items-center gap-1 text-green-500 font-semibold shrink-0">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                    <span>{(() => {
-                      const base = (slug || '').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-                      return (800 + (base % 4200)).toLocaleString();
-                    })()} Online</span>
-                  </div>
+                </div>
+
+                {/* Comments list */}
+                <div className="space-y-3 overflow-y-auto flex-1">
+                  {comments.map(c => (
+                    <div key={c.id} className="flex gap-2.5">
+                      <div className="w-7 h-7 rounded-full bg-primary-100 dark:bg-primary-950/50 text-primary-600 dark:text-primary-400 flex items-center justify-center text-[9px] font-bold shrink-0">
+                        {c.avatar}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-[10px] font-bold text-gray-800 dark:text-white">{c.author}</span>
+                          <span className="text-[9px] text-gray-400">{c.time}</span>
+                        </div>
+                        <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">{c.text}</p>
+                        <button className="mt-1 flex items-center gap-1 text-[9px] text-gray-400 hover:text-primary-500 transition-all">
+                          <ThumbsUp className="w-2.5 h-2.5" />
+                          <span>{c.likes}</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ) : (

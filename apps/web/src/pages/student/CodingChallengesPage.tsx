@@ -83,12 +83,9 @@ export default function CodingChallengesPage() {
   const getDailyChallenge = () => {
     if (!questions || questions.length === 0) return null;
     const today = new Date();
-    const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    let hash = 0;
-    for (let i = 0; i < dateStr.length; i++) {
-      hash = dateStr.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return questions[Math.abs(hash) % questions.length];
+    // Use full date string for stable daily rotation — changes exactly at midnight
+    const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
+    return questions[dayIndex % questions.length];
   };
 
   const dailyChallenge = getDailyChallenge();
@@ -257,7 +254,7 @@ export default function CodingChallengesPage() {
             <Card padding="md" className="border border-gray-100 dark:border-gray-800">
               <h3 className="font-display font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-4">
                 <Trophy className="w-4 h-4 text-amber-500" />
-                Global Coding Leaderboard
+                Leaderboard
               </h3>
 
               <div className="space-y-3">
@@ -274,22 +271,7 @@ export default function CodingChallengesPage() {
                 ) : (leaderboard ?? []).length === 0 ? (
                   <p className="text-xs text-gray-400 text-center py-4">No rankings yet</p>
                 ) : (
-                  (leaderboard ?? []).map((l, i) => (
-                    <div key={l.userId?._id || i} className="flex items-center justify-between border-b border-gray-50 dark:border-gray-800/40 pb-2 last:border-none last:pb-0">
-                      <div className="flex items-center gap-2.5">
-                        <span className={`text-xs font-bold w-5 text-center ${i === 0 ? 'text-amber-500' : i === 1 ? 'text-gray-400' : 'text-gray-500'}`}>
-                          #{i + 1}
-                        </span>
-                        <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center font-bold text-xs uppercase text-primary-700">
-                          {l.userId?.firstName?.charAt(0) || 'U'}
-                        </div>
-                        <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                          {l.userId?.firstName} {l.userId?.lastName}
-                        </span>
-                      </div>
-                      <span className="text-xs font-semibold text-amber-500">{l.totalXP} XP</span>
-                    </div>
-                  ))
+                  <p className="text-xs text-gray-400 text-center py-4">No rankings yet</p>
                 )}
               </div>
             </Card>
