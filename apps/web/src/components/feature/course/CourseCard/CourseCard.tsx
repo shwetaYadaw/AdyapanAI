@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Clock, Users, Star, PlayCircle } from 'lucide-react';
 import { ICourse } from '@adyapan/shared';
 import { formatCourseDuration, formatNumber, formatPrice } from '@adyapan/shared';
 import Badge from '../../../common/Badge/Badge';
 import Avatar from '../../../common/Avatar/Avatar';
+import { api } from '../../../../services/api';
+import toast from 'react-hot-toast';
 
 interface CourseCardProps {
   course: ICourse;
@@ -14,6 +17,25 @@ interface CourseCardProps {
 }
 
 export default function CourseCard({ course, enrolled, progress, index = 0 }: CourseCardProps) {
+  const navigate = useNavigate();
+  const [enrolling, setEnrolling] = useState(false);
+
+  const handleEnroll = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (course.isFree) {
+      setEnrolling(true);
+      try {
+        await api.post('/enrollments', { courseId: course._id });
+        toast.success('Enrolled successfully!');
+        navigate(`/student/learn/${course._id}`);
+      } catch {
+        toast.error('Failed to enroll. Please try again.');
+      } finally { setEnrolling(false); }
+    } else {
+      navigate(`/courses/${course.slug}`);
+    }
+  };
   const levelColor: Record<string, 'success' | 'warning' | 'danger' | 'primary'> = {
     beginner: 'success',
     intermediate: 'warning',
@@ -118,21 +140,32 @@ export default function CourseCard({ course, enrolled, progress, index = 0 }: Co
                 </span>
               </div>
 
-              {/* Price */}
+              {/* Price + Enroll */}
               {!enrolled && (
-                <div className="font-semibold">
-                  {course.isFree ? (
-                    <span className="text-green-600 dark:text-green-400">Free</span>
-                  ) : (
-                    <div className="text-right">
-                      <span className="text-gray-900 dark:text-white">{formatPrice(course.price)}</span>
-                      {course.originalPrice > course.price && (
-                        <span className="ml-1 text-gray-400 line-through text-xs">
-                          {formatPrice(course.originalPrice)}
-                        </span>
-                      )}
-                    </div>
-                  )}
+                <div className="flex items-center justify-between gap-2">
+                  <div className="font-semibold">
+                    {course.isFree ? (
+                      <span className="text-green-600 dark:text-green-400">Free</span>
+                    ) : (
+                      <div className="text-right">
+                        <span className="text-gray-900 dark:text-white">{formatPrice(course.price)}</span>
+                        {course.originalPrice > course.price && (
+                          <span className="ml-1 text-gray-400 line-through text-xs">{formatPrice(course.originalPrice)}</span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={handleEnroll}
+                    disabled={enrolling}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all shrink-0 ${
+                      course.isFree
+                        ? 'bg-primary-500 hover:bg-primary-600 text-white'
+                        : 'bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-100 text-white dark:text-gray-900'
+                    } disabled:opacity-60`}
+                  >
+                    {enrolling ? '...' : course.isFree ? 'Enroll Free' : 'Buy Now'}
+                  </button>
                 </div>
               )}
             </div>

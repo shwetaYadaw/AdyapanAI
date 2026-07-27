@@ -1,29 +1,30 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, MapPin, Edit2, Zap, Flame, Award, Target, BookOpen, Code2, X } from 'lucide-react';
+import { Github, Linkedin, MapPin, Edit2, Zap, Flame, Award, BookOpen, Code2, X } from 'lucide-react';
 import { api } from '../../services/api';
-import { useAppSelector } from '../../app/hooks';
-import { selectUser } from '../../features/auth/authSlice';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { selectUser, updateUser } from '../../features/auth/authSlice';
 import Card from '../../components/common/Card/Card';
 import Avatar from '../../components/common/Avatar/Avatar';
 import Badge from '../../components/common/Badge/Badge';
 import ProgressBar from '../../components/common/ProgressBar/ProgressBar';
-import Button from '../../components/common/Button/Button';
 import toast from 'react-hot-toast';
 
 export default function ProfilePage() {
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
+
   const [editOpen, setEditOpen] = useState(false);
-  const [form, setForm] = useState({ headline: '', city: '', github: '', linkedin: '' });
+  const [form, setForm] = useState({
+    firstName: '', lastName: '', phone: '',
+    headline: '', city: '', github: '', linkedin: '',
+  });
 
   const { data: profile } = useQuery({
     queryKey: ['studentProfile'],
-    queryFn: async () => {
-      const { data } = await api.get('/students/profile');
-      return data.data;
-    },
+    queryFn: async () => { const { data } = await api.get('/students/profile'); return data.data; },
   });
 
   const { data: certificates } = useQuery({
@@ -37,8 +38,21 @@ export default function ProfilePage() {
   });
 
   const updateProfile = useMutation({
-    mutationFn: (payload: object) => api.put('/students/profile', payload),
-    onSuccess: () => {
+    mutationFn: async (payload: any) => {
+      const userRes = await api.put('/users/me', {
+        firstName: payload.firstName,
+        lastName:  payload.lastName,
+        phone:     payload.phone,
+      });
+      await api.put('/students/profile', {
+        headline:    payload.headline,
+        location:    { city: payload.city },
+        socialLinks: { github: payload.github, linkedin: payload.linkedin },
+      });
+      return userRes.data.data;
+    },
+    onSuccess: (updatedUser) => {
+      dispatch(updateUser({ firstName: updatedUser.firstName, lastName: updatedUser.lastName, phone: updatedUser.phone }));
       queryClient.invalidateQueries({ queryKey: ['studentProfile'] });
       toast.success('Profile updated!');
       setEditOpen(false);
@@ -48,20 +62,15 @@ export default function ProfilePage() {
 
   const openEdit = () => {
     setForm({
-      headline: profile?.headline ?? '',
-      city: profile?.location?.city ?? '',
-      github: profile?.socialLinks?.github ?? '',
-      linkedin: profile?.socialLinks?.linkedin ?? '',
+      firstName: user?.firstName ?? '',
+      lastName:  user?.lastName  ?? '',
+      phone:     (user as any)?.phone ?? '',
+      headline:  profile?.headline ?? '',
+      city:      profile?.location?.city ?? '',
+      github:    profile?.socialLinks?.github ?? '',
+      linkedin:  profile?.socialLinks?.linkedin ?? '',
     });
     setEditOpen(true);
-  };
-
-  const handleSave = () => {
-    updateProfile.mutate({
-      headline: form.headline,
-      location: { city: form.city },
-      socialLinks: { github: form.github, linkedin: form.linkedin },
-    });
   };
 
   const levelProgress = ((profile?.totalXP ?? 0) % 1000) / 10;
@@ -71,6 +80,16 @@ export default function ProfilePage() {
     { label: 'Day Streak',      value: profile?.streak ?? 0,          icon: Flame, color: 'from-orange-400 to-red-500'    },
     { label: 'Certificates',    value: certificates?.length ?? 0,     icon: Award, color: 'from-purple-400 to-violet-500' },
     { label: 'Problems Solved', value: codingStats?.solvedCount ?? 0, icon: Code2, color: 'from-blue-400 to-cyan-500'     },
+  ];
+
+  const formFields = [
+    { label: 'First Name', key: 'firstName', placeholder: 'e.g. Poojitha',                              type: 'text' },
+    { label: 'Last Name',  key: 'lastName',  placeholder: 'e.g. Sharma',                                type: 'text' },
+    { label: 'Phone',      key: 'phone',     placeholder: 'e.g. 9876543210',                            type: 'tel'  },
+    { label: 'Headline',   key: 'headline',  placeholder: 'e.g. Full Stack Developer | DSA Enthusiast', type: 'text' },
+    { label: 'City',       key: 'city',      placeholder: 'e.g. Bengaluru',                             type: 'text' },
+    { label: 'GitHub',     key: 'github',    placeholder: 'https://github.com/username',                type: 'url'  },
+    { label: 'LinkedIn',   key: 'linkedin',  placeholder: 'https://linkedin.com/in/username',           type: 'url'  },
   ];
 
   return (
@@ -96,14 +115,10 @@ export default function ProfilePage() {
                     <span className="flex items-center gap-1"><MapPin className="w-3 h-3" />{profile.location.city}</span>
                   )}
                   {profile?.socialLinks?.github && (
-                    <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white">
-                      <Github className="w-3 h-3" />GitHub
-                    </a>
+                    <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white"><Github className="w-3 h-3" />GitHub</a>
                   )}
                   {profile?.socialLinks?.linkedin && (
-                    <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white">
-                      <Linkedin className="w-3 h-3" />LinkedIn
-                    </a>
+                    <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white"><Linkedin className="w-3 h-3" />LinkedIn</a>
                   )}
                 </div>
               </div>
@@ -143,54 +158,26 @@ export default function ProfilePage() {
         <ProgressBar value={levelProgress} showPercent size="sm" />
       </Card>
 
-      {/* Skills + Placement */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card padding="md" className="flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-primary-500" /> Skills
-            </h3>
-            <Button variant="ghost" size="xs">+ Add</Button>
+      {/* Skills */}
+      <Card padding="md">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2">
+            <BookOpen className="w-4 h-4 text-primary-500" /> Skills
+          </h3>
+          <button className="text-xs text-primary-500 hover:text-primary-600 font-semibold px-2 py-1 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all">+ Add</button>
+        </div>
+        {(profile?.skills ?? []).length === 0 ? (
+          <div className="flex items-center justify-center border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl py-8">
+            <p className="text-sm text-gray-400 text-center">No skills added yet<br /><span className="text-xs">Click + Add to get started</span></p>
           </div>
-          {(profile?.skills ?? []).length === 0 ? (
-            <div className="flex-1 flex items-center justify-center border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl py-8">
-              <p className="text-sm text-gray-400 text-center">No skills added yet</p>
-            </div>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {profile.skills.map((s: { name: string; level: string }) => (
-                <Badge key={s.name} variant={s.level === 'expert' ? 'purple' : s.level === 'advanced' ? 'primary' : 'gray'}>{s.name}</Badge>
-              ))}
-            </div>
-          )}
-        </Card>
-
-        <Card padding="md" className="flex flex-col">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2">
-              <Target className="w-4 h-4 text-primary-500" /> Placement Status
-            </h3>
-            <Badge variant={profile?.placementStatus === 'placed' ? 'success' : profile?.placementStatus === 'in_progress' ? 'warning' : 'gray'} dot>
-              {(profile?.placementStatus ?? 'not started').replace('_', ' ')}
-            </Badge>
-          </div>
-          <div className="space-y-3 flex-1">
-            {[
-              { label: 'Resume Ready',        done: !!profile?.resumeUrl },
-              { label: 'Profile Complete',    done: !!(profile?.headline && profile?.skills?.length > 0) },
-              { label: 'ATS Score > 70',      done: (profile?.atsScore ?? 0) > 70 },
-              { label: 'Mock Interview Done', done: false },
-            ].map(item => (
-              <div key={item.label} className="flex items-center gap-2.5">
-                <span className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-xs font-bold ${item.done ? 'bg-green-500 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-400'}`}>
-                  {item.done ? '✓' : '○'}
-                </span>
-                <span className={`text-sm ${item.done ? 'text-gray-700 dark:text-gray-200' : 'text-gray-400'}`}>{item.label}</span>
-              </div>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {profile.skills.map((s: { name: string; level: string }) => (
+              <Badge key={s.name} variant={s.level === 'expert' ? 'purple' : s.level === 'advanced' ? 'primary' : 'gray'}>{s.name}</Badge>
             ))}
           </div>
-        </Card>
-      </div>
+        )}
+      </Card>
 
       {/* Edit Profile Modal */}
       <AnimatePresence>
@@ -198,24 +185,29 @@ export default function ProfilePage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
             <motion.div initial={{ opacity: 0, scale: 0.96, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 16 }} transition={{ duration: 0.2 }}
-              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 dark:border-gray-800 overflow-hidden">
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl w-full max-w-md border border-gray-100 dark:border-gray-800 overflow-hidden max-h-[90vh] flex flex-col">
 
               {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-orange-600 to-amber-500">
+              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gradient-to-r from-orange-600 to-amber-500 shrink-0">
                 <h3 className="font-display font-bold text-white text-base">Edit Profile</h3>
                 <button onClick={() => setEditOpen(false)} className="p-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white transition-all">
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Form */}
-              <div className="p-6 space-y-4">
-                {[
-                  { label: 'Headline', key: 'headline', placeholder: 'e.g. Full Stack Developer | DSA Enthusiast', type: 'text' },
-                  { label: 'City',     key: 'city',     placeholder: 'e.g. Bengaluru',                              type: 'text' },
-                  { label: 'GitHub',   key: 'github',   placeholder: 'https://github.com/username',                 type: 'url'  },
-                  { label: 'LinkedIn', key: 'linkedin', placeholder: 'https://linkedin.com/in/username',            type: 'url'  },
-                ].map(({ label, key, placeholder, type }) => (
+              {/* Form — scrollable */}
+              <div className="p-6 space-y-4 overflow-y-auto flex-1">
+
+                {/* Email read-only */}
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                    Email <span className="text-gray-400 font-normal">(cannot be changed)</span>
+                  </label>
+                  <input type="email" value={user?.email ?? ''} disabled
+                    className="w-full text-sm px-3 py-2.5 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/50 text-gray-400 cursor-not-allowed" />
+                </div>
+
+                {formFields.map(({ label, key, placeholder, type }) => (
                   <div key={key}>
                     <label className="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{label}</label>
                     <input
@@ -233,7 +225,7 @@ export default function ProfilePage() {
                     className="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-50 transition-all">
                     Cancel
                   </button>
-                  <button onClick={handleSave} disabled={updateProfile.isPending}
+                  <button onClick={() => updateProfile.mutate(form)} disabled={updateProfile.isPending}
                     className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 text-white text-sm font-bold hover:opacity-90 disabled:opacity-60 transition-all">
                     {updateProfile.isPending ? 'Saving...' : 'Save Changes'}
                   </button>
