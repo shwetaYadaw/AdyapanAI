@@ -312,7 +312,23 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
   {
     name: 'Ratio & Proportion',
     pageNumber: 237,
-    questions: []
+    questions: [
+      { question: 'A and B together have Rs.1210. If 4/15 of A equals 2/5 of B, how much does B have?', options: ['Rs.460', 'Rs.484', 'Rs.550', 'Rs.664'], answer: 'Rs.484', explanation: '(4/15)A = (2/5)B => A = (2/5)x(15/4)B = (3/2)B. A:B = 3:2. B = 1210x(2/5) = Rs.484.' },
+      { question: 'Two numbers are respectively 20% and 50% more than a third number. Ratio of the two numbers is:', options: ['2:5', '3:5', '4:5', '6:7'], answer: '4:5', explanation: 'Let third = x. First = 1.2x, Second = 1.5x. Ratio = 1.2x:1.5x = 12:15 = 4:5.' },
+      { question: 'A sum distributed among A, B, C, D in ratio 5:2:4:3. If C gets Rs.1000 more than D, B share is:', options: ['Rs.500', 'Rs.1500', 'Rs.2000', 'None of these'], answer: 'Rs.2000', explanation: 'C-D = 4x-3x = x = 1000. B = 2x = Rs.2000.' },
+      { question: 'Seats for Maths, Physics, Bio in ratio 5:7:8. Increased by 40%, 50%, 75%. New ratio?', options: ['2:3:4', '6:7:8', '6:8:9', 'None of these'], answer: '2:3:4', explanation: 'New = 140%x5:150%x7:175%x8 = 7:10.5:14 = 14:21:28 = 2:3:4.' },
+      { question: 'In mixture of 60 litres, milk:water = 2:1. To make ratio 1:2, water to add?', options: ['20 litres', '30 litres', '40 litres', '60 litres'], answer: '60 litres', explanation: 'Milk=40L, Water=20L. For 1:2 ratio: 40/(20+x) = 1/2 => 20+x=80 => x=60 litres.' },
+      { question: 'Boys:Girls in college = 7:8. If boys increase 20% and girls 10%, new ratio?', options: ['8:9', '17:18', '21:22', 'Cannot be determined'], answer: '21:22', explanation: 'New boys = 120% of 7x = 42x/5. New girls = 110% of 8x = 44x/5. Ratio = 42:44 = 21:22.' },
+      { question: 'Salaries of Ravi and Sumit in ratio 2:3. Each increased by Rs.4000, new ratio 40:57. Sumit salary?', options: ['Rs.17000', 'Rs.20000', 'Rs.25500', 'Rs.38000'], answer: 'Rs.38000', explanation: '(2x+4000)/(3x+4000) = 40/57. 57(2x+4000)=40(3x+4000) => 114x+228000=120x+160000 => 6x=68000 => x=11333. Sumit = 3x+4000 = 34000+4000 = Rs.38000.' },
+      { question: 'If 0.75:x :: 5:8, then x equals:', options: ['1.12', '1.2', '1.25', '1.30'], answer: '1.2', explanation: '0.75/x = 5/8 => x = 0.75x8/5 = 6/5 = 1.2.' },
+      { question: 'Sum of three numbers is 98. First:Second = 2:3 and Second:Third = 5:8. Second number?', options: ['20', '30', '48', '58'], answer: '30', explanation: 'A:B = 2:3. B:C = 5:8. A:B:C = 10:15:24. B = 98x15/49 = 30.' },
+      { question: 'Rs.782 divided in parts proportional to 1/2:2/3:3/4. First part?', options: ['Rs.182', 'Rs.190', 'Rs.196', 'Rs.204'], answer: 'Rs.204', explanation: 'Ratio = 1/2:2/3:3/4 = 6:8:9. First part = 782x6/23 = Rs.204.' },
+      { question: 'Salaries A:B:C = 2:3:5. Increments 15%, 10%, 20%. New ratio?', options: ['3:3:10', '10:11:20', '23:33:60', 'Cannot be determined'], answer: '23:33:60', explanation: 'New = 2.3k:3.3k:6k = 23:33:60.' },
+      { question: 'If 40% of a number equals 2/3 of another, ratio of first to second?', options: ['2:5', '3:7', '5:3', '7:3'], answer: '5:3', explanation: '40A/100 = 2B/3 => 2A/5 = 2B/3 => A/B = 5/3. Ratio = 5:3.' },
+      { question: 'The fourth proportional to 5, 8, 15 is:', options: ['18', '24', '19', '20'], answer: '24', explanation: '5:8 = 15:x => 5x = 120 => x = 24.' },
+      { question: 'Two numbers in ratio 3:5. If 9 subtracted from each, new ratio 12:23. Smaller number?', options: ['27', '33', '49', '55'], answer: '33', explanation: '(3x-9)/(5x-9) = 12/23. 23(3x-9)=12(5x-9) => 69x-207=60x-108 => 9x=99 => x=11. Smaller = 3x11 = 33.' },
+      { question: 'Coins of 25p, 10p, 5p in ratio 1:2:3. Total Rs.30. Number of 5p coins?', options: ['50', '100', '150', '200'], answer: '150', explanation: 'Let coins be x, 2x, 3x. Value = 25x/100 + 10(2x)/100 + 5(3x)/100 = 60x/100 = 30 => x=50. 5p coins = 3x50 = 150.' }
+    ]
   },
   {
     name: 'Time & Work',
