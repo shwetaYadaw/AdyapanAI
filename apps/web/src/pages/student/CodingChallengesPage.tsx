@@ -80,16 +80,6 @@ export default function CodingChallengesPage() {
     },
   });
 
-  const getDailyChallenge = () => {
-    if (!questions || questions.length === 0) return null;
-    const today = new Date();
-    // Use full date string for stable daily rotation — changes exactly at midnight
-    const dayIndex = Math.floor(Date.now() / (1000 * 60 * 60 * 24));
-    return questions[dayIndex % questions.length];
-  };
-
-  const dailyChallenge = getDailyChallenge();
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
 
@@ -211,44 +201,6 @@ export default function CodingChallengesPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Daily Challenge Card */}
-            {dailyChallenge ? (
-              <Card padding="md" className="bg-gradient-to-br from-primary-600 to-purple-600 text-white relative overflow-hidden shadow-xl border-none">
-                <div className="relative z-10 space-y-4">
-                  <div>
-                    <span className="text-xxs px-2 py-0.5 rounded-full bg-white/20 font-bold uppercase tracking-wider">Daily Challenge</span>
-                    <h3 className="font-display font-extrabold text-xl mt-1">{dailyChallenge.title}</h3>
-                    <p className="text-xs text-white/80 mt-1">Difficulty: <span className="capitalize">{dailyChallenge.difficulty}</span> | Max {dailyChallenge.xpReward || 15} XP</p>
-                  </div>
-                  <p className="text-xs text-white/85 line-clamp-2">
-                    Solve today's featured coding challenge in the coding arena: {dailyChallenge.title}!
-                  </p>
-                  <Link to={`/student/challenges/${dailyChallenge.slug}`} className="block">
-                    <button className="w-full bg-white text-primary-600 font-bold text-xs py-2.5 rounded-xl hover:bg-white/95 transition-all flex items-center justify-center gap-1 shadow-sm">
-                      Solve Challenge <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </Link>
-                </div>
-              </Card>
-            ) : (
-              <Card padding="md" className="bg-gradient-to-br from-primary-600 to-purple-600 text-white relative overflow-hidden shadow-xl border-none">
-                <div className="relative z-10 space-y-4">
-                  <div>
-                    <span className="text-xxs px-2 py-0.5 rounded-full bg-white/20 font-bold uppercase tracking-wider">Daily Challenge</span>
-                    <h3 className="font-display font-extrabold text-xl mt-1">Maximum Subarray</h3>
-                    <p className="text-xs text-white/80 mt-1">Difficulty: Medium | Max 15 XP</p>
-                  </div>
-                  <p className="text-xs text-white/85 line-clamp-2">
-                    {"Find the contiguous subarray (containing at least one number) which has the largest sum."}
-                  </p>
-                  <Link to="/student/challenges/maximum-subarray" className="block">
-                    <button className="w-full bg-white text-primary-600 font-bold text-xs py-2.5 rounded-xl hover:bg-white/95 transition-all flex items-center justify-center gap-1 shadow-sm">
-                      Solve Challenge <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  </Link>
-                </div>
-              </Card>
-            )}
 
             {/* Leaderboard Card */}
             <Card padding="md" className="border border-gray-100 dark:border-gray-800">

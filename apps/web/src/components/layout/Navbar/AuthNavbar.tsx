@@ -73,7 +73,6 @@ export default function AuthNavbar() {
             paddingLeft: 24,
           }} className="hidden-mobile">
             {[
-              { label: 'Home', href: '/' },
               { label: 'About', href: '#about' },
               { label: 'Careers', href: '/careers' },
             ].map((link) => (

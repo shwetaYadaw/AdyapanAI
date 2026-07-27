@@ -1,28 +1,19 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon, Bell, ChevronDown, LogOut, User, LayoutDashboard } from 'lucide-react';
+import { Menu, X, Sun, Moon, Bell, ChevronDown, LogOut, User, LayoutDashboard, CheckCheck } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectUser, selectIsAuthenticated, logoutThunk } from '../../../features/auth/authSlice';
 import { toggleDarkMode } from '../../../features/ui/uiSlice';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { api } from '../../../services/api';
 import Avatar from '../../common/Avatar/Avatar';
 import Badge from '../../common/Badge/Badge';
 import toast from 'react-hot-toast';
 
-const PUBLIC_NAV_LINKS: { label: string; href: string }[] = [
-  { label: 'Home', href: '/' },
-];
+const PUBLIC_NAV_LINKS: { label: string; href: string }[] = [];
 
-const AUTH_NAV_LINKS: { label: string; href: string }[] = [
-  { label: 'Dashboard', href: '/student/dashboard' },
-  { label: 'Resume Builder', href: '/student/resume-builder' },
-  { label: 'AI Features', href: '/student/ai-features' },
-  { label: 'Certificates', href: '/student/certificates' },
-  { label: 'Coding Arena', href: '/student/coding-arena' },
-  { label: 'TCS NQT Prep', href: '/student/tcs-nqt-prep' },
-  { label: 'Aptitude Prep', href: '/student/aptitude-prep' },
-  { label: 'Contests', href: '/student/contests' },
-];
+const AUTH_NAV_LINKS: { label: string; href: string }[] = [];
 
 const DASHBOARD_LINKS: Record<string, string> = {
   student: '/student/dashboard',
@@ -36,11 +27,49 @@ const DASHBOARD_LINKS: Record<string, string> = {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const darkMode = useAppSelector((s) => s.ui.darkMode);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  // Fetch unread notifications
+  const { data: notifData } = useQuery({
+    queryKey: ['navNotifications'],
+    queryFn: async () => {
+      const { data } = await api.get('/notifications?unread=true&limit=8');
+      return data;
+    },
+    enabled: isAuthenticated,
+    refetchInterval: 30000, // refresh every 30s
+  });
+
+  const notifications: any[] = notifData?.data ?? [];
+  const unreadCount: number = notifData?.unreadCount ?? 0;
+
+  // Close notif dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleMarkAllRead = async () => {
+    try {
+      await api.put('/notifications/mark-all-read');
+      queryClient.invalidateQueries({ queryKey: ['navNotifications'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+    } catch {
+      // silent fail
+    }
+  };
 
   const handleLogout = async () => {
     await dispatch(logoutThunk());
@@ -94,10 +123,93 @@ export default function Navbar() {
             {isAuthenticated && user ? (
               <>
                 {/* Notifications */}
-                <button className="relative p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                  <Bell className="w-4 h-4" />
-                  <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500" />
-                </button>
+                <div className="relative" ref={notifRef}>
+                  <button
+                    onClick={() => setNotifOpen(o => !o)}
+                    className="relative p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    aria-label="Notifications"
+                  >
+                    <Bell className="w-4 h-4" />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    )}
+                  </button>
+
+                  <AnimatePresence>
+                    {notifOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-80 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-800 z-50 overflow-hidden"
+                      >
+                        {/* Header */}
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-sm font-bold text-gray-900 dark:text-white">Notifications</h3>
+                            {unreadCount > 0 && (
+                              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 dark:bg-red-950/40 text-red-600 dark:text-red-400">
+                                {unreadCount} new
+                              </span>
+                            )}
+                          </div>
+                          {unreadCount > 0 && (
+                            <button
+                              onClick={handleMarkAllRead}
+                              className="flex items-center gap-1 text-[10px] text-primary-500 hover:text-primary-600 font-semibold transition-colors"
+                            >
+                              <CheckCheck className="w-3 h-3" /> Mark all read
+                            </button>
+                          )}
+                        </div>
+
+                        {/* List */}
+                        <div className="max-h-72 overflow-y-auto">
+                          {notifications.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-8 text-center">
+                              <Bell className="w-8 h-8 text-gray-200 dark:text-gray-700 mb-2" />
+                              <p className="text-xs text-gray-400">No notifications yet</p>
+                            </div>
+                          ) : (
+                            notifications.map((n: any) => (
+                              <div
+                                key={n._id}
+                                className={`px-4 py-3 border-b border-gray-50 dark:border-gray-800/60 last:border-none transition-colors ${
+                                  !n.isRead ? 'bg-primary-50/60 dark:bg-primary-950/20' : 'hover:bg-gray-50 dark:hover:bg-gray-800/40'
+                                }`}
+                              >
+                                <div className="flex items-start gap-2.5">
+                                  {!n.isRead && <span className="w-1.5 h-1.5 rounded-full bg-primary-500 mt-1.5 shrink-0" />}
+                                  <div className={`flex-1 min-w-0 ${n.isRead ? 'pl-4' : ''}`}>
+                                    <p className="text-xs font-semibold text-gray-800 dark:text-gray-200 leading-snug">{n.title}</p>
+                                    {n.message && <p className="text-[10px] text-gray-400 mt-0.5 line-clamp-2">{n.message}</p>}
+                                    <p className="text-[10px] text-gray-400 mt-1">
+                                      {new Date(n.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+
+                        {/* Footer */}
+                        {notifications.length > 0 && (
+                          <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-800">
+                            <Link
+                              to="/student/dashboard"
+                              onClick={() => setNotifOpen(false)}
+                              className="text-xs text-primary-500 hover:text-primary-600 font-semibold"
+                            >
+                              View all notifications →
+                            </Link>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
                 {/* Profile Dropdown */}
                 <div className="relative">
