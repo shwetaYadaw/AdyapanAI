@@ -84,6 +84,7 @@ export default function ProfilePage() {
   };
 
   const openEdit = () => {
+    setForm({
       firstName: user?.firstName ?? '',
       lastName:  user?.lastName  ?? '',
       phone:     (user as any)?.phone ?? '',
