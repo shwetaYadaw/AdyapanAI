@@ -315,6 +315,66 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         options: ['1951609', '1981709', '18362619', '2031719', 'None of these'],
         answer: '1951609',
         explanation: '1397 × 1397 = (1397)^2 = (1400 - 3)^2 = 1400^2 + 3^2 - 2 × 1400 × 3 = 1960000 + 9 - 8400 = 1951609.'
+      },
+      {
+        question: 'How many of the following numbers are divisible by 132? 264, 396, 462, 792, 968, 2178, 5184, 6336',
+        options: ['4', '5', '6', '7'],
+        answer: '4',
+        explanation: '132 = 4 × 3 × 11. A number divisible by 132 must be divisible by 4, 3, and 11. Checking: 264 ✓, 396 ✓, 462 ✗, 792 ✓, 968 ✗, 2178 ✗, 5184 ✗, 6336 ✓. Total = 4.'
+      },
+      {
+        question: '(935421 × 625) = ?',
+        options: ['575648125', '584638125', '584649125', '585628125'],
+        answer: '584638125',
+        explanation: '935421 × 625 = 935421 × 5^4 = 935421 × (10/2)^4 = (935421 × 10^4) / 2^4 = 9354210000 / 16 = 584638125.'
+      },
+      {
+        question: 'The largest 4 digit number exactly divisible by 88 is:',
+        options: ['9944', '9768', '9988', '8888', 'None of these'],
+        answer: '9944',
+        explanation: 'Largest 4-digit number = 9999. 9999 ÷ 88 = 113 remainder 55. Required number = 9999 - 55 = 9944.'
+      },
+      {
+        question: 'Which of the following is a prime number?',
+        options: ['33', '81', '93', '97'],
+        answer: '97',
+        explanation: '33 = 3 × 11, 81 = 3^4, 93 = 3 × 31. 97 has no divisors other than 1 and itself. Clearly, 97 is a prime number.'
+      },
+      {
+        question: 'What is the unit digit in {(6374)^1793 × (625)^317 × (341^491)}?',
+        options: ['0', '2', '3', '5'],
+        answer: '0',
+        explanation: 'Unit digit of (6374)^1793 = unit digit of (4)^1793 = unit digit of [(4^2)^896 × 4] = unit digit of [6 × 4] = 4. Unit digit of (625)^317 = unit digit of (5)^317 = 5. Unit digit of (341)^491 = unit digit of (1)^491 = 1. Required unit digit = unit digit of (4 × 5 × 1) = 0.'
+      },
+      {
+        question: '5358 × 51 = ?',
+        options: ['273258', '273268', '273348', '273358'],
+        answer: '273258',
+        explanation: '5358 × 51 = 5358 × (50 + 1) = 5358 × 50 + 5358 × 1 = 267900 + 5358 = 273258.'
+      },
+      {
+        question: 'The sum of first five prime numbers is:',
+        options: ['11', '18', '26', '28'],
+        answer: '28',
+        explanation: 'First five prime numbers are 2, 3, 5, 7, 11. Note: 1 is not a prime number. Sum = 2 + 3 + 5 + 7 + 11 = 28.'
+      },
+      {
+        question: 'The difference of two numbers is 1365. On dividing the larger number by the smaller, we get 6 as quotient and 15 as remainder. What is the smaller number?',
+        options: ['240', '270', '295', '360'],
+        answer: '270',
+        explanation: 'Let the smaller number be x. Then larger = x + 1365. x + 1365 = 6x + 15 => 5x = 1350 => x = 270. Smaller number = 270.'
+      },
+      {
+        question: '(12)^3 × 6^4 ÷ 432 = ?',
+        options: ['5184', '5060', '5148', '5084', 'None of these'],
+        answer: '5184',
+        explanation: '(12)^3 × 6^4 ÷ 432 = (12)^3 × 6^4 / (12 × 6^2) = (12)^2 × 6^2 = 144 × 36 = 5184. Alternatively, (72)^2 = 5184.'
+      },
+      {
+        question: '72519 × 9999 = ?',
+        options: ['725117481', '674217481', '685126481', '696217481', 'None of these'],
+        answer: '725117481',
+        explanation: '72519 × 9999 = 72519 × (10000 - 1) = 72519 × 10000 - 72519 × 1 = 725190000 - 72519 = 725117481.'
       }
     ]
   },
