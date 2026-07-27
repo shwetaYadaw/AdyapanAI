@@ -285,6 +285,36 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         options: ['5', '7', '12', '15'],
         answer: '5',
         explanation: '899 is divisible by 29. Remainder is 63 % 29 = 5.'
+      },
+      {
+        question: 'Which one of the following is not a prime number?',
+        options: ['31', '61', '71', '91'],
+        answer: '91',
+        explanation: '91 = 7 × 13. So 91 is divisible by 7 and is not a prime number. 31, 61, and 71 are all prime numbers.'
+      },
+      {
+        question: '(112 × 5^4) = ?',
+        options: ['67000', '70000', '76500', '77200'],
+        answer: '70000',
+        explanation: '112 × 5^4 = 112 × (10/2)^4 = 112 × 10^4 / 2^4 = 112 × 10000 / 16 = 1120000 / 16 = 70000.'
+      },
+      {
+        question: 'It is being given that (2^32 + 1) is completely divisible by a whole number. Which of the following numbers is completely divisible by this number?',
+        options: ['(2^16 + 1)', '(2^16 - 1)', '(7 × 2^23)', '(2^96 + 1)'],
+        answer: '(2^96 + 1)',
+        explanation: 'Let 2^32 = x. Then (2^32 + 1) = (x + 1). (2^96 + 1) = [(2^32)^3 + 1] = (x^3 + 1) = (x + 1)(x^2 - x + 1), which is completely divisible by (x + 1) = (2^32 + 1).'
+      },
+      {
+        question: 'What least number must be added to 1056, so that the sum is completely divisible by 23?',
+        options: ['2', '3', '18', '21', 'None of these'],
+        answer: '2',
+        explanation: '1056 ÷ 23 = 45 remainder 21. Required number = 23 - 21 = 2. So 1056 + 2 = 1058 is divisible by 23.'
+      },
+      {
+        question: '1397 × 1397 = ?',
+        options: ['1951609', '1981709', '18362619', '2031719', 'None of these'],
+        answer: '1951609',
+        explanation: '1397 × 1397 = (1397)^2 = (1400 - 3)^2 = 1400^2 + 3^2 - 2 × 1400 × 3 = 1960000 + 9 - 8400 = 1951609.'
       }
     ]
   },
