@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Github, Linkedin, MapPin, Edit2, Zap, Flame, Award, BookOpen, Code2, X } from 'lucide-react';
+import { Github, Linkedin, MapPin, Edit2, Zap, Flame, Award, BookOpen, Code2, X, Plus, Check } from 'lucide-react';
 import { api } from '../../services/api';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { selectUser, updateUser } from '../../features/auth/authSlice';
@@ -21,6 +21,8 @@ export default function ProfilePage() {
     firstName: '', lastName: '', phone: '',
     headline: '', city: '', github: '', linkedin: '',
   });
+  const [addingSkill, setAddingSkill] = useState(false);
+  const [skillInput, setSkillInput] = useState('');
 
   const { data: profile } = useQuery({
     queryKey: ['studentProfile'],
@@ -60,8 +62,28 @@ export default function ProfilePage() {
     onError: () => toast.error('Failed to update profile'),
   });
 
+  const addSkill = useMutation({
+    mutationFn: async (name: string) => {
+      const current = profile?.skills ?? [];
+      const updated = [...current, { name, level: 'beginner' }];
+      return api.put('/students/profile', { skills: updated });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studentProfile'] });
+      setSkillInput('');
+      setAddingSkill(false);
+      toast.success('Skill added!');
+    },
+    onError: () => toast.error('Failed to add skill'),
+  });
+
+  const handleAddSkill = () => {
+    const name = skillInput.trim();
+    if (!name) return;
+    addSkill.mutate(name);
+  };
+
   const openEdit = () => {
-    setForm({
       firstName: user?.firstName ?? '',
       lastName:  user?.lastName  ?? '',
       phone:     (user as any)?.phone ?? '',
@@ -164,15 +186,48 @@ export default function ProfilePage() {
           <h3 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2">
             <BookOpen className="w-4 h-4 text-primary-500" /> Skills
           </h3>
-          <button className="text-xs text-primary-500 hover:text-primary-600 font-semibold px-2 py-1 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all">+ Add</button>
+          <button onClick={() => setAddingSkill(s => !s)}
+            className="text-xs text-primary-500 hover:text-primary-600 font-semibold px-2 py-1 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all flex items-center gap-1">
+            <Plus className="w-3 h-3" /> Add
+          </button>
         </div>
-        {(profile?.skills ?? []).length === 0 ? (
+
+        {/* Inline add input */}
+        <AnimatePresence>
+          {addingSkill && (
+            <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }}
+              className="mb-3 overflow-hidden">
+              <div className="flex items-center gap-2">
+                <input
+                  autoFocus
+                  type="text"
+                  placeholder="e.g. React, Python, DSA..."
+                  value={skillInput}
+                  onChange={e => setSkillInput(e.target.value)}
+                  onKeyDown={e => { if (e.key === 'Enter') handleAddSkill(); if (e.key === 'Escape') setAddingSkill(false); }}
+                  className="flex-1 text-sm px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 transition-all"
+                />
+                <button onClick={handleAddSkill} disabled={addSkill.isPending || !skillInput.trim()}
+                  className="p-2 rounded-xl bg-primary-500 hover:bg-primary-600 text-white disabled:opacity-50 transition-all">
+                  <Check className="w-4 h-4" />
+                </button>
+                <button onClick={() => { setAddingSkill(false); setSkillInput(''); }}
+                  className="p-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 text-gray-500 transition-all">
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <p className="text-[10px] text-gray-400 mt-1 ml-1">Press Enter to add · Esc to cancel</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {(profile?.skills ?? []).length === 0 && !addingSkill ? (
           <div className="flex items-center justify-center border-2 border-dashed border-gray-100 dark:border-gray-800 rounded-xl py-8">
             <p className="text-sm text-gray-400 text-center">No skills added yet<br /><span className="text-xs">Click + Add to get started</span></p>
           </div>
         ) : (
           <div className="flex flex-wrap gap-2">
-            {profile.skills.map((s: { name: string; level: string }) => (
+            {(profile?.skills ?? []).map((s: { name: string; level: string }) => (
               <Badge key={s.name} variant={s.level === 'expert' ? 'purple' : s.level === 'advanced' ? 'primary' : 'gray'}>{s.name}</Badge>
             ))}
           </div>

@@ -27,6 +27,7 @@ const DASHBOARD_LINKS: Record<string, string> = {
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
   const [notifOpen, setNotifOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const dispatch = useAppDispatch();
@@ -55,6 +56,17 @@ export default function Navbar() {
     const handler = (e: MouseEvent) => {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setNotifOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Close profile dropdown when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
       }
     };
     document.addEventListener('mousedown', handler);
@@ -212,7 +224,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Profile Dropdown */}
-                <div className="relative">
+                <div className="relative" ref={profileRef}>
                   <button
                     onClick={() => setProfileOpen(!profileOpen)}
                     className="flex items-center gap-2 p-1 pr-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
