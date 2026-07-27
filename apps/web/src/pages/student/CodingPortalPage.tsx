@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+﻿import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Editor from '@monaco-editor/react';
@@ -843,13 +843,21 @@ export default function CodingPortalPage() {
             <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 via-amber-500 to-purple-600" />
             
             <div className="text-center space-y-6">
-              <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg relative">
-                {unlockedBadgeData ? (
-                  <span className="text-5xl animate-bounce">{unlockedBadgeData.iconUrl || 'ðŸ†'}</span>
-                ) : (
-                  <Award className="w-12 h-12 text-white animate-pulse" />
-                )}
-                <div className="absolute inset-0 rounded-full border-4 border-amber-300 animate-ping opacity-25" />
+              <div className="flex flex-col items-center justify-center">
+                <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg relative">
+                  {unlockedBadgeData ? (
+                    <span className="text-6xl animate-bounce">{unlockedBadgeData.iconUrl || '🏆'}</span>
+                  ) : (
+                    <Award className="w-14 h-14 text-white animate-pulse" />
+                  )}
+                  <div className="absolute inset-0 rounded-full border-4 border-amber-300 animate-ping opacity-25" />
+                </div>
+                
+                {/* Adyapan branding text below badge */}
+                <div className="mt-3 flex flex-col items-center gap-0.5">
+                  <span className="text-sm font-bold text-orange-600 dark:text-orange-400 tracking-wider">Adyapan</span>
+                  <span className="text-[10px] font-semibold text-gray-500 dark:text-gray-400">BADGE UNLOCKED</span>
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -908,3 +916,5 @@ export default function CodingPortalPage() {
     </div>
   );
 }
+
+
