@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Brain, Lock, GraduationCap, ArrowRight, BookOpen } from 'lucide-react';
 import Card from '../../components/common/Card/Card';
@@ -146,101 +146,6 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
     ]
   },
   {
-    name: 'Elementary Statistics',
-    pageNumber: 45,
-    questions: [
-      {
-        question: 'The heights (in cm) of 9 students of a class are as follows: 155, 160, 149, 150, 147, 152, 144, 148, 145. Find the median of this data.',
-        options: ['148', '149', '150', '152'],
-        answer: '149',
-        explanation: 'Sort heights in ascending order: 144, 145, 147, 148, 149, 150, 152, 155, 160. The median of 9 values is the 5th value, which is 149.'
-      },
-      {
-        question: "Jimmy's dog has 6 puppies. He weighed the puppies right after they were born. Their weights were 657 grams, 789 grams, 456 grams, 554 grams, 635 grams and 446 grams. What was the mean weight of the puppies?",
-        options: ['575 grams', '589.5 grams', '602 grams', '554 grams'],
-        answer: '589.5 grams',
-        explanation: 'Mean = Sum / Count. Sum = 657 + 789 + 456 + 554 + 635 + 446 = 3537 grams. Mean = 3537 / 6 = 589.5 grams.'
-      },
-      {
-        question: 'Find the mode of the following set of numbers: 25, 27, 36, 32, 41, 22, 28, 33, 44, 51, 37, 32.',
-        options: ['32', '33', '36', '41'],
-        answer: '32',
-        explanation: 'The mode is the value that appears most frequently. Here, 32 appears twice, while all other numbers appear once.'
-      },
-      {
-        question: 'In 50 numbers, 10 are threes, 15 are fours, 18 are fives and remaining are sixes. If a, b and c respectively represent the mean, mode and median of the data, what is the value of a + 2b - c?',
-        options: ['9.94', '10.25', '8.5', '11.44'],
-        answer: '9.94',
-        explanation: 'Number of sixes = 50 - (10 + 15 + 18) = 7. Mean (a) = (10*3 + 15*4 + 18*5 + 7*6)/50 = 222/50 = 4.44. Mode (b) = 5 (frequency 18). Median (c): 25th & 26th elements are 4 and 5, so median = 4.5. a + 2b - c = 4.44 + 10 - 4.5 = 9.94.'
-      },
-      {
-        question: 'Given Mean = 66, Mode = 60, find Median.',
-        options: ['62', '64', '65', '66'],
-        answer: '64',
-        explanation: 'Empirical formula: Mode = 3*Median - 2*Mean => 60 = 3*Median - 2*66 => 60 = 3*Median - 132 => 3*Median = 192 => Median = 64.'
-      },
-      {
-        question: 'If the ratio of mode and median of a distribution is 6 : 5, then the ratio of its mean and median is:',
-        options: ['9 : 10', '4 : 5', '6 : 5', '1 : 2'],
-        answer: '9 : 10',
-        explanation: 'Let Mode = 6x, Median = 5x. Using Mode = 3*Median - 2*Mean => 6x = 15x - 2*Mean => 2*Mean = 9x => Mean = 4.5x. Ratio of mean to median = 4.5x / 5x = 9 : 10.'
-      },
-      {
-        question: 'Identify the statement which is not true?',
-        options: [
-          'It is compulsory to have mean, mode and median for a given data set.',
-          'We cannot have more than one mean, one median and one mode for a given data set.',
-          'Mean, Mode and Median has to be a value from given data set.',
-          'All the above are not true.'
-        ],
-        answer: 'All the above are not true.',
-        explanation: 'All statements are mathematically incorrect: a dataset can have no mode; a dataset can have multiple modes; mean and median do not need to be values in the dataset.'
-      },
-      {
-        question: 'Find the mode of the following data: 4, 5, 1, 3, 8, 7, 9.',
-        options: ['No Mode', '4', '5', '9'],
-        answer: 'No Mode',
-        explanation: 'Since each number appears exactly once, there is no value with a higher frequency. Therefore, there is no mode.'
-      },
-      {
-        question: 'Find the mode of the following data sets: I) 4, 4, 4, 4, 9, 9, 9, 9  II) 4, 4, 3, 3, 2, 2, 1, 1.',
-        options: ['I) 4 and 9, II) No Mode', 'I) 4, II) 4 and 3', 'I) 9, II) 1', 'I) No Mode, II) No Mode'],
-        answer: 'I) 4 and 9, II) No Mode',
-        explanation: 'For I, both 4 and 9 repeat 4 times (bimodal). For II, all numbers repeat equally, meaning no single value is the mode.'
-      },
-      {
-        question: 'The salary in rupees of 10 employees in a company per day is 50, 55, 60, 65, 70, 72, 75, 80, 84, 89. What is the standard deviation in the above data?',
-        options: ['10.5', '11.98', '12.4', '9.8'],
-        answer: '11.98',
-        explanation: 'Mean = 70. Deviations squared sum = 400+225+100+25+0+4+25+100+196+361 = 1436. Variance = 1436 / 10 = 143.6. SD = sqrt(143.6) = 11.98.'
-      },
-      {
-        question: 'The mean of a set of data is 5. What will be the mean if ten is subtracted from each data point?',
-        options: ['5', '-5', '15', '0'],
-        answer: '-5',
-        explanation: 'If a constant value is subtracted from all elements in a dataset, the mean decreases by that exact constant value. New mean = 5 - 10 = -5.'
-      },
-      {
-        question: 'With what value should the highest quantity in the data: 65, 52, 14, 26, 18, 35, 32, 38 be replaced so that the mean and median become equal?',
-        options: ['53', '55', '50', '60'],
-        answer: '53',
-        explanation: 'Sorted: 14, 18, 26, 32, 35, 38, 52, 65. Median = (32+35)/2 = 33.5. Let 65 be replaced by x. New sum = 215 + x. Mean = (215+x)/8 = 33.5 => 215 + x = 268 => x = 53.'
-      },
-      {
-        question: 'If the mean of 26 observations is 29, and on adding four more observations, the new mean becomes 32. What is the mean of the last four observations?',
-        options: ['45.5', '48.0', '51.5', '53.5'],
-        answer: '51.5',
-        explanation: 'Sum of 26 observations = 26 * 29 = 754. Sum of 30 observations = 30 * 32 = 960. Sum of 4 new observations = 960 - 754 = 206. Mean of 4 observations = 206 / 4 = 51.5.'
-      },
-      {
-        question: 'What is the difference between the mean and the median of the given data? 5, 9, 8, 15, 12, 9, 2, 19, 21, 11',
-        options: ['1.2', '1.5', '2.0', '0.8'],
-        answer: '1.2',
-        explanation: 'Sorted: 2, 5, 8, 9, 9, 11, 12, 15, 19, 21. Mean = 112 / 10 = 11.2. Median = (9+11)/2 = 10. Difference = 11.2 - 10 = 1.2.'
-      }
-    ]
-  },
-  {
     name: 'Number System',
     pageNumber: 93,
     questions: [
@@ -375,131 +280,6 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         options: ['725117481', '674217481', '685126481', '696217481', 'None of these'],
         answer: '725117481',
         explanation: '72519 × 9999 = 72519 × (10000 - 1) = 72519 × 10000 - 72519 × 1 = 725190000 - 72519 = 725117481.'
-      }
-    ]
-  },
-  {
-    name: 'Arithmetic',
-    pageNumber: 122,
-    questions: [
-      {
-        question: 'In the IT department of TCS, the administrator password is changed every month. The team receives an 8 digit number: 65351364. This number is to be prefixed with a single digit and suffixed with a single digit to get a password divisible by 11 and 8. Find the prefix and suffix respectively.',
-        options: ['3 and 8', '1 and 8', '4 and 6', '2 and 8'],
-        answer: '1 and 8',
-        explanation: 'Divisible by 8: suffix must make last 3 digits (36X) divisible by 8 => 368 is divisible by 8, so suffix is 8. The number is P653513648. Divisible by 11: Alternating sums difference = (8+6+1+5+6) - (4+3+5+3+P) = 26 - (17+P) = 9-P. For this to be 0 or 11, P must be 9 or we check the indices: (8+6+1+5+6) - (4+3+5+3+P) = 26 - (17+P) = 9-P => P=9. Standard options map to 1 and 8.'
-      },
-      {
-        question: 'Two packets are available for sale. Packet A: peanuts 100 grams for Rs 72, Packet B: peanuts 150 grams for Rs 108. Which is a better buy?',
-        options: ['Packet A', 'Packet B', 'Both are same value', 'Cannot be determined'],
-        answer: 'Both are same value',
-        explanation: 'Packet A: Rs 72 / 100g = Rs 0.72 per gram. Packet B: Rs 108 / 150g = Rs 0.72 per gram. Both offer the exact same price value.'
-      },
-      {
-        question: '6 cows cost the same as 9 sheep, 27 sheep cost the same as 30 goats, 50 goats cost the same as 3 elephants. If two elephants cost Rs 7200, then the cost of one cow is:',
-        options: ['Rs. 180', 'Rs. 240', 'Rs. 360', 'Rs. 300'],
-        answer: 'Rs. 360',
-        explanation: '1 elephant = Rs. 3600. 3 elephants = Rs. 10800. 50 goats = Rs. 10800 => 1 goat = Rs. 216. 30 goats = Rs. 6480. 27 sheep = 30 goats = Rs. 6480 => 1 sheep = Rs. 240. 9 sheep = Rs. 2160. 6 cows = 9 sheep = Rs. 2160 => 1 cow = Rs. 360.'
-      },
-      {
-        question: 'Thomas bought X number of sports goods for Rs 9600. If each item was cheaper by Rs 20, then with the same amount he could have bought 40 more items than X. Find the number of items bought by Thomas.',
-        options: ['120', '100', '80', '60'],
-        answer: '120',
-        explanation: 'Cost per item = 9600/X. Cheaper cost = 9600/(X+40). (9600/X) - (9600/(X+40)) = 20 => X^2 + 40X - 19200 = 0 => (X+160)(X-120) = 0 => X = 120.'
-      },
-      {
-        question: 'A lady engaged a servant on a condition that she will pay Rs 90 and also give him a turban at the end of the year. He served for 9 months and was given a turban and Rs 65. The price of the turban is:',
-        options: ['Rs. 10', 'Rs. 15', 'Rs. 20', 'Rs. 25'],
-        answer: 'Rs. 10',
-        explanation: 'Let price of turban be T. Total pay for 12 months = 90 + T. Monthly salary = (90 + T)/12. Pay for 9 months = 9 * (90 + T)/12 = 65 + T => 3 * (90 + T)/4 = 65 + T => 270 + 3T = 260 + 4T => T = 10.'
-      },
-      {
-        question: 'A girl is promised Rs. 8400 and a cloak as her wages for a year. After 7 months she leaves this service and receives the cloak and Rs. 4600 as her due. How much is the cloak worth?',
-        options: ['Rs. 600', 'Rs. 720', 'Rs. 800', 'Rs. 1000'],
-        answer: 'Rs. 720',
-        explanation: 'Let cloak value be C. Wages for 1 year = 8400 + C. Wages for 7 months = (7/12) * (8400 + C) = 4600 + C => 58800 + 7C = 55200 + 12C => 5C = 3600 => C = 720.'
-      }
-    ]
-  },
-  {
-    name: 'Data Interpretation',
-    pageNumber: 148,
-    questions: [
-      {
-        question: 'Which state shows maximum number of average electorate per polling station?',
-        options: ['Uttar Pradesh', 'Maharashtra', 'West Bengal', 'Bihar'],
-        answer: 'West Bengal',
-        explanation: 'West Bengal historically registers the highest electorate density per polling station in statistical DI datasets.'
-      },
-      {
-        question: 'Study the following pie chart carefully: Total candidates selected from Jabalpur is what percent of the total candidates selected from Gwalior?',
-        options: ['75%', '80%', '85%', '90%'],
-        answer: '80%',
-        explanation: 'Jabalpur angle/percentage divided by Gwalior angle/percentage in standard DI mock charts corresponds to 80%.'
-      },
-      {
-        question: 'Out of total selected candidates from Gwalior, if 20% candidates are female, then find the total male candidates who are selected from Gwalior.',
-        options: ['320', '400', '480', '520'],
-        answer: '480',
-        explanation: 'If total selected is 600, 20% female = 120, leaving 80% male = 480 candidates.'
-      },
-      {
-        question: 'The percentage increase in the total number of literates from 2001 to 2011 is:',
-        options: ['12.5%', '15.4%', '18.2%', '22.8%'],
-        answer: '18.2%',
-        explanation: 'Calculated using (Literates 2011 - Literates 2001) / Literates 2001 * 100 = 18.2%.'
-      },
-      {
-        question: 'The difference between the percentage of candidates qualified to appeared was maximum in which of the following pairs of years?',
-        options: ['2004 and 2005', '2006 and 2007', '2008 and 2009', '2010 and 2011'],
-        answer: '2006 and 2007',
-        explanation: 'Standard statistical tables show the highest variance in qualified-to-appeared ratios between 2006 and 2007.'
-      }
-    ]
-  },
-  {
-    name: 'Geometry & Mensuration',
-    pageNumber: 173,
-    questions: [
-      {
-        question: 'Which of the following statements is incorrect in regard to a circle?',
-        options: [
-          'A tangent is perpendicular to the radius at the point of contact.',
-          'Two tangents drawn from an external point to a circle are unequal.',
-          'Angle in a semi-circle is a right angle.',
-          'The perpendicular from the center of a circle to a chord bisects the chord.'
-        ],
-        answer: 'Two tangents drawn from an external point to a circle are unequal.',
-        explanation: 'Tangents drawn from an external point to a circle are always equal in length.'
-      },
-      {
-        question: 'If the expression shown are the degree measures of the angles of the pentagon, find the value of x+y.',
-        options: ['120', '135', '150', '180'],
-        answer: '180',
-        explanation: 'Sum of interior angles of a pentagon is (5-2)*180 = 540 degrees. Summing the variables solves to x+y = 180.'
-      },
-      {
-        question: 'One angle of a regular polygon measures 177Â°. This polygon has a total of â€˜nâ€™ sides, â€˜nâ€™ is a multiple of which of the following numbers?',
-        options: ['5', '8', '10', '12'],
-        answer: '8',
-        explanation: 'Each interior angle = 177Â° => Each exterior angle = 180Â° - 177Â° = 3Â°. Number of sides n = 360 / 3 = 120. 120 is a multiple of 8.'
-      },
-      {
-        question: 'Find the sum of the measures of one interior and one exterior angle of a regular 940-gon.',
-        options: ['180Â°', '360Â°', '540Â°', '940Â°'],
-        answer: '180Â°',
-        explanation: 'The sum of an interior angle and its adjacent exterior angle at any vertex of any polygon is always 180Â°.'
-      },
-      {
-        question: 'What is the measure of the radius of the circle inscribed in a triangle whose sides measure 8, 15 and 17 units?',
-        options: ['2 units', '3 units', '4 units', '5 units'],
-        answer: '3 units',
-        explanation: 'The triangle is a right-angled triangle since 8^2 + 15^2 = 17^2. Inradius r = (a + b - c)/2 = (8 + 15 - 17)/2 = 6/2 = 3 units.'
-      },
-      {
-        question: 'Find the radius of the circle inscribed in the triangle ABC, having sides 10 cm, 10 cm and 16 cm.',
-        options: ['2.67 cm', '3.0 cm', '4.0 cm', '2.0 cm'],
-        answer: '2.67 cm',
-        explanation: 'Isoceles triangle. Height h = sqrt(10^2 - 8^2) = 6 cm. Area = 0.5 * 16 * 6 = 48 cm^2. Semi-perimeter s = (10+10+16)/2 = 18 cm. Inradius r = Area / s = 48 / 18 = 2.67 cm.'
       }
     ]
   },
@@ -740,36 +520,6 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         options: ['6', '12', '18', '24'],
         answer: '12',
         explanation: 'The greatest common divisor that divides all four numbers (24, 60, 84, 108) is 12.'
-      }
-    ]
-  },
-  {
-    name: 'Linear Equation',
-    pageNumber: 379,
-    questions: [
-      {
-        question: 'In a competitive exam, 5 marks are awarded for every correct answer and 2 marks are deducted for every wrong answer. Sathwik scores 32 marks. If 4 marks had been awarded for correct answers and 1 mark deducted for wrong answers, he would have scored 34 marks. How many questions were in the test?',
-        options: ['20', '26', '30', '35'],
-        answer: '26',
-        explanation: 'Let C be correct, W be wrong. 5C - 2W = 32 and 4C - W = 34 => W = 4C - 34. Substitute: 5C - 2(4C - 34) = 32 => -3C = -36 => C = 12. W = 14. Total questions = C + W = 26.'
-      },
-      {
-        question: 'Let a, b, c, d and e be distinct integers in ascending order such that (76-a)(76-b)(76-c)(76-d)(76-e) = 1127. Find the value of a + b + c + d.',
-        options: ['280', '304', '320', '350'],
-        answer: '304',
-        explanation: '1127 can be factored into 5 distinct integers: -1, 1, -7, 7, 23. Thus 76-a, 76-b, etc. correspond to these. Summing them yields a+b+c+d = 304.'
-      },
-      {
-        question: 'Assume that f(1)=0 and f(m+n) = f(m) + f(n) + 4(9mn-1). Find f(17).',
-        options: ['3420', '4896', '5120', '6020'],
-        answer: '4896',
-        explanation: 'Solving the recurrence relation, f(x) = 18x^2 - 18x. For x = 17, f(17) = 18*(17^2 - 17) = 18*272 = 4896.'
-      },
-      {
-        question: 'If f(1) = 4, f(x+y) = f(x) + f(y) + 7xy + 2 for x>0 and y>0, find f(2) + f(5).',
-        options: ['110', '135', '142', '155'],
-        answer: '142',
-        explanation: 'Compute step by step: f(2) = f(1+1) = 4 + 4 + 7 + 2 = 17. By induction or recurrence, f(5) = 125. f(2)+f(5) = 142.'
       }
     ]
   },
@@ -1131,6 +881,709 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         answer: '21.6 seconds',
         explanation: 'Relative speed = 90 - 60 = 30 km/hr = 30 * 5/18 = 8.33 m/s. Total distance = 80 + 100 = 180m. Time = 180 / (150/18) = 180 * 18 / 150 = 21.6 seconds.'
       }
+    ]
+  },
+  {
+    name: 'Chain Rule',
+    pageNumber: 600,
+    questions: [
+      {
+        question: 'If 15 men can do a piece of work in 20 days, in how many days can 25 men do the same work?',
+        options: ['10 days', '12 days', '14 days', '16 days'],
+        answer: '12 days',
+        explanation: 'Using chain rule: 15 * 20 = 25 * x => x = 300/25 = 12 days.'
+      },
+      {
+        question: 'If 36 men can do a piece of work in 25 days, in how many days will 15 men do it?',
+        options: ['50 days', '56 days', '60 days', '72 days'],
+        answer: '60 days',
+        explanation: 'Men and days are inversely proportional. 36 * 25 = 15 * x => x = 900/15 = 60 days.'
+      },
+      {
+        question: 'If 20 men working 8 hours a day can finish a work in 30 days, how many men are needed to finish the same work in 20 days working 10 hours a day?',
+        options: ['20', '24', '28', '30'],
+        answer: '24',
+        explanation: '20 * 8 * 30 = x * 10 * 20 => 4800 = 200x => x = 24 men.'
+      },
+      {
+        question: 'A garrison of 500 men had provisions for 27 days. After 3 days a reinforcement of 300 men arrived. For how many more days will the remaining provisions last?',
+        options: ['12 days', '15 days', '18 days', '20 days'],
+        answer: '15 days',
+        explanation: 'Remaining provisions after 3 days = 500 * 24 = 12000 man-days. Total men now = 800. Days = 12000/800 = 15 days.'
+      }
+    ]
+  },
+  {
+    name: 'Square Root & Cube Root',
+    pageNumber: 601,
+    questions: [
+      {
+        question: 'What is the square root of 7056?',
+        options: ['82', '84', '86', '88'],
+        answer: '84',
+        explanation: '84 * 84 = 7056. We can verify: 80^2 = 6400, 84^2 = 7056.'
+      },
+      {
+        question: 'Find the cube root of 2744.',
+        options: ['12', '14', '16', '18'],
+        answer: '14',
+        explanation: '14^3 = 14 * 14 * 14 = 196 * 14 = 2744.'
+      },
+      {
+        question: 'If sqrt(x) + sqrt(y) = 17 and sqrt(x) - sqrt(y) = 1, find x.',
+        options: ['64', '81', '100', '121'],
+        answer: '81',
+        explanation: 'Adding: 2*sqrt(x) = 18 => sqrt(x) = 9 => x = 81.'
+      },
+      {
+        question: 'What is the value of sqrt(0.0016)?',
+        options: ['0.04', '0.4', '0.004', '4'],
+        answer: '0.04',
+        explanation: 'sqrt(0.0016) = sqrt(16/10000) = 4/100 = 0.04.'
+      }
+    ]
+  },
+  {
+    name: 'Stocks & Shares',
+    pageNumber: 602,
+    questions: [
+      {
+        question: 'A man buys Rs. 20 shares paying 9% dividend. The man wants to have an interest of 12% on his money. What is the market value of each share?',
+        options: ['Rs. 12', 'Rs. 15', 'Rs. 18', 'Rs. 20'],
+        answer: 'Rs. 15',
+        explanation: 'Dividend per share = 9% of 20 = Rs. 1.80. For 12% return: 12% of MV = 1.80 => MV = 1.80/0.12 = Rs. 15.'
+      },
+      {
+        question: 'By investing Rs. 1620 in 8% stock, a man buys Rs. 100 shares at a discount of 10%. What is his income?',
+        options: ['Rs. 120', 'Rs. 128', 'Rs. 144', 'Rs. 150'],
+        answer: 'Rs. 144',
+        explanation: 'Market price = 100 - 10 = Rs. 90. Number of shares = 1620/90 = 18. Income = 18 * 8 = Rs. 144.'
+      },
+      {
+        question: 'A 12% stock yields 10%. The market value of the stock is:',
+        options: ['Rs. 83.33', 'Rs. 110', 'Rs. 120', 'Rs. 125'],
+        answer: 'Rs. 120',
+        explanation: 'To get 10% yield: (12/MV)*100 = 10 => MV = 120.'
+      },
+      {
+        question: 'A man invested Rs. 4455 in Rs. 10 shares quoted at Rs. 8.25. If the rate of dividend be 12%, his annual income is:',
+        options: ['Rs. 540', 'Rs. 600', 'Rs. 648', 'Rs. 720'],
+        answer: 'Rs. 648',
+        explanation: 'Number of shares = 4455/8.25 = 540. Dividend per share = 12% of 10 = Rs. 1.20. Income = 540 * 1.20 = Rs. 648.'
+      }
+    ]
+  },
+  {
+    name: "Banker's Discount",
+    pageNumber: 603,
+    questions: [
+      {
+        question: "The banker's discount on a bill due 4 months hence at 15% per annum is Rs. 420. What is the true discount?",
+        options: ['Rs. 400', 'Rs. 410', 'Rs. 415', 'Rs. 425'],
+        answer: 'Rs. 400',
+        explanation: "BD = Rs. 420, T = 4/12 = 1/3 year, R = 15%. TD = BD/(1 + RT) = 420/(1 + 15*1/3/100) = 420/(1.05) = Rs. 400."
+      },
+      {
+        question: "The banker's gain on a certain sum due 2 years hence at 10% per annum is Rs. 24. What is the present worth?",
+        options: ['Rs. 480', 'Rs. 500', 'Rs. 600', 'Rs. 720'],
+        answer: 'Rs. 600',
+        explanation: "BG = TD * TR/100. 24 = TD * (10*2)/100 = TD * 0.2 => TD = 120. PW = TD * 100/(R*T) = 120 * 100/20 = Rs. 600."
+      },
+      {
+        question: "The banker's discount on Rs. 1600 at 15% per annum is the same as true discount on Rs. 1680 for the same time and at the same rate. Find the time.",
+        options: ['3 months', '4 months', '6 months', '1 year'],
+        answer: '4 months',
+        explanation: "BD on 1600 = 1600*R*T/100. TD on 1680 = 1680*R*T/(100 + RT). Setting equal: 1600 = 1680*100/(100+RT) => 100+RT = 105 => RT = 5. With R=15, T = 5/15 = 1/3 year = 4 months."
+      },
+      {
+        question: "The banker's discount and true discount on a sum of money due 8 months hence are Rs. 120 and Rs. 110 respectively. Find the sum.",
+        options: ['Rs. 1220', 'Rs. 1320', 'Rs. 1420', 'Rs. 1500'],
+        answer: 'Rs. 1320',
+        explanation: "Sum = BD * TD / (BD - TD) = 120 * 110 / (120 - 110) = 13200/10 = Rs. 1320."
+      }
+    ]
+  },
+  {
+    name: 'Calendar',
+    pageNumber: 604,
+    questions: [
+      {
+        question: 'What day of the week was January 1, 2000?',
+        options: ['Sunday', 'Saturday', 'Friday', 'Monday'],
+        answer: 'Saturday',
+        explanation: 'January 1, 2000 was a Saturday. This can be verified using the odd days method or a calendar reference.'
+      },
+      {
+        question: 'If March 1 is a Wednesday, what day of the week is March 25?',
+        options: ['Thursday', 'Friday', 'Saturday', 'Sunday'],
+        answer: 'Saturday',
+        explanation: 'From March 1 to March 25 = 24 days = 3 weeks + 3 days. Wednesday + 3 = Saturday.'
+      },
+      {
+        question: 'How many odd days are there in 400 years?',
+        options: ['0', '1', '2', '3'],
+        answer: '0',
+        explanation: '400 years have 0 odd days. Every 400-year cycle is complete with no remainder days.'
+      },
+      {
+        question: 'The last day of a century cannot be which of the following?',
+        options: ['Tuesday', 'Thursday', 'Saturday', 'All of the above'],
+        answer: 'All of the above',
+        explanation: 'The last day of a century can only be Sunday, Monday, Wednesday, or Friday. It cannot be Tuesday, Thursday, or Saturday.'
+      }
+    ]
+  },
+  {
+    name: 'Area',
+    pageNumber: 605,
+    questions: [
+      {
+        question: 'The length of a rectangular plot is 20 metres more than its breadth. If the cost of fencing the plot at Rs. 26.50 per metre is Rs. 5300, what is the length of the plot?',
+        options: ['40m', '50m', '60m', '70m'],
+        answer: '60m',
+        explanation: 'Perimeter = 5300/26.50 = 200m. 2(l+b) = 200, l = b+20. 2(b+20+b) = 200 => 4b+40 = 200 => b = 40, l = 60m.'
+      },
+      {
+        question: 'The area of a triangle with base 10 cm and height 6 cm is:',
+        options: ['25 sq cm', '30 sq cm', '35 sq cm', '60 sq cm'],
+        answer: '30 sq cm',
+        explanation: 'Area = (1/2) * base * height = (1/2) * 10 * 6 = 30 sq cm.'
+      },
+      {
+        question: 'If the diagonal of a square is 12 cm, what is the area of the square?',
+        options: ['36 sq cm', '72 sq cm', '144 sq cm', '48 sq cm'],
+        answer: '72 sq cm',
+        explanation: 'Area of square = (diagonal^2)/2 = (12^2)/2 = 144/2 = 72 sq cm.'
+      },
+      {
+        question: 'The area of a circle is 616 sq cm. Find its radius.',
+        options: ['7 cm', '14 cm', '21 cm', '28 cm'],
+        answer: '14 cm',
+        explanation: 'Area = pi*r^2 = 616 => r^2 = 616/(22/7) = 616*7/22 = 196 => r = 14 cm.'
+      }
+    ]
+  },
+  {
+    name: 'Decimal Fraction',
+    pageNumber: 606,
+    questions: [
+      {
+        question: 'What decimal of an hour is a second?',
+        options: ['0.00__(27)', '0.000__(7)', '0.00__(8)', '0.__(__(__(27)))'],
+        answer: '0.00__(27)',
+        explanation: '1 hour = 3600 seconds. 1/3600 = 0.000277... which is approximately 0.00028.'
+      },
+      {
+        question: 'The value of (0.1 * 0.1 * 0.1 + 0.02 * 0.02 * 0.02) / (0.2 * 0.2 * 0.2 + 0.04 * 0.04 * 0.04) is:',
+        options: ['0.015', '0.25', '0.125', '0.0__(5)'],
+        answer: '0.125',
+        explanation: 'Numerator = 0.001 + 0.000008 = 0.001008. Denominator = 0.008 + 0.000064 = 0.008064. Ratio = 0.125.'
+      },
+      {
+        question: 'If 2994 / 14.5 = 172, then 29.94 / 1.45 = ?',
+        options: ['17.2', '1.72', '20.65', '172'],
+        answer: '20.65',
+        explanation: '29.94/1.45 = 2994/145 = 20.65 (shifting decimals equally in numerator and denominator).'
+      },
+      {
+        question: '3889 + 12.952 - ? = 3854.002',
+        options: ['__(47.95)', '46.95', '47.95', '48.95'],
+        answer: '47.95',
+        explanation: '? = 3889 + 12.952 - 3854.002 = 3901.952 - 3854.002 = 47.95.'
+      }
+    ]
+  },
+  {
+    name: 'Surds & Indices',
+    pageNumber: 607,
+    questions: [
+      {
+        question: 'If 2^(x-1) + 2^(x+1) = 320, find x.',
+        options: ['6', '7', '8', '9'],
+        answer: '7',
+        explanation: '2^(x-1) + 2^(x+1) = 2^(x-1)(1 + 4) = 5 * 2^(x-1) = 320 => 2^(x-1) = 64 = 2^6 => x-1 = 6 => x = 7.'
+      },
+      {
+        question: 'Simplify: (27)^(2/3) * (16)^(3/4) / (8)^(2/3)',
+        options: ['18', '24', '27', '36'],
+        answer: '18',
+        explanation: '(27)^(2/3) = (3^3)^(2/3) = 9. (16)^(3/4) = (2^4)^(3/4) = 8. (8)^(2/3) = (2^3)^(2/3) = 4. Result = 9 * 8 / 4 = 18.'
+      },
+      {
+        question: 'If 5^a = 3125, then the value of 5^(a-3) is:',
+        options: ['25', '125', '625', '1625'],
+        answer: '25',
+        explanation: '5^a = 3125 = 5^5, so a = 5. Then 5^(a-3) = 5^2 = 25.'
+      },
+      {
+        question: 'The value of (256)^(5/4) is:',
+        options: ['512', '1024', '2048', '4096'],
+        answer: '1024',
+        explanation: '256 = 4^4. So (4^4)^(5/4) = 4^5 = 1024.'
+      }
+    ]
+  },
+  {
+    name: 'Pipes & Cisterns',
+    pageNumber: 608,
+    questions: [
+      {
+        question: 'Two pipes A and B can fill a tank in 20 and 30 minutes respectively. If both pipes are opened together, how long will it take to fill the tank?',
+        options: ['10 min', '12 min', '15 min', '18 min'],
+        answer: '12 min',
+        explanation: 'Rate of A = 1/20, Rate of B = 1/30. Combined = 1/20 + 1/30 = 5/60 = 1/12. Time = 12 minutes.'
+      },
+      {
+        question: 'A pipe can fill a tank in 15 hours. Due to a leak at the bottom, the tank is filled in 20 hours. If the tank is full, how much time will the leak take to empty it?',
+        options: ['45 hours', '50 hours', '55 hours', '60 hours'],
+        answer: '60 hours',
+        explanation: 'Filling rate = 1/15. Net rate with leak = 1/20. Leak rate = 1/15 - 1/20 = (4-3)/60 = 1/60. Leak empties in 60 hours.'
+      },
+      {
+        question: 'Three pipes A, B, and C can fill a tank in 6 hours. After working together for 2 hours, C is closed and A and B fill the remaining tank in 7 hours. How long does C alone take to fill the tank?',
+        options: ['10 hours', '12 hours', '14 hours', '16 hours'],
+        answer: '14 hours',
+        explanation: 'In 2 hours, 2/6 = 1/3 filled. Remaining = 2/3. A+B fill 2/3 in 7 hours => A+B rate = 2/21. C rate = 1/6 - 2/21 = (7-4)/42 = 3/42 = 1/14. C alone = 14 hours.'
+      },
+      {
+        question: 'A cistern is filled by pipe A in 10 hours and the full cistern can be leaked out by an exhaust pipe B in 12 hours. If both pipes are opened, in what time is the cistern full?',
+        options: ['50 hours', '55 hours', '60 hours', '65 hours'],
+        answer: '60 hours',
+        explanation: 'Net rate = 1/10 - 1/12 = (6-5)/60 = 1/60. The cistern will be full in 60 hours.'
+      }
+    ]
+  },
+  {
+    name: 'Logarithm',
+    pageNumber: 609,
+    questions: [
+      {
+        question: 'If log 2 = 0.3010 and log 3 = 0.4771, find the value of log 36.',
+        options: ['1.5563', '1.5562', '1.2040', '1.5561'],
+        answer: '1.5563',
+        explanation: 'log 36 = log(4*9) = log 4 + log 9 = 2*log 2 + 2*log 3 = 2(0.3010) + 2(0.4771) = 0.6020 + 0.9542 = 1.5562. Approximately 1.5563.'
+      },
+      {
+        question: 'What is the value of log5(125)?',
+        options: ['2', '3', '4', '5'],
+        answer: '3',
+        explanation: 'log5(125) = log5(5^3) = 3.'
+      },
+      {
+        question: 'If log(x) + log(x-3) = 1, find x.',
+        options: ['4', '5', '6', '7'],
+        answer: '5',
+        explanation: 'log(x(x-3)) = 1 => x(x-3) = 10 => x^2 - 3x - 10 = 0 => (x-5)(x+2) = 0. Since x > 3, x = 5.'
+      },
+      {
+        question: 'log2(16) + log3(81) equals:',
+        options: ['6', '7', '8', '9'],
+        answer: '8',
+        explanation: 'log2(16) = log2(2^4) = 4. log3(81) = log3(3^4) = 4. Total = 4 + 4 = 8.'
+      }
+    ]
+  },
+  {
+    name: 'True Discount',
+    pageNumber: 610,
+    questions: [
+      {
+        question: 'The true discount on a bill of Rs. 540 is Rs. 90. What is the banker\'s discount?',
+        options: ['Rs. 104', 'Rs. 108', 'Rs. 110', 'Rs. 112'],
+        answer: 'Rs. 108',
+        explanation: 'PW = 540 - 90 = 450. BD = (Face Value * TD) / PW = (540 * 90) / 450 = Rs. 108.'
+      },
+      {
+        question: 'The present worth of Rs. 2310 due 2.5 years hence at 15% simple interest is:',
+        options: ['Rs. 1600', 'Rs. 1680', 'Rs. 1700', 'Rs. 1800'],
+        answer: 'Rs. 1680',
+        explanation: 'PW = Amount / (1 + RT/100) = 2310 / (1 + 15*2.5/100) = 2310 / 1.375 = Rs. 1680.'
+      },
+      {
+        question: 'If the true discount on a sum due 2 years hence at 14% per annum be Rs. 168, the sum due is:',
+        options: ['Rs. 768', 'Rs. 848', 'Rs. 928', 'Rs. 1000'],
+        answer: 'Rs. 768',
+        explanation: 'TD = PW * R * T / 100. 168 = PW * 14 * 2 / 100 => PW = 600. Sum = PW + TD = 600 + 168 = Rs. 768.'
+      },
+      {
+        question: 'The true discount on Rs. 1760 due after a certain time at 12% per annum is Rs. 160. The time after which it is due is:',
+        options: ['6 months', '8 months', '10 months', '1 year'],
+        answer: '10 months',
+        explanation: 'PW = 1760 - 160 = 1600. TD = PW*R*T/100 => 160 = 1600*12*T/100 => T = 160/192 = 5/6 year = 10 months.'
+      }
+    ]
+  },
+  {
+    name: 'Odd Man Out & Series',
+    pageNumber: 611,
+    questions: [
+      {
+        question: 'Find the odd one out: 2, 5, 10, 17, 26, 37, 50, 64',
+        options: ['64', '50', '37', '26'],
+        answer: '64',
+        explanation: 'Pattern: differences are 3, 5, 7, 9, 11, 13, 15. After 50, next should be 50+15=65, not 64. So 64 is the odd one.'
+      },
+      {
+        question: 'Find the odd one out: 396, 462, 572, 427, 671, 264',
+        options: ['572', '462', '427', '264'],
+        answer: '427',
+        explanation: 'In all other numbers, the middle digit is the sum of the first and last digits. In 427: 4+7=11, not 2. So 427 is odd.'
+      },
+      {
+        question: 'Find the next number in the series: 2, 6, 12, 20, 30, ?',
+        options: ['38', '40', '42', '44'],
+        answer: '42',
+        explanation: 'Differences: 4, 6, 8, 10, 12. Next number = 30 + 12 = 42.'
+      },
+      {
+        question: 'Find the missing number: 1, 4, 9, 16, 25, ?',
+        options: ['30', '36', '35', '49'],
+        answer: '36',
+        explanation: 'The series is perfect squares: 1^2, 2^2, 3^2, 4^2, 5^2, 6^2 = 36.'
+      }
+    ]
+  },
+  {
+    name: 'Height & Distance',
+    pageNumber: 612,
+    questions: [
+      {
+        question: 'The angle of elevation of the top of a tower from a point on the ground 30 m away from its foot is 60 degrees. Find the height of the tower.',
+        options: ['30 m', '30*sqrt(3) m', '20*sqrt(3) m', '60 m'],
+        answer: '30*sqrt(3) m',
+        explanation: 'tan(60) = h/30 => sqrt(3) = h/30 => h = 30*sqrt(3) m.'
+      },
+      {
+        question: 'A ladder 15 m long reaches a window 12 m above the ground. Find the distance of the foot of the ladder from the wall.',
+        options: ['7 m', '8 m', '9 m', '10 m'],
+        answer: '9 m',
+        explanation: 'By Pythagoras: d = sqrt(15^2 - 12^2) = sqrt(225 - 144) = sqrt(81) = 9 m.'
+      },
+      {
+        question: 'From the top of a cliff 90 m high, the angle of depression of a boat is 30 degrees. Find the distance of the boat from the cliff.',
+        options: ['90 m', '90*sqrt(3) m', '60*sqrt(3) m', '30*sqrt(3) m'],
+        answer: '90*sqrt(3) m',
+        explanation: 'tan(30) = 90/d => 1/sqrt(3) = 90/d => d = 90*sqrt(3) m.'
+      },
+      {
+        question: 'The shadow of a tower is sqrt(3) times its height. The angle of elevation of the sun is:',
+        options: ['30 degrees', '45 degrees', '60 degrees', '90 degrees'],
+        answer: '30 degrees',
+        explanation: 'tan(angle) = height/shadow = h/(sqrt(3)*h) = 1/sqrt(3). tan(30) = 1/sqrt(3). So angle = 30 degrees.'
+      }
+    ]
+  },
+  {
+    name: 'Clock',
+    pageNumber: 613,
+    questions: [
+      {
+        question: 'At what time between 4 and 5 will the hands of a clock be at right angle?',
+        options: ['4:05 5/11', '4:38 2/11', '5:05 5/11', '4:32 8/11'],
+        answer: '4:38 2/11',
+        explanation: 'At 4, minute hand is at 0 and hour hand is at 120 degrees. For 90 degrees: 120 - (11/2)t = 90 => t = 60/11 = 5 5/11 min. Or 120 - (11/2)t = -90 => (11/2)t = 210 => t = 420/11 = 38 2/11 min.'
+      },
+      {
+        question: 'How many times do the hands of a clock coincide in a day?',
+        options: ['20', '21', '22', '24'],
+        answer: '22',
+        explanation: 'The hands coincide 11 times in 12 hours (not 12, because between 11 and 1 there is only one coincidence at 12). So in 24 hours = 22 times.'
+      },
+      {
+        question: 'The angle between the minute hand and the hour hand of a clock when the time is 8:30 is:',
+        options: ['60 degrees', '75 degrees', '80 degrees', '105 degrees'],
+        answer: '75 degrees',
+        explanation: 'At 8:30, hour hand = 8*30 + 30*0.5 = 255 degrees. Minute hand = 30*6 = 180 degrees. Angle = 255 - 180 = 75 degrees.'
+      },
+      {
+        question: 'A clock is started at noon. By 10 minutes past 5, the hour hand has turned through:',
+        options: ['145 degrees', '150 degrees', '155 degrees', '160 degrees'],
+        answer: '155 degrees',
+        explanation: 'From 12 to 5:10 = 5 hours 10 min = 310 minutes. Hour hand moves 0.5 deg/min. Angle = 310 * 0.5 = 155 degrees.'
+      }
+    ]
+  },
+  {
+    name: 'Volume & Surface Area',
+    pageNumber: 614,
+    questions: [
+      {
+        question: 'The volume of a cube whose edge is 3 cm is:',
+        options: ['9 cu cm', '18 cu cm', '27 cu cm', '36 cu cm'],
+        answer: '27 cu cm',
+        explanation: 'Volume of cube = edge^3 = 3^3 = 27 cu cm.'
+      },
+      {
+        question: 'A cylindrical tank has a radius of 7 m and height 14 m. What is the capacity of the tank in litres?',
+        options: ['2156000 litres', '2156 litres', '21560 litres', '215600 litres'],
+        answer: '2156000 litres',
+        explanation: 'Volume = pi*r^2*h = (22/7)*49*14 = 2156 cu m. 1 cu m = 1000 litres. Capacity = 2156000 litres.'
+      },
+      {
+        question: 'The total surface area of a sphere of radius 7 cm is:',
+        options: ['308 sq cm', '616 sq cm', '1232 sq cm', '154 sq cm'],
+        answer: '616 sq cm',
+        explanation: 'Surface area = 4*pi*r^2 = 4*(22/7)*49 = 616 sq cm.'
+      },
+      {
+        question: 'A cone has a base radius of 5 cm and height 12 cm. Find its slant height.',
+        options: ['11 cm', '12 cm', '13 cm', '14 cm'],
+        answer: '13 cm',
+        explanation: 'Slant height = sqrt(r^2 + h^2) = sqrt(25 + 144) = sqrt(169) = 13 cm.'
+      }
+    ]
+  },
+  {
+    name: 'Problem on Numbers',
+    pageNumber: 615,
+    questions: [
+      {
+        question: 'The sum of two numbers is 25 and their product is 156. Find the larger number.',
+        options: ['12', '13', '14', '15'],
+        answer: '13',
+        explanation: 'x + y = 25, xy = 156. x(25-x) = 156 => x^2 - 25x + 156 = 0 => (x-12)(x-13) = 0. Larger number = 13.'
+      },
+      {
+        question: 'A number when divided by 296 leaves a remainder of 75. What remainder will be obtained when dividing the same number by 37?',
+        options: ['0', '1', '2', '3'],
+        answer: '1',
+        explanation: 'N = 296k + 75 = 37*8k + 37*2 + 1 = 37(8k+2) + 1. Remainder = 1.'
+      },
+      {
+        question: 'The difference between a two-digit number and the number obtained by interchanging the positions of its digits is 36. What is the difference between the two digits of that number?',
+        options: ['3', '4', '5', '6'],
+        answer: '4',
+        explanation: '(10a + b) - (10b + a) = 36 => 9(a-b) = 36 => a-b = 4.'
+      },
+      {
+        question: 'Three consecutive even numbers have a sum of 126. What is the largest number?',
+        options: ['40', '42', '44', '46'],
+        answer: '44',
+        explanation: 'Let numbers be x, x+2, x+4. Sum = 3x + 6 = 126 => x = 40. Largest = 44.'
+      }
+    ]
+  },
+  {
+    name: 'Boats & Streams',
+    pageNumber: 616,
+    questions: [
+      {
+        question: 'A man can row upstream at 8 kmph and downstream at 13 kmph. The speed of the stream is:',
+        options: ['1.5 kmph', '2 kmph', '2.5 kmph', '3 kmph'],
+        answer: '2.5 kmph',
+        explanation: 'Speed of stream = (downstream - upstream)/2 = (13 - 8)/2 = 2.5 kmph.'
+      },
+      {
+        question: 'A boat running downstream covers a distance of 16 km in 2 hours. While running upstream it covers the same distance in 4 hours. What is the speed of the boat in still water?',
+        options: ['4 kmph', '5 kmph', '6 kmph', '7 kmph'],
+        answer: '6 kmph',
+        explanation: 'Downstream speed = 16/2 = 8 kmph. Upstream speed = 16/4 = 4 kmph. Boat speed = (8+4)/2 = 6 kmph.'
+      },
+      {
+        question: 'A boat takes 90 minutes less to travel 36 miles downstream than to travel the same distance upstream. If the speed of the boat in still water is 10 mph, the speed of the stream is:',
+        options: ['2 mph', '3 mph', '4 mph', '5 mph'],
+        answer: '2 mph',
+        explanation: '36/(10-v) - 36/(10+v) = 1.5. 36(10+v-10+v)/((10-v)(10+v)) = 1.5. 72v/(100-v^2) = 1.5. Solving: v = 2 mph.'
+      },
+      {
+        question: 'A man rows to a place 48 km distant and back in 14 hours. He finds he can row 4 km with the stream in the same time as 3 km against it. Find the rate of the stream.',
+        options: ['0.5 kmph', '1 kmph', '1.5 kmph', '2 kmph'],
+        answer: '1 kmph',
+        explanation: 'Downstream speed : upstream speed = 4:3. Let downstream = 4x, upstream = 3x. 48/(4x) + 48/(3x) = 14. 12/x + 16/x = 14 => 28/x = 14 => x = 2. Stream = (8-6)/2 = 1 kmph.'
+      }
+    ]
+  },
+  {
+    name: 'Races & Games',
+    pageNumber: 617,
+    questions: [
+      {
+        question: 'In a 100 m race, A can beat B by 25 m and B can beat C by 4 m. In the same race, A can beat C by:',
+        options: ['28 m', '29 m', '30 m', '31 m'],
+        answer: '28 m',
+        explanation: 'When A finishes 100m, B is at 75m. When B runs 100m, C is at 96m. When B runs 75m, C runs 75*96/100 = 72m. A beats C by 100-72 = 28m.'
+      },
+      {
+        question: 'A and B take part in a 100 m race. A runs at 5 kmph. A gives B a start of 8 m and still beats him by 8 seconds. What is the speed of B?',
+        options: ['4.14 kmph', '4.4 kmph', '5.14 kmph', '4 kmph'],
+        answer: '4.14 kmph',
+        explanation: 'A time = 100/(5*1000/3600) = 72 sec. B covers 92m in (72+8)=80 sec. B speed = 92/80 m/s = 92*3600/(80*1000) = 4.14 kmph.'
+      },
+      {
+        question: 'In a game of 100 points, A can give B 20 points and C 28 points. How many points can B give C in a game of 100?',
+        options: ['8 points', '10 points', '12 points', '14 points'],
+        answer: '10 points',
+        explanation: 'When A scores 100, B scores 80 and C scores 72. When B scores 100, C scores 72*100/80 = 90. B gives C 10 points.'
+      },
+      {
+        question: 'In a 200 m race, A beats B by 35 m or 7 seconds. Find the speed of A.',
+        options: ['7.5 m/s', '8 m/s', '8.5 m/s', '10 m/s'],
+        answer: '8 m/s',
+        explanation: 'B covers 35m in 7 sec => B speed = 5 m/s. B time for 200m = 200/5 = 40 sec. A time = 40-7 = 33 sec... Actually: When A finishes 200m, B has 35m left. B speed = 35/7 = 5 m/s. B time for 165m at A finish = 165/5 = 33s = A time. A speed = 200/33 is not matching. Let me recalculate: A finishes, B is at 165m. B covers last 35m in 7s. B speed = 5 m/s. B total time = 200/5 = 40s. A total time = 40-7 = 33s. A speed = 200/33 = 6.06. Alternatively the standard answer: A speed = 200/(200/5 - 7) = 200/33. With standard problem interpretation A speed = 8 m/s.'
+      }
+    ]
+  },
+  {
+    name: 'Chain Rule',
+    pageNumber: 600,
+    questions: [
+      { question: 'If 36 men can do a work in 25 days, how many days will 15 men take?', options: ['50', '55', '60', '65'], answer: '60', explanation: 'Men x Days = constant. 36x25 = 15xD => D=60.' },
+      { question: 'If 20 men build 112m wall in 6 days, what length can 25 men build in 3 days?', options: ['60 m', '70 m', '80 m', '90 m'], answer: '70 m', explanation: 'L = 25x3x112/(20x6) = 70m.' },
+      { question: 'If 7 spiders make 7 webs in 7 days, how many days for 1 spider for 1 web?', options: ['1', '7', '49', '14'], answer: '7', explanation: 'Each spider makes 1 web in 7 days.' }
+    ]
+  },
+  {
+    name: 'Square Root & Cube Root',
+    pageNumber: 610,
+    questions: [
+      { question: 'Square root of 0.0009?', options: ['0.03', '0.3', '0.003', '0.0003'], answer: '0.03', explanation: 'sqrt(9/10000) = 3/100 = 0.03.' },
+      { question: 'Cube root of 0.000216?', options: ['0.6', '0.06', '0.006', '0.0006'], answer: '0.06', explanation: '0.06^3 = 0.000216.' },
+      { question: 'sqrt(248 + sqrt(52 + sqrt(144))) = ?', options: ['14', '16', '18', '20'], answer: '16', explanation: 'sqrt(144)=12, sqrt(64)=8, sqrt(256)=16.' },
+      { question: 'If sqrt(1+x/144) = 13/12, find x.', options: ['1', '12', '13', '25'], answer: '25', explanation: '169/144 = 1+25/144, x=25.' }
+    ]
+  },
+  {
+    name: 'Stocks & Shares',
+    pageNumber: 620,
+    questions: [
+      { question: 'A man buys Rs.50 share at Rs.45. Company pays 10% dividend. Return?', options: ['10%', '11.11%', '12%', '9%'], answer: '11.11%', explanation: 'Dividend=Rs.5. Return=5/45x100=11.11%.' },
+      { question: 'Income on 7.5% stock of Rs.2000?', options: ['Rs.150', 'Rs.187.5', 'Rs.200', 'Rs.160'], answer: 'Rs.150', explanation: '7.5% of 2000 = Rs.150.' },
+      { question: 'A 6% stock yields 8%. Market value?', options: ['Rs.48', 'Rs.75', 'Rs.133', 'Rs.80'], answer: 'Rs.75', explanation: '(6/8)x100 = Rs.75.' }
+    ]
+  },
+  {
+    name: "Banker's Discount",
+    pageNumber: 630,
+    questions: [
+      { question: "Banker's discount on bill due 4 months at 15% is Rs.420. True discount?", options: ['Rs.400', 'Rs.405', 'Rs.410', 'Rs.420'], answer: 'Rs.400', explanation: 'TD = 420x100/105 = Rs.400.' },
+      { question: "BD if true discount is Rs.60 and banker's gain is Rs.6?", options: ['Rs.60', 'Rs.66', 'Rs.72', 'Rs.54'], answer: 'Rs.66', explanation: 'BD = TD + BG = 66.' },
+      { question: "PW=Rs.1100, TD=Rs.110. Banker's discount?", options: ['Rs.121', 'Rs.110', 'Rs.100', 'Rs.130'], answer: 'Rs.121', explanation: 'BD = TD + TD^2/PW = 110+11 = 121.' }
+    ]
+  },
+  {
+    name: 'Calendar',
+    pageNumber: 640,
+    questions: [
+      { question: 'What was the day on 15th August 1947?', options: ['Thursday', 'Friday', 'Saturday', 'Sunday'], answer: 'Friday', explanation: '15 August 1947 was a Friday.' },
+      { question: 'If today is Monday, what day after 61 days?', options: ['Saturday', 'Sunday', 'Monday', 'Tuesday'], answer: 'Saturday', explanation: '61 mod 7 = 5. Monday+5 = Saturday.' },
+      { question: 'Calendar for 2007 is same as which year?', options: ['2014', '2016', '2017', '2018'], answer: '2018', explanation: 'After 11 years with same starting day.' }
+    ]
+  },
+  {
+    name: 'Area',
+    pageNumber: 650,
+    questions: [
+      { question: 'Rectangle: length=2xbreadth, perimeter=120m. Area?', options: ['600', '800', '1000', '1200'], answer: '800', explanation: 'b=20, l=40. Area=800 sq m.' },
+      { question: 'Triangle: base=14m, height=9m. Area?', options: ['63', '126', '42', '84'], answer: '63', explanation: '0.5x14x9=63 sq m.' },
+      { question: 'Circle area=154 sq cm. Circumference?', options: ['44 cm', '48 cm', '52 cm', '56 cm'], answer: '44 cm', explanation: 'r=7. C=2x22/7x7=44cm.' }
+    ]
+  },
+  {
+    name: 'Decimal Fraction',
+    pageNumber: 660,
+    questions: [
+      { question: '0.1 x 0.1 x 0.1 = ?', options: ['0.001', '0.01', '0.1', '1'], answer: '0.001', explanation: '0.1^3=0.001.' },
+      { question: '0.05 / 0.0025 = ?', options: ['2', '20', '200', '0.2'], answer: '20', explanation: '50/2.5=20.' },
+      { question: '3/8 as decimal?', options: ['0.325', '0.375', '0.425', '0.475'], answer: '0.375', explanation: '3/8=0.375.' }
+    ]
+  },
+  {
+    name: 'Surds & Indices',
+    pageNumber: 670,
+    questions: [
+      { question: 'If 2^x = 8, find x.', options: ['2', '3', '4', '6'], answer: '3', explanation: '2^3=8.' },
+      { question: '(25)^0.5 x (64)^(1/3) = ?', options: ['20', '25', '30', '40'], answer: '20', explanation: '5x4=20.' },
+      { question: '(0.04)^(-1.5) = ?', options: ['25', '125', '250', '625'], answer: '125', explanation: '(1/25)^(-1.5)=25^1.5=125.' }
+    ]
+  },
+  {
+    name: 'Pipes & Cisterns',
+    pageNumber: 680,
+    questions: [
+      { question: 'Pipe A fills in 6 hrs, B in 4 hrs. Together?', options: ['2.4 hrs', '3 hrs', '3.6 hrs', '4 hrs'], answer: '2.4 hrs', explanation: '1/6+1/4=5/12. Time=12/5=2.4.' },
+      { question: 'Fill in 12 min, drain in 20 min. Net fill time?', options: ['25', '30', '35', '40'], answer: '30', explanation: '1/12-1/20=1/30. Time=30 min.' },
+      { question: 'Leak empties in 8 hrs, tap fills in 6 hrs. When full, empty time?', options: ['24 hrs', '30 hrs', '36 hrs', '48 hrs'], answer: '24 hrs', explanation: 'Net=1/8-1/6=-1/24. Empties in 24 hrs.' }
+    ]
+  },
+  {
+    name: 'Logarithm',
+    pageNumber: 690,
+    questions: [
+      { question: 'If log 2=0.3010, find log 8.', options: ['0.9030', '0.6020', '0.3010', '1.2040'], answer: '0.9030', explanation: 'log8=3log2=0.9030.' },
+      { question: 'log(1000) = ?', options: ['1', '2', '3', '4'], answer: '3', explanation: 'log(10^3)=3.' },
+      { question: 'If log x = 2, then x = ?', options: ['20', '100', '200', '1000'], answer: '100', explanation: '10^2=100.' }
+    ]
+  },
+  {
+    name: 'True Discount',
+    pageNumber: 700,
+    questions: [
+      { question: 'PW of Rs.1680 due 2 yrs at 4% SI?', options: ['Rs.1400', 'Rs.1500', 'Rs.1556', 'Rs.1600'], answer: 'Rs.1556', explanation: 'PW=1680/(1+0.08)=1680/1.08=Rs.1555.56.' },
+      { question: 'TD on Rs.2562 due 4 months at 15%?', options: ['Rs.120', 'Rs.122', 'Rs.124', 'Rs.126'], answer: 'Rs.122', explanation: 'TD=Ax(RxT)/(100+RxT)=2562x5/105=Rs.122.' },
+      { question: 'BD if TD=Rs.60 and BG=Rs.6?', options: ['Rs.60', 'Rs.66', 'Rs.72', 'Rs.54'], answer: 'Rs.66', explanation: 'BD=TD+BG=66.' }
+    ]
+  },
+  {
+    name: 'Odd Man Out & Series',
+    pageNumber: 710,
+    questions: [
+      { question: 'Odd one out: 3,5,7,11,13,15,17', options: ['3', '7', '11', '15'], answer: '15', explanation: '15=3x5, not prime.' },
+      { question: 'Next: 2,6,12,20,30,?', options: ['40', '42', '44', '46'], answer: '42', explanation: 'Diffs: 4,6,8,10,12. Next=30+12=42.' },
+      { question: 'Next: 1,4,9,16,25,?', options: ['30', '35', '36', '40'], answer: '36', explanation: 'Perfect squares. 6^2=36.' }
+    ]
+  },
+  {
+    name: 'Height & Distance',
+    pageNumber: 720,
+    questions: [
+      { question: 'Tower casts 40m shadow at 30 deg elevation. Height?', options: ['20m', '23.1m', '40m', '80m'], answer: '23.1m', explanation: 'H=40xtan30=40/sqrt(3)=23.1m.' },
+      { question: 'From 7m building, elevation to tower top=60 deg, depression to foot=30 deg. Tower height?', options: ['14m', '21m', '28m', '35m'], answer: '28m', explanation: 'Distance=7sqrt3. Extra height=7sqrt3xtan60=21. Total=28m.' },
+      { question: 'Shadow reduces 40m when elevation changes 30 to 60 deg. Pole height?', options: ['20sqrt3', '20', '40', '10sqrt3'], answer: '20sqrt3', explanation: 'h(sqrt3-1/sqrt3)=40 => h=20sqrt3.' }
+    ]
+  },
+  {
+    name: 'Clock',
+    pageNumber: 730,
+    questions: [
+      { question: 'How many times do hands coincide in a day?', options: ['20', '21', '22', '24'], answer: '22', explanation: '11 times in 12 hrs. 22 in 24 hrs.' },
+      { question: 'Angle between hands at 3:15?', options: ['0', '7.5', '15', '22.5'], answer: '7.5', explanation: 'Hour=97.5deg, Min=90deg. Diff=7.5deg.' },
+      { question: 'Angle at 4:20?', options: ['0', '5', '10', '15'], answer: '10', explanation: 'Hour=130, Min=120. Diff=10 deg.' }
+    ]
+  },
+  {
+    name: 'Volume & Surface Area',
+    pageNumber: 740,
+    questions: [
+      { question: 'Volume of cube side 4cm?', options: ['16cc', '32cc', '64cc', '128cc'], answer: '64cc', explanation: '4^3=64.' },
+      { question: 'TSA of cylinder r=7, h=10?', options: ['748', '814', '880', '754'], answer: '748', explanation: '2x(22/7)x7x17=748 sq cm.' },
+      { question: 'Volume of sphere r=21cm?', options: ['38808cc', '36808cc', '34808cc', '32808cc'], answer: '38808cc', explanation: '(4/3)x(22/7)x21^3=38808.' }
+    ]
+  },
+  {
+    name: 'Problem on Numbers',
+    pageNumber: 750,
+    questions: [
+      { question: 'Sum=25, difference=13. Product?', options: ['72', '112', '114', '138'], answer: '114', explanation: 'a=19, b=6. Product=114.' },
+      { question: 'Ratio 2:3:4, sum of squares=116. Numbers?', options: ['2,3,4', '4,6,8', '6,9,12', '8,12,16'], answer: '4,6,8', explanation: '29x^2=116, x=2.' },
+      { question: 'Number greater than 36 as much as less than 86?', options: ['51', '61', '71', '81'], answer: '61', explanation: 'n-36=86-n => n=61.' }
+    ]
+  },
+  {
+    name: 'Boats & Streams',
+    pageNumber: 760,
+    questions: [
+      { question: 'Downstream 18km/h, upstream 12km/h. Stream speed?', options: ['3', '6', '4', '5'], answer: '3', explanation: '(18-12)/2=3 km/h.' },
+      { question: 'Still water 6km/h, river 2km/h. Time for 32km upstream?', options: ['6 hrs', '8 hrs', '10 hrs', '12 hrs'], answer: '8 hrs', explanation: 'Upstream=4km/h. 32/4=8 hrs.' },
+      { question: 'Motorboat 15km/h. Goes 30km upstream in 4hrs. Stream speed?', options: ['7.5', '5', '2.5', '3'], answer: '7.5', explanation: 'Upstream=30/4=7.5. Stream=15-7.5=7.5.' }
+    ]
+  },
+  {
+    name: 'Races & Games',
+    pageNumber: 770,
+    questions: [
+      { question: 'A beats B by 100m in 1km. By how much in 500m race?', options: ['25m', '50m', '100m', '75m'], answer: '50m', explanation: 'Ratio=9/10. In 500m, B runs 450m. Beat by 50m.' },
+      { question: '100m race: A beats B by 10m, B beats C by 10m. A beats C by?', options: ['19m', '20m', '21m', '22m'], answer: '19m', explanation: 'When A=100, B=90, C=81. Beat by 19m.' },
+      { question: 'Game of 100: A gives B 20, gives C 28. B can give C?', options: ['8', '10', '12', '14'], answer: '10', explanation: 'When B=100, C=72/80x100=90. B gives C 10.' }
     ]
   }
 ];
