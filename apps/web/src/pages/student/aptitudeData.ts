@@ -3,6 +3,9 @@ export interface Question {
   options: string[];
   answer: string;
   explanation: string;
+  questionImage?: string; // Path to image in public folder
+  optionImages?: Record<string, string>; // Map of option to image path
+  isImageBased?: boolean; // Flag to indicate this is an image-based question
 }
 
 export interface Topic {
