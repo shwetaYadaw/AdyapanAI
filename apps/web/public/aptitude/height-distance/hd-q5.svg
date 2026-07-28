@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 250" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+    .line { stroke: #333; stroke-width: 1.5; }
+    .angle { fill: none; stroke: #4CAF50; stroke-width: 1.2; }
+    .label { font-size: 11px; fill: #555; }
+  </style>
+  <!-- Ground line -->
+  <line class="line" x1="50" y1="220" x2="320" y2="220"/>
+  <!-- Tower AB -->
+  <line class="line" x1="280" y1="220" x2="280" y2="60"/>
+  <text x="285" y="140" class="label">100 m</text>
+  <text x="273" y="240">B</text>
+  <text x="273" y="55">A</text>
+  <!-- Point P -->
+  <text x="80" y="240">P</text>
+  <!-- Line of sight from P to A -->
+  <line class="line" x1="90" y1="220" x2="280" y2="60" stroke="#2196F3" stroke-width="1.5"/>
+  <!-- Angle at P = 30° -->
+  <path class="angle" d="M 115,220 A 25,25 0 0,0 108,205"/>
+  <text x="118" y="208" font-size="10" fill="#4CAF50">30°</text>
+  <!-- Distance AP -->
+  <text x="150" y="235" class="label">AP = 100√3 = 173 m</text>
+  <!-- Right angle at B -->
+  <rect x="270" y="210" width="10" height="10" fill="none" stroke="#333" stroke-width="1"/>
+</svg>

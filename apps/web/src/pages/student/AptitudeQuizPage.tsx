@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -12,6 +12,7 @@ import { TCS_NUMERICAL_TOPICS, TCS_REASONING_TOPICS } from './AptitudePage';
 
 export default function AptitudeQuizPage() {
   const { module, topicSlug: slug } = useParams<{ module: string; topicSlug: string }>();
+  const topRef = useRef<HTMLDivElement>(null);
 
   const allTopics =
     module === 'tcs-reasoning' ? TCS_REASONING_TOPICS : TCS_NUMERICAL_TOPICS;
@@ -19,6 +20,14 @@ export default function AptitudeQuizPage() {
 
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
   const [showExplanations, setShowExplanations] = useState<Record<string, boolean>>({});
+
+  // Scroll to top when page loads or topic changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    const mainEl = document.querySelector('main');
+    if (mainEl) mainEl.scrollTo(0, 0);
+    topRef.current?.scrollIntoView();
+  }, [slug]);
 
   if (!topic) {
     return (
@@ -47,7 +56,7 @@ export default function AptitudeQuizPage() {
     module === 'tcs-reasoning' ? 'TCS Reasoning Ability' : 'TCS Numerical Ability';
 
   return (
-    <div className="page-wrapper space-y-6">
+    <div ref={topRef} className="page-wrapper space-y-6">
 
       {/* Back link */}
       <Link
@@ -120,10 +129,8 @@ export default function AptitudeQuizPage() {
               <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
                 <div className="flex gap-3">
                   <span className="text-sm font-bold text-gray-500 dark:text-gray-400 shrink-0">{qIdx + 1}.</span>
-                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed">{q.question}</p>
+                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 leading-relaxed whitespace-pre-line">{q.question}</p>
                 </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
 
                 {/* Question Image */}
                 {q.questionImage && (
@@ -226,7 +233,16 @@ export default function AptitudeQuizPage() {
                           <p className="text-xs font-bold text-blue-800 dark:text-blue-300 mb-1">
                             Step-by-step explanation:
                           </p>
-                          <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed">
+                          {q.explanationImage && (
+                            <div className="w-full rounded-lg overflow-hidden border border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-900 mb-2">
+                              <img
+                                src={q.explanationImage}
+                                alt="Explanation diagram"
+                                className="w-full h-auto object-contain max-h-48"
+                              />
+                            </div>
+                          )}
+                          <p className="text-xs text-blue-700 dark:text-blue-400 leading-relaxed whitespace-pre-line">
                             {q.explanation}
                           </p>
                         </motion.div>
@@ -234,80 +250,7 @@ export default function AptitudeQuizPage() {
                     </motion.div>
                   </AnimatePresence>
                 )}
-=======
->>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
-=======
->>>>>>> 96de961d0e7a5be9b5f40999bb08728caf926912
               </div>
-
-              {/* Options */}
-              <div className="px-5 py-3 space-y-2">
-                {q.options.map((opt, oIdx) => {
-                  const isSelected = selected === opt;
-                  const isCorrect = opt === q.answer;
-                  const answered = selected !== undefined;
-                  const label = optionLabels[oIdx] ?? String(oIdx + 1);
-
-                  let containerCls = 'border-gray-200 dark:border-gray-700 hover:border-primary-300 dark:hover:border-primary-700 bg-white dark:bg-gray-900 cursor-pointer';
-                  let labelCls = 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400';
-                  let textCls = 'text-gray-700 dark:text-gray-300';
-
-                  if (answered) {
-                    if (isCorrect) {
-                      containerCls = 'border-green-400 bg-green-50 dark:bg-green-950/30 cursor-default';
-                      labelCls = 'bg-green-500 text-white';
-                      textCls = 'text-green-800 dark:text-green-300 font-semibold';
-                    } else if (isSelected) {
-                      containerCls = 'border-red-400 bg-red-50 dark:bg-red-950/20 cursor-default';
-                      labelCls = 'bg-red-500 text-white';
-                      textCls = 'text-red-700 dark:text-red-400';
-                    } else {
-                      containerCls = 'border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 cursor-default opacity-60';
-                    }
-                  }
-
-                  return (
-                    <button key={opt} disabled={!!selected} onClick={() => handleSelectOption(key, opt)}
-                      className={`flex items-center gap-3 w-full text-left px-3 py-2.5 rounded-xl border text-sm transition-all ${containerCls}`}>
-                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all ${labelCls}`}>
-                        {label}
-                      </span>
-                      <span className={`flex-1 ${textCls}`}>{opt}</span>
-                      {answered && isCorrect && <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />}
-                      {answered && isSelected && !isCorrect && <XCircle className="w-4 h-4 text-red-500 shrink-0" />}
-                    </button>
-                  );
-                })}
-              </div>
-
-              {/* Answer + Explanation */}
-              {selected !== undefined && (
-                <AnimatePresence>
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    className="px-5 pb-4 space-y-3 border-t border-gray-100 dark:border-gray-800 pt-3">
-
-                    <div className="flex items-center justify-between">
-                      <span className={`text-sm font-bold flex items-center gap-1.5 ${selected === q.answer ? 'text-green-600' : 'text-red-500'}`}>
-                        {selected === q.answer
-                          ? <><CheckCircle2 className="w-4 h-4" /> Correct! Well done.</>
-                          : <><AlertCircle className="w-4 h-4" /> Incorrect. Answer: <span className="text-green-600 ml-1">{q.answer}</span></>}
-                      </span>
-                      <button onClick={() => setShowExplanations(p => ({ ...p, [key]: !p[key] }))}
-                        className="text-xs font-semibold text-primary-600 hover:text-primary-700 px-2 py-1 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-950/30 transition-all">
-                        {isExplanationOpen ? 'Hide' : 'Show'} Explanation
-                      </button>
-                    </div>
-
-                    {isExplanationOpen && (
-                      <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }}
-                        className="rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 px-4 py-3">
-                        <p className="text-xs font-bold text-amber-800 dark:text-amber-300 mb-1.5">Explanation:</p>
-                        <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">{q.explanation}</p>
-                      </motion.div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
-              )}
             </Card>
           );
         })}

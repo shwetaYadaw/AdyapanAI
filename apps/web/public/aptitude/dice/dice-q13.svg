@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+    .face { fill: #fff; stroke: #333; stroke-width: 1.5; }
+    .top { fill: #f0f0f0; stroke: #333; stroke-width: 1.5; }
+    .side { fill: #e0e0e0; stroke: #333; stroke-width: 1.5; }
+  </style>
+  <!-- Dice 1: front=Orange, top=Yellow, right=Blue -->
+  <g transform="translate(10,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="5" y="58" font-size="9">Orange</text>
+    <text x="27" y="22" font-size="9">Yellow</text>
+    <text x="53" y="48" font-size="9">Blue</text>
+  </g>
+  <!-- Dice 2: front=Violet, top=Orange, right=Blue -->
+  <g transform="translate(110,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="7" y="58" font-size="9">Violet</text>
+    <text x="27" y="22" font-size="9">Orange</text>
+    <text x="53" y="48" font-size="9">Blue</text>
+  </g>
+  <!-- Dice 3: front=Red, top=Blue, right=Yellow -->
+  <g transform="translate(210,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="12" y="58" font-size="9">Red</text>
+    <text x="30" y="22" font-size="9">Blue</text>
+    <text x="52" y="48" font-size="9">Yellow</text>
+  </g>
+  <!-- Dice 4: front=Rose, top=Red, right=Yellow -->
+  <g transform="translate(310,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="12" y="58" font-size="9">Rose</text>
+    <text x="32" y="22" font-size="9">Red</text>
+    <text x="52" y="48" font-size="9">Yellow</text>
+  </g>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 250" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+    .line { stroke: #333; stroke-width: 1.5; }
+    .angle { fill: none; stroke: #4CAF50; stroke-width: 1.2; }
+    .label { font-size: 11px; fill: #555; }
+  </style>
+  <!-- Ground line -->
+  <line class="line" x1="50" y1="220" x2="300" y2="220"/>
+  <!-- Wall AB (vertical) -->
+  <line class="line" x1="250" y1="220" x2="250" y2="60"/>
+  <text x="255" y="145" class="label">Wall (AB)</text>
+  <text x="243" y="240">A</text>
+  <text x="243" y="55">B</text>
+  <!-- Ladder BC -->
+  <line class="line" x1="100" y1="220" x2="250" y2="60" stroke="#2196F3" stroke-width="2"/>
+  <text x="155" y="125" class="label" fill="#2196F3">Ladder (BC)</text>
+  <!-- Foot of ladder C -->
+  <text x="88" y="240">C</text>
+  <!-- Angle at C = 60° -->
+  <path class="angle" d="M 120,220 A 20,20 0 0,0 112,205"/>
+  <text x="122" y="208" font-size="10" fill="#4CAF50">60°</text>
+  <!-- Distance AC = 4.6m -->
+  <text x="140" y="235" class="label">AC = 4.6 m</text>
+  <!-- Right angle at A -->
+  <rect x="240" y="210" width="10" height="10" fill="none" stroke="#333" stroke-width="1"/>
+</svg>

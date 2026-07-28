@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 120" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 14px; fill: #333; }
+    .face { fill: #fff; stroke: #333; stroke-width: 1.5; }
+    .top { fill: #f0f0f0; stroke: #333; stroke-width: 1.5; }
+    .side { fill: #e0e0e0; stroke: #333; stroke-width: 1.5; }
+  </style>
+  <!-- Dice 1: front=o, top=%, right=x -->
+  <g transform="translate(10,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="20" y="62">o</text>
+    <text x="32" y="24">%</text>
+    <text x="56" y="45">x</text>
+  </g>
+  <!-- Dice 2: front=o, top=-, right=x -->
+  <g transform="translate(110,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="20" y="62">o</text>
+    <text x="32" y="24">-</text>
+    <text x="56" y="45">x</text>
+  </g>
+  <!-- Dice 3: front=$, top=%, right=+ -->
+  <g transform="translate(210,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="20" y="62">$</text>
+    <text x="32" y="24">%</text>
+    <text x="56" y="45">+</text>
+  </g>
+  <!-- Dice 4: front=o, top=%, right=+ -->
+  <g transform="translate(310,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <text x="20" y="62">o</text>
+    <text x="32" y="24">%</text>
+    <text x="57" y="45">+</text>
+  </g>
+</svg>

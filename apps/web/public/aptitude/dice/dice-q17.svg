@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 120" fill="none">
+  <style>
+    .face { fill: #fff; stroke: #333; stroke-width: 1.5; }
+    .top { fill: #f0f0f0; stroke: #333; stroke-width: 1.5; }
+    .side { fill: #e0e0e0; stroke: #333; stroke-width: 1.5; }
+    .dot { fill: #333; }
+  </style>
+  <!-- Dice 1: front=5dots, top=6dots, right=2dots -->
+  <g transform="translate(10,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <!-- front: 5 dots -->
+    <circle class="dot" cx="12" cy="40" r="3"/>
+    <circle class="dot" cx="38" cy="40" r="3"/>
+    <circle class="dot" cx="25" cy="55" r="3"/>
+    <circle class="dot" cx="12" cy="70" r="3"/>
+    <circle class="dot" cx="38" cy="70" r="3"/>
+    <!-- top: 6 dots -->
+    <circle class="dot" cx="25" cy="13" r="2"/>
+    <circle class="dot" cx="35" cy="13" r="2"/>
+    <circle class="dot" cx="45" cy="16" r="2"/>
+    <circle class="dot" cx="28" cy="22" r="2"/>
+    <circle class="dot" cx="38" cy="22" r="2"/>
+    <circle class="dot" cx="52" cy="22" r="2"/>
+    <!-- right: 2 dots -->
+    <circle class="dot" cx="58" cy="40" r="2"/>
+    <circle class="dot" cx="62" cy="55" r="2"/>
+  </g>
+  <!-- Dice 2: front=4dots, top=6dots, right=3dots -->
+  <g transform="translate(120,20)">
+    <polygon class="face" points="0,30 50,30 50,80 0,80"/>
+    <polygon class="top" points="0,30 50,30 70,10 20,10"/>
+    <polygon class="side" points="50,30 70,10 70,60 50,80"/>
+    <!-- front: 4 dots -->
+    <circle class="dot" cx="15" cy="42" r="3"/>
+    <circle class="dot" cx="35" cy="42" r="3"/>
+    <circle class="dot" cx="15" cy="65" r="3"/>
+    <circle class="dot" cx="35" cy="65" r="3"/>
+    <!-- top: 6 dots -->
+    <circle class="dot" cx="25" cy="13" r="2"/>
+    <circle class="dot" cx="35" cy="13" r="2"/>
+    <circle class="dot" cx="45" cy="16" r="2"/>
+    <circle class="dot" cx="28" cy="22" r="2"/>
+    <circle class="dot" cx="38" cy="22" r="2"/>
+    <circle class="dot" cx="52" cy="22" r="2"/>
+    <!-- right: 3 dots -->
+    <circle class="dot" cx="57" cy="38" r="2"/>
+    <circle class="dot" cx="60" cy="50" r="2"/>
+    <circle class="dot" cx="63" cy="62" r="2"/>
+  </g>
+</svg>

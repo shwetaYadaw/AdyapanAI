@@ -4,6 +4,7 @@ export interface Question {
   answer: string;
   explanation: string;
   questionImage?: string; // Path to image in public folder
+  explanationImage?: string; // Path to diagram image shown in explanation
   optionImages?: Record<string, string>; // Map of option to image path
   isImageBased?: boolean; // Flag to indicate this is an image-based question
 }

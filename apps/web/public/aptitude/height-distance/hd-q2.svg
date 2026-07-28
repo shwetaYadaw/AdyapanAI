@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+    .line { stroke: #333; stroke-width: 1.5; }
+    .dashed { stroke: #999; stroke-width: 1; stroke-dasharray: 5,3; }
+    .angle { fill: none; stroke: #4CAF50; stroke-width: 1.2; }
+    .label { font-size: 11px; fill: #555; }
+  </style>
+  <!-- Ground line -->
+  <line class="line" x1="50" y1="220" x2="350" y2="220"/>
+  <!-- Tower AB -->
+  <line class="line" x1="300" y1="220" x2="300" y2="60"/>
+  <text x="305" y="145" class="label">Tower</text>
+  <text x="293" y="240">B</text>
+  <text x="293" y="55">A</text>
+  <!-- Point P (far) -->
+  <line class="line" x1="80" y1="220" x2="300" y2="60"/>
+  <text x="70" y="240">P</text>
+  <!-- Point D (closer) -->
+  <line class="line" x1="190" y1="220" x2="300" y2="60"/>
+  <text x="183" y="240">D</text>
+  <!-- Angle at P = 30° -->
+  <path class="angle" d="M 100,220 A 20,20 0 0,0 95,207"/>
+  <text x="100" y="210" font-size="10" fill="#4CAF50">30°</text>
+  <!-- Angle at D = 60° -->
+  <path class="angle" d="M 210,220 A 20,20 0 0,0 200,205"/>
+  <text x="205" y="208" font-size="10" fill="#4CAF50">60°</text>
+  <!-- Distance labels -->
+  <text x="120" y="235" class="label">distance walked</text>
+</svg>

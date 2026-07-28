@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 260" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+    .line { stroke: #333; stroke-width: 1.5; }
+    .dashed { stroke: #999; stroke-width: 1; stroke-dasharray: 5,3; }
+    .label { font-size: 11px; fill: #555; }
+  </style>
+  <!-- Left side: Right triangle -->
+  <g transform="translate(20,20)">
+    <text x="60" y="10" font-size="13" fill="#333" font-weight="bold">Right Triangle</text>
+    <!-- Triangle -->
+    <line class="line" x1="30" y1="200" x2="30" y2="60"/>
+    <line class="line" x1="30" y1="200" x2="120" y2="200"/>
+    <line class="line" x1="30" y1="60" x2="120" y2="200"/>
+    <!-- Labels -->
+    <text x="10" y="135" class="label">3 cm</text>
+    <text x="60" y="218" class="label">4 cm</text>
+    <text x="80" y="125" class="label">5 cm</text>
+    <!-- Right angle -->
+    <rect x="30" y="190" width="10" height="10" fill="none" stroke="#333" stroke-width="1"/>
+    <!-- Rotation arrow -->
+    <path d="M 25,130 C 10,130 10,140 25,140" fill="none" stroke="#4CAF50" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="0" y="140" font-size="9" fill="#4CAF50">↻</text>
+  </g>
+  <!-- Arrow between -->
+  <text x="170" y="140" font-size="20" fill="#666">→</text>
+  <!-- Right side: Cone formed -->
+  <g transform="translate(210,20)">
+    <text x="40" y="10" font-size="13" fill="#333" font-weight="bold">Cone Formed</text>
+    <!-- Cone outline -->
+    <line class="line" x1="80" y1="40" x2="20" y2="200"/>
+    <line class="line" x1="80" y1="40" x2="140" y2="200"/>
+    <!-- Base ellipse -->
+    <ellipse cx="80" cy="200" rx="60" ry="15" fill="none" stroke="#333" stroke-width="1.5"/>
+    <!-- Height dashed -->
+    <line class="dashed" x1="80" y1="40" x2="80" y2="200"/>
+    <!-- Labels -->
+    <text x="85" y="125" class="label">h = 4 cm</text>
+    <text x="85" y="215" class="label">r = 3 cm</text>
+    <!-- Radius line -->
+    <line class="dashed" x1="80" y1="200" x2="140" y2="200"/>
+  </g>
+</svg>

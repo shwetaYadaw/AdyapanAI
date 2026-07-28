@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 260" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+    .line { stroke: #333; stroke-width: 1.5; }
+    .dashed { stroke: #999; stroke-width: 1; stroke-dasharray: 5,3; }
+    .label { font-size: 11px; fill: #555; }
+  </style>
+  <!-- Cone -->
+  <line class="line" x1="150" y1="30" x2="60" y2="210"/>
+  <line class="line" x1="150" y1="30" x2="240" y2="210"/>
+  <!-- Base ellipse -->
+  <ellipse cx="150" cy="210" rx="90" ry="20" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- Height (dashed) -->
+  <line class="dashed" x1="150" y1="30" x2="150" y2="210"/>
+  <!-- Slant height -->
+  <text x="185" y="120" class="label" fill="#2196F3">l = 10 m</text>
+  <!-- Height label -->
+  <text x="155" y="130" class="label">h = 8 m</text>
+  <!-- Radius -->
+  <line class="dashed" x1="150" y1="210" x2="240" y2="210"/>
+  <text x="175" y="230" class="label">r = 6 m</text>
+  <!-- Right angle at base center -->
+  <rect x="150" y="200" width="8" height="8" fill="none" stroke="#333" stroke-width="1"/>
+</svg>

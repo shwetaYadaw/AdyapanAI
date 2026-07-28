@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 350 250" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 12px; fill: #333; }
+    .line { stroke: #333; stroke-width: 1.5; }
+    .angle { fill: none; stroke: #4CAF50; stroke-width: 1.2; }
+    .label { font-size: 11px; fill: #555; }
+  </style>
+  <!-- Ground line -->
+  <line class="line" x1="50" y1="220" x2="330" y2="220"/>
+  <!-- Tree AB (vertical) -->
+  <line class="line" x1="100" y1="220" x2="100" y2="120"/>
+  <text x="80" y="175" class="label">AB</text>
+  <text x="93" y="240">A</text>
+  <text x="93" y="115">B</text>
+  <!-- Shadow AC (horizontal) -->
+  <line class="line" x1="100" y1="220" x2="300" y2="220" stroke="#FF9800" stroke-width="2"/>
+  <text x="175" y="235" class="label">Shadow AC = √3 × AB</text>
+  <text x="293" y="240">C</text>
+  <!-- Line of sight (hypotenuse) -->
+  <line class="line" x1="300" y1="220" x2="100" y2="120" stroke="#2196F3" stroke-width="1.5"/>
+  <!-- Angle θ at C -->
+  <path class="angle" d="M 275,220 A 25,25 0 0,1 280,205"/>
+  <text x="262" y="210" font-size="10" fill="#4CAF50">θ=30°</text>
+  <!-- Right angle at A -->
+  <rect x="100" y="210" width="10" height="10" fill="none" stroke="#333" stroke-width="1"/>
+</svg>
