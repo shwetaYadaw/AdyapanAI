@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Code, BookOpen, ChevronRight, Award, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Code, ChevronRight, Award, Sparkles, CheckCircle2 } from 'lucide-react';
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
 import Button from '../../components/common/Button/Button';
@@ -169,7 +169,7 @@ export default function TcsNqtPrepPage() {
     .filter((question): question is TCSQuestion => Boolean(question));
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper space-y-6">
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
         <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
@@ -194,7 +194,7 @@ export default function TcsNqtPrepPage() {
       </div>
 
       {/* Navigation tabs */}
-      <div className="flex flex-wrap gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-fit">
+      <div className="flex flex-wrap gap-2 p-1.5 bg-gray-100 dark:bg-gray-800/60 rounded-xl w-fit overflow-x-auto">
         {[
           { key: 'arrays', label: 'Problems on Arrays' },
           { key: 'numbers', label: 'Problems on Numbers' },
@@ -205,7 +205,7 @@ export default function TcsNqtPrepPage() {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key as any)}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
+            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.key
                 ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-300 shadow-sm'
                 : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
@@ -217,53 +217,55 @@ export default function TcsNqtPrepPage() {
       </div>
 
       {/* Grid of Coding challenges */}
-      {isError && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Unable to load TCS NQT questions from MySQL. Please make sure the backend and database are running.
-        </div>
-      )}
-      {!isError && !isLoading && questions.length === 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          No TCS NQT questions have been restored for this section yet.
-        </div>
-      )}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {questions.map((q, idx) => (
-          <motion.div
-            key={q.slug}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: idx * 0.015 }}
-          >
-            <Card padding="md" className="hover:border-purple-500/30 transition-all group flex flex-col justify-between h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
-              <div className="space-y-2">
-                <div className="flex justify-between items-start gap-2">
-                  <span className="text-xs font-bold font-mono text-purple-500/80">
-                    Q{idx + 1}.
-                  </span>
-                  <Badge
-                    variant={
-                      q.difficulty === 'easy' ? 'success' : q.difficulty === 'medium' ? 'warning' : 'danger'
-                    }
-                    className="capitalize"
-                  >
-                    {q.difficulty}
-                  </Badge>
+      <div className="space-y-4">
+        {isError && (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            Unable to load TCS NQT questions from MySQL. Please make sure the backend and database are running.
+          </div>
+        )}
+        {!isError && !isLoading && questions.length === 0 && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            No TCS NQT questions have been restored for this section yet.
+          </div>
+        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {questions.map((q, idx) => (
+            <motion.div
+              key={q.slug}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25, delay: idx * 0.015 }}
+            >
+              <Card padding="md" className="hover:border-purple-500/30 transition-all group flex flex-col justify-between h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center gap-2">
+                    <span className="text-xs font-bold font-mono text-purple-500/80">
+                      Q{idx + 1}.
+                    </span>
+                    <Badge
+                      variant={
+                        q.difficulty === 'easy' ? 'success' : q.difficulty === 'medium' ? 'warning' : 'danger'
+                      }
+                      className="capitalize"
+                    >
+                      {q.difficulty}
+                    </Badge>
+                  </div>
+                  <h3 className="font-display font-bold text-gray-900 dark:text-white group-hover:text-purple-600 transition-colors text-sm sm:text-base">
+                    {q.title}
+                  </h3>
                 </div>
-                <h3 className="font-display font-bold text-gray-900 dark:text-white group-hover:text-purple-600 transition-colors text-sm sm:text-base pr-4">
-                  {q.title}
-                </h3>
-              </div>
-              <div className="mt-4 pt-3 border-t border-gray-50 dark:border-gray-800 flex justify-end">
-                <Link to={`/student/challenges/${q.slug}`}>
-                  <Button size="sm" variant="primary" rightIcon={<ChevronRight className="w-4 h-4" />}>
-                    Solve Challenge
-                  </Button>
-                </Link>
-              </div>
-            </Card>
-          </motion.div>
-        ))}
+                <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+                  <Link to={`/student/challenges/${q.slug}`}>
+                    <Button size="sm" variant="primary" rightIcon={<ChevronRight className="w-4 h-4" />}>
+                      Solve Challenge
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
