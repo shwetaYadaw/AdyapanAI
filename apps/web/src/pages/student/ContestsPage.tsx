@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Clock, Trophy, Users, Award, Play, X, Timer } from 'lucide-react';
 import { api } from '../../services/api';
-import Navbar from '../../components/layout/Navbar/Navbar';
 import Button from '../../components/common/Button/Button';
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
@@ -198,128 +197,125 @@ export default function ContestsPage() {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="page-wrapper space-y-6">
 
       {/* Hero */}
-      <div className="page-container pt-8">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
-          <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
-            <Trophy className="w-96 h-96 text-white" />
-          </div>
-          <div className="relative z-10 max-w-2xl space-y-4">
-            <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight flex items-center gap-2">
-              ADYAPAN Coding Contests
-            </h1>
-            <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-              Participate in timed weekly and monthly speedruns, top the leaderboard, and unlock direct placement opportunities with top recruiters.
-            </p>
-          </div>
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
+        <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
+          <Trophy className="w-96 h-96 text-white" />
+        </div>
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight flex items-center gap-2">
+            ADYAPAN Coding Contests
+          </h1>
+          <p className="text-white/90 text-sm sm:text-base leading-relaxed">
+            Participate in timed weekly and monthly speedruns, top the leaderboard, and unlock direct placement opportunities with top recruiters.
+          </p>
         </div>
       </div>
 
-      <div className="page-container pb-16">
-        <div className="grid lg:grid-cols-3 gap-8 items-start">
-          {/* Contests List */}
-          <div className="lg:col-span-2 space-y-6">
-            <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white">Active & Upcoming Contests</h2>
-            
-            {(contests ?? []).map((contest) => {
-              const start = new Date(contest.startTime);
-              const isUpcoming = start.getTime() > Date.now();
+      {/* Main Content Grid */}
+      <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+        {/* Contests List */}
+        <div className="lg:col-span-2 space-y-5">
+          <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white">Active & Upcoming Contests</h2>
+          
+          {(contests ?? []).map((contest) => {
+            const start = new Date(contest.startTime);
+            const isUpcoming = start.getTime() > Date.now();
 
-              return (
-                <Card key={contest._id} padding="md" className="border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-all duration-300">
-                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <Badge variant={isUpcoming ? 'primary' : 'success'}>
-                          {isUpcoming ? 'Upcoming' : 'Live Now'}
-                        </Badge>
-                        <span className="text-xxs text-gray-400 font-medium flex items-center gap-1">
-                          <Users className="w-3.5 h-3.5" />
-                          {contest.participants.length + (registeredContests.includes(contest._id) ? 1 : 0)} registered
-                        </span>
-                      </div>
-                      <h3 className="font-display font-bold text-lg text-gray-900 dark:text-white">{contest.title}</h3>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{contest.description}</p>
-                      {/* Countdown Timer */}
-                      <ContestCountdown startTime={contest.startTime} />
+            return (
+              <Card key={contest._id} padding="md" className="border border-gray-100 dark:border-gray-800 hover:shadow-lg transition-all duration-300">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                  <div className="space-y-2 flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge variant={isUpcoming ? 'primary' : 'success'}>
+                        {isUpcoming ? 'Upcoming' : 'Live Now'}
+                      </Badge>
+                      <span className="text-xxs text-gray-400 font-medium flex items-center gap-1">
+                        <Users className="w-3.5 h-3.5" />
+                        {contest.participants.length + (registeredContests.includes(contest._id) ? 1 : 0)} registered
+                      </span>
                     </div>
-
-                    <div className="flex sm:flex-col items-end gap-2 justify-between border-t sm:border-t-0 border-gray-50 pt-3 sm:pt-0">
-                      <div className="text-right">
-                        <p className="text-xxs text-gray-400">Date & Time</p>
-                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mt-0.5">
-                          {start.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} at {start.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-xxs text-gray-400">Duration</p>
-                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mt-0.5">
-                          {(() => {
-                            const durationMs = new Date(contest.endTime).getTime() - new Date(contest.startTime).getTime();
-                            const durationHours = Math.round(durationMs / (1000 * 60 * 60));
-                            return `${durationHours} Hour${durationHours > 1 ? 's' : ''}`;
-                          })()}
-                        </p>
-                      </div>
-                    </div>
+                    <h3 className="font-display font-bold text-base sm:text-lg text-gray-900 dark:text-white">{contest.title}</h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{contest.description}</p>
+                    {/* Countdown Timer */}
+                    <ContestCountdown startTime={contest.startTime} />
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-gray-50 dark:border-gray-800/60 mt-5 pt-4">
-                    <span className="text-xxs text-amber-500 font-bold flex items-center gap-1">
-                      <Award className="w-4 h-4" />
-                      XP Reward & Badges Eligible
-                    </span>
+                  <div className="flex sm:flex-col items-end gap-3 sm:gap-2 justify-between border-t sm:border-t-0 border-gray-100 dark:border-gray-800 pt-3 sm:pt-0 sm:text-right flex-shrink-0">
+                    <div>
+                      <p className="text-xxs text-gray-400">Date & Time</p>
+                      <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mt-0.5">
+                        {start.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} at {start.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xxs text-gray-400">Duration</p>
+                      <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mt-0.5">
+                        {(() => {
+                          const durationMs = new Date(contest.endTime).getTime() - new Date(contest.startTime).getTime();
+                          const durationHours = Math.round(durationMs / (1000 * 60 * 60));
+                          return `${durationHours} Hour${durationHours > 1 ? 's' : ''}`;
+                        })()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
 
-                    {isUpcoming ? (
-                      registeredContests.includes(contest._id) ? (
-                        <Button size="xs" variant="outline" disabled className="text-green-600 border-green-600 dark:text-green-400 dark:border-green-400">
-                          Registered ✓
-                        </Button>
-                      ) : (
-                        <Button size="xs" variant="secondary" onClick={() => handleOpenRegister(contest)}>
-                          Register Now
-                        </Button>
-                      )
+                <div className="flex items-center justify-between border-t border-gray-100 dark:border-gray-800/60 mt-5 pt-4">
+                  <span className="text-xxs text-amber-500 font-bold flex items-center gap-1">
+                    <Award className="w-4 h-4" />
+                    XP Reward & Badges Eligible
+                  </span>
+
+                  {isUpcoming ? (
+                    registeredContests.includes(contest._id) ? (
+                      <Button size="xs" variant="outline" disabled className="text-green-600 border-green-600 dark:text-green-400 dark:border-green-400">
+                        Registered ✓
+                      </Button>
                     ) : (
-                      <Link to={`/student/challenges/${contest.questions[0] || ''}`}>
-                        <Button size="xs" leftIcon={<Play className="w-3 h-3" />}>
-                          Enter Contest
-                        </Button>
-                      </Link>
-                    )}
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
+                      <Button size="xs" variant="secondary" onClick={() => handleOpenRegister(contest)}>
+                        Register Now
+                      </Button>
+                    )
+                  ) : (
+                    <Link to={`/student/challenges/${contest.questions[0] || ''}`}>
+                      <Button size="xs" leftIcon={<Play className="w-3 h-3" />}>
+                        Enter Contest
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              </Card>
+            );
+          })}
+        </div>
 
-          {/* Rules & Rewards Sidebar */}
-          <div className="space-y-6">
-            <Card padding="md" className="border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30">
-              <h3 className="font-display font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-3">
-                <Clock className="w-4 h-4 text-primary-500" />
-                Contest Rules
-              </h3>
-              <ul className="space-y-2.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed list-disc pl-4">
-                <li>Strict time limit applies. Once started, you cannot pause the contest.</li>
-                <li>All submissions undergo automated checks for syntax, execution time, and memory limits.</li>
-                <li>Copying code or using external assistance is monitored. Fair play rules apply.</li>
-                <li>Leaderboard rankings are based on total correct problems solved and time taken.</li>
-              </ul>
-            </Card>
+        {/* Rules & Rewards Sidebar */}
+        <div className="space-y-5 lg:sticky lg:top-6">
+          <Card padding="md" className="border border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30">
+            <h3 className="font-display font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-3">
+              <Clock className="w-4 h-4 text-primary-500" />
+              Contest Rules
+            </h3>
+            <ul className="space-y-2.5 text-xs text-gray-500 dark:text-gray-400 leading-relaxed list-disc pl-4">
+              <li>Strict time limit applies. Once started, you cannot pause the contest.</li>
+              <li>All submissions undergo automated checks for syntax, execution time, and memory limits.</li>
+              <li>Copying code or using external assistance is monitored. Fair play rules apply.</li>
+              <li>Leaderboard rankings are based on total correct problems solved and time taken.</li>
+            </ul>
+          </Card>
 
-            <Card padding="md" className="border border-gray-100 dark:border-gray-800">
-              <h3 className="font-display font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-3">
-                <Award className="w-4 h-4 text-purple-500" />
-                Recruiter Spotlights
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
-                Top 10 leaderboard finishers in Monthly Contests are featured on the ADYAPAN Recruiter Portal with direct fast-track interview pipelines to MNC partners.
-              </p>
-            </Card>
-          </div>
+          <Card padding="md" className="border border-gray-100 dark:border-gray-800">
+            <h3 className="font-display font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-3">
+              <Award className="w-4 h-4 text-purple-500" />
+              Recruiter Spotlights
+            </h3>
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
+              Top 10 leaderboard finishers in Monthly Contests are featured on the ADYAPAN Recruiter Portal with direct fast-track interview pipelines to MNC partners.
+            </p>
+          </Card>
         </div>
       </div>
 
