@@ -3576,6 +3576,11 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
 
 export const TCS_REASONING_TOPICS: Topic[] = [
   {
+    name: 'Logical Sequence of Words',
+    pageNumber: 1,
+    questions: []
+  },
+  {
     name: 'Logical Deduction',
     pageNumber: 5,
     questions: []
@@ -3583,6 +3588,11 @@ export const TCS_REASONING_TOPICS: Topic[] = [
   {
     name: 'Identifying Word and Numeric Patterns (Letter & Number Series)',
     pageNumber: 24,
+    questions: []
+  },
+  {
+    name: 'Series Completion',
+    pageNumber: 30,
     questions: []
   },
   {
@@ -3658,7 +3668,7 @@ export const TCS_REASONING_TOPICS: Topic[] = [
     questions: []
   },
   {
-    name: 'Blood Relation',
+    name: 'Blood Relation Test',
     pageNumber: 90,
     questions: []
   },
@@ -3683,7 +3693,7 @@ export const TCS_REASONING_TOPICS: Topic[] = [
     questions: []
   },
   {
-    name: 'Venn Diagram',
+    name: 'Venn Diagrams',
     pageNumber: 172,
     questions: []
   },
@@ -3693,7 +3703,7 @@ export const TCS_REASONING_TOPICS: Topic[] = [
     questions: []
   },
   {
-    name: 'Direction Sense',
+    name: 'Direction Sense Test',
     pageNumber: 220,
     questions: []
   },
@@ -3780,6 +3790,46 @@ export const TCS_REASONING_TOPICS: Topic[] = [
         explanation: 'No man is sky, No sky is road, Some men are roads. From these statements: We cannot conclude "No road is man" because some men are roads (I is false). "No road is sky" doesn\'t follow from the premises (II uncertain). "Some skies are men" contradicts "No man is sky" (III is false). "All roads are men" is not supported (IV is false). None of the conclusions necessarily follow from the given statements.'
       }
     ]
+  },
+  {
+    name: 'Cause and Effect',
+    pageNumber: 260,
+    questions: []
+  },
+  {
+    name: 'Dice',
+    pageNumber: 270,
+    questions: []
+  },
+  {
+    name: 'Cube and Cuboid',
+    pageNumber: 280,
+    questions: []
+  },
+  {
+    name: 'Analogy',
+    pageNumber: 290,
+    questions: []
+  },
+  {
+    name: 'Character Puzzles',
+    pageNumber: 300,
+    questions: []
+  },
+  {
+    name: 'Classification',
+    pageNumber: 310,
+    questions: []
+  },
+  {
+    name: 'Arithmetic Reasoning',
+    pageNumber: 320,
+    questions: []
+  },
+  {
+    name: 'Verification of Truth',
+    pageNumber: 330,
+    questions: []
   }
 ];
 
