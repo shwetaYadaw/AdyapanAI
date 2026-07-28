@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, Trophy, Code2, Flame, BrainCircuit, Target, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Search, Trophy, Code2, Flame, BrainCircuit, Target, ArrowRight, Sparkles } from 'lucide-react';
 import { api } from '../../services/api';
 import Card from '../../components/common/Card/Card';
 interface Question {
@@ -81,153 +82,142 @@ export default function CodingChallengesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="page-wrapper space-y-6">
 
-      {/* Search bar — above the hero */}
-      <div className="page-container pt-6">
-        <div className="flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 shadow-sm max-w-lg">
-          <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search topics..."
-            className="flex-1 bg-transparent text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 outline-none"
-          />
-        </div>
+      {/* Search bar */}
+      <div className="flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-2.5 shadow-sm max-w-lg">
+        <Search className="w-4 h-4 text-gray-400 flex-shrink-0" />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search topics..."
+          className="flex-1 bg-transparent text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 outline-none"
+        />
       </div>
 
       {/* Hero */}
-      <div className="page-container pt-3">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
-          <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
-            <Code2 className="w-96 h-96 text-white" />
-          </div>
-          <div className="relative z-10 space-y-2 max-w-2xl">
-            <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
-              ADYAPAN Coding Arena
-            </h1>
-            <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-              Master your Data Structures &amp; Algorithms, crack placement coding rounds, and prepare for top product companies.
-            </p>
-          </div>
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 p-8 sm:p-10 text-white shadow-brand"
+      >
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
+          <Code2 className="w-96 h-96 text-white" />
         </div>
-      </div>
-
-      <div className="page-container pb-16">
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center text-amber-500">
-              <Trophy className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Total Solved</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">
-                {stats?.solvedCount ?? 0} / {stats?.totalQuestions ?? 0}
-              </h3>
-            </div>
-          </Card>
-          
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-950/30 flex items-center justify-center text-orange-500">
-              <Flame className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Current Streak</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">5 Days</h3>
-            </div>
-          </Card>
-
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center text-blue-500">
-              <BrainCircuit className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Placement Score</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">85 / 100</h3>
-            </div>
-          </Card>
-
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/30 flex items-center justify-center text-purple-500">
-              <Target className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Active Contests</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">1 Live</h3>
-            </div>
-          </Card>
+        <div className="absolute left-1/3 bottom-0 opacity-5 pointer-events-none">
+          <Sparkles className="w-48 h-48 text-white" />
         </div>
+        <div className="relative z-10 space-y-2 max-w-2xl">
+          <motion.h1
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight"
+          >
+            ADYAPAN Coding Arena
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35, duration: 0.4 }}
+            className="text-white/90 text-sm sm:text-base leading-relaxed"
+          >
+            Master your Data Structures &amp; Algorithms, crack placement coding rounds, and prepare for top product companies.
+          </motion.p>
+        </div>
+      </motion.div>
 
-        {/* Main Content Split */}
-        <div className="grid lg:grid-cols-3 gap-8 items-start">
-          <div className="lg:col-span-2 space-y-6">
-            {/* Topic Grid — click to navigate */}
-            <div className="space-y-3">
-              {TOPIC_GROUPS.filter((g) =>
-                !search || g.title.toLowerCase().includes(search.toLowerCase())
-              ).map((group, idx) => {
-                const topicCount = (questions ?? []).filter((q) =>
-                  q.topics.some((t) => t.toLowerCase() === group.key)
-                ).length;
-
-                return (
-                  <button
-                    key={group.key}
-                    onClick={() => navigate(`/student/challenges/topic/${group.key}`)}
-                    className="w-full text-left border border-gray-100 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 group overflow-hidden"
-                  >
-                    <div className="px-6 py-4 flex items-center justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-display font-bold text-base text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                          {group.title}
-                        </h3>
-                        <p className="text-xs text-gray-400 mt-1 line-clamp-1">{group.description}</p>
-                      </div>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          {isLoading ? '...' : topicCount} Problems
-                        </span>
-                        <div className="w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-colors">
-                          <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
-                        </div>
-                      </div>
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-
-            {/* Leaderboard Card */}
-            <Card padding="md" className="border border-gray-100 dark:border-gray-800">
-              <h3 className="font-display font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-4">
-                <Trophy className="w-4 h-4 text-amber-500" />
-                Leaderboard
-              </h3>
-
-              <div className="space-y-3">
-                {loadingLeaderboard ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="skeleton w-8 h-8 rounded-full" />
-                      <div className="flex-1 space-y-1">
-                        <div className="skeleton h-3 w-1/2 rounded" />
-                        <div className="skeleton h-2 w-1/3 rounded" />
-                      </div>
-                    </div>
-                  ))
-                ) : (leaderboard ?? []).length === 0 ? (
-                  <p className="text-xs text-gray-400 text-center py-4">No rankings yet</p>
-                ) : (
-                  <p className="text-xs text-gray-400 text-center py-4">No rankings yet</p>
-                )}
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: 'Total Solved', value: `${stats?.solvedCount ?? 0} / ${stats?.totalQuestions ?? 0}`, icon: Trophy, color: 'from-amber-500 to-yellow-400' },
+          { label: 'Current Streak', value: '5 Days', icon: Flame, color: 'from-orange-500 to-red-400' },
+          { label: 'Placement Score', value: '85 / 100', icon: BrainCircuit, color: 'from-blue-500 to-cyan-400' },
+          { label: 'Active Contests', value: '1 Live', icon: Target, color: 'from-purple-500 to-violet-400' },
+        ].map((stat, i) => (
+          <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.07 }}>
+            <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
+              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center flex-shrink-0`}>
+                <stat.icon className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400">{stat.label}</p>
+                <h3 className="font-display font-bold text-lg text-gray-900 dark:text-white mt-0.5">{stat.value}</h3>
               </div>
             </Card>
-          </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {/* Main Content Split */}
+      <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 items-start">
+        <div className="lg:col-span-2 space-y-3">
+          {/* Topic Grid */}
+          {TOPIC_GROUPS.filter((g) =>
+            !search || g.title.toLowerCase().includes(search.toLowerCase())
+          ).map((group, idx) => {
+            const topicCount = (questions ?? []).filter((q) =>
+              q.topics.some((t) => t.toLowerCase() === group.key)
+            ).length;
+
+            return (
+              <motion.button
+                key={group.key}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25, delay: idx * 0.02 }}
+                onClick={() => navigate(`/student/challenges/topic/${group.key}`)}
+                className="w-full text-left border border-gray-100 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 hover:shadow-card-hover hover:border-primary-200 dark:hover:border-primary-800 hover:-translate-y-0.5 transition-all duration-300 group overflow-hidden"
+              >
+                <div className="px-6 py-4 flex items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-display font-bold text-base text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                      {group.title}
+                    </h3>
+                    <p className="text-xs text-gray-400 mt-1 line-clamp-1">{group.description}</p>
+                  </div>
+                  <div className="flex items-center gap-3 flex-shrink-0">
+                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                      {isLoading ? '...' : topicCount} Problems
+                    </span>
+                    <div className="w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-all group-hover:translate-x-0.5">
+                      <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                    </div>
+                  </div>
+                </div>
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6 lg:sticky lg:top-6">
+          {/* Leaderboard Card */}
+          <Card padding="md" className="border border-gray-100 dark:border-gray-800">
+            <h3 className="font-display font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-4">
+              <Trophy className="w-4 h-4 text-amber-500" />
+              Leaderboard
+            </h3>
+
+            <div className="space-y-3">
+              {loadingLeaderboard ? (
+                Array.from({ length: 5 }).map((_, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="skeleton w-8 h-8 rounded-full" />
+                    <div className="flex-1 space-y-1">
+                      <div className="skeleton h-3 w-1/2 rounded" />
+                      <div className="skeleton h-2 w-1/3 rounded" />
+                    </div>
+                  </div>
+                ))
+              ) : (leaderboard ?? []).length === 0 ? (
+                <p className="text-xs text-gray-400 text-center py-4">No rankings yet</p>
+              ) : (
+                <p className="text-xs text-gray-400 text-center py-4">No rankings yet</p>
+              )}
+            </div>
+          </Card>
         </div>
       </div>
     </div>
