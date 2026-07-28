@@ -1,7 +1,7 @@
 import Bull, { Queue, Job } from 'bull';
 import { redis } from '../config/redis';
 import { logger } from '../config/logger';
-import { JudgeService, TestCase } from './judge.service';
+import { JudgeService, TestCase, ExecutionOptions } from './judge.service';
 import axios from 'axios';
 import { env } from '../config/env';
 
@@ -13,6 +13,8 @@ export interface SubmissionJob {
   timeLimit?: number;
   memoryLimit?: number;
   callbackUrl?: string;
+  executionMode?: 'fullProgram' | 'function';
+  functionSignature?: any;
 }
 
 export class QueueService {
@@ -52,12 +54,18 @@ export class QueueService {
       logger.info(`Processing submission: ${job.data.submissionId}`);
       
       try {
+        const executionOptions: ExecutionOptions = {
+          executionMode: job.data.executionMode,
+          functionSignature: job.data.functionSignature,
+        };
+
         const result = await this.judgeService.judgeSubmission(
           job.data.code,
           job.data.language,
           job.data.testCases,
           job.data.timeLimit,
-          job.data.memoryLimit
+          job.data.memoryLimit,
+          executionOptions
         );
 
         // Send result back to backend
