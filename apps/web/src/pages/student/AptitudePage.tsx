@@ -1,6 +1,7 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Lock, GraduationCap, ArrowRight, BookOpen } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Brain, Lock, GraduationCap, ArrowRight, BookOpen, Sparkles } from 'lucide-react';
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
 import { topicSlug, Topic } from './aptitudeData';
@@ -3797,28 +3798,51 @@ export default function AptitudePage() {
     <div className="page-wrapper space-y-6">
 
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
-        <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 p-8 sm:p-10 text-white shadow-brand"
+      >
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
           <Brain className="w-96 h-96 text-white" />
         </div>
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
-            Aptitude Preparation
-          </h1>
-          <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-            Master quantitative ability, logical reasoning, and verbal skills chapter-wise to ace top MNC placement assessments.
-          </p>
+        <div className="absolute left-1/2 bottom-0 opacity-5 pointer-events-none transform -translate-x-1/2 translate-y-1/2">
+          <Sparkles className="w-64 h-64 text-white" />
         </div>
-      </div>
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <motion.h1
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight"
+          >
+            Aptitude Preparation
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35, duration: 0.4 }}
+            className="text-white/90 text-sm sm:text-base leading-relaxed"
+          >
+            Master quantitative ability, logical reasoning, and verbal skills chapter-wise to ace top MNC placement assessments.
+          </motion.p>
+        </div>
+      </motion.div>
 
       {/* Sub-module Selector */}
-      <div className="flex gap-2 sm:gap-4 border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto">
+      <motion.div
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.4 }}
+        className="flex gap-2 sm:gap-3 p-1.5 bg-gray-100/80 dark:bg-gray-800/60 rounded-xl w-fit overflow-x-auto"
+      >
         <button
           onClick={() => setSelectedSubModule('tcs-numerical')}
           className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
             selectedSubModule === 'tcs-numerical'
-              ? 'bg-primary-500 text-white shadow'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
           TCS Numerical Ability
@@ -3827,8 +3851,8 @@ export default function AptitudePage() {
           onClick={() => setSelectedSubModule('tcs-reasoning')}
           className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
             selectedSubModule === 'tcs-reasoning'
-              ? 'bg-primary-500 text-white shadow'
-              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              ? 'bg-white dark:bg-gray-700 text-primary-600 dark:text-primary-400 shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
           }`}
         >
           TCS Reasoning Ability
@@ -3839,7 +3863,7 @@ export default function AptitudePage() {
         >
           <Lock className="w-3.5 h-3.5" /> Verbal Ability (Locked)
         </button>
-      </div>
+      </motion.div>
 
       {/* Chapter Grid */}
       <div className="space-y-4">
@@ -3858,31 +3882,37 @@ export default function AptitudePage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {currentTopics.map((topic, idx) => (
-            <Card
+            <motion.div
               key={topic.name}
-              padding="none"
-              className="overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 cursor-pointer group"
-              onClick={() => handleTopicClick(topic.name)}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: idx * 0.03 }}
             >
-              <div className="p-5 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/30 flex items-center justify-center font-bold text-sm text-primary-600 dark:text-primary-400 flex-shrink-0">
-                    {idx + 1}
+              <Card
+                padding="none"
+                className="overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:shadow-card-hover hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-300 cursor-pointer group hover:-translate-y-0.5"
+                onClick={() => handleTopicClick(topic.name)}
+              >
+                <div className="p-5 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-950/30 dark:to-primary-900/20 flex items-center justify-center font-bold text-sm text-primary-600 dark:text-primary-400 flex-shrink-0 group-hover:from-primary-100 group-hover:to-primary-200 dark:group-hover:from-primary-900/40 dark:group-hover:to-primary-800/30 transition-all">
+                      {idx + 1}
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-sm text-gray-900 dark:text-white leading-snug truncate group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                        {topic.name}
+                      </h3>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1">
+                        <BookOpen className="w-3 h-3" /> {topic.questions.length} Questions
+                      </p>
+                    </div>
                   </div>
-                  <div className="min-w-0">
-                    <h3 className="font-semibold text-sm text-gray-900 dark:text-white leading-snug truncate">
-                      {topic.name}
-                    </h3>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1">
-                      <BookOpen className="w-3 h-3" /> {topic.questions.length} Questions
-                    </p>
+                  <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-all group-hover:translate-x-0.5">
+                    <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
                   </div>
                 </div>
-                <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-colors">
-                  <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </div>

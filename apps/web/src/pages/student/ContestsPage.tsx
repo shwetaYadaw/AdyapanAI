@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Clock, Trophy, Users, Award, Play, X, Timer } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Clock, Trophy, Users, Award, Play, X, Timer, Sparkles } from 'lucide-react';
 import { api } from '../../services/api';
 import Button from '../../components/common/Button/Button';
 import Card from '../../components/common/Card/Card';
@@ -200,19 +201,37 @@ export default function ContestsPage() {
     <div className="page-wrapper space-y-6">
 
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
-        <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 p-8 sm:p-10 text-white shadow-brand"
+      >
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
           <Trophy className="w-96 h-96 text-white" />
         </div>
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight flex items-center gap-2">
-            ADYAPAN Coding Contests
-          </h1>
-          <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-            Participate in timed weekly and monthly speedruns, top the leaderboard, and unlock direct placement opportunities with top recruiters.
-          </p>
+        <div className="absolute left-1/3 bottom-0 opacity-5 pointer-events-none">
+          <Sparkles className="w-48 h-48 text-white" />
         </div>
-      </div>
+        <div className="relative z-10 max-w-2xl space-y-4">
+          <motion.h1
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight"
+          >
+            ADYAPAN Coding Contests
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35, duration: 0.4 }}
+            className="text-white/90 text-sm sm:text-base leading-relaxed"
+          >
+            Participate in timed weekly and monthly speedruns, top the leaderboard, and unlock direct placement opportunities with top recruiters.
+          </motion.p>
+        </div>
+      </motion.div>
 
       {/* Main Content Grid */}
       <div className="grid lg:grid-cols-3 gap-6 lg:gap-8 items-start">

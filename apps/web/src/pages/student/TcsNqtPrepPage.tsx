@@ -171,27 +171,47 @@ export default function TcsNqtPrepPage() {
   return (
     <div className="page-wrapper space-y-6">
       {/* Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
-        <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-amber-500 to-orange-500 p-8 sm:p-10 text-white shadow-brand"
+      >
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
           <Code className="w-96 h-96 text-white" />
         </div>
         <div className="relative z-10 max-w-2xl space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold uppercase tracking-wider">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.15, duration: 0.3 }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold uppercase tracking-wider"
+          >
             <Sparkles className="w-3.5 h-3.5" /> Special Prep Track
-          </div>
-          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
+          </motion.div>
+          <motion.h1
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.4 }}
+            className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight"
+          >
             TCS NQT Coding Sheet
-          </h1>
-          <p className="text-white/90 text-sm sm:text-base leading-relaxed">
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.35, duration: 0.4 }}
+            className="text-white/90 text-sm sm:text-base leading-relaxed"
+          >
             Master the top coding challenges frequently asked in the TCS National Qualifier Test (NQT) and similar placement assessments.
-          </p>
+          </motion.p>
           <div className="flex flex-wrap gap-4 text-xs text-white/70 pt-2 border-t border-white/20">
             <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-white" /> {storedQuestions.length} MySQL-backed Problems</span>
             <span className="flex items-center gap-1.5"><Code className="w-4 h-4 text-white" /> Multilanguage Editor</span>
             <span className="flex items-center gap-1.5"><Award className="w-4 h-4 text-white" /> TCS Specific Test Cases</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Navigation tabs */}
       <div className="flex flex-wrap gap-2 p-1.5 bg-gray-100 dark:bg-gray-800/60 rounded-xl w-fit overflow-x-auto">
