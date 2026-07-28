@@ -3663,11 +3663,6 @@ export const TCS_REASONING_TOPICS: Topic[] = [
     ]
   },
   {
-    name: 'Syllogism',
-    pageNumber: 72,
-    questions: []
-  },
-  {
     name: 'Blood Relation Test',
     pageNumber: 90,
     questions: []
