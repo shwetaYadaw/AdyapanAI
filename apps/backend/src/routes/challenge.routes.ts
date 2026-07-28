@@ -798,6 +798,7 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
   const isDivisibleK = title.includes("Divisible K") || title.includes("Divisible k");
   const isTwoSum = title.toLowerCase().includes("two sum");
   const isChocolate = title.includes("Chocolate");
+  const isKthSmallest = title.toLowerCase().includes("kth") && title.toLowerCase().includes("smallest");
   const isSmallest = title.toLowerCase().includes("smallest");
   const isSpaceOptimization = title.includes("Space Optimization");
 
@@ -824,6 +825,13 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       const m = Math.floor(Math.random() * 3) + 2;
       input = `${arr.join(' ')}\n${m}`;
       output = String(solveChocolate(arr, m));
+    } else if (isKthSmallest) {
+      // Kth Smallest Element requires array + k value
+      const arr = Array.from({ length: 5 + i }, () => Math.floor(Math.random() * 100) + 1);
+      const k = Math.floor(Math.random() * arr.length) + 1;
+      const sorted = [...arr].sort((a, b) => a - b);
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(sorted[k - 1]);
     } else if (isSmallest) {
       // For "find smallest" problems, generate proper test cases
       const testArr = Array.from({ length: 5 + i }, () => Math.floor(Math.random() * 100) + 1);
@@ -864,6 +872,13 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       const m = Math.floor(Math.random() * 5) + 2;
       input = `${arr.join(' ')}\n${m}`;
       output = String(solveChocolate(arr, m));
+    } else if (isKthSmallest) {
+      // Kth Smallest Element - Hidden test cases
+      const arr = Array.from({ length: 15 + i }, () => Math.floor(Math.random() * 1000) + 1);
+      const k = Math.floor(Math.random() * arr.length) + 1;
+      const sorted = [...arr].sort((a, b) => a - b);
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(sorted[k - 1]);
     } else if (isSpaceOptimization) {
       const a = Math.floor(Math.random() * 50) + 1;
       const b = a + Math.floor(Math.random() * 100) + 50;
@@ -915,6 +930,18 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       else { arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; m = 10; }
       input = `${arr.join(' ')}\n${m}`;
       output = String(solveChocolate(arr, m));
+    } else if (isKthSmallest) {
+      // Kth Smallest Element - Edge cases
+      let arr: number[] = [];
+      let k = 1;
+      if (i === 1) { arr = [10]; k = 1; }
+      else if (i === 2) { arr = [5, 3, 7, 2, 8]; k = 1; }
+      else if (i === 3) { arr = [5, 3, 7, 2, 8]; k = 5; }
+      else if (i === 4) { arr = Array.from({ length: 20 }, () => Math.floor(Math.random() * 100)); k = 10; }
+      else { arr = [100, 200, 1, 50, 25]; k = 3; }
+      const sorted = [...arr].sort((a, b) => a - b);
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(sorted[k - 1]);
     } else if (isSmallest) {
       const testArr = Array.from({ length: 10 + i }, () => Math.floor(Math.random() * 1000) + 1);
       input = testArr.join(' ');
@@ -959,6 +986,13 @@ function generateTestCasesForQuestion(title: string, sampleInput: string, sample
       const m = 50;
       input = `${arr.join(' ')}\n${m}`;
       output = String(solveChocolate(arr, m));
+    } else if (isKthSmallest) {
+      // Kth Smallest Element - Stress test cases
+      const arr = Array.from({ length: 500 + i * 100 }, () => Math.floor(Math.random() * 10000) + 1);
+      const k = Math.floor(arr.length / 2);
+      const sorted = [...arr].sort((a, b) => a - b);
+      input = `${arr.join(' ')}\n${k}`;
+      output = String(sorted[k - 1]);
     } else if (isSmallest) {
       const testArr = Array.from({ length: 500 + i * 100 }, () => Math.floor(Math.random() * 10000) + 1);
       input = testArr.join(' ');

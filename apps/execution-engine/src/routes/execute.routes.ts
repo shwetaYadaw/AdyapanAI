@@ -11,10 +11,11 @@ const queueService = new QueueService();
 /**
  * POST /execute/run
  * Execute code with custom input (synchronous)
+ * Automatically detects execution mode - no need to specify
  */
 router.post('/run', async (req, res, next) => {
   try {
-    const { code, language, input, timeLimit, memoryLimit } = req.body;
+    const { code, language, input, timeLimit, memoryLimit, executionMode, functionSignature } = req.body;
 
     if (!code || !language) {
       return res.status(400).json({
@@ -30,7 +31,8 @@ router.post('/run', async (req, res, next) => {
       language,
       input || '',
       timeLimit,
-      memoryLimit
+      memoryLimit,
+      { executionMode, functionSignature }
     );
 
     res.json({
@@ -52,10 +54,11 @@ router.post('/run', async (req, res, next) => {
 /**
  * POST /execute/submit
  * Submit code for judging against test cases (asynchronous)
+ * Automatically detects execution mode - no need to specify
  */
 router.post('/submit', async (req, res, next) => {
   try {
-    const { submissionId, code, language, testCases, timeLimit, memoryLimit, callbackUrl } = req.body;
+    const { submissionId, code, language, testCases, timeLimit, memoryLimit, callbackUrl, executionMode, functionSignature } = req.body;
 
     if (!submissionId || !code || !language || !testCases) {
       return res.status(400).json({
@@ -81,6 +84,8 @@ router.post('/submit', async (req, res, next) => {
       timeLimit,
       memoryLimit,
       callbackUrl,
+      executionMode,
+      functionSignature,
     });
 
     res.json({
@@ -100,10 +105,11 @@ router.post('/submit', async (req, res, next) => {
 /**
  * POST /execute/judge
  * Submit code and wait for result (synchronous)
+ * Automatically detects execution mode - no need to specify
  */
 router.post('/judge', async (req, res, next) => {
   try {
-    const { code, language, testCases, timeLimit, memoryLimit } = req.body;
+    const { code, language, testCases, timeLimit, memoryLimit, executionMode, functionSignature } = req.body;
 
     if (!code || !language || !testCases) {
       return res.status(400).json({
@@ -126,7 +132,8 @@ router.post('/judge', async (req, res, next) => {
       language,
       testCases,
       timeLimit,
-      memoryLimit
+      memoryLimit,
+      { executionMode, functionSignature }
     );
 
     res.json({

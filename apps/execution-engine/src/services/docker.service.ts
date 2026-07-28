@@ -2,6 +2,7 @@ import Docker from 'dockerode';
 import { env } from '../config/env';
 import { logger } from '../config/logger';
 import { LanguageConfig } from '../config/languages';
+import { InputValidator } from '../utils/inputValidator';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs/promises';
 import path from 'path';
@@ -56,6 +57,21 @@ export class DockerService {
     const memory = memoryLimit || language.memoryLimit;
 
     try {
+      // Validate and sanitize input
+      const inputValidation = InputValidator.validateInput(input);
+      if (!inputValidation.valid) {
+        logger.error(`Invalid input for execution ${executionId}: ${inputValidation.error}`);
+        return {
+          output: '',
+          error: `Input validation failed: ${inputValidation.error}`,
+          exitCode: -1,
+          runtime: 0,
+          memory: 0,
+          timeout: false,
+          verdict: 'RE',
+        };
+      }
+      const sanitizedInput = inputValidation.sanitized;
       // Create execution directory
       await fs.mkdir(workDir, { recursive: true });
 
@@ -66,7 +82,7 @@ export class DockerService {
 
       // Write input file
       const inputPath = path.join(workDir, 'input.txt');
-      await fs.writeFile(inputPath, input, 'utf-8');
+      await fs.writeFile(inputPath, sanitizedInput, 'utf-8');
 
       logger.debug(`Executing ${language.name} code in container: ${executionId}`);
 
@@ -151,12 +167,23 @@ export class DockerService {
       // Execution phase
       const startTime = Date.now();
       const actualRunCommand = (language as any)._dynamicRunCommand || language.runCommand;
-      const execResult = await this.runInContainer(container, actualRunCommand, input, timeout);
+      const execResult = await this.runInContainer(container, actualRunCommand, sanitizedInput, timeout);
       const runtime = Date.now() - startTime;
 
-      // Get memory stats
-      const stats = await container.stats({ stream: false });
-      const memoryUsed = Math.round((stats.memory_stats.usage || 0) / (1024 * 1024));
+      // Get memory stats (with fallback for undefined stats)
+      let memoryUsed = 0;
+      try {
+        const stats = await container.stats({ stream: false });
+        if (stats && stats.memory_stats && stats.memory_stats.usage) {
+          memoryUsed = Math.round(stats.memory_stats.usage / (1024 * 1024));
+        } else {
+          logger.warn(`Memory stats unavailable for container ${executionId}`);
+          memoryUsed = 0; // Default to 0 if stats unavailable
+        }
+      } catch (statsError: any) {
+        logger.warn(`Failed to get memory stats for ${executionId}: ${statsError.message}`);
+        memoryUsed = 0;
+      }
 
       // Determine verdict
       let verdict: ExecutionResult['verdict'] = 'AC';
@@ -224,8 +251,11 @@ export class DockerService {
       }
 
       // Create execution inside running container
+      // Use bash to ensure input.txt is properly closed and EOF is sent
       const exec = await container.exec({
-        Cmd: input ? ['/bin/sh', '-c', `cat /app/input.txt | ${command}`] : ['/bin/sh', '-c', command],
+        Cmd: input 
+          ? ['/bin/sh', '-c', `cat /app/input.txt < /dev/null | ${command}`]
+          : ['/bin/sh', '-c', command],
         AttachStdout: true,
         AttachStderr: true,
         AttachStdin: false,
@@ -325,28 +355,60 @@ export class DockerService {
 
   /**
    * Compare actual output with expected output
+   * Flexible comparison that handles different valid output formats
    */
   private compareOutputs(actual: string, expected: string): boolean {
-    // Normalize whitespace
-    const normalize = (str: string) => str.trim().replace(/\s+/g, ' ');
-    
-    const normalizedActual = normalize(actual);
-    const normalizedExpected = normalize(expected);
+    // Remove all leading/trailing whitespace
+    const actualTrimmed = actual.trim();
+    const expectedTrimmed = expected.trim();
 
-    // Exact match after normalization
+    // Quick exact match check
+    if (actualTrimmed === expectedTrimmed) {
+      return true;
+    }
+
+    // Normalize: collapse multiple spaces into single space, trim each line
+    const normalize = (str: string) => {
+      return str
+        .trim()
+        .split('\n')
+        .map(line => line.trim().replace(/\s+/g, ' '))
+        .filter(line => line.length > 0) // Remove empty lines
+        .join('\n');
+    };
+
+    const normalizedActual = normalize(actualTrimmed);
+    const normalizedExpected = normalize(expectedTrimmed);
+
+    // Try normalized comparison
     if (normalizedActual === normalizedExpected) {
       return true;
     }
 
-    // Line by line comparison
-    const actualLines = actual.trim().split('\n').map(l => l.trim());
-    const expectedLines = expected.trim().split('\n').map(l => l.trim());
+    // Line-by-line comparison with flexible whitespace
+    const actualLines = actualTrimmed.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    const expectedLines = expectedTrimmed.split('\n').map(l => l.trim()).filter(l => l.length > 0);
 
+    // Must have same number of non-empty lines
     if (actualLines.length !== expectedLines.length) {
+      logger.debug(`Line count mismatch: actual=${actualLines.length}, expected=${expectedLines.length}`);
       return false;
     }
 
-    return actualLines.every((line, i) => line === expectedLines[i]);
+    // Compare each line with flexible whitespace
+    for (let i = 0; i < actualLines.length; i++) {
+      const actualLine = actualLines[i].replace(/\s+/g, ' ');
+      const expectedLine = expectedLines[i].replace(/\s+/g, ' ');
+      
+      if (actualLine !== expectedLine) {
+        logger.debug(`Line ${i + 1} mismatch:`);
+        logger.debug(`  Actual  : "${actualLine}"`);
+        logger.debug(`  Expected: "${expectedLine}"`);
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /**

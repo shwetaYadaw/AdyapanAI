@@ -19,6 +19,10 @@ const envSchema = z.object({
   DEFAULT_MAX_PROCESSES: z.string().transform(Number).default('20'),
   DEFAULT_MAX_FILE_SIZE: z.string().transform(Number).default('10'),
 
+  // Rate Limiting
+  RATE_LIMIT_WINDOW_MS: z.string().transform(Number).default('60000'), // 1 minute
+  RATE_LIMIT_MAX_REQUESTS: z.string().transform(Number).default('100'), // 100 requests per minute
+
   // Docker
   DOCKER_SOCKET_PATH: z.string().default('/var/run/docker.sock'),
   DOCKER_NETWORK: z.string().default('execution-network'),
@@ -28,6 +32,7 @@ const envSchema = z.object({
   // Logging
   LOG_LEVEL: z.enum(['error', 'warn', 'info', 'debug']).default('info'),
   LOG_FILE_PATH: z.string().default('logs/execution-engine.log'),
+  LOG_FILE_ENABLED: z.string().transform(v => v === 'true').default('true'),
 
   // CORS
   ALLOWED_ORIGINS: z.string().default('http://localhost:3000'),

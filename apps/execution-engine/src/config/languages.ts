@@ -27,7 +27,7 @@ export const LANGUAGE_CONFIGS: Record<string, LanguageConfig> = {
     dockerImage: 'adyapan/runner-java:latest',
     compileCommand: 'javac -d /app /app/Main.java',
     runCommand: 'java -cp /app Main',
-    timeout: 5,
+    timeout: 10, // Increased to 10 seconds for complex problems
     memoryLimit: 512,
   },
   python: {
