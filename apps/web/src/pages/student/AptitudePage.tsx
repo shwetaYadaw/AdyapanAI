@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Brain, Lock, GraduationCap, ArrowRight, BookOpen } from 'lucide-react';
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
-import { topicSlug, Question, Topic } from './aptitudeData';
+import { topicSlug, Topic } from './aptitudeData';
 
 export const TCS_NUMERICAL_TOPICS: Topic[] = [
   {
@@ -3794,7 +3794,7 @@ export default function AptitudePage() {
   };
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper space-y-6">
 
       {/* Header Banner */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
@@ -3812,7 +3812,7 @@ export default function AptitudePage() {
       </div>
 
       {/* Sub-module Selector */}
-      <div className="flex gap-4 border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto">
+      <div className="flex gap-2 sm:gap-4 border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto">
         <button
           onClick={() => setSelectedSubModule('tcs-numerical')}
           className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
@@ -3864,16 +3864,16 @@ export default function AptitudePage() {
               className="overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 cursor-pointer group"
               onClick={() => handleTopicClick(topic.name)}
             >
-              <div className="p-5 flex items-start justify-between gap-3">
-                <div className="flex items-start gap-3 flex-1 min-w-0">
-                  <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/30 flex items-center justify-center font-bold text-xs text-primary-600 dark:text-primary-400 flex-shrink-0">
+              <div className="p-5 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 flex-1 min-w-0">
+                  <div className="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-950/30 flex items-center justify-center font-bold text-sm text-primary-600 dark:text-primary-400 flex-shrink-0">
                     {idx + 1}
                   </div>
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-sm text-gray-900 dark:text-white leading-snug">
+                    <h3 className="font-semibold text-sm text-gray-900 dark:text-white leading-snug truncate">
                       {topic.name}
                     </h3>
-                    <p className="text-xs text-gray-400 mt-0.5 flex items-center gap-1">
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5 flex items-center gap-1">
                       <BookOpen className="w-3 h-3" /> {topic.questions.length} Questions
                     </p>
                   </div>
