@@ -41,12 +41,9 @@ export default function LoginPage() {
     if (googleLoginThunk.fulfilled.match(result)) {
       toast.success('Welcome back!');
       const role = result.payload.user?.role;
-      const redirectMap: Record<string, string> = {
-        student: '/student/dashboard', teacher: '/teacher/dashboard',
-        mentor: '/mentor/dashboard',   recruiter: '/recruiter/dashboard',
-        admin: '/admin/dashboard',     superadmin: '/admin/dashboard',
-      };
-      navigate(redirectMap[role] ?? from, { replace: true });
+      // Only two roles: student and admin
+      const redirectPath = role === 'admin' ? '/admin/dashboard' : '/student/dashboard';
+      navigate(redirectPath, { replace: true });
     } else {
       toast.error('Google sign in failed');
     }
@@ -90,12 +87,9 @@ export default function LoginPage() {
     if (loginThunk.fulfilled.match(result)) {
       toast.success('Welcome back!');
       const role = result.payload.user?.role;
-      const redirectMap: Record<string, string> = {
-        student: '/student/dashboard', teacher: '/teacher/dashboard',
-        mentor: '/mentor/dashboard',   recruiter: '/recruiter/dashboard',
-        admin: '/admin/dashboard',     superadmin: '/admin/dashboard',
-      };
-      navigate(redirectMap[role] ?? from, { replace: true });
+      // Only two roles: student and admin
+      const redirectPath = role === 'admin' ? '/admin/dashboard' : '/student/dashboard';
+      navigate(redirectPath, { replace: true });
     }
   };
 

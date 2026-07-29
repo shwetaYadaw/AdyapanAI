@@ -16,7 +16,7 @@ const registerSchema = z.object({
     .regex(/\d/, 'Must contain a number'),
   firstName: z.string().min(1).max(50),
   lastName: z.string().min(1).max(50),
-  role: z.enum(['student', 'teacher', 'recruiter']).optional().default('student'),
+  role: z.enum(['student', 'admin']).optional().default('student'),
 });
 
 const loginSchema = z.object({
