@@ -6,7 +6,56 @@ import { sendSuccess, getPaginationParams, sendPaginated } from '../utils/respon
 import { AppError } from '../middleware/errorHandler.middleware';
 
 const router = Router();
-router.use(authenticate, authorize('admin', 'superadmin'));
+router.use(authenticate, authorize('admin'));
+
+// GET /admin/stats - Dashboard statistics
+router.get('/stats', async (req, res, next) => {
+  try {
+    const [
+      totalStudents,
+      totalCourses,
+      totalProblems,
+      totalSubmissions,
+      todaySubmissions,
+      activeStudents,
+    ] = await Promise.all([
+      prisma.user.count({ where: { role: 'student' } }),
+      prisma.course.count({ where: { isPublished: true } }),
+      prisma.problem.count(),
+      prisma.submission.count(),
+      prisma.submission.count({
+        where: {
+          createdAt: {
+            gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          },
+        },
+      }),
+      prisma.user.count({
+        where: {
+          role: 'student',
+          isActive: true,
+          lastLogin: {
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
+          },
+        },
+      }),
+    ]);
+
+    sendSuccess({
+      res,
+      data: {
+        totalStudents,
+        totalCourses,
+        totalProblems,
+        totalSubmissions,
+        submissionsToday: todaySubmissions,
+        activeStudents,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 // GET /admin/users
 router.get('/users', async (req, res, next) => {
