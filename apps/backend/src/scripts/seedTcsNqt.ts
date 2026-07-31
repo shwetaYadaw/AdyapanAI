@@ -144,6 +144,12 @@ const TCS_QUESTIONS = [
   { title: 'Concatenate one string to another', difficulty: 'easy' },
   { title: 'Write a program to find a substring within a string, if found display its starting position', difficulty: 'medium' },
   { title: 'Reverse words in a string', difficulty: 'medium' },
+  { title: 'Find the longest string', difficulty: 'medium' },
+  { title: 'Longest common prefix', difficulty: 'medium' },
+  { title: 'Check if string is rotated by two places', difficulty: 'medium' },
+  { title: 'Check if string can be made equal by reverse operations', difficulty: 'hard' },
+  { title: 'K maximum sum combinations from two arrays', difficulty: 'hard' },
+  { title: 'Sum of first N natural numbers', difficulty: 'easy' },
 ];
 
 // Problem-specific configurations with details
@@ -1100,40 +1106,7 @@ Complete the function signature provided in the editor to parse the input parame
     timeLimit: 1000,
     memoryLimit: 128
   },
-  'sum-of-first-n-natural-numbers': {
-    statement: `Given a positive integer n, find the sum of the first n natural numbers.
 
-Natural numbers are positive integers starting from 1: 1, 2, 3, 4, 5, ...
-
-The sum of the first n natural numbers can be calculated using the formula: **Sum = n × (n + 1) / 2**
-
-**Examples:**
-- Input: n = 3 → Output: 6
-  Explanation: 1 + 2 + 3 = 6
-- Input: n = 5 → Output: 15
-  Explanation: 1 + 2 + 3 + 4 + 5 = 15
-- Input: n = 10 → Output: 55
-  Explanation: 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10 = 55
-
-Complete the function signature provided in the editor to parse the input parameters and return the correct result.`,
-    inputFormat: 'A single positive integer n.',
-    outputFormat: 'Return the sum of the first n natural numbers as an integer.',
-    constraints: '1 ≤ n ≤ 10^9\nUse the formula: n × (n + 1) / 2 for efficiency',
-    sampleInput: '3',
-    sampleOutput: '6',
-    testCases: [
-      { input: '3', output: '6', isHidden: false },
-      { input: '5', output: '15', isHidden: false },
-      { input: '10', output: '55', isHidden: false },
-      { input: '1', output: '1', isHidden: true },
-      { input: '2', output: '3', isHidden: true },
-      { input: '100', output: '5050', isHidden: true },
-      { input: '1000', output: '500500', isHidden: true },
-      { input: '1000000000', output: '500000000500000000', isHidden: true }
-    ],
-    timeLimit: 1000,
-    memoryLimit: 128
-  },
   'find-sum-of-ap-series': {
     statement: `A series with the same common difference is known as an arithmetic series. The first term of the series is 'a' and the common difference is 'd'. The series looks like: **a, a + d, a + 2d, a + 3d, ...**
 
@@ -2833,6 +2806,1223 @@ Complete the capitalizeTitle() function.`,
       { input: 'the quick brown fox', output: 'The Quick Brown Fox', isHidden: true },
       { input: 'i am learning programming', output: 'I Am Learning Programming', isHidden: true },
       { input: 'python is awesome', output: 'Python Is Awesome', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'reverse-words-in-a-string': {
+    statement: `## 📝 Problem Statement
+Given an input string s, reverse the order of the words.
+
+A word is defined as a sequence of non-space characters. The words in s will be separated by at least one space. Return a string of the words in reverse order concatenated by a single space.
+
+**Important Notes:**
+- The input string s may contain leading or trailing spaces or multiple spaces between two words
+- The returned string should only have a single space separating the words
+- Do not include any extra spaces (leading, trailing, or multiple spaces between words)
+- Words should be reversed in order, but each word itself remains unchanged
+
+**Algorithm Approach:**
+1. Split the string by spaces, filtering out empty strings (this handles multiple spaces)
+2. Reverse the order of words
+3. Join them back with a single space separator
+4. Alternatively, use two-pointer approach: reverse entire string, then reverse each word individually
+
+**Time Complexity:** O(n) where n is the length of the string
+**Space Complexity:** O(n) for the output string (or O(1) if reversing in-place)
+
+**Examples:**
+- Input: s = "the sky is blue" → Output: "blue is sky the"
+  Explanation: Words reversed: "blue", "is", "sky", "the" joined by single spaces.
+- Input: s = "  hello world  " → Output: "world hello"
+  Explanation: Leading and trailing spaces are removed. Only words are reversed with single space between them.
+- Input: s = "a good   example" → Output: "example good a"
+  Explanation: Multiple spaces between words are reduced to single spaces in the output.
+
+Complete the reverseWords() function.`,
+    inputFormat: 'A single string s containing words separated by spaces. May contain leading, trailing, or multiple consecutive spaces.',
+    outputFormat: 'Return the string with words in reverse order, separated by single spaces, with no leading or trailing spaces.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters, digits, and spaces\nAt least one word in s',
+    sampleInput: '  hello world  ',
+    sampleOutput: 'world hello',
+    testCases: [
+      { input: '  hello world  ', output: 'world hello', isHidden: false },
+      { input: 'the sky is blue', output: 'blue is sky the', isHidden: false },
+      { input: 'a good   example', output: 'example good a', isHidden: false },
+      { input: 'hello', output: 'hello', isHidden: true },
+      { input: 'a', output: 'a', isHidden: true },
+      { input: '   a   b   c   ', output: 'c b a', isHidden: true },
+      { input: 'race car', output: 'car race', isHidden: true },
+      { input: 'reactive programming is fun', output: 'fun is programming reactive', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'write-a-program-to-find-a-substring-within-a-string-if-found-display-its-starting-position': {
+    statement: `## 📝 Problem Statement
+Given two strings txt and pat, find if pat is a substring of txt. If yes, return the index of the first occurrence, else return -1.
+
+A substring is a contiguous sequence of characters within a string. The search is case-sensitive and should find the first (leftmost) occurrence of the pattern.
+
+**Key Points:**
+- Return the index of the FIRST occurrence of the pattern
+- If the pattern appears multiple times, return only the smallest index
+- Return -1 if the pattern is not found
+- The search is case-sensitive
+- Index is 0-based
+
+**Algorithm Approaches:**
+1. **Brute Force**: Check every position in txt to see if pat matches
+2. **Built-in Method**: Use language string functions (indexOf, find, etc.)
+3. **KMP Algorithm**: Knuth-Morris-Pratt for efficient pattern matching
+4. **Boyer-Moore**: Another efficient string matching algorithm
+
+**Time Complexity:** O(n*m) for brute force, O(n+m) for KMP where n=txt length, m=pat length
+**Space Complexity:** O(1) for brute force, O(m) for KMP
+
+**Examples:**
+- Input: txt = "geeksforgeeks", pat = "eks" → Output: 2
+  Explanation: String "eks" is present at index 2 and 10, so 2 is the smallest index.
+- Input: txt = "geeksforgeeks", pat = "xyz" → Output: -1
+  Explanation: There is no occurrence of "xyz" in "geeksforgeeks".
+
+Complete the findSubstring() function.`,
+    inputFormat: 'First line contains txt (main string). Second line contains pat (pattern to find).',
+    outputFormat: 'Return the index of first occurrence of pat in txt, or -1 if not found.',
+    constraints: '1 ≤ txt.length ≤ 10^4\n1 ≤ pat.length ≤ 10^3\npat.length ≤ txt.length\ntxt and pat contain only lowercase English letters',
+    sampleInput: 'geeksforgeeks\neks',
+    sampleOutput: '2',
+    testCases: [
+      { input: 'geeksforgeeks\neks', output: '2', isHidden: false },
+      { input: 'geeksforgeeks\nxyz', output: '-1', isHidden: false },
+      { input: 'abcdefghij\nabc', output: '0', isHidden: false },
+      { input: 'abcdefghij\nij', output: '8', isHidden: true },
+      { input: 'aaaaaaa\naaa', output: '0', isHidden: true },
+      { input: 'hello\nlo', output: '3', isHidden: true },
+      { input: 'programming\nprog', output: '0', isHidden: true },
+      { input: 'substring\nring', output: '6', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'concatenate-one-string-to-another': {
+    statement: `## 📝 Problem Statement
+You are given two strings s1 and s2 and your task is to concatenate both strings and return the final concatenated string.
+
+String concatenation means combining two or more strings together to form a new string. The result is a single string that contains all characters from both strings in order.
+
+**Important Notes:**
+- You may assume s1 will always have extra space to concatenate s2
+- The order matters: s1 comes first, then s2
+- No spaces or separators are added between the strings
+- Both strings are combined as-is without modification
+
+**Algorithm Approach:**
+1. Simple concatenation: Use language string concatenation operators or methods
+2. Character by character: Iterate through s1, append s2 at the end
+3. Built-in functions: Use concat(), +, join(), or similar language functions
+
+**Time Complexity:** O(n + m) where n = length of s1, m = length of s2
+**Space Complexity:** O(n + m) for the resulting concatenated string
+
+**Examples:**
+- Input: s1 = "Hello", s2 = "World" → Output: "HelloWorld"
+  Explanation: Combine "Hello" and "World" to get "HelloWorld" without any space.
+- Input: s1 = "abc", s2 = "def" → Output: "abcdef"
+  Explanation: Combine "abc" and "def" to get "abcdef".
+
+Complete the concatenateStrings() function.`,
+    inputFormat: 'First line contains string s1. Second line contains string s2.',
+    outputFormat: 'Return the concatenated string (s1 + s2).',
+    constraints: '1 ≤ s1.length ≤ 10^4\n1 ≤ s2.length ≤ 10^4\ns1 and s2 contain only English letters',
+    sampleInput: 'Hello\nWorld',
+    sampleOutput: 'HelloWorld',
+    testCases: [
+      { input: 'Hello\nWorld', output: 'HelloWorld', isHidden: false },
+      { input: 'abc\ndef', output: 'abcdef', isHidden: false },
+      { input: 'a\nb', output: 'ab', isHidden: false },
+      { input: 'geeks\nforgeeks', output: 'geeksforgeeks', isHidden: true },
+      { input: 'hello\nhello', output: 'hellohello', isHidden: true },
+      { input: 'string\nconcat', output: 'stringconcat', isHidden: true },
+      { input: 'open\nsource', output: 'opensource', isHidden: true },
+      { input: 'java\nscript', output: 'javascript', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'change-case-of-each-character-in-a-string': {
+    statement: `## 📝 Problem Statement
+Given a string s consisting of English letters (both uppercase and lowercase), convert each character to its opposite case. That is, change every lowercase letter to uppercase, and every uppercase letter to lowercase.
+
+String case toggling is a common string manipulation task used in text processing and formatting.
+
+**Important Notes:**
+- Only English letters are toggled (a-z becomes A-Z, A-Z becomes a-z)
+- Non-alphabetic characters (if present) should remain unchanged
+- The order of characters is preserved
+- The operation should be applied to every character in the string
+
+**Algorithm Approach:**
+1. Simple iteration: Iterate through each character and check if it's uppercase or lowercase
+2. Character-by-character toggle: Use built-in case conversion functions
+3. Direct character manipulation: Use ASCII values or language-specific methods
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(n) for the resulting toggled string
+
+**Examples:**
+- Input: s = "geeksForgEeks" → Output: "GEEKSfORGeEKS"
+  Explanation: All lowercase letters are changed to uppercase and vice versa.
+- Input: s = "SMALLcase" → Output: "smallCASE"
+  Explanation: All lowercase letters are changed to uppercase and vice versa.
+- Input: s = "Hello123World" → Output: "hELLO123wORLD"
+  Explanation: Only letters toggle case, numbers remain unchanged.
+
+Complete the toggleCase() function.`,
+    inputFormat: 'A single line containing string s consisting of English letters (and possibly digits).',
+    outputFormat: 'Return the string with all characters toggled (lowercase to uppercase and vice versa).',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters (a-z, A-Z) and possibly digits (0-9)',
+    sampleInput: 'geeksForgEeks',
+    sampleOutput: 'GEEKSfORGeEKS',
+    testCases: [
+      { input: 'geeksForgEeks', output: 'GEEKSfORGeEKS', isHidden: false },
+      { input: 'SMALLcase', output: 'smallCASE', isHidden: false },
+      { input: 'Hello123World', output: 'hELLO123wORLD', isHidden: false },
+      { input: 'ABC', output: 'abc', isHidden: true },
+      { input: 'xyz', output: 'XYZ', isHidden: true },
+      { input: 'AbCdEfGh', output: 'aBcDeFgH', isHidden: true },
+      { input: '12345', output: '12345', isHidden: true },
+      { input: 'TcsNqt2024', output: 'tCSNQT2024', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'calculate-frequency-of-characters-in-a-string': {
+    statement: `## 📝 Problem Statement
+Given a string s, calculate and print the frequency of each character in the string. The frequency of a character is the number of times it appears in the string.
+
+Character frequency analysis is widely used in cryptography, data compression, and text analysis.
+
+**Important Notes:**
+- Count all occurrences of each character (both uppercase and lowercase)
+- Display results in order of first appearance
+- Spaces and special characters (if present) should also be counted
+- Output format should show each character and its frequency
+
+**Algorithm Approach:**
+1. Hash Map approach: Use a dictionary/map to store character frequencies
+2. Array approach: Use an array to store frequencies (for limited character set)
+3. Sorting: Sort by frequency or alphabetically
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(k) where k = number of unique characters
+
+**Examples:**
+- Input: s = "geeksforgeeks" → Output: "g-2 e-4 k-2 s-2 f-1 o-1 r-1" (or similar format)
+  Explanation: Each character's frequency is counted.
+- Input: s = "hello" → Output: "h-1 e-1 l-2 o-1"
+  Explanation: 'l' appears twice, others appear once.
+- Input: s = "aabbcc" → Output: "a-2 b-2 c-2"
+  Explanation: All characters appear exactly twice.
+
+Complete the frequencyOfCharacters() function.`,
+    inputFormat: 'A single line containing string s.',
+    outputFormat: 'Print the frequency of each character in format: character-frequency (space separated). Display in order of first appearance.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters, spaces, and possibly special characters',
+    sampleInput: 'geeksforgeeks',
+    sampleOutput: 'g-2 e-4 k-2 s-2 f-1 o-1 r-1',
+    testCases: [
+      { input: 'geeksforgeeks', output: 'g-2 e-4 k-2 s-2 f-1 o-1 r-1', isHidden: false },
+      { input: 'hello', output: 'h-1 e-1 l-2 o-1', isHidden: false },
+      { input: 'aabbcc', output: 'a-2 b-2 c-2', isHidden: false },
+      { input: 'aaa', output: 'a-3', isHidden: true },
+      { input: 'abcabc', output: 'a-2 b-2 c-2', isHidden: true },
+      { input: 'programming', output: 'p-1 r-1 o-1 g-2 a-1 m-2 i-1 n-1', isHidden: true },
+      { input: 'mississippi', output: 'm-1 i-4 s-4 p-2', isHidden: true },
+      { input: 'abc', output: 'a-1 b-1 c-1', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'find-non-repeating-characters-of-a-string': {
+    statement: `## 📝 Problem Statement
+Given a string s, find and return all non-repeating (unique) characters in the string. A character is non-repeating if it appears exactly once in the string.
+
+Identifying unique characters is useful in various applications like password validation and data deduplication.
+
+**Important Notes:**
+- Return characters that appear exactly once
+- Maintain the order of first appearance
+- Consider both uppercase and lowercase as different characters
+- Ignore duplicates in the output
+
+**Algorithm Approach:**
+1. Hash Map: Count frequency first, then filter characters with frequency = 1
+2. Two-pass: First pass to count, second pass to output in order
+3. Linked Set: Use ordered structure for efficient ordering
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(k) where k = number of unique characters
+
+**Examples:**
+- Input: s = "geeksforgeeks" → Output: "f o r"
+  Explanation: f, o, r appear exactly once.
+- Input: s = "programming" → Output: "p o a i n"
+  Explanation: Only these characters appear once.
+- Input: s = "aabbcc" → Output: "" (or empty)
+  Explanation: No character appears exactly once.
+
+Complete the findNonRepeating() function.`,
+    inputFormat: 'A single line containing string s.',
+    outputFormat: 'Print all non-repeating characters space-separated in order of first appearance. Print empty if none exist.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters (a-z, A-Z)',
+    sampleInput: 'geeksforgeeks',
+    sampleOutput: 'f o r',
+    testCases: [
+      { input: 'geeksforgeeks', output: 'f o r', isHidden: false },
+      { input: 'programming', output: 'p o a i n', isHidden: false },
+      { input: 'aabbcc', output: '', isHidden: false },
+      { input: 'abcabc', output: '', isHidden: true },
+      { input: 'hello', output: 'h e o', isHidden: true },
+      { input: 'abcd', output: 'a b c d', isHidden: true },
+      { input: 'aaa', output: '', isHidden: true },
+      { input: 'ababa', output: 'b', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'check-if-two-strings-are-anagram-of-each-other': {
+    statement: `## 📝 Problem Statement
+Given two strings s and t, check if they are anagrams of each other. Two strings are anagrams if one can be rearranged to form the other using the same characters with the same frequencies.
+
+Anagram checking is used in word games, cryptography, and data validation.
+
+**Important Notes:**
+- Compare character frequencies, not order
+- Case-sensitive comparison (uppercase and lowercase are different)
+- Strings must have exactly the same length to be anagrams
+- Special characters and spaces (if present) must also match
+
+**Algorithm Approach:**
+1. Sorting: Sort both strings and compare - if equal, they are anagrams
+2. Hash Map: Count character frequencies in both strings and compare
+3. Array: Use fixed-size array for character counts
+
+**Time Complexity:** O(n log n) for sorting approach, O(n) for hash map approach
+**Space Complexity:** O(1) if using fixed array, O(k) for hash map
+
+**Examples:**
+- Input: s = "listen", t = "silent" → Output: "true"
+  Explanation: Both have same characters: l, i, s, t, e, n
+- Input: s = "geeks", t = "kseeg" → Output: "true"
+  Explanation: Both strings contain same characters with same frequency.
+- Input: s = "abc", t = "def" → Output: "false"
+  Explanation: No common characters.
+
+Complete the isAnagram() function.`,
+    inputFormat: 'First line contains string s. Second line contains string t.',
+    outputFormat: 'Return "true" if anagrams, "false" otherwise.',
+    constraints: '1 ≤ s.length, t.length ≤ 10^4\ns and t contain lowercase English letters',
+    sampleInput: 'listen\nsilent',
+    sampleOutput: 'true',
+    testCases: [
+      { input: 'listen\nsilent', output: 'true', isHidden: false },
+      { input: 'geeks\nkseeg', output: 'true', isHidden: false },
+      { input: 'abc\ndef', output: 'false', isHidden: false },
+      { input: 'anagram\nnagaram', output: 'true', isHidden: true },
+      { input: 'ab\nba', output: 'true', isHidden: true },
+      { input: 'aab\naba', output: 'true', isHidden: true },
+      { input: 'abc\nabc', output: 'true', isHidden: true },
+      { input: 'hello\nworld', output: 'false', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'return-maximum-occurring-character-in-the-input-string': {
+    statement: `## 📝 Problem Statement
+Given a string s, return the character that appears most frequently in the string. If multiple characters have the same maximum frequency, return the one that appears first in the string.
+
+Finding the maximum occurring character is useful in text analysis, compression, and frequency analysis.
+
+**Important Notes:**
+- Return the character (not its frequency)
+- If tie, return the character that appears first
+- Case-sensitive (uppercase and lowercase are different)
+- Spaces and special characters should be considered
+
+**Algorithm Approach:**
+1. Hash Map: Count all characters, find maximum, return corresponding character
+2. Iteration: Single pass through string while maintaining running maximum
+3. Array: Use fixed-size array for efficient counting
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(k) where k = number of unique characters
+
+**Examples:**
+- Input: s = "geeksforgeeks" → Output: "e"
+  Explanation: 'e' appears 4 times, which is maximum.
+- Input: s = "abcccdddee" → Output: "d"
+  Explanation: Both 'd' and 'e' appear 3 times, but 'd' appears at lower index.
+- Input: s = "aabbcc" → Output: "a"
+  Explanation: All characters appear 2 times, 'a' appears first.
+
+Complete the maxOccurringChar() function.`,
+    inputFormat: 'A single line containing string s.',
+    outputFormat: 'Return the character with maximum frequency (single character as output).',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters (a-z, A-Z)',
+    sampleInput: 'geeksforgeeks',
+    sampleOutput: 'e',
+    testCases: [
+      { input: 'geeksforgeeks', output: 'e', isHidden: false },
+      { input: 'abcccdddee', output: 'd', isHidden: false },
+      { input: 'aabbcc', output: 'a', isHidden: false },
+      { input: 'aaa', output: 'a', isHidden: true },
+      { input: 'programming', output: 'g', isHidden: true },
+      { input: 'mississippi', output: 's', isHidden: true },
+      { input: 'abcd', output: 'a', isHidden: true },
+      { input: 'hello', output: 'l', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'remove-all-duplicates-from-the-input-string': {
+    statement: `## 📝 Problem Statement
+Given a string s, remove all duplicate characters and return the resulting string. Keep only the first occurrence of each character, removing all subsequent duplicates.
+
+Duplicate removal is useful in data deduplication, unique character extraction, and text processing.
+
+**Important Notes:**
+- Keep only the first occurrence of each character
+- Maintain the order of first appearance
+- Remove all subsequent occurrences
+- Case-sensitive (uppercase and lowercase are different)
+
+**Algorithm Approach:**
+1. Hash Set: Track seen characters, keep only first occurrence
+2. Ordered Set: Use data structure that maintains insertion order
+3. Index Array: Mark positions to keep
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(k) where k = number of unique characters
+
+**Examples:**
+- Input: s = "geeksforgeeks" → Output: "geksfor"
+  Explanation: Remove duplicate g, e, e, k, s.
+- Input: s = "hello" → Output: "helo"
+  Explanation: 'l' appears twice, keep first occurrence.
+- Input: s = "aabbcc" → Output: "abc"
+  Explanation: All duplicates are removed.
+
+Complete the removeDuplicates() function.`,
+    inputFormat: 'A single line containing string s.',
+    outputFormat: 'Return the string with all duplicate characters removed (keeping first occurrence).',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains lowercase English letters',
+    sampleInput: 'geeksforgeeks',
+    sampleOutput: 'geksfor',
+    testCases: [
+      { input: 'geeksforgeeks', output: 'geksfor', isHidden: false },
+      { input: 'hello', output: 'helo', isHidden: false },
+      { input: 'aabbcc', output: 'abc', isHidden: false },
+      { input: 'abcd', output: 'abcd', isHidden: true },
+      { input: 'aaa', output: 'a', isHidden: true },
+      { input: 'programming', output: 'progamin', isHidden: true },
+      { input: 'mississippi', output: 'misp', isHidden: true },
+      { input: 'aaabbbccc', output: 'abc', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'print-all-the-duplicates-in-the-input-string': {
+    statement: `## 📝 Problem Statement
+Given a string s, identify and print all characters that appear more than once. A duplicate character is one that occurs 2 or more times in the string.
+
+Duplicate detection is useful in data validation, fraud detection, and text analysis.
+
+**Important Notes:**
+- Print each duplicate character only once
+- Display in order of first appearance
+- Include duplicates only (characters appearing > 1 time)
+- Case-sensitive (uppercase and lowercase are different)
+
+**Algorithm Approach:**
+1. Hash Map: Count frequency of each character, print those with count > 1
+2. Two-pass: First count, second pass output
+3. Sorting: Sort and identify consecutive duplicates
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(k) where k = number of unique characters
+
+**Examples:**
+- Input: s = "geeksforgeeks" → Output: "g e k s f o r" (or similar format)
+  Explanation: Characters appearing more than once.
+- Input: s = "hello" → Output: "l"
+  Explanation: Only 'l' appears twice.
+- Input: s = "abcd" → Output: "" (or none/empty)
+  Explanation: No duplicate characters.
+
+Complete the printDuplicates() function.`,
+    inputFormat: 'A single line containing string s.',
+    outputFormat: 'Print all duplicate characters space-separated in order of first appearance. Empty line if no duplicates.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains lowercase English letters',
+    sampleInput: 'geeksforgeeks',
+    sampleOutput: 'g e k s f o r',
+    testCases: [
+      { input: 'geeksforgeeks', output: 'g e k s f o r', isHidden: false },
+      { input: 'hello', output: 'l', isHidden: false },
+      { input: 'abcd', output: '', isHidden: false },
+      { input: 'aabbcc', output: 'a b c', isHidden: true },
+      { input: 'aaa', output: 'a', isHidden: true },
+      { input: 'programming', output: 'p r o g m', isHidden: true },
+      { input: 'mississippi', output: 'm i s p', isHidden: true },
+      { input: 'uniqueness', output: 'u e', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'remove-characters-from-first-string-present-in-the-second-string': {
+    statement: `## 📝 Problem Statement
+Given two strings s1 and s2, remove all characters from s1 that are present in s2. Keep only characters from s1 that are NOT in s2, maintaining the original order.
+
+String filtering is useful in text processing, data cleaning, and selective character preservation.
+
+**Important Notes:**
+- Remove from s1 characters that appear anywhere in s2
+- Maintain the order of remaining characters from s1
+- Case-sensitive comparison
+- Remove all occurrences of matching characters
+
+**Algorithm Approach:**
+1. Hash Set: Create set of characters in s2, filter s1
+2. Two-pointer: Iterate s1, check each character against s2
+3. Built-in functions: Use filter/map operations
+
+**Time Complexity:** O(n + m) where n = s1 length, m = s2 length
+**Space Complexity:** O(m) for character set from s2
+
+**Examples:**
+- Input: s1 = "geeksforgeeks", s2 = "aeiou" → Output: "gksfrgks"
+  Explanation: Remove all vowels (a, e, i, o, u).
+- Input: s1 = "hello", s2 = "aeiou" → Output: "hll"
+  Explanation: Remove 'e' and 'o'.
+- Input: s1 = "abc", s2 = "xyz" → Output: "abc"
+  Explanation: No common characters, return original.
+
+Complete the removeCharacters() function.`,
+    inputFormat: 'First line contains s1. Second line contains s2.',
+    outputFormat: 'Return characters from s1 that are not in s2, maintaining order.',
+    constraints: '1 ≤ s1.length, s2.length ≤ 10^4\ns1 and s2 contain lowercase English letters',
+    sampleInput: 'geeksforgeeks\naeiou',
+    sampleOutput: 'gksfrgks',
+    testCases: [
+      { input: 'geeksforgeeks\naeiou', output: 'gksfrgks', isHidden: false },
+      { input: 'hello\naeiou', output: 'hll', isHidden: false },
+      { input: 'abc\nxyz', output: 'abc', isHidden: false },
+      { input: 'abcabc\nabc', output: '', isHidden: true },
+      { input: 'programming\naeiou', output: 'prgrmmng', isHidden: true },
+      { input: 'hello\nlo', output: 'he', isHidden: true },
+      { input: 'mississippi\nsimp', output: '', isHidden: true },
+      { input: 'geeksforgeeks\nxyz', output: 'geeksforgeeks', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'count-number-of-words-in-a-given-string': {
+    statement: `## 📝 Problem Statement
+Given a string s, count the total number of words in the string. A word is defined as a sequence of non-space characters separated by one or more spaces.
+
+Word counting is fundamental in text processing, natural language analysis, and document metrics.
+
+**Important Notes:**
+- Words are separated by spaces (one or more)
+- Leading and trailing spaces should be handled
+- Count only non-empty words
+- Special characters attached to words count as part of the word
+
+**Algorithm Approach:**
+1. Split approach: Split by spaces and count non-empty parts
+2. Iteration: Iterate through string, count word transitions
+3. Regex: Use pattern matching for word boundaries
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(1) for iteration approach, O(k) for split approach
+
+**Examples:**
+- Input: s = "hello world" → Output: 2
+  Explanation: Two words separated by space.
+- Input: s = "  hello   world  " → Output: 2
+  Explanation: Extra spaces are ignored, still 2 words.
+- Input: s = "geeksforgeeks" → Output: 1
+  Explanation: Single word without spaces.
+
+Complete the countWords() function.`,
+    inputFormat: 'A single line containing string s with words separated by spaces.',
+    outputFormat: 'Return the count of words as a single integer.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters and spaces',
+    sampleInput: 'hello world',
+    sampleOutput: '2',
+    testCases: [
+      { input: 'hello world', output: '2', isHidden: false },
+      { input: '  hello   world  ', output: '2', isHidden: false },
+      { input: 'geeksforgeeks', output: '1', isHidden: false },
+      { input: 'a b c d e', output: '5', isHidden: true },
+      { input: 'hello world geeks', output: '3', isHidden: true },
+      { input: '   ', output: '0', isHidden: true },
+      { input: 'the quick brown fox', output: '4', isHidden: true },
+      { input: 'singularword', output: '1', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'change-every-letter-with-the-next-lexicographic-alphabet-in-the-given-string': {
+    statement: `## 📝 Problem Statement
+Given a string s consisting of lowercase English letters, change every letter to the next lexicographic alphabet. The letter 'z' should wrap around to 'a'.
+
+Character transformation is useful in cryptography, Caesar cipher implementation, and text encoding.
+
+**Important Notes:**
+- Each letter changes to the next one (a→b, b→c, ..., z→a)
+- Only lowercase letters are transformed
+- Non-alphabetic characters remain unchanged
+- Wrap-around: 'z' becomes 'a'
+
+**Algorithm Approach:**
+1. Direct transformation: Map each character to next
+2. ASCII arithmetic: Use character codes for transformation
+3. Modulo approach: Use modulo 26 for wrap-around
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(n) for resulting string
+
+**Examples:**
+- Input: s = "abcxyz" → Output: "bcdyza"
+  Explanation: Each letter shifts to next, z wraps to a.
+- Input: s = "hello" → Output: "ifmmp"
+  Explanation: h→i, e→f, l→m, l→m, o→p.
+- Input: s = "xyz" → Output: "yza"
+  Explanation: x→y, y→z, z→a.
+
+Complete the nextAlphabet() function.`,
+    inputFormat: 'A single line containing string s of lowercase English letters.',
+    outputFormat: 'Return the string with each letter changed to next lexicographic alphabet.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains lowercase English letters',
+    sampleInput: 'abcxyz',
+    sampleOutput: 'bcdyza',
+    testCases: [
+      { input: 'abcxyz', output: 'bcdyza', isHidden: false },
+      { input: 'hello', output: 'ifmmp', isHidden: false },
+      { input: 'xyz', output: 'yza', isHidden: false },
+      { input: 'z', output: 'a', isHidden: true },
+      { input: 'abc', output: 'bcd', isHidden: true },
+      { input: 'zzz', output: 'aaa', isHidden: true },
+      { input: 'programming', output: 'qsphsnnnjoh', isHidden: true },
+      { input: 'geeksforgeeks', output: 'hfflrugshfflr', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'write-a-program-to-find-the-largest-word-in-a-given-string': {
+    statement: `## 📝 Problem Statement
+Given a string s containing words separated by spaces, find and return the largest word. A word is defined as a sequence of non-space characters. The largest word is the one with maximum length.
+
+Finding the longest word is useful in text analysis, word statistics, and natural language processing.
+
+**Important Notes:**
+- Words are separated by spaces (one or more)
+- Return the word itself, not its length
+- If multiple words have same length, return the first one
+- Handle leading/trailing spaces
+
+**Algorithm Approach:**
+1. Split: Split string by spaces, find longest
+2. Iteration: Iterate through string, track current word and maximum
+3. Regex: Use pattern matching to extract words
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(m) where m = length of longest word
+
+**Examples:**
+- Input: s = "I am learning programming" → Output: "programming"
+  Explanation: programming (11) is longest.
+- Input: s = "hello world geeks" → Output: "hello" or "world"
+  Explanation: hello, world, geeks have lengths 5, 5, 5; return first.
+- Input: s = "a ab abc" → Output: "abc"
+  Explanation: abc is longest with length 3.
+
+Complete the largestWord() function.`,
+    inputFormat: 'A single line containing string s with words separated by spaces.',
+    outputFormat: 'Return the largest word (by length).',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters and spaces',
+    sampleInput: 'I am learning programming',
+    sampleOutput: 'programming',
+    testCases: [
+      { input: 'I am learning programming', output: 'programming', isHidden: false },
+      { input: 'hello world geeks', output: 'hello', isHidden: false },
+      { input: 'a ab abc', output: 'abc', isHidden: false },
+      { input: 'the quick brown fox jumps', output: 'quick', isHidden: true },
+      { input: 'coding is fun', output: 'coding', isHidden: true },
+      { input: 'geeksforgeeks', output: 'geeksforgeeks', isHidden: true },
+      { input: 'a', output: 'a', isHidden: true },
+      { input: 'computer science algorithm', output: 'computer', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'write-a-program-to-sort-characters-in-a-string': {
+    statement: `## 📝 Problem Statement
+Given a string s consisting of lowercase English letters, sort all characters alphabetically and return the sorted string.
+
+Character sorting is useful in lexicographic ordering, anagram detection, and text normalization.
+
+**Important Notes:**
+- Sort all characters alphabetically
+- Maintain all characters (no removal)
+- Case matters if mixed case present
+- Result should be a string, not array
+
+**Algorithm Approach:**
+1. Convert and sort: Convert to array, sort, convert back
+2. Counting sort: Use count array for efficient sorting
+3. Built-in sort: Use language sorting functions
+
+**Time Complexity:** O(n log n) for comparison sort, O(n) for counting sort
+**Space Complexity:** O(n) for result string
+
+**Examples:**
+- Input: s = "geeksforgeeks" → Output: "eeeefggkkorss"
+  Explanation: All characters sorted alphabetically.
+- Input: s = "hello" → Output: "ehllo"
+  Explanation: Characters sorted in order.
+- Input: s = "dcba" → Output: "abcd"
+  Explanation: Reverse string becomes sorted.
+
+Complete the sortCharacters() function.`,
+    inputFormat: 'A single line containing string s of lowercase English letters.',
+    outputFormat: 'Return the string with all characters sorted alphabetically.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains lowercase English letters',
+    sampleInput: 'geeksforgeeks',
+    sampleOutput: 'eeeefggkkorss',
+    testCases: [
+      { input: 'geeksforgeeks', output: 'eeeefggkkorss', isHidden: false },
+      { input: 'hello', output: 'ehllo', isHidden: false },
+      { input: 'dcba', output: 'abcd', isHidden: false },
+      { input: 'abc', output: 'abc', isHidden: true },
+      { input: 'cba', output: 'abc', isHidden: true },
+      { input: 'aabbcc', output: 'aabbcc', isHidden: true },
+      { input: 'zzaabb', output: 'aabbzz', isHidden: true },
+      { input: 'programming', output: 'aggimmnoprr', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'write-a-program-to-find-a-word-in-a-given-string-which-has-the-highest-number-of-repeated-letters': {
+    statement: `## 📝 Problem Statement
+Given a string s containing words separated by spaces, find the word that has the highest number of repeated (duplicate) letters. If multiple words have the same number of repeated letters, return the first one.
+
+Identifying words with repeated letters is useful in text analysis and pattern detection.
+
+**Important Notes:**
+- Count how many characters repeat in each word
+- A character repeating means appearing more than once
+- Count unique characters that repeat (not total repetitions)
+- Words separated by spaces
+
+**Algorithm Approach:**
+1. Split and analyze: Split into words, check each word
+2. Frequency map: Create frequency map for each word
+3. Iteration: Track repeating characters
+
+**Time Complexity:** O(n) where n = total length of string
+**Space Complexity:** O(k) where k = max word length
+
+**Examples:**
+- Input: s = "a aa aaa b bb bbb" → Output: "aaa"
+  Explanation: aaa has 1 unique repeated letter (a appears 3 times).
+- Input: s = "hello world programming" → Output: "programming"
+  Explanation: programming has 2 repeated chars (g appears 2 times, m appears 2 times).
+- Input: s = "abc def ghi" → Output: "abc"
+  Explanation: No words have repeated letters; return first.
+
+Complete the wordWithMostRepeats() function.`,
+    inputFormat: 'A single line containing string s with words separated by spaces.',
+    outputFormat: 'Return the word with the highest number of repeated (duplicate) characters.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains English letters and spaces',
+    sampleInput: 'a aa aaa b bb bbb',
+    sampleOutput: 'aaa',
+    testCases: [
+      { input: 'a aa aaa b bb bbb', output: 'aaa', isHidden: false },
+      { input: 'hello world programming', output: 'programming', isHidden: false },
+      { input: 'abc def ghi', output: 'abc', isHidden: false },
+      { input: 'geeks for geeks', output: 'geeks', isHidden: true },
+      { input: 'book look tell', output: 'book', isHidden: true },
+      { input: 'aabbcc ddeeff', output: 'aabbcc', isHidden: true },
+      { input: 'mississippi', output: 'mississippi', isHidden: true },
+      { input: 'unique words here', output: 'unique', isHidden: true }
+    ],
+    timeLimit: 1500,
+    memoryLimit: 128
+  },
+  'count-common-sub-sequence-in-two-strings': {
+    statement: `## 📝 Problem Statement
+Given two strings s and t, return the number of distinct subsequences of s which equal t. A subsequence is derived by deleting some (or not) characters without changing the order of remaining characters.
+
+Subsequence counting is used in sequence alignment, DNA analysis, and dynamic programming problems.
+
+**Important Notes:**
+- Count distinct subsequences (not occurrences)
+- Subsequence maintains order but characters need not be consecutive
+- Case-sensitive comparison
+- Empty subsequence counts as 1 if target is empty
+
+**Algorithm Approach:**
+1. Dynamic Programming: Create 2D DP table
+2. Recursion with Memoization: Track positions in both strings
+3. Bottom-up DP: Fill table iteratively
+
+**Time Complexity:** O(m*n) where m = s.length, n = t.length
+**Space Complexity:** O(m*n) for DP table
+
+**Examples:**
+- Input: s = "babgbag", t = "bag" → Output: 5
+  Explanation: [ba_g_], [ba__g], [b_a_g], [__a_bag], [b_agba_]
+- Input: s = "raban", t = "ban" → Output: 3
+  Explanation: [r_aban], [rab_an], [raba_n]
+- Input: s = "abc", t = "abc" → Output: 1
+  Explanation: Only one way to form "abc" from "abc".
+
+Complete the distinctSubsequences() function.`,
+    inputFormat: 'First line contains s. Second line contains t.',
+    outputFormat: 'Return the number of distinct subsequences of s that equal t.',
+    constraints: '1 ≤ s.length, t.length ≤ 1000\ns and t contain lowercase English letters',
+    sampleInput: 'babgbag\nbag',
+    sampleOutput: '5',
+    testCases: [
+      { input: 'babgbag\nbag', output: '5', isHidden: false },
+      { input: 'raban\nban', output: '3', isHidden: false },
+      { input: 'abc\nabc', output: '1', isHidden: false },
+      { input: 'aaaa\naa', output: '6', isHidden: true },
+      { input: 'abc\nxy', output: '0', isHidden: true },
+      { input: 'a\na', output: '1', isHidden: true },
+      { input: 'geeksforgeeks\ngeeks', output: '8', isHidden: true },
+      { input: 'programming\ngrm', output: '4', isHidden: true }
+    ],
+    timeLimit: 2000,
+    memoryLimit: 256
+  },
+  'check-if-two-strings-match-where-one-string-contains-wildcard-characters': {
+    statement: `## 📝 Problem Statement
+Given two strings s and p where p contains wildcard characters ('*' and '?'), check if p matches s.
+- '?' matches any single character
+- '*' matches any sequence of characters (including empty sequence)
+
+Wildcard matching is used in file systems, pattern matching, and regex implementations.
+
+**Important Notes:**
+- '*' can match zero or more characters
+- '?' matches exactly one character
+- Case-sensitive matching
+- Both strings are non-empty
+
+**Algorithm Approach:**
+1. Dynamic Programming: Create 2D DP table for matching
+2. Greedy with Backtracking: Process character by character
+3. Two-pointer technique with wildcards
+
+**Time Complexity:** O(m*n) where m = s.length, n = p.length
+**Space Complexity:** O(m*n) for DP table
+
+**Examples:**
+- Input: s = "aa", p = "a" → Output: "false"
+  Explanation: Pattern "a" cannot match "aa"
+- Input: s = "aa", p = "*" → Output: "true"
+  Explanation: '*' matches any sequence including "aa"
+- Input: s = "cb", p = "?a" → Output: "false"
+  Explanation: '?' matches 'c' but 'a' cannot match 'b'
+
+Complete the isMatch() function.`,
+    inputFormat: 'First line contains s (string). Second line contains p (pattern with wildcards).',
+    outputFormat: 'Return "true" if pattern matches, "false" otherwise.',
+    constraints: '1 ≤ s.length, p.length ≤ 2000\ns contains only lowercase English letters\np contains lowercase English letters, "*", and "?"',
+    sampleInput: 'aa\n*',
+    sampleOutput: 'true',
+    testCases: [
+      { input: 'aa\n*', output: 'true', isHidden: false },
+      { input: 'aa\na', output: 'false', isHidden: false },
+      { input: 'cb\n?a', output: 'false', isHidden: false },
+      { input: 'adceb\n*a*b', output: 'true', isHidden: true },
+      { input: 'acdcb\na*c?b', output: 'false', isHidden: true },
+      { input: 'aab\nc*a*b', output: 'false', isHidden: true },
+      { input: 'mississippi\nm*iss*p*.', output: 'false', isHidden: true },
+      { input: 'geeks\ng*k*', output: 'true', isHidden: true }
+    ],
+    timeLimit: 2000,
+    memoryLimit: 256
+  },
+  'palindrome-string': {
+    statement: `## 📝 Problem Statement
+Already covered in 'Check if a given string is palindrome or not'. This is a reference problem.
+
+Given a string s, check if it reads the same forwards and backwards (ignoring spaces and case if applicable).
+
+A palindrome is a word, phrase, or sequence that reads the same in both directions.
+
+**Examples:**
+- Input: s = "abba" → Output: "true"
+- Input: s = "abc" → Output: "false"
+- Input: s = "a" → Output: "true"
+
+Complete the isPalindrome() function.`,
+    inputFormat: 'A single line containing string s.',
+    outputFormat: 'Return "true" if palindrome, "false" otherwise.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains lowercase English letters',
+    sampleInput: 'abba',
+    sampleOutput: 'true',
+    testCases: [
+      { input: 'abba', output: 'true', isHidden: false },
+      { input: 'abc', output: 'false', isHidden: false },
+      { input: 'a', output: 'true', isHidden: false },
+      { input: 'racecar', output: 'true', isHidden: true },
+      { input: 'hello', output: 'false', isHidden: true },
+      { input: 'aabbaa', output: 'true', isHidden: true },
+      { input: 'geeksforgeeks', output: 'false', isHidden: true },
+      { input: 'madam', output: 'true', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'find-the-longest-string': {
+    statement: `## 📝 Problem Statement
+Given an array of strings words[], find the longest string in words[] such that every prefix of it is also present in the array words[].
+
+A prefix of a string is any substring starting from the beginning. For example, prefixes of "problem" are: "p", "pr", "pro", "prob", "probl", "problem".
+
+This problem requires understanding of prefix relationships and array searching strategies.
+
+**Important Notes:**
+- Every prefix of the result string must be present in the array
+- If multiple strings have the same maximum length, return the lexicographically smallest one
+- All prefixes of the answer string must be present in the input array
+- A single character is always a valid prefix
+
+**Algorithm Approach:**
+1. Brute Force: Check each word with all prefixes against the array
+2. Hash Set: Convert array to set for O(1) prefix lookup
+3. Trie: Build trie and traverse for words with all prefixes
+4. Sorting + Checking: Sort by length descending, lexicographically ascending
+
+**Time Complexity:** O(n * m * k) where n = array length, m = max string length, k = average prefix count
+**Space Complexity:** O(n * m) for hash set or trie
+
+**Examples:**
+- Input: words[] = ["p", "pr", "pro", "probl", "problem", "pros", "process", "processor"]
+  Output: "pros"
+  Explanation: "pros" has all prefixes ("p", "pr", "pro", "pros") in the array. "problem" also qualifies but is lexicographically larger.
+
+- Input: words[] = ["ab", "a", "abc", "abd"]
+  Output: "abc"
+  Explanation: Both "abc" and "abd" have all prefixes ("a", "ab") in array. "abc" is lexicographically smaller.
+
+- Input: words[] = ["car", "card", "care", "careful"]
+  Output: "careful"
+  Explanation: "careful" has all prefixes ("c", "ca", "car", "care", "caref", "carefu", "careful") present.
+
+Complete the findLongestString() function.`,
+    inputFormat: 'First line contains n (size of array). Next n lines contain strings, one per line.',
+    outputFormat: 'Return the longest string where all its prefixes are present in the array. If multiple strings have same length, return lexicographically smallest.',
+    constraints: '1 ≤ n ≤ 10^4\n1 ≤ length of each string ≤ 100\nAll strings contain only lowercase English letters\nAll strings are unique',
+    sampleInput: '8\np\npr\npro\nprobl\nproblem\npros\nprocess\nprocessor',
+    sampleOutput: 'pros',
+    testCases: [
+      { input: '8\np\npr\npro\nprobl\nproblem\npros\nprocess\nprocessor', output: 'pros', isHidden: false },
+      { input: '4\nab\na\nabc\nabd', output: 'abc', isHidden: false },
+      { input: '7\ncar\ncard\ncare\ncareful\nc\nca\ncare', output: 'careful', isHidden: false },
+      { input: '3\na\nab\nabc', output: 'abc', isHidden: true },
+      { input: '1\na', output: 'a', isHidden: true },
+      { input: '6\nw\nwo\nwor\nworl\nworld\nword', output: 'world', isHidden: true },
+      { input: '5\nx\nxi\nxia\nxian\nxians', output: 'xians', isHidden: true },
+      { input: '4\ncode\nc\nco\ncod', output: 'cod', isHidden: true }
+    ],
+    timeLimit: 2000,
+    memoryLimit: 256
+  },
+  'longest-common-prefix': {
+    statement: `## 📝 Problem Statement
+Given an array of strings words[], write a function to find the longest common prefix string amongst all the strings.
+
+The longest common prefix (LCP) is the longest string that is a prefix of all strings in the array.
+
+**Important Notes:**
+- If there is no common prefix, return empty string
+- All strings must be considered
+- Comparison is case-sensitive
+- Prefixes must start from the beginning of each string
+
+**Algorithm Approach:**
+1. Horizontal scanning: Compare strings one by one
+2. Vertical scanning: Compare character by character across all strings
+3. Divide and Conquer: Split array and find LCP recursively
+4. Trie: Build trie and find common path
+
+**Time Complexity:** O(n * m) where n = number of strings, m = length of shortest string
+**Space Complexity:** O(1) excluding result
+
+**Examples:**
+- Input: words[] = ["flower", "flow", "flight"]
+  Output: "fl"
+  Explanation: "fl" is common prefix in all three strings.
+
+- Input: words[] = ["dog", "racecar", "car"]
+  Output: ""
+  Explanation: No common prefix exists.
+
+- Input: words[] = ["interspecies", "interstellar", "interstate"]
+  Output: "inters"
+  Explanation: "inters" is the longest common prefix.
+
+Complete the longestCommonPrefix() function.`,
+    inputFormat: 'First line contains n (number of strings). Next n lines contain strings.',
+    outputFormat: 'Return the longest common prefix string. Return empty string if no common prefix.',
+    constraints: '1 ≤ n ≤ 200\n0 ≤ words[i].length ≤ 200\nwords[i] consists of only lowercase English letters',
+    sampleInput: '3\nflower\nflow\nflight',
+    sampleOutput: 'fl',
+    testCases: [
+      { input: '3\nflower\nflow\nflight', output: 'fl', isHidden: false },
+      { input: '3\ndog\nracecar\ncar', output: '', isHidden: false },
+      { input: '3\ninterspecies\ninterstellar\ninterstate', output: 'inters', isHidden: false },
+      { input: '1\nhello', output: 'hello', isHidden: true },
+      { input: '2\na\na', output: 'a', isHidden: true },
+      { input: '3\ngeeks\ngeeks\ngeeks', output: 'geeks', isHidden: true },
+      { input: '3\nabc\nabd\nabe', output: 'ab', isHidden: true },
+      { input: '4\ntest\ntesting\ntester\ntests', output: 'test', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'check-if-string-is-rotated-by-two-places': {
+    statement: `## 📝 Problem Statement
+Given two strings s1 and s2, determine if one string is a rotation of another by 2 places.
+
+A rotation by 2 places means moving the first 2 characters to the end (or equivalently, moving the last 2 characters to the beginning).
+
+**Important Notes:**
+- Rotation is circular and specific (exactly 2 places)
+- String lengths must be equal (after accounting for rotation)
+- Case-sensitive comparison
+- Both forward (left) and backward (right) rotations by 2 places are valid
+
+**Algorithm Approach:**
+1. Direct checking: Compare after rotating by 2 places
+2. Substring approach: Check if rotated string is substring of concatenated string
+3. Character-by-character verification
+
+**Time Complexity:** O(n) where n = length of string
+**Space Complexity:** O(n) for rotated string
+
+**Examples:**
+- Input: s1 = "waterbottle", s2 = "tlewater"
+  Output: "true"
+  Explanation: First 2 chars "wa" moved to end gives "terbottlewa", not matching. 
+               Last 2 chars "le" moved to start gives "lewaterbot" - check other direction.
+
+- Input: s1 = "abcd", s2 = "cdab"
+  Output: "true"
+  Explanation: "cd" at start moved to end gives "cdab" (rotation by 2 to right).
+
+- Input: s1 = "hello", s2 = "llohe"
+  Output: "true"
+  Explanation: "he" moved to end gives "llohe" (rotation by 2 to left).
+
+Complete the isRotatedByTwo() function.`,
+    inputFormat: 'First line contains s1. Second line contains s2.',
+    outputFormat: 'Return "true" if s2 is rotation of s1 by exactly 2 places, "false" otherwise.',
+    constraints: '1 ≤ s1.length, s2.length ≤ 10^4\ns1 and s2 contain only lowercase English letters',
+    sampleInput: 'abcd\ncdab',
+    sampleOutput: 'true',
+    testCases: [
+      { input: 'abcd\ncdab', output: 'true', isHidden: false },
+      { input: 'hello\nllhe', output: 'false', isHidden: false },
+      { input: 'hello\nllohe', output: 'true', isHidden: false },
+      { input: 'ab\nab', output: 'false', isHidden: true },
+      { input: 'abc\ncab', output: 'true', isHidden: true },
+      { input: 'geeks\nksge', output: 'false', isHidden: true },
+      { input: 'programming\nmmprogrammi', output: 'true', isHidden: true },
+      { input: 'rotate\naterot', output: 'true', isHidden: true }
+    ],
+    timeLimit: 1000,
+    memoryLimit: 128
+  },
+  'check-if-string-can-be-made-equal-by-reverse-operations': {
+    statement: `## 📝 Problem Statement
+Given a string s, check if the string can be made equal by performing reverse operations. In each operation, you can reverse any substring of length 2.
+
+By repeatedly reversing substrings of exactly length 2, determine if you can make the string equal to itself (check for palindrome possibility) or transform it.
+
+**Important Notes:**
+- Each operation reverses exactly 2 consecutive characters
+- You can perform unlimited operations
+- Goal is to check if string can achieve target configuration
+- Adjacent character swaps are effectively what happen
+
+**Algorithm Approach:**
+1. Parity analysis: Check if positions can be rearranged
+2. Sorting simulation: See what permutations are achievable
+3. Graph approach: Build graph of reachable configurations
+
+**Time Complexity:** O(n) for analysis
+**Space Complexity:** O(n)
+
+**Examples:**
+- Input: s = "ab"
+  Output: "true"
+  Explanation: Can reverse to get "ba".
+
+- Input: s = "abc"
+  Output: "true"
+  Explanation: Multiple reverse operations can rearrange.
+
+- Input: s = "abcd"
+  Output: "true"
+  Explanation: Any permutation achievable through adjacent swaps.
+
+Complete the canMakeEqual() function.`,
+    inputFormat: 'A single line containing string s.',
+    outputFormat: 'Return "true" if string can be rearranged, "false" otherwise.',
+    constraints: '1 ≤ s.length ≤ 10^4\ns contains only lowercase English letters',
+    sampleInput: 'ab',
+    sampleOutput: 'true',
+    testCases: [
+      { input: 'ab', output: 'true', isHidden: false },
+      { input: 'abc', output: 'true', isHidden: false },
+      { input: 'abcd', output: 'true', isHidden: false },
+      { input: 'a', output: 'true', isHidden: true },
+      { input: 'aa', output: 'true', isHidden: true },
+      { input: 'hello', output: 'true', isHidden: true },
+      { input: 'geeks', output: 'true', isHidden: true },
+      { input: 'programming', output: 'true', isHidden: true }
+    ],
+    timeLimit: 1500,
+    memoryLimit: 128
+  },
+  'k-maximum-sum-combinations-from-two-arrays': {
+    statement: `## 📝 Problem Statement
+Given two integer arrays a[] and b[] of the same length, and a positive integer k, the goal is to find the top k maximum sum combinations, where each combination is formed by adding one element from a and one from b. Each index from both arrays can be used at most once in a pair. Return the k largest sums in descending order.
+
+**Problem Details:**
+- Two arrays of integers: a[] and b[]
+- Each combination pairs one element from a[] with one element from b[]
+- Each index can be used at most once in a single pair
+- Find the k largest possible sums
+- Return results in descending order
+
+**Algorithm Approach:**
+1. **Brute Force Approach:**
+   - Generate all n² possible combinations
+   - Sort all combinations
+   - Return top k
+   - Time: O(n² log n), Space: O(n²)
+
+2. **Max Heap Approach (Recommended):**
+   - Sort both arrays
+   - Use max heap to track the largest sums
+   - Extract k times from heap
+   - Time: O(n log n + k log n), Space: O(k)
+
+3. **Two Pointers Approach:**
+   - Sort both arrays
+   - Use two pointers to find maximum combinations
+   - Time: O(n log n + k), Space: O(k)
+
+4. **Optimized Heap with Indices:**
+   - Maintain heap of (sum, index_a, index_b) tuples
+   - Use visited set to avoid duplicates
+   - Time: O(n log n + k log k)
+
+**Examples:**
+
+Input: a[] = [3, 2], b[] = [1, 4], k = 2
+Output: [7, 6]
+Explanation: Possible sums: 3 + 1 = 4, 3 + 4 = 7, 2 + 1 = 3, 2 + 4 = 6. Top 2 sums are 7 and 6.
+
+Input: a[] = [1, 4, 2, 3], b[] = [2, 5, 1, 6], k = 3
+Output: [10, 9, 9]
+Explanation: The top 3 maximum possible sums are: 4 + 6 = 10, 3 + 6 = 9, and 4 + 5 = 9.
+
+**Time Complexity:** O(n log n + k log n) for optimized approach
+**Space Complexity:** O(k) for storing k combinations
+
+Complete the function to parse input and return the k maximum sum combinations.`,
+    inputFormat: 'First line: n (length of both arrays). Second line: n space-separated integers for array a[]. Third line: n space-separated integers for array b[]. Fourth line: k (number of combinations to find).',
+    outputFormat: 'Return k maximum sum combinations in descending order as space-separated integers on a single line.',
+    constraints: '1 ≤ n ≤ 1000\n1 ≤ k ≤ min(n², 10000)\n-10^5 ≤ a[i], b[i] ≤ 10^5',
+    sampleInput: '2\n3 2\n1 4\n2',
+    sampleOutput: '7 6',
+    testCases: [
+      { input: '2\n3 2\n1 4\n2', output: '7 6', isHidden: false },
+      { input: '4\n1 4 2 3\n2 5 1 6\n3', output: '10 9 9', isHidden: false },
+      { input: '3\n1 2 3\n1 2 3\n2', output: '6 5', isHidden: false },
+      { input: '2\n5 10\n3 7\n2', output: '17 12', isHidden: true },
+      { input: '3\n1 1 1\n1 1 1\n3', output: '2 2 2', isHidden: true },
+      { input: '4\n10 20 15 25\n5 10 8 6\n4', output: '35 32 31 30', isHidden: true },
+      { input: '3\n-5 -10 0\n1 2 3\n3', output: '3 2 1', isHidden: true },
+      { input: '5\n100 200 50 150 75\n10 20 30 15 25\n5', output: '220 215 210 205 200', isHidden: true }
+    ],
+    timeLimit: 2000,
+    memoryLimit: 256
+  },
+  'sum-of-first-n-natural-numbers': {
+    statement: `## 📝 Problem Statement
+Write a recursive function to find the sum of first n natural numbers.
+
+Natural numbers are positive integers starting from 1: 1, 2, 3, 4, 5, ...
+
+You need to implement a **recurring function** (recursive solution) that calculates the sum of the first n natural numbers.
+
+**Examples:**
+- Input: n = 3
+  Output: 6
+  Explanation: The sum of first 3 natural numbers is 1+2+3 = 6
+
+- Input: n = 7
+  Output: 28
+  Explanation: The sum of first 7 natural numbers is 1+2+3+4+5+6+7 = 28
+
+- Input: n = 1
+  Output: 1
+  Explanation: For n=1, sum is just 1
+
+- Input: n = 10
+  Output: 55
+  Explanation: 1+2+3+4+5+6+7+8+9+10 = 55
+
+**Algorithm Approach:**
+1. **Recursive Approach (Recommended):** Define a base case (when n=0 or n=1) and recursive case (n + sum(n-1))
+   - Time Complexity: O(n)
+   - Space Complexity: O(n) due to call stack
+   
+2. **Mathematical Formula:** Sum = n × (n+1) / 2
+   - Time Complexity: O(1)
+   - Space Complexity: O(1)
+
+3. **Iterative Approach:** Loop from 1 to n and accumulate sum
+   - Time Complexity: O(n)
+   - Space Complexity: O(1)
+
+**Recommended:** Implement the recursive approach as the primary solution.
+
+Complete the function signature provided in the editor to parse the input parameters and return the correct result.`,
+    inputFormat: 'A single line containing integer n (positive integer).',
+    outputFormat: 'Return the sum of first n natural numbers as a single integer.',
+    constraints: '1 ≤ n ≤ 10^6\nFor large values, ensure your recursion depth doesn\'t exceed system limits or use iteration/formula',
+    sampleInput: '3',
+    sampleOutput: '6',
+    testCases: [
+      { input: '3', output: '6', isHidden: false },
+      { input: '7', output: '28', isHidden: false },
+      { input: '10', output: '55', isHidden: false },
+      { input: '1', output: '1', isHidden: true },
+      { input: '2', output: '3', isHidden: true },
+      { input: '100', output: '5050', isHidden: true },
+      { input: '1000', output: '500500', isHidden: true },
+      { input: '999999', output: '499999500000', isHidden: true }
     ],
     timeLimit: 1000,
     memoryLimit: 128
