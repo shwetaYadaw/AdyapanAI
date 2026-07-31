@@ -242,8 +242,6 @@ model Problem {
   referenceSolution String            @db.Text
   topics            String            @db.Text
   companies         String            @db.Text
-  executionMode     String            @default("fullProgram") // "fullProgram" or "function"
-  functionSignature Json?             // Function signature for function mode
   testCases         ProblemTestCase[]
   submissions       Submission[]
   createdAt         DateTime          @default(now())
