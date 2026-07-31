@@ -16,6 +16,7 @@
     "seed": "npx ts-node --transpile-only src/scripts/seed.ts",
     "seed:challenges": "npx ts-node --transpile-only src/scripts/seedChallenges.ts",
     "seed:tcs": "npx ts-node --transpile-only src/scripts/seedTcsNqt.ts",
+    "seed:tcs-json": "npx ts-node --transpile-only src/scripts/seedTcsNqtFromJson.ts",
     "seed:tcs-reasoning": "npx ts-node --transpile-only src/scripts/seedTcsReasoningAptitude.ts",
     "seed:tcs-seating": "npx ts-node --transpile-only src/scripts/seedTcsSeatingArrangement.ts",
     "seed:tcs-circular": "npx ts-node --transpile-only src/scripts/seedTcsSeatingComprehensive.ts",
