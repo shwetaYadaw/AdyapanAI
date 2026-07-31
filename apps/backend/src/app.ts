@@ -36,6 +36,8 @@ import roadmapRoutes from './routes/roadmap.routes';
 import problemRoutes from './routes/problem.routes';
 import submissionRoutes from './routes/submission.routes';
 import puzzleRoutes from './routes/puzzle.routes';
+import contestRoutes from './routes/contest.routes';
+import aptitudeRoutes from './routes/aptitude.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -117,6 +119,8 @@ export function createApp(): Application {
   app.use('/api/v1/problems', problemRoutes);
   app.use('/api/v1/submissions', submissionRoutes);
   app.use('/api/v1/puzzles', puzzleRoutes);
+  app.use('/api/v1/contests', contestRoutes);
+  app.use('/api/v1/aptitude', aptitudeRoutes);
   app.use('/api/v1/roadmap', roadmapRoutes);
   app.use('/api/v1/notifications', notificationRoutes);
   app.use('/api/v1/upload', uploadRoutes);

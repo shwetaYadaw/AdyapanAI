@@ -16,6 +16,9 @@ interface TCSQuestion {
   topics?: string[];
 }
 
+// Hardcoded arrays kept for reference and backward compatibility
+// These are no longer used for filtering - questions are now loaded dynamically from database
+
 const ARRAY_PROBLEMS: TCSQuestion[] = [
   { title: 'Find the smallest number in an array', slug: 'find-the-smallest-number-in-an-array-tcs-nqt', difficulty: 'easy' },
   { title: 'Largest in Array', slug: 'largest-in-array-tcs-nqt', difficulty: 'easy' },
@@ -149,22 +152,34 @@ export default function TcsNqtPrepPage() {
   });
 
   const getQuestions = () => {
-    switch (activeTab) {
-      case 'arrays': return ARRAY_PROBLEMS;
-      case 'numbers': return NUMBER_PROBLEMS;
-      case 'number-system': return NUMBER_SYSTEM_PROBLEMS;
-      case 'sorting': return SORTING_PROBLEMS;
-      case 'strings': return STRING_PROBLEMS;
-      default: return ARRAY_PROBLEMS;
-    }
+    // Filter questions by category from database instead of using hardcoded lists
+    const categoryMap: Record<string, string[]> = {
+      'arrays': ['array', 'arrays'],
+      'numbers': ['number', 'numbers', 'math', 'mathematics'],
+      'number-system': ['number-system', 'binary', 'octal', 'decimal', 'conversion'],
+      'sorting': ['sorting', 'sort'],
+      'strings': ['string', 'strings']
+    };
+
+    const categoryKeywords = categoryMap[activeTab] || [];
+    
+    return storedQuestions.filter((question) => {
+      // Check if question topics include any category keywords
+      const questionTopics = (question.topics || []).map((t: string) => t.toLowerCase());
+      
+      // Check title and slug for category hints as fallback
+      const titleLower = question.title.toLowerCase();
+      const slugLower = question.slug.toLowerCase();
+      
+      return categoryKeywords.some(keyword => 
+        questionTopics.includes(keyword) || 
+        titleLower.includes(keyword) ||
+        slugLower.includes(keyword)
+      );
+    });
   };
 
-  // The local lists define the NQT sections and display order. The actual
-  // question data always comes from MySQL, so this screen cannot link to a
-  // problem that is missing from the coding portal.
-  const questions = getQuestions()
-    .map((reference) => storedQuestions.find((question) => question.slug === reference.slug))
-    .filter((question): question is TCSQuestion => Boolean(question));
+  const questions = getQuestions();
 
   return (
     <div className="page-wrapper">
