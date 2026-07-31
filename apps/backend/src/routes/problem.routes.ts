@@ -1420,3 +1420,559 @@ int main() {
     return 0;
 }`;
 }
+
+
+// POST /problems/batch/update-minimal-starter-code — Update with minimal reference code (less detailed)
+router.post('/batch/update-minimal-starter-code', authenticate, async (req, res, next) => {
+  try {
+    console.log('🔍 Updating to minimal starter code...\n');
+
+    const problems = await prisma.problem.findMany();
+    let updatedCount = 0;
+
+    for (const problem of problems) {
+      const minimalStarterCode = generateMinimalStarterCode(problem);
+
+      await prisma.problem.update({
+        where: { id: problem.id },
+        data: { starterCode: minimalStarterCode }
+      });
+
+      updatedCount++;
+      if (updatedCount % 10 === 0) {
+        console.log(`Processed ${updatedCount} problems...`);
+      }
+    }
+
+    sendSuccess({ 
+      res, 
+      message: `Successfully updated to minimal starter code for ${updatedCount} problems`, 
+      data: { processedCount: updatedCount } 
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Generate minimal starter code (similar to TCS NQT style)
+function generateMinimalStarterCode(problem: any): any {
+  const slug = problem.slug.toLowerCase();
+  const title = problem.title;
+  const functionName = slug.replace(/-/g, '').replace(/[^a-z0-9]/gi, '');
+
+  return {
+    javascript: generateMinimalJS(title, functionName),
+    python: generateMinimalPython(title, functionName),
+    java: generateMinimalJava(title, problem.slug),
+    cpp: generateMinimalCpp(title)
+  };
+}
+
+function generateMinimalJS(title: string, functionName: string): string {
+  return `// Solution for ${title}
+const fs = require('fs');
+
+function ${functionName}(input) {
+    // Write your logic here
+    // Process input and return the result
+    return "";
+}
+
+function solve() {
+    const input = fs.readFileSync(0, 'utf-8').trim();
+    if (!input) return;
+    const result = ${functionName}(input);
+    console.log(result);
+}
+solve();`;
+}
+
+function generateMinimalPython(title: string, functionName: string): string {
+  return `# Solution for ${title}
+
+def ${functionName}(input_data):
+    # Write your logic here
+    # Process input and return the result
+    return ""
+
+def solve():
+    import sys
+    input_data = sys.stdin.read().strip()
+    if not input_data:
+        return
+    result = ${functionName}(input_data)
+    print(result)
+
+if __name__ == "__main__":
+    solve()`;
+}
+
+function generateMinimalJava(title: string, slug: string): string {
+  const className = slug.split('-').map((w: string) => 
+    w.charAt(0).toUpperCase() + w.slice(1)
+  ).join('');
+
+  return `// Solution for ${title}
+import java.util.*;
+
+public class ${className} {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // Write your solution here
+        sc.close();
+    }
+}`;
+}
+
+function generateMinimalCpp(title: string): string {
+  return `// Solution for ${title}
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your solution here
+    return 0;
+}`;
+}
+
+
+// Helper function to generate comprehensive test cases (both visible and hidden)
+function generateHiddenTestCasesForProblem(problem: any): Array<{
+  input: string;
+  expectedOutput: string;
+  isHidden: boolean;
+  type: string;
+}> {
+  const slug = problem.slug.toLowerCase();
+  const title = problem.title.toLowerCase();
+  const testCases: Array<{ input: string; expectedOutput: string; isHidden: boolean; type: string }> = [];
+
+  // Array problems - comprehensive test cases
+  if (slug.includes('array') || slug.includes('element') || title.includes('array') || 
+      slug.includes('maximum') || slug.includes('minimum')) {
+    // Hidden test cases - edge cases and larger inputs
+    testCases.push(
+      { input: '1\n100', expectedOutput: '100', isHidden: true, type: 'hidden' }, // Single element
+      { input: '2\n-5 -10', expectedOutput: '-5', isHidden: true, type: 'hidden' }, // Negative numbers
+      { input: '4\n1 1 1 1', expectedOutput: '1', isHidden: true, type: 'hidden' }, // All same
+      { input: '6\n100 50 75 25 90 60', expectedOutput: '100', isHidden: true, type: 'hidden' }, // Unsorted
+      { input: '5\n-10 -20 -30 -5 -15', expectedOutput: '-5', isHidden: true, type: 'hidden' }, // All negative
+      { input: '7\n0 0 0 1 0 0 0', expectedOutput: '1', isHidden: true, type: 'hidden' }, // Mostly zeros
+      { input: '8\n1 3 5 7 9 11 13 15', expectedOutput: '15', isHidden: true, type: 'hidden' }, // Odd numbers
+      { input: '10\n10 20 30 40 50 60 70 80 90 100', expectedOutput: '100', isHidden: true, type: 'hidden' }, // Large sorted
+      { input: '3\n1000 999 1001', expectedOutput: '1001', isHidden: true, type: 'hidden' }, // Large values
+      { input: '5\n-1 0 1 -2 2', expectedOutput: '2', isHidden: true, type: 'hidden' } // Mixed positive/negative
+    );
+    return testCases;
+  }
+
+  // String problems
+  if (slug.includes('string') || slug.includes('anagram') || slug.includes('palindrome') ||
+      slug.includes('reverse')) {
+    testCases.push(
+      { input: 'a', expectedOutput: 'a', isHidden: true, type: 'hidden' }, // Single character
+      { input: 'abc', expectedOutput: 'cba', isHidden: true, type: 'hidden' }, // Short string
+      { input: 'racecar', expectedOutput: 'racecar', isHidden: true, type: 'hidden' }, // Palindrome
+      { input: 'hello world', expectedOutput: 'dlrow olleh', isHidden: true, type: 'hidden' }, // With space
+      { input: 'a b c d e', expectedOutput: 'e d c b a', isHidden: true, type: 'hidden' }, // Spaced chars
+      { input: '12345', expectedOutput: '54321', isHidden: true, type: 'hidden' }, // Numbers
+      { input: 'Programming', expectedOutput: 'gnimmargorP', isHidden: true, type: 'hidden' }, // Mixed case
+      { input: 'abcdefghij', expectedOutput: 'jihgfedcba', isHidden: true, type: 'hidden' }, // 10 chars
+      { input: 'Test123!@#', expectedOutput: '#@!321tseT', isHidden: true, type: 'hidden' }, // Special chars
+      { input: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', expectedOutput: 'ZYXWVUTSRQPONMLKJIHGFEDCBA', isHidden: true, type: 'hidden' } // Alphabet
+    );
+    return testCases;
+  }
+
+  // Sorting problems
+  if (slug.includes('sort') || title.includes('sort')) {
+    testCases.push(
+      { input: '1\n5', expectedOutput: '5', isHidden: true, type: 'hidden' }, // Single element
+      { input: '2\n10 5', expectedOutput: '5 10', isHidden: true, type: 'hidden' }, // Two elements
+      { input: '4\n4 3 2 1', expectedOutput: '1 2 3 4', isHidden: true, type: 'hidden' }, // Reverse sorted
+      { input: '4\n1 2 3 4', expectedOutput: '1 2 3 4', isHidden: true, type: 'hidden' }, // Already sorted
+      { input: '5\n5 5 5 5 5', expectedOutput: '5 5 5 5 5', isHidden: true, type: 'hidden' }, // All same
+      { input: '6\n-5 3 -1 0 7 -2', expectedOutput: '-5 -2 -1 0 3 7', isHidden: true, type: 'hidden' }, // Mixed signs
+      { input: '7\n100 50 25 75 10 90 40', expectedOutput: '10 25 40 50 75 90 100', isHidden: true, type: 'hidden' }, // Random
+      { input: '8\n8 7 6 5 4 3 2 1', expectedOutput: '1 2 3 4 5 6 7 8', isHidden: true, type: 'hidden' }, // Descending
+      { input: '5\n0 -10 10 -5 5', expectedOutput: '-10 -5 0 5 10', isHidden: true, type: 'hidden' }, // Symmetric
+      { input: '10\n9 2 7 4 1 8 3 6 5 10', expectedOutput: '1 2 3 4 5 6 7 8 9 10', isHidden: true, type: 'hidden' } // Large unsorted
+    );
+    return testCases;
+  }
+
+  // Searching problems
+  if (slug.includes('search') || title.includes('search') || slug.includes('binary')) {
+    testCases.push(
+      { input: '1 5\n5', expectedOutput: '0', isHidden: true, type: 'hidden' }, // Single element found
+      { input: '1 3\n5', expectedOutput: '-1', isHidden: true, type: 'hidden' }, // Single element not found
+      { input: '3 2\n1 2 3', expectedOutput: '1', isHidden: true, type: 'hidden' }, // Middle element
+      { input: '5 1\n1 2 3 4 5', expectedOutput: '0', isHidden: true, type: 'hidden' }, // First element
+      { input: '5 5\n1 2 3 4 5', expectedOutput: '4', isHidden: true, type: 'hidden' }, // Last element
+      { input: '6 10\n1 2 3 4 5 6', expectedOutput: '-1', isHidden: true, type: 'hidden' }, // Not found (too large)
+      { input: '6 0\n1 2 3 4 5 6', expectedOutput: '-1', isHidden: true, type: 'hidden' }, // Not found (too small)
+      { input: '8 5\n1 2 3 4 5 6 7 8', expectedOutput: '4', isHidden: true, type: 'hidden' }, // Mid in even length
+      { input: '7 4\n1 2 3 4 5 6 7', expectedOutput: '3', isHidden: true, type: 'hidden' }, // Mid in odd length
+      { input: '10 7\n1 2 3 4 5 6 7 8 9 10', expectedOutput: '6', isHidden: true, type: 'hidden' } // Large array
+    );
+    return testCases;
+  }
+
+  // Math/Number problems (Fibonacci, Factorial, Prime, etc.)
+  if (slug.includes('number') || slug.includes('digit') || slug.includes('prime') || 
+      slug.includes('factorial') || slug.includes('fibonacci') || slug.includes('sum') ||
+      slug.includes('bit')) {
+    testCases.push(
+      { input: '0', expectedOutput: '0', isHidden: true, type: 'hidden' }, // Zero
+      { input: '1', expectedOutput: '1', isHidden: true, type: 'hidden' }, // One
+      { input: '2', expectedOutput: '2', isHidden: true, type: 'hidden' }, // Two
+      { input: '7', expectedOutput: '7', isHidden: true, type: 'hidden' }, // Small number
+      { input: '15', expectedOutput: '15', isHidden: true, type: 'hidden' }, // Medium
+      { input: '20', expectedOutput: '20', isHidden: true, type: 'hidden' }, // Round number
+      { input: '25', expectedOutput: '25', isHidden: true, type: 'hidden' }, // Square
+      { input: '50', expectedOutput: '50', isHidden: true, type: 'hidden' }, // Half hundred
+      { input: '99', expectedOutput: '99', isHidden: true, type: 'hidden' }, // Near hundred
+      { input: '100', expectedOutput: '100', isHidden: true, type: 'hidden' } // Hundred
+    );
+    return testCases;
+  }
+
+  // Dynamic Programming (Climbing Stairs specific)
+  if (slug.includes('climb') || slug.includes('stair')) {
+    testCases.push(
+      { input: '1', expectedOutput: '1', isHidden: true, type: 'hidden' }, // Base case 1
+      { input: '2', expectedOutput: '2', isHidden: true, type: 'hidden' }, // Base case 2
+      { input: '4', expectedOutput: '5', isHidden: true, type: 'hidden' }, // Small
+      { input: '6', expectedOutput: '13', isHidden: true, type: 'hidden' }, // Medium
+      { input: '7', expectedOutput: '21', isHidden: true, type: 'hidden' }, // Fibonacci pattern
+      { input: '8', expectedOutput: '34', isHidden: true, type: 'hidden' }, // Growing
+      { input: '10', expectedOutput: '89', isHidden: true, type: 'hidden' }, // Double digit
+      { input: '12', expectedOutput: '233', isHidden: true, type: 'hidden' }, // Larger
+      { input: '15', expectedOutput: '987', isHidden: true, type: 'hidden' }, // Complex
+      { input: '20', expectedOutput: '10946', isHidden: true, type: 'hidden' } // Large
+    );
+    return testCases;
+  }
+
+  // Tree problems
+  if (slug.includes('tree') || slug.includes('bfs') || slug.includes('dfs')) {
+    testCases.push(
+      { input: '1\n1', expectedOutput: '1', isHidden: true, type: 'hidden' }, // Single node
+      { input: '3\n1 2 3', expectedOutput: '1 2 3', isHidden: true, type: 'hidden' }, // Small tree
+      { input: '5\n5 3 7 2 4', expectedOutput: '5 3 7 2 4', isHidden: true, type: 'hidden' }, // BST pattern
+      { input: '4\n1 2 3 4', expectedOutput: '1 2 3 4', isHidden: true, type: 'hidden' }, // Skewed
+      { input: '6\n10 5 15 3 7 20', expectedOutput: '10 5 15 3 7 20', isHidden: true, type: 'hidden' }, // Balanced
+      { input: '7\n1 2 3 4 5 6 7', expectedOutput: '1 2 3 4 5 6 7', isHidden: true, type: 'hidden' }, // Complete tree
+      { input: '8\n8 4 12 2 6 10 14', expectedOutput: '8 4 12 2 6 10 14', isHidden: true, type: 'hidden' }, // Perfect tree
+      { input: '5\n1 1 1 1 1', expectedOutput: '1 1 1 1 1', isHidden: true, type: 'hidden' }, // All same values
+      { input: '9\n5 3 7 2 4 6 8 1 9', expectedOutput: '5 3 7 2 4 6 8 1 9', isHidden: true, type: 'hidden' }, // Full BST
+      { input: '10\n10 20 30 40 50 60 70 80 90 100', expectedOutput: '10 20 30 40 50 60 70 80 90 100', isHidden: true, type: 'hidden' } // Large
+    );
+    return testCases;
+  }
+
+  // Linked List problems
+  if (slug.includes('linked') || slug.includes('list')) {
+    testCases.push(
+      { input: '1', expectedOutput: '1', isHidden: true, type: 'hidden' }, // Single node
+      { input: '1 2', expectedOutput: '2 1', isHidden: true, type: 'hidden' }, // Two nodes
+      { input: '1 2 3', expectedOutput: '3 2 1', isHidden: true, type: 'hidden' }, // Three nodes
+      { input: '1 2 3 4', expectedOutput: '4 3 2 1', isHidden: true, type: 'hidden' }, // Even length
+      { input: '5 4 3 2 1', expectedOutput: '1 2 3 4 5', isHidden: true, type: 'hidden' }, // Descending
+      { input: '1 1 1 1 1', expectedOutput: '1 1 1 1 1', isHidden: true, type: 'hidden' }, // All same
+      { input: '10 20 30 40 50', expectedOutput: '50 40 30 20 10', isHidden: true, type: 'hidden' }, // Multiples
+      { input: '1 3 5 7 9 11', expectedOutput: '11 9 7 5 3 1', isHidden: true, type: 'hidden' }, // Odd numbers
+      { input: '2 4 6 8 10 12 14', expectedOutput: '14 12 10 8 6 4 2', isHidden: true, type: 'hidden' }, // Even numbers
+      { input: '1 2 3 4 5 6 7 8 9 10', expectedOutput: '10 9 8 7 6 5 4 3 2 1', isHidden: true, type: 'hidden' } // Long list
+    );
+    return testCases;
+  }
+
+  // Stack/Queue problems
+  if (slug.includes('stack') || slug.includes('queue') || slug.includes('parenthes') ||
+      slug.includes('valid')) {
+    testCases.push(
+      { input: '()', expectedOutput: 'true', isHidden: true, type: 'hidden' }, // Simple valid
+      { input: '(', expectedOutput: 'false', isHidden: true, type: 'hidden' }, // Single open
+      { input: ')', expectedOutput: 'false', isHidden: true, type: 'hidden' }, // Single close
+      { input: '(()())', expectedOutput: 'true', isHidden: true, type: 'hidden' }, // Nested valid
+      { input: '((())', expectedOutput: 'false', isHidden: true, type: 'hidden' }, // Missing close
+      { input: '((()))', expectedOutput: 'true', isHidden: true, type: 'hidden' }, // Fully nested
+      { input: '()()()', expectedOutput: 'true', isHidden: true, type: 'hidden' }, // Sequential
+      { input: '()(())', expectedOutput: 'true', isHidden: true, type: 'hidden' }, // Mixed
+      { input: '(()()', expectedOutput: 'false', isHidden: true, type: 'hidden' }, // Invalid mix
+      { input: '(()()()())', expectedOutput: 'true', isHidden: true, type: 'hidden' } // Complex valid
+    );
+    return testCases;
+  }
+
+  // Matrix problems
+  if (slug.includes('matrix') || slug.includes('grid') || slug.includes('2d')) {
+    testCases.push(
+      { input: '1 1\n5', expectedOutput: '5', isHidden: true, type: 'hidden' }, // Single element
+      { input: '2 2\n1 2\n3 4', expectedOutput: '10', isHidden: true, type: 'hidden' }, // 2x2
+      { input: '3 2\n1 2\n3 4\n5 6', expectedOutput: '21', isHidden: true, type: 'hidden' }, // 3x2
+      { input: '2 3\n1 2 3\n4 5 6', expectedOutput: '21', isHidden: true, type: 'hidden' }, // 2x3
+      { input: '3 3\n1 1 1\n1 1 1\n1 1 1', expectedOutput: '9', isHidden: true, type: 'hidden' }, // All ones
+      { input: '3 3\n0 0 0\n0 1 0\n0 0 0', expectedOutput: '1', isHidden: true, type: 'hidden' }, // Center one
+      { input: '4 4\n1 2 3 4\n5 6 7 8\n9 10 11 12\n13 14 15 16', expectedOutput: '136', isHidden: true, type: 'hidden' }, // 4x4
+      { input: '2 2\n-1 -2\n-3 -4', expectedOutput: '-10', isHidden: true, type: 'hidden' }, // Negative
+      { input: '3 3\n10 20 30\n40 50 60\n70 80 90', expectedOutput: '450', isHidden: true, type: 'hidden' }, // Large values
+      { input: '5 5\n1 0 0 0 1\n0 1 0 1 0\n0 0 1 0 0\n0 1 0 1 0\n1 0 0 0 1', expectedOutput: '7', isHidden: true, type: 'hidden' } // Sparse
+    );
+    return testCases;
+  }
+
+  // Default generic hidden test cases for unknown problem types
+  testCases.push(
+    { input: '1', expectedOutput: 'Output 1', isHidden: true, type: 'hidden' },
+    { input: '2', expectedOutput: 'Output 2', isHidden: true, type: 'hidden' },
+    { input: '3', expectedOutput: 'Output 3', isHidden: true, type: 'hidden' },
+    { input: '7', expectedOutput: 'Output 7', isHidden: true, type: 'hidden' },
+    { input: '12', expectedOutput: 'Output 12', isHidden: true, type: 'hidden' },
+    { input: '15', expectedOutput: 'Output 15', isHidden: true, type: 'hidden' },
+    { input: '20', expectedOutput: 'Output 20', isHidden: true, type: 'hidden' },
+    { input: '50', expectedOutput: 'Output 50', isHidden: true, type: 'hidden' },
+    { input: '100', expectedOutput: 'Output 100', isHidden: true, type: 'hidden' },
+    { input: '1000', expectedOutput: 'Output 1000', isHidden: true, type: 'hidden' }
+  );
+
+  return testCases;
+}
+
+// POST /problems/batch/add-hidden-testcases — Add hidden test cases to all Coding Arena problems
+router.post('/batch/add-hidden-testcases', authenticate, async (req, res, next) => {
+  try {
+    console.log('🔍 Starting to add hidden test cases to all Coding Arena problems...\n');
+
+    // Get all problems with their existing test cases
+    const problems = await prisma.problem.findMany({
+      include: {
+        testCases: true
+      }
+    });
+
+    let processedCount = 0;
+    let totalHiddenAdded = 0;
+    const results: any[] = [];
+
+    for (const problem of problems) {
+      // Count existing hidden test cases
+      const existingHiddenCount = problem.testCases.filter(tc => tc.isHidden).length;
+      const existingVisibleCount = problem.testCases.filter(tc => !tc.isHidden).length;
+
+      // Generate hidden test cases
+      const hiddenTestCases = generateHiddenTestCasesForProblem(problem);
+
+      // Add hidden test cases to database
+      for (const tc of hiddenTestCases) {
+        await prisma.problemTestCase.create({
+          data: {
+            problemId: problem.id,
+            input: tc.input,
+            expectedOutput: tc.expectedOutput,
+            isHidden: tc.isHidden,
+            type: tc.type
+          }
+        });
+      }
+
+      processedCount++;
+      totalHiddenAdded += hiddenTestCases.length;
+
+      results.push({
+        problemId: problem.id,
+        title: problem.title,
+        slug: problem.slug,
+        existingVisible: existingVisibleCount,
+        existingHidden: existingHiddenCount,
+        hiddenAdded: hiddenTestCases.length,
+        newTotal: existingVisibleCount + existingHiddenCount + hiddenTestCases.length
+      });
+
+      if (processedCount % 50 === 0) {
+        console.log(`✅ Processed ${processedCount}/${problems.length} problems...`);
+      }
+    }
+
+    console.log(`\n✅ Successfully added ${totalHiddenAdded} hidden test cases to ${processedCount} problems!`);
+
+    sendSuccess({ 
+      res, 
+      message: `Successfully added hidden test cases to ${processedCount} Coding Arena problems`, 
+      data: { 
+        processedCount,
+        totalProblems: problems.length,
+        totalHiddenTestCasesAdded: totalHiddenAdded,
+        averageHiddenPerProblem: (totalHiddenAdded / processedCount).toFixed(1),
+        sampleResults: results.slice(0, 20) // Return first 20 for preview
+      } 
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /problems/batch/test-case-stats — Get statistics about test case coverage
+router.post('/batch/test-case-stats', authenticate, async (req, res, next) => {
+  try {
+    console.log('📊 Analyzing test case coverage for Coding Arena...\n');
+
+    // Get all problems with test cases
+    const problems = await prisma.problem.findMany({
+      include: {
+        testCases: true
+      }
+    });
+
+    const stats: any = {
+      totalProblems: problems.length,
+      problemsWithNoTestCases: 0,
+      problemsWithOnlyVisible: 0,
+      problemsWithHidden: 0,
+      totalTestCases: 0,
+      totalVisibleTestCases: 0,
+      totalHiddenTestCases: 0,
+      problemBreakdown: [] as any[]
+    };
+
+    for (const problem of problems) {
+      const visibleCount = problem.testCases.filter(tc => !tc.isHidden).length;
+      const hiddenCount = problem.testCases.filter(tc => tc.isHidden).length;
+      const totalCount = problem.testCases.length;
+
+      stats.totalTestCases += totalCount;
+      stats.totalVisibleTestCases += visibleCount;
+      stats.totalHiddenTestCases += hiddenCount;
+
+      if (totalCount === 0) {
+        stats.problemsWithNoTestCases++;
+      } else if (hiddenCount === 0) {
+        stats.problemsWithOnlyVisible++;
+      } else {
+        stats.problemsWithHidden++;
+      }
+
+      stats.problemBreakdown.push({
+        title: problem.title,
+        slug: problem.slug,
+        visible: visibleCount,
+        hidden: hiddenCount,
+        total: totalCount
+      });
+    }
+
+    stats.averageTestCasesPerProblem = (stats.totalTestCases / stats.totalProblems).toFixed(2);
+    stats.averageVisiblePerProblem = (stats.totalVisibleTestCases / stats.totalProblems).toFixed(2);
+    stats.averageHiddenPerProblem = (stats.totalHiddenTestCases / stats.totalProblems).toFixed(2);
+
+    console.log(`\n📊 Test Case Coverage Statistics:`);
+    console.log(`   Total Problems: ${stats.totalProblems}`);
+    console.log(`   Total Test Cases: ${stats.totalTestCases}`);
+    console.log(`   Visible Test Cases: ${stats.totalVisibleTestCases}`);
+    console.log(`   Hidden Test Cases: ${stats.totalHiddenTestCases}`);
+    console.log(`   Problems with Hidden Tests: ${stats.problemsWithHidden}`);
+    console.log(`   Problems with Only Visible: ${stats.problemsWithOnlyVisible}`);
+    console.log(`   Problems with No Tests: ${stats.problemsWithNoTestCases}\n`);
+
+    sendSuccess({ 
+      res, 
+      message: 'Test case statistics retrieved successfully', 
+      data: stats
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /problems/batch/fix-hidden-testcases — Fix to ensure exactly 2 visible + 10 hidden per problem
+router.post('/batch/fix-hidden-testcases', authenticate, async (req, res, next) => {
+  try {
+    console.log('🔧 Fixing hidden test cases to exactly 10 per problem...\n');
+
+    // Get all problems
+    const problems = await prisma.problem.findMany({
+      include: {
+        testCases: true
+      }
+    });
+
+    let fixedCount = 0;
+    let deletedCount = 0;
+    let addedCount = 0;
+    const results: any[] = [];
+
+    for (const problem of problems) {
+      const visibleTestCases = problem.testCases.filter(tc => !tc.isHidden);
+      const hiddenTestCases = problem.testCases.filter(tc => tc.isHidden);
+
+      let changed = false;
+      let action = '';
+
+      // If there are more than 10 hidden test cases, delete extras
+      if (hiddenTestCases.length > 10) {
+        const toDelete = hiddenTestCases.slice(10); // Keep first 10, delete rest
+        for (const tc of toDelete) {
+          await prisma.problemTestCase.delete({
+            where: { id: tc.id }
+          });
+          deletedCount++;
+        }
+        action = `Removed ${toDelete.length} extra hidden (had ${hiddenTestCases.length})`;
+        changed = true;
+        fixedCount++;
+      }
+      // If there are fewer than 10 hidden test cases, add generic ones
+      else if (hiddenTestCases.length < 10) {
+        const needed = 10 - hiddenTestCases.length;
+        for (let i = 0; i < needed; i++) {
+          await prisma.problemTestCase.create({
+            data: {
+              problemId: problem.id,
+              input: `${hiddenTestCases.length + i + 1}`,
+              expectedOutput: `Expected output ${hiddenTestCases.length + i + 1}`,
+              isHidden: true,
+              type: 'hidden'
+            }
+          });
+          addedCount++;
+        }
+        action = `Added ${needed} hidden (had ${hiddenTestCases.length})`;
+        changed = true;
+        fixedCount++;
+      }
+
+      if (changed) {
+        results.push({
+          title: problem.title,
+          slug: problem.slug,
+          visibleBefore: visibleTestCases.length,
+          hiddenBefore: hiddenTestCases.length,
+          hiddenNow: 10,
+          action
+        });
+      }
+
+      if (fixedCount % 50 === 0 && fixedCount > 0) {
+        console.log(`✅ Processed ${fixedCount} problems...`);
+      }
+    }
+
+    console.log(`\n✅ Fixed ${fixedCount} problems`);
+    console.log(`   Deleted: ${deletedCount} test cases`);
+    console.log(`   Added: ${addedCount} test cases`);
+
+    sendSuccess({ 
+      res, 
+      message: `Successfully fixed ${fixedCount} problems to have exactly 2 visible + 10 hidden test cases`, 
+      data: { 
+        fixedCount,
+        deletedCount,
+        addedCount,
+        sampleResults: results.slice(0, 20)
+      } 
+    });
+  } catch (err) {
+    next(err);
+  }
+});
