@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "two-pointers",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 7
+  },
+  "questions": [
+    {
+      "title": "Valid Palindrome",
+      "difficulty": "medium",
+      "category": "two-pointers",
+      "statement": "Practice solving **Valid Palindrome** under topic **two-pointers**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "A man, a plan, a canal: Panama",
+      "sampleOutput": "true",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Container With Most Water",
+      "difficulty": "medium",
+      "category": "two-pointers",
+      "statement": "Practice solving **Container With Most Water** under topic **two-pointers**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 8 6 2 5 4 8 3 7",
+      "sampleOutput": "49",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "3Sum",
+      "difficulty": "medium",
+      "category": "two-pointers",
+      "statement": "Practice solving **3Sum** under topic **two-pointers**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "-1 0 1 2 -1 -4",
+      "sampleOutput": "-1 -1 2\\n-1 0 1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Remove Duplicates from Sorted Array",
+      "difficulty": "medium",
+      "category": "two-pointers",
+      "statement": "Practice solving **Remove Duplicates from Sorted Array** under topic **two-pointers**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Move Zeroes",
+      "difficulty": "medium",
+      "category": "two-pointers",
+      "statement": "Practice solving **Move Zeroes** under topic **two-pointers**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Sort Colors",
+      "difficulty": "medium",
+      "category": "two-pointers",
+      "statement": "Practice solving **Sort Colors** under topic **two-pointers**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Trapping Rain Water",
+      "difficulty": "medium",
+      "category": "two-pointers",
+      "statement": "Practice solving **Trapping Rain Water** under topic **two-pointers**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "3 0 1 0 4 0 2",
+      "sampleOutput": "10",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,471 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "strings",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 20
+  },
+  "questions": [
+    {
+      "title": "Valid Palindrome",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Valid Palindrome** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "A man, a plan, a canal: Panama",
+      "sampleOutput": "true",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Common Prefix",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Longest Common Prefix** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "geeksforgeeks geeks geek geezer",
+      "sampleOutput": "gee",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Group Anagrams",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Group Anagrams** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "eat tea tan ate nat bat",
+      "sampleOutput": "bat\\nnat tan\\nate eat tea",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Longest Substring Without Repeating Characters** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "geeksforgeeks",
+      "sampleOutput": "7",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Minimum Window Substring",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Minimum Window Substring** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "String Compression",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Given an array of characters **chars**, compress it in-place. For every consecutive group of equal characters, write the character once; if the group length is greater than 1, write the decimal digits of its length after the character. Return the new length.\\n\\nThe first returned-length characters of chars must contain the compressed string. Group lengths of 10 or more are written as separate digits. Use only constant extra space.",
+      "inputFormat": "A single line containing the character sequence without commas or quotes. For example, aabbccc represents [\"a\", \"a\", \"b\", \"b\", \"c\", \"c\", \"c\"].",
+      "outputFormat": "Print the new compressed length.",
+      "constraints": "1 <= chars.length <= 2000\\nEach character is a lowercase letter, uppercase letter, digit, or symbol.",
+      "sampleInput": "aabbccc",
+      "sampleOutput": "6",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Remove Consecutive Characters",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Remove Consecutive Characters** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "aaaaabbbbbb",
+      "sampleOutput": "ab",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Convert a Sentence into its Equivalent Mobile Numeric Keypad Sequence",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Convert a Sentence into its Equivalent Mobile Numeric Keypad Sequence** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "GFG",
+      "sampleOutput": "43334",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Print all the Duplicates in the Input String",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Print all the Duplicates in the Input String** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "geeksforgeeks",
+      "sampleOutput": "[",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Repeating Character Replacement",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Given a string **s** of length n consisting of uppercase English letters and an integer **k**, you may perform at most k operations. In one operation, change any character in the string to any other uppercase English letter.\\n\\nReturn the length of the longest substring that can be transformed into a string containing only identical characters using at most k operations.",
+      "inputFormat": "The first line contains the uppercase string s.\\nThe second line contains the integer k.",
+      "outputFormat": "Print the maximum possible length of a uniform-character substring.",
+      "constraints": "1 <= n, k <= 10^5\\ns contains uppercase English letters only.",
+      "sampleInput": "ABBA\\n2",
+      "sampleOutput": "4",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Palindromic Substring",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Longest Palindromic Substring** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "forgeeksskeegfor",
+      "sampleOutput": "geeksskeeg",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Palindromic Substrings",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Palindromic Substrings** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "abc",
+      "sampleOutput": "3",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Count Palindromic Subsequences",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Given a string **s**, find the number of palindromic subsequences present in s. Subsequences do not need to be distinct: occurrences chosen from different positions are counted separately.",
+      "inputFormat": "A single line containing the string s.",
+      "outputFormat": "Print the total number of palindromic subsequences.",
+      "constraints": "1 <= s.length <= 30\\ns contains lowercase English letters.",
+      "sampleInput": "abcd",
+      "sampleOutput": "4",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Smallest Window in a String Containing all the Characters of Another String",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Given two strings **s** and **t**, return the minimum window substring of s that contains every character in t, including duplicate characters. If no such substring exists, return the empty string.\\n\\nThe test cases guarantee that the answer, when it exists, is unique.",
+      "inputFormat": "The first line contains s.\\nThe second line contains t.",
+      "outputFormat": "Print the minimum window substring, or an empty line if no valid window exists.",
+      "constraints": "1 <= s.length, t.length <= 10^5\\ns and t contain uppercase and lowercase English letters.",
+      "sampleInput": "ADOBECODEBANC\\nABC",
+      "sampleOutput": "BANC",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Wildcard String Matching",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Given an input string **s** and a pattern **p**, implement wildcard pattern matching with support for \\`?\\` and \\`*\\`.\\n\\n- \\`?\\` matches any single character.\\n- \\`*\\` matches any sequence of characters, including the empty sequence.\\n\\nThe match must cover the **entire** input string, not only a substring. Return \\`true\\` if \\`p\\` matches \\`s\\`; otherwise return \\`false\\`.",
+      "inputFormat": "The first line contains the string s.\\nThe second line contains the pattern p.",
+      "outputFormat": "Print true if the entire string matches the pattern; otherwise print false.",
+      "constraints": "0 <= s.length, p.length <= 2000\\ns contains lowercase English letters only.\\np contains lowercase English letters, ? or *.",
+      "sampleInput": "aa\\na",
+      "sampleOutput": "false",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Prefix Suffix",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Given a lowercase English string **s**, find the length of the longest proper prefix that is also a suffix of s.\\n\\nA prefix and suffix may overlap, but they must not be equal to the entire string.",
+      "inputFormat": "A single line containing the string s.",
+      "outputFormat": "Print the length of the longest proper prefix that is also a suffix.",
+      "constraints": "1 <= s.length <= 10^6\\ns contains lowercase English letters only.",
+      "sampleInput": "abab",
+      "sampleOutput": "2",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Rabin-Karp Algorithm for Pattern Searching",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Given two strings: a text string in which you want to search, and a pattern string that you are looking for within the text. Return all positions (0-based indexing) where the pattern occurs as a substring in the text. If the pattern does not occur, return an empty list.\\n\\n![Rabin-Karp pattern matching example](/rabin-karp-pattern-search.png)\\n\\nUse the Rabin-Karp rolling-hash technique. Verify matching hash windows character by character to avoid collisions.",
+      "inputFormat": "The first line contains the text string.\\nThe second line contains the pattern string.",
+      "outputFormat": "Print the 0-based starting indices in the format [i, j, ...]. Print [] when there are no matches.",
+      "constraints": "1 <= text.length <= 10^5\\n1 <= pattern.length <= text.length\\nBoth strings contain lowercase English letters.",
+      "sampleInput": "geeksforgeeks\\ngeek",
+      "sampleOutput": "[0, 8]",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Transform One String to Another using Minimum Number of Given Operation",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Transform One String to Another using Minimum Number of Given Operation** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "abd\\nbad",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Boyer Moore Algorithm for Pattern Searching",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Boyer Moore Algorithm for Pattern Searching** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "THIS IS A TEST TEXT\\nTEST",
+      "sampleOutput": "Pattern found at index 10",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Word Wrap",
+      "difficulty": "medium",
+      "category": "strings",
+      "statement": "Practice solving **Word Wrap** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "3 2 2 5\\n6",
+      "sampleOutput": "10",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}
