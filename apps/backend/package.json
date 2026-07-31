@@ -16,12 +16,19 @@
     "seed": "npx ts-node --transpile-only src/scripts/seed.ts",
     "seed:challenges": "npx ts-node --transpile-only src/scripts/seedChallenges.ts",
     "seed:tcs": "npx ts-node --transpile-only src/scripts/seedTcsNqt.ts",
+    "seed:tcs-json": "npx ts-node --transpile-only src/scripts/seedTcsNqtFromJson.ts",
     "seed:tcs-reasoning": "npx ts-node --transpile-only src/scripts/seedTcsReasoningAptitude.ts",
     "seed:tcs-seating": "npx ts-node --transpile-only src/scripts/seedTcsSeatingArrangement.ts",
     "seed:tcs-circular": "npx ts-node --transpile-only src/scripts/seedTcsSeatingComprehensive.ts",
     "seed:tcs-nonverbal": "npx ts-node --transpile-only src/scripts/seedTcsNonVerbalReasoning.ts",
     "seed:mysql": "npx ts-node --transpile-only src/scripts/seedMysql.ts",
-    "seed:all": "npm run seed && npm run seed:mysql && npm run seed:challenges && npm run seed:tcs && npm run seed:tcs-reasoning && npm run seed:tcs-seating && npm run seed:tcs-circular"
+    "seed:all-questions": "npx ts-node --transpile-only src/scripts/seedAllQuestionsFromJson.ts",
+    "seed:all": "npm run seed && npm run seed:mysql && npm run seed:challenges && npm run seed:tcs && npm run seed:tcs-reasoning && npm run seed:tcs-seating && npm run seed:tcs-circular",
+    "migrate:questions": "npm run seed:all-questions",
+    "reset:seed:questions": "npm run seed:all-questions",
+    "migrate:questions-to-problems": "npx ts-node --transpile-only src/scripts/migrateQuestionsToProblem.ts",
+    "clean:reseed": "npx ts-node --transpile-only src/scripts/cleanAndReseed.ts",
+    "fresh:seed": "npx ts-node --transpile-only src/scripts/freshSeed.ts"
   },
   "dependencies": {
     "@adyapan/shared": "*",

@@ -1,0 +1,747 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "hashing",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 32
+  },
+  "questions": [
+    {
+      "title": "Top K Frequent Elements",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an integer array \\`nums\\` and an integer \\`k\\",
+      "inputFormat": "The first line contains the space-separated elements of nums. The second line contains k.",
+      "outputFormat": "Print the k most frequent elements as space-separated integers, in any order.",
+      "constraints": "1 <= nums.length <= 10^5\\n-10^4 <= nums[i] <= 10^4\\n1 <= k <= number of unique elements in nums\\nThe answer is guaranteed to be unique.",
+      "sampleInput": "1 1 1 2 2 3\\n2",
+      "sampleOutput": "1 2",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Majority Element",
+      "difficulty": "easy",
+      "category": "hashing",
+      "statement": "Given an array \\`nums\\` of size \\`n\\",
+      "inputFormat": "The first line contains the space-separated elements of nums.",
+      "outputFormat": "Print the majority element.",
+      "constraints": "n == nums.length\\n1 <= n <= 5 * 10^4\\n-10^9 <= nums[i] <= 10^9\\nA majority element always exists in nums.",
+      "sampleInput": "3 2 3",
+      "sampleOutput": "3",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Happy Number",
+      "difficulty": "easy",
+      "category": "hashing",
+      "statement": "Write an algorithm to determine whether a positive integer \\`n\\` is happy.\r\n\r\nA happy number follows this process:\r\n\r\n- Replace the number with the sum of the squares of its digits.\r\n- Repeat until the number equals \\`1\\",
+      "inputFormat": "The first line contains n.",
+      "outputFormat": "Print true if n is a happy number; otherwise, print false.",
+      "constraints": "1 <= n <= 2^31 - 1",
+      "sampleInput": "19",
+      "sampleOutput": "true",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Consecutive Sequence",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an unsorted array of integers **nums**, return the length of the longest consecutive elements sequence.\r\n\r\nYou must write an algorithm that runs in **O(n)** time.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`nums = [100, 4, 200, 1, 3, 2]\\`\r\n\r\n**Output:** \\`4\\`\r\n\r\n**Explanation:** The longest consecutive elements sequence is \\`[1, 2, 3, 4]\\`. Therefore its length is 4.\r\n\r\n### Example 2\r\n\r\n**Input:** \\`nums = [0, 3, 7, 2, 5, 8, 4, 6, 0, 1]\\`\r\n\r\n**Output:** \\`9\\`\r\n\r\n\r\n### Example 3\r\n\r\n**Input:** \\`nums = [1, 0, 1, 2]\\`\r\n\r\n**Output:** \\`3\\`",
+      "inputFormat": "The first line contains n. The second line contains n space-separated integers of nums.",
+      "outputFormat": "Print the length of the longest consecutive elements sequence.",
+      "constraints": "0 <= nums.length <= 10^5\\n-10^9 <= nums[i] <= 10^9",
+      "sampleInput": "6\\n100 4 200 1 3 2",
+      "sampleOutput": "4",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Subarray Sum Equals K",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **Subarray Sum Equals K** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Duplicate Number",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **Find Duplicate Number** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Heap Sort",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an array \\`arr[]\\`. The task is to sort the array elements by Heap Sort.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`arr[] = [4, 1, 3, 9, 7]\\`\r\n\r\n**Output:** \\`[1, 3, 4, 7, 9]\\`\r\n\r\n**Explanation:** After sorting elements using heap sort, elements will be in order as 1, 3, 4, 7, 9.\r\n\r\n### Example 2\r\n\r\n**Input:** \\`arr[] = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]\\`\r\n\r\n**Output:** \\`[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\\`\r\n\r\n**Explanation:** After sorting elements using heap sort, elements will be in order as 1, 2, 3, 4, 5, 6, 7, 8, 9, 10.\r\n\r\n### Example 3\r\n\r\n**Input:** \\`arr[] = [2, 1, 5]\\`\r\n\r\n**Output:** \\`[1, 2, 5]\\`\r\n\r\n**Explanation:** After sorting elements using heap sort, elements will be in order as 1, 2, 5.",
+      "inputFormat": "The first line contains n. The second line contains n space-separated integers of arr.",
+      "outputFormat": "Print the sorted array as space-separated integers.",
+      "constraints": "1 <= arr.length <= 10^6\\n1 <= arr[i] <= 10^6",
+      "sampleInput": "5\\n4 1 3 9 7",
+      "sampleOutput": "1 3 4 7 9",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Kth Largest Element in an Array",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an integer array \\`nums\\` and an integer \\`k\\",
+      "inputFormat": "The first line contains the space-separated elements of nums. The second line contains k.",
+      "outputFormat": "Print the kth largest element.",
+      "constraints": "1 <= k <= nums.length <= 10^5\\n-10^4 <= nums[i] <= 10^4",
+      "sampleInput": "3 2 1 5 6 4\\n2",
+      "sampleOutput": "5",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Next Greater Element",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an array **arr[]** of integers, determine the **Next Greater Element** (NGE) for every element in the array, maintaining the order of appearance.\r\n\r\nThe Next Greater Element for an element x is defined as the first element to the right of x in the array that is strictly greater than x.\r\nIf no such element exists for an element, its Next Greater Element is \\`-1\\`.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`arr[] = [1, 3, 2, 4]\\`\r\n\r\n**Output:** \\`[3, 4, 4, -1]\\`\r\n\r\n**Explanation:** The next larger element to 1 is 3, 3 is 4, 2 is 4 and for 4, since it doesn't exist, it is -1.\r\n\r\n### Example 2\r\n\r\n**Input:** \\`arr[] = [6, 8, 0, 1, 3]\\`\r\n\r\n**Output:** \\`[8, -1, 1, 3, -1]\\`\r\n\r\n**Explanation:** The next larger element to 6 is 8, for 8 there are no larger elements hence it is -1, for 0 it is 1, for 1 it is 3 and then for 3 there is no larger element on the right and hence -1.",
+      "inputFormat": "The first line contains n. The second line contains n space-separated integers of arr.",
+      "outputFormat": "Print the next greater element for every array element as space-separated integers.",
+      "constraints": "1 <= arr.length <= 10^6\\n0 <= arr[i] <= 10^9",
+      "sampleInput": "4\\n1 3 2 4",
+      "sampleOutput": "3 4 4 -1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "K\\'th Smallest/Largest Element in Unsorted Array",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **K\\'th Smallest/Largest Element in Unsorted Array** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find the maximum repeating number in O(n) time and O(1) extra space",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **Find the maximum repeating number in O(n) time and O(1) extra space** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "K-th smallest element after removing some integers from natural numbers",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "_Last Updated: 23 Jul, 2025_\r\n\r\nGiven an array **arr[]** of size **n** and a positive integer **k**. Consider the series of natural numbers and remove \\`arr[0], arr[1], arr[2], ..., arr[n - 1]\\` from it. Find the kth smallest number in the remaining set of natural numbers. If no such number exists, print \\`-1\\`.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`arr[] = [1]\\` and \\`k = 1\\`\r\n\r\n**Output:** \\`2\\`\r\n\r\n**Explanation:** Natural numbers are \\`{1, 2, 3, 4, ...}\\`. After removing \\`{1}\\",
+      "inputFormat": "The first line contains the space-separated elements of arr. The second line contains k.",
+      "outputFormat": "Print the kth smallest natural number that is not in arr, or -1 if it does not exist.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1\\n1",
+      "sampleOutput": "2",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find K Closest Elements",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given a **sorted** integer array \\`arr\\` and two integers \\`k\\` and \\`x\\",
+      "inputFormat": "The first line contains the sorted, space-separated elements of arr. The second line contains k and x.",
+      "outputFormat": "Print the k closest elements in ascending order, separated by spaces.",
+      "constraints": "1 <= k <= arr.length\\n1 <= arr.length <= 10^4\\narr is sorted in ascending order.\\n-10^4 <= arr[i], x <= 10^4",
+      "sampleInput": "1 2 3 4 5\\n4 3",
+      "sampleOutput": "1 2 3 4",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "K\\'th largest element in a stream",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **K\\'th largest element in a stream** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Min Cost to Connect Ropes",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an array \\`arr[]\\` of rope lengths, connect all ropes into a single rope with the minimum total cost. The cost to connect two ropes is the sum of their lengths.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`arr[] = [4, 3, 2, 6]\\`\r\n\r\n**Output:** \\`29\\`\r\n\r\n**Explanation:** First connect \\`2\\` and \\`3\\` for a cost of \\`5\\",
+      "inputFormat": "The first line contains the space-separated rope lengths in arr.",
+      "outputFormat": "Print the minimum total cost to connect all ropes.",
+      "constraints": "1 <= arr.length <= 10^5\\n1 <= arr[i] <= 10^4",
+      "sampleInput": "4 3 2 6",
+      "sampleOutput": "29",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Cuckoo Hashing",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **Cuckoo Hashing** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Itinerary from a List of Tickets",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **Itinerary from a List of Tickets** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Largest Subarray with 0 Sum",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an array \\`arr[]\\` containing positive and negative integers, find the length of the longest subarray whose sum equals \\`0\\`.\r\n\r\nA subarray is a contiguous part of an array formed by selecting one or more consecutive elements while maintaining their original order.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`arr[] = [15, -2, 2, -8, 1, 7, 10, 23]\\`\r\n\r\n**Output:** \\`5\\`\r\n\r\n**Explanation:** The longest subarray with sum \\`0\\` is \\`[-2, 2, -8, 1, 7]\\`.\r\n\r\n### Example 2\r\n\r\n**Input:** \\`arr[] = [2, 10, 4]\\`\r\n\r\n**Output:** \\`0\\`\r\n\r\n**Explanation:** No subarray has a sum of \\`0\\`.\r\n\r\n### Example 3\r\n\r\n**Input:** \\`arr[] = [1, 0, -4, 3, 1, 0]\\`\r\n\r\n**Output:** \\`5\\`\r\n\r\n**Explanation:** The longest subarray with sum \\`0\\` is \\`[0, -4, 3, 1, 0]\\`.",
+      "inputFormat": "The first line contains the space-separated elements of arr.",
+      "outputFormat": "Print the length of the longest subarray with sum 0.",
+      "constraints": "1 <= arr.length <= 10^6\\n-10^3 <= arr[i] <= 10^3",
+      "sampleInput": "15 -2 2 -8 1 7 10 23",
+      "sampleOutput": "5",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Count Distinct Elements in Every Window",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an integer array \\`arr[]\\` and a number \\`k\\",
+      "inputFormat": "The first line contains the space-separated elements of arr. The second line contains k.",
+      "outputFormat": "Print the distinct-element count for every window as space-separated integers.",
+      "constraints": "1 <= k <= arr.length <= 10^5\\n1 <= arr[i] <= 10^5",
+      "sampleInput": "1 2 1 3 4 2 3\\n4",
+      "sampleOutput": "3 4 4 3",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Group Shifted Strings",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "_Last Updated: 28 Dec, 2024_\r\n\r\nGiven an array of strings containing lowercase letters, group the strings so that every string in a group is a shifted version of every other string in that group.\r\n\r\nTwo strings **s1** and **s2** are shifted if:\r\n\r\n- \\`s1.length\\` is equal to \\`s2.length\\`.\r\n- \\`s1[i]\\` is equal to \\`s2[i] + m\\` for every index, for a constant integer \\`m\\`.\r\n\r\nThe shifting is cyclic: if a shift goes past \\`'z'\\",
+      "inputFormat": "The first line contains the lowercase strings of arr, separated by spaces.",
+      "outputFormat": "Print the groups as a nested array. The order of groups and strings within a group may vary.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "acd dfg wyz yab mop bdfh a x moqs",
+      "sampleOutput": "[[",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Merge K Sorted Lists",
+      "difficulty": "hard",
+      "category": "hashing",
+      "statement": "You are given an array of \\`k\\` linked lists, where each linked list is sorted in ascending order.\r\n\r\nMerge all the linked lists into one sorted linked list and return it.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`lists = [[1, 4, 5], [1, 3, 4], [2, 6]]\\`\r\n\r\n**Output:** \\`[1, 1, 2, 3, 4, 4, 5, 6]\\`\r\n\r\n**Explanation:** The lists \\`1 → 4 → 5\\",
+      "inputFormat": "The first line contains k. Each of the next k lines contains the space-separated values of one sorted list; an empty line represents an empty list.",
+      "outputFormat": "Print all values from the merged list as space-separated integers.",
+      "constraints": "k == lists.length\\n0 <= k <= 10^4\\n0 <= lists[i].length <= 500\\n-10^4 <= lists[i][j] <= 10^4\\nEach list is sorted in ascending order.\\nThe total number of elements does not exceed 10^4.",
+      "sampleInput": "3\\n1 4 5\\n1 3 4\\n2 6",
+      "sampleOutput": "1 1 2 3 4 4 5 6",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Median from Data Stream",
+      "difficulty": "hard",
+      "category": "hashing",
+      "statement": "The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.\r\n\r\nFor example, for \\`arr = [2, 3, 4]\\",
+      "inputFormat": "The first line contains q. Each of the next q lines is either \"addNum num\" or \"findMedian\".",
+      "outputFormat": "For every findMedian operation, print the median on a new line.",
+      "constraints": "-10^5 <= num <= 10^5\\nThere will be at least one element in the data structure before calling findMedian.\\nAt most 5 * 10^4 calls will be made to addNum and findMedian.",
+      "sampleInput": "5\\naddNum 1\\naddNum 2\\nfindMedian\\naddNum 3\\nfindMedian",
+      "sampleOutput": "1.5\\n2.0",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Sliding Window Maximum",
+      "difficulty": "hard",
+      "category": "hashing",
+      "statement": "You are given an integer array \\`nums\\` and a sliding window of size \\`k\\` that moves from the left of the array to the right. At each position, consider only the \\`k\\` values inside the window.\r\n\r\nReturn the maximum value in every sliding window.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`nums = [1, 3, -1, -3, 5, 3, 6, 7]\\",
+      "inputFormat": "The first line contains the space-separated elements of nums. The second line contains k.",
+      "outputFormat": "Print the maximum of each window as space-separated integers.",
+      "constraints": "1 <= nums.length <= 10^5\\n-10^4 <= nums[i] <= 10^4\\n1 <= k <= nums.length",
+      "sampleInput": "1 3 -1 -3 5 3 6 7\\n3",
+      "sampleOutput": "3 3 5 5 6 7",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find the smallest positive number",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **Find the smallest positive number** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Surpasser Count",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an array \\`arr[]\\` containing distinct integers, find the number of surpassers for each element. An element \\`y\\` is a surpasser of element \\`x\\` if it is a greater element to the right of \\`x\\`. In other words, if \\`x = arr[i]\\` and \\`y = arr[j]\\",
+      "inputFormat": "The first line contains the space-separated elements of arr.",
+      "outputFormat": "Print the surpasser count for every element as space-separated integers.",
+      "constraints": "1 <= arr.length <= 10^5\\n1 <= arr[i] <= 10^6\\nAll elements in arr are distinct.",
+      "sampleInput": "2 7 5 3 8 1",
+      "sampleOutput": "4 1 1 1 0 0",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Binary Heap Operations",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Given an initially empty Binary Min Heap and a list of queries. Process each query by performing the corresponding heap operation.\r\n\r\nThe queries are of the following types:\r\n- [1, x]: Insert the value x into the Binary Min Heap.\r\n- [2, x]: Delete the element present at index x in the current Binary Min Heap. If the index is invalid, ignore the query.\r\n- [3]: Remove and return the minimum element from the Binary Min Heap. If the heap is empty, return -1.\r\n\r\nImplement the following methods:\r\n- insertKey(x): Inserts x into the Binary Min Heap.\r\n- deleteKey(i): Deletes the element at index i from the Binary Min Heap.\r\n- extractMin(): Removes and returns the minimum element from the Binary Min Heap, or -1 if the heap is empty.\r\n\r\nThe driver code will invoke these methods according to the given queries.\r\n\r\n### Example 1\r\n\r\n**Input:** queries[][] = [[1, 4], [1, 2], [3], [1, 6], [2, 0], [3], [3]]\r\n\r\n**Output:** [2, 6, -1]\r\n\r\n**Explanation:**\r\n- Initially, the Min Heap is empty.\r\n- Insert 4. The heap contains 4.\r\n- Insert 2. The heap is rearranged to satisfy the Min Heap property, with 2 at the root.\r\n- Extract the minimum element. The value 2 is removed and printed.\r\n- Insert 6. The heap contains 4 and 6.\r\n- Delete the element at index 0. The value 4 is removed, leaving only 6 in the heap.\r\n- Extract the minimum element. The value 6 is removed and printed.\r\n- Extract the minimum element again. Since the heap is empty, -1 is returned.\r\n\r\n### Example 2\r\n\r\n**Input:** queries[][] = [[1, 8], [1, 9], [2, 1], [3], [3]]\r\n\r\n**Output:** [8, -1]\r\n\r\n**Explanation:**\r\n- Initially, the Min Heap is empty.\r\n- Insert 8. The heap contains 8.\r\n- Insert 9. The heap contains 8 and 9.\r\n- Delete the element at index 1. The value 9 is removed, leaving only 8 in the heap.\r\n- Extract the minimum element. The value 8 is removed and printed.\r\n- Extract the minimum element again. Since the heap is empty, -1 is returned.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "7\\n1 4\\n1 2\\n3\\n1 6\\n2 0\\n3\\n3",
+      "sampleOutput": "2\\n6\\n-1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Valid Palindrome",
+      "difficulty": "easy",
+      "category": "hashing",
+      "statement": "A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.\r\n\r\nGiven a string \\`s\\",
+      "inputFormat": "The first line contains s.",
+      "outputFormat": "Print true if s is a valid palindrome; otherwise, print false.",
+      "constraints": "1 <= s.length <= 2 * 10^5\\ns consists only of printable ASCII characters.",
+      "sampleInput": "A man, a plan, a canal: Panama",
+      "sampleOutput": "true",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Length of the largest subarray with contiguous elements | Set 1",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "_Last Updated: 23 Jul, 2025_\r\n\r\nGiven an array of distinct integers, find the length of the longest subarray whose values can be arranged into a continuous sequence.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`arr[] = [10, 12, 11]\\`\r\n\r\n**Output:** \\`3\\`\r\n\r\n**Explanation:** The entire subarray can be arranged as \\`[10, 11, 12]\\`.\r\n\r\n### Example 2\r\n\r\n**Input:** \\`arr[] = [14, 12, 11, 20]\\`\r\n\r\n**Output:** \\`2\\`\r\n\r\n### Example 3\r\n\r\n**Input:** \\`arr[] = [1, 56, 58, 57, 90, 92, 94, 93, 91, 45]\\`\r\n\r\n**Output:** \\`5\\`",
+      "inputFormat": "The first line contains the space-separated, distinct elements of arr.",
+      "outputFormat": "Print the length of the longest subarray with contiguous elements.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "10 12 11",
+      "sampleOutput": "3",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Palindrome Substring Queries",
+      "difficulty": "hard",
+      "category": "hashing",
+      "statement": "Given a string \\`s\\` and a 2D list \\`queries[][]\\` of size \\`q\\",
+      "inputFormat": "The first line contains s. The second line contains q. Each of the next q lines contains left and right.",
+      "outputFormat": "Print 1 for each palindrome substring and 0 otherwise, as space-separated integers in query order.",
+      "constraints": "1 <= s.length, q <= 10^5\\n0 <= queries[i][0] <= queries[i][1] < s.length\\ns consists of lowercase English letters.",
+      "sampleInput": "abaaabaaaba\\n4\\n0 10\\n5 8\\n2 5\\n5 9",
+      "sampleOutput": "1 0 0 1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Subarrays With At Most K Distinct",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "## 📝 Problem Statement\r\nYou are given an array arr[] of positive integers and an integer k, find the number of subarrays in arr[] where the count of distinct integers is at most k.\r\n\r\n**Note:** A subarray is a contiguous part of an array.\r\n\r\n**Problem Details:**\r\n- Given an array of positive integers\r\n- Given an integer k\r\n- Count all subarrays with at most k distinct elements\r\n- A subarray is a contiguous portion of the array\r\n\r\n**Algorithm Approach:**\r\n1. **Brute Force Approach:**\r\n   - Generate all subarrays\r\n   - For each subarray, count distinct elements\r\n   - Check if distinct count ≤ k\r\n   - Time: O(n²), Space: O(n)\r\n\r\n2. **Sliding Window with Hash Map (Recommended):**\r\n   - Use a hash map to track element frequencies\r\n   - Maintain a sliding window of at most k distinct elements\r\n   - Expand right pointer, contract left pointer when needed\r\n   - Time: O(n), Space: O(k)\r\n\r\n3. **Two Pointer Approach:**\r\n   - Count subarrays with exactly k distinct = subarrays(≤ k) - subarrays(≤ k-1)\r\n   - Use two pointer technique for each calculation\r\n   - Time: O(n), Space: O(k)\r\n\r\n**Key Insight:**\r\n- For each position i, if we can extend the window to include it, all subarrays ending at i with left pointer from any valid position are valid\r\n- Use the formula: number of subarrays = (number of valid positions for left pointer)\r\n\r\n**Examples:**\r\n\r\nInput: arr[] = [1, 2, 2, 3], k = 2\r\nOutput: 9\r\nExplanation: Subarrays with at most 2 distinct elements are: [1], [2], [2], [3], [1, 2], [2, 2], [2, 3], [1, 2, 2] and [2, 2, 3].\r\n\r\nInput: arr[] = [1, 1, 1], k = 1\r\nOutput: 6\r\nExplanation: Subarrays with at most 1 distinct element are: [1], [1], [1], [1, 1], [1, 1] and [1, 1, 1].\r\n\r\nInput: arr[] = [1, 2, 1, 1, 3, 3, 4, 2, 1], k = 2\r\nOutput: 24\r\nExplanation: There are 24 subarrays with at most 2 distinct elements.\r\n\r\n**Time Complexity:** O(n) using sliding window with hash map\r\n**Space Complexity:** O(k) for the hash map storing at most k distinct elements\r\n\r\nComplete the function to find the number of subarrays with at most k distinct elements.",
+      "inputFormat": "First line: array arr[] as space-separated integers. Second line: integer k (number of allowed distinct elements).",
+      "outputFormat": "Return the count of subarrays with at most k distinct elements as a single integer.",
+      "constraints": "1 ≤ arr.length ≤ 10^5\\n1 ≤ k ≤ 26 (or number of unique elements)\\n1 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "1 2 2 3\\n2",
+      "sampleOutput": "9",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find the recurring function",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **Find the recurring function** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "K maximum sum combinations from two arrays",
+      "difficulty": "medium",
+      "category": "hashing",
+      "statement": "Practice solving **K maximum sum combinations from two arrays** under topic **hashing**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

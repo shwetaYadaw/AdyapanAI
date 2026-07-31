@@ -1,0 +1,509 @@
+{
+  "questions": [
+    {
+      "title": "Find the smallest number in an array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Largest in Array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Second Smallest and Second Largest",
+      "difficulty": "medium",
+      "category": "arrays"
+    },
+    {
+      "title": "Reverse a given array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Count Elements With Maximum Frequency",
+      "difficulty": "medium",
+      "category": "arrays"
+    },
+    {
+      "title": "Half Ascending and Half Descending Sort",
+      "difficulty": "medium",
+      "category": "arrays"
+    },
+    {
+      "title": "Sum of Array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Rotate Array",
+      "difficulty": "hard",
+      "category": "arrays"
+    },
+    {
+      "title": "Mean or Average of an Array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Median of an Array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Remove Duplicates from Sorted Array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Insert Element at a Given Position in an Array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Find All Duplicates in an Array",
+      "difficulty": "medium",
+      "category": "arrays"
+    },
+    {
+      "title": "First Non-Repeating Element",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Symmetric pairs in an array",
+      "difficulty": "medium",
+      "category": "arrays"
+    },
+    {
+      "title": "Maximum Product Subarray",
+      "difficulty": "hard",
+      "category": "arrays"
+    },
+    {
+      "title": "Rank Transform of an Array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Sort elements by frequency",
+      "difficulty": "hard",
+      "category": "arrays"
+    },
+    {
+      "title": "Equilibrium Index",
+      "difficulty": "medium",
+      "category": "arrays"
+    },
+    {
+      "title": "Array after k Rotations",
+      "difficulty": "medium",
+      "category": "arrays"
+    },
+    {
+      "title": "Sort an array according to the order defined by another array",
+      "difficulty": "hard",
+      "category": "arrays"
+    },
+    {
+      "title": "Array Search",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Check if an array is subset of another array",
+      "difficulty": "easy",
+      "category": "arrays"
+    },
+    {
+      "title": "Check if a number is Palindrome",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Palindromes in a Range",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Check if a number is prime",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Primes in a Range",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Check if a number is armstrong number of not",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Check if a number is perfect number",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Even or Odd",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Check weather a given number is positive or negative",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Sum of first N natural numbers",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Find Sum of AP Series",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Program to find sum of GP Series",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Greatest of two numbers",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Greatest of three numbers",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Leap Year or not",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Reverse digits of a number",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Maximum and Minimum digit in a number",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Print Fibonacci upto Nth Term",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Factorial of a number",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Power of a number",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Factors of a given number",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Print all prime factors of the given number",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Check if a number is a strong number or not",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Check if a Number is Automorphic",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "GCD of two numbers",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "LCM of two numbers",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Sum of digits of a number",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Sum of numbers in the given range",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Permutations in which N people can occupy R seats in a classroom",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Program to add two fractions",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Replace all 0s with 1s in a given integer",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Can a number be expressed as a sum of two prime numbers",
+      "difficulty": "medium",
+      "category": "numbers"
+    },
+    {
+      "title": "Calculate the area of circle",
+      "difficulty": "easy",
+      "category": "numbers"
+    },
+    {
+      "title": "Program to find roots of a Quadratic Equation",
+      "difficulty": "hard",
+      "category": "numbers"
+    },
+    {
+      "title": "Convert Binary to Decimal",
+      "difficulty": "easy",
+      "category": "number-systems"
+    },
+    {
+      "title": "Convert binary to octal",
+      "difficulty": "medium",
+      "category": "number-systems"
+    },
+    {
+      "title": "Decimal to Binary conversion",
+      "difficulty": "easy",
+      "category": "number-systems"
+    },
+    {
+      "title": "Convert decimal to octal",
+      "difficulty": "medium",
+      "category": "number-systems"
+    },
+    {
+      "title": "Convert octal to binary",
+      "difficulty": "medium",
+      "category": "number-systems"
+    },
+    {
+      "title": "Convert octal to decimal",
+      "difficulty": "medium",
+      "category": "number-systems"
+    },
+    {
+      "title": "Convert digits/numbers to words",
+      "difficulty": "hard",
+      "category": "number-systems"
+    },
+    {
+      "title": "Bubble Sort Algorithm",
+      "difficulty": "easy",
+      "category": "sorting"
+    },
+    {
+      "title": "Selection Sort Algorithm",
+      "difficulty": "easy",
+      "category": "sorting"
+    },
+    {
+      "title": "Insertion Sort Algorithm",
+      "difficulty": "easy",
+      "category": "sorting"
+    },
+    {
+      "title": "Quick Sort Algorithm",
+      "difficulty": "medium",
+      "category": "sorting"
+    },
+    {
+      "title": "Merge sort algorithm",
+      "difficulty": "medium",
+      "category": "sorting"
+    },
+    {
+      "title": "Check if a given string is palindrome or not",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Count number of vowels, consonants, spaces in String",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Find the ASCII value of a character",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Remove all vowels from the string",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Remove spaces from a string",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Remove characters from a string except alphabets",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Reverse a String",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Remove brackets from an algebraic expression",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Sum of the numbers in a String",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Capitalize first and last character of each word",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Calculate frequency of characters in a string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Find Non-repeating characters of a String",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Check if two strings are anagram of each other",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Count common sub-sequence in two strings",
+      "difficulty": "hard",
+      "category": "strings"
+    },
+    {
+      "title": "Check if two strings match where one string contains wildcard characters",
+      "difficulty": "hard",
+      "category": "strings"
+    },
+    {
+      "title": "Return maximum occurring character in the input string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Remove all duplicates from the input string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Print all the duplicates in the input string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Remove characters from first string present in the second string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Change every letter with the next lexicographic alphabet in the given string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Write a program to find the largest word in a given string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Write a program to sort characters in a string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Count number of words in a given string",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Write a program to find a word in a given string which has the highest number of repeated letters",
+      "difficulty": "hard",
+      "category": "strings"
+    },
+    {
+      "title": "Change case of each character in a string",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Concatenate one string to another",
+      "difficulty": "easy",
+      "category": "strings"
+    },
+    {
+      "title": "Write a program to find a substring within a string, if found display its starting position",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Reverse words in a string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Find the longest string",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Longest common prefix",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Check if string is rotated by two places",
+      "difficulty": "medium",
+      "category": "strings"
+    },
+    {
+      "title": "Check if string can be made equal by reverse operations",
+      "difficulty": "hard",
+      "category": "strings"
+    },
+    {
+      "title": "K maximum sum combinations from two arrays",
+      "difficulty": "hard",
+      "category": "arrays"
+    }
+  ]
+}

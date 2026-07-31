@@ -24,6 +24,8 @@ import forumRoutes from './routes/forum.routes';
 import resumeRoutes from './routes/resume.routes';
 import aiRoutes from './routes/ai.routes';
 import adminRoutes from './routes/admin.routes';
+import tcsNqtAdminRoutes from './routes/tcs-nqt-admin.routes';
+import questionsAdminRoutes from './routes/questions-admin.routes';
 import notificationRoutes from './routes/notification.routes';
 import uploadRoutes from './routes/upload.routes';
 import healthRoutes from './routes/health.routes';
@@ -111,6 +113,8 @@ export function createApp(): Application {
   app.use('/api/v1/placement', placementRoutes);
   app.use('/api/v1/ai', aiRoutes);
   app.use('/api/v1/admin', adminRoutes);
+  app.use('/api/v1/admin/tcs-nqt', tcsNqtAdminRoutes);
+  app.use('/api/v1/admin/questions', questionsAdminRoutes);
   app.use('/api/v1/challenges', challengeRoutes);
   app.use('/api/v1/problems', problemRoutes);
   app.use('/api/v1/submissions', submissionRoutes);

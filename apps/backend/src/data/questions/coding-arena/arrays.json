@@ -1,0 +1,609 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "arrays",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 26
+  },
+  "questions": [
+    {
+      "title": "Best Time to Buy and Sell Stock",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Best Time to Buy and Sell Stock** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "7 1 5 3 6 4",
+      "sampleOutput": "5",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Contains Duplicate",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Contains Duplicate** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3 1",
+      "sampleOutput": "true",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Product of Array Except Self",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Product of Array Except Self** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3 4",
+      "sampleOutput": "24 12 8 6",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Maximum Subarray (Kadane\\'s Algorithm)",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Maximum Subarray (Kadane\\'s Algorithm)** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Merge Intervals",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Merge Intervals** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 3 2 4 6 8 9 10",
+      "sampleOutput": "1 4\\n6 8\\n9 10",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Rotate Array",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Rotate Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3 4 5\\n2",
+      "sampleOutput": "3 4 5 1 2",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Reverse the Array",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Reverse the Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 4 3 2 6 5",
+      "sampleOutput": "5 6 2 3 4 1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Chocolate Distribution Problem",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Chocolate Distribution Problem** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "7 3 2 4 9 12 56\\n3",
+      "sampleOutput": "2",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Search in Rotated Sorted Array",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Search in Rotated Sorted Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "5 6 7 8 9 10 1 2 3\\n3",
+      "sampleOutput": "8",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Next Permutation",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Next Permutation** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "2 4 1 7 5 0",
+      "sampleOutput": "2 4 5 0 1 7",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Repeat and Missing Number Array",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Repeat and Missing Number Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "2 2",
+      "sampleOutput": "2 1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Kth-Largest Element in an Array",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Kth-Largest Element in an Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "3 5 4 2 9\\n3",
+      "sampleOutput": "4",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Trapping Rain Water",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Trapping Rain Water** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "3 0 1 0 4 0 2",
+      "sampleOutput": "10",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Maximum Product Subarray",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Maximum Product Subarray** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "-2 6 -3 -10 0 2",
+      "sampleOutput": "180",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Minimum in Rotated Sorted Array",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Find Minimum in Rotated Sorted Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "5 6 1 2 3 4",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Pair with Sum in Sorted & Rotated Array",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Find Pair with Sum in Sorted & Rotated Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "7 9 1 3 5\\n6",
+      "sampleOutput": "true",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "3Sum",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **3Sum** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "-1 0 1 2 -1 -4",
+      "sampleOutput": "-1 -1 2\\n-1 0 1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Container With Most Water",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Container With Most Water** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 8 6 2 5 4 8 3 7",
+      "sampleOutput": "49",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Given Sum Pair",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Given Sum Pair** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "0 -1 2 -3 1\\n-2",
+      "sampleOutput": "true",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Kth - Smallest Element",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Kth - Smallest Element** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "10 5 4 3 48 6 2 33 53 10\\n4",
+      "sampleOutput": "5",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Merge Overlapping Intervals",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Merge Overlapping Intervals** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 3 2 4 6 8 9 10",
+      "sampleOutput": "1 4\\n6 8\\n9 10",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Minimum Number of Merge Operations to Make an Array Palindrome",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Find Minimum Number of Merge Operations to Make an Array Palindrome** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "aabb",
+      "sampleOutput": "2",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Given an Array of Numbers Arrange the Numbers to Form the Biggest Number",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Given an Array of Numbers Arrange the Numbers to Form the Biggest Number** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "3 30 34 5 9",
+      "sampleOutput": "9534330",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Space Optimization Using Bit Manipulations",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Space Optimization Using Bit Manipulations** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "2 10",
+      "sampleOutput": "2 4 5 6 8 10",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Subarray Sum Divisible K",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Subarray Sum Divisible K** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "4 5 0 -2 -3 1\\n5",
+      "sampleOutput": "7",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Print all Possible Combinations of r Elements in a Given Array of Size n",
+      "difficulty": "medium",
+      "category": "arrays",
+      "statement": "Practice solving **Print all Possible Combinations of r Elements in a Given Array of Size n** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3 4\\n2",
+      "sampleOutput": "1 2\\n1 3\\n1 4\\n2 3\\n2 4\\n3 4",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}
