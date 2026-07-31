@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "binary-search",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 7
+  },
+  "questions": [
+    {
+      "title": "Binary Search",
+      "difficulty": "medium",
+      "category": "binary-search",
+      "statement": "Practice solving **Binary Search** under topic **binary-search**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Search Insert Position",
+      "difficulty": "medium",
+      "category": "binary-search",
+      "statement": "Practice solving **Search Insert Position** under topic **binary-search**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "First Bad Version",
+      "difficulty": "medium",
+      "category": "binary-search",
+      "statement": "Practice solving **First Bad Version** under topic **binary-search**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Search in Rotated Sorted Array",
+      "difficulty": "medium",
+      "category": "binary-search",
+      "statement": "Practice solving **Search in Rotated Sorted Array** under topic **binary-search**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "5 6 7 8 9 10 1 2 3\\n3",
+      "sampleOutput": "8",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Peak Element",
+      "difficulty": "medium",
+      "category": "binary-search",
+      "statement": "Practice solving **Find Peak Element** under topic **binary-search**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Koko Eating Bananas",
+      "difficulty": "medium",
+      "category": "binary-search",
+      "statement": "Practice solving **Koko Eating Bananas** under topic **binary-search**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Median of Two Sorted Arrays",
+      "difficulty": "medium",
+      "category": "binary-search",
+      "statement": "Practice solving **Median of Two Sorted Arrays** under topic **binary-search**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

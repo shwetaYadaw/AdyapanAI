@@ -38,7 +38,6 @@ export default function StudentDashboard() {
   const user = useAppSelector(selectUser);
 
   const { data: profile } = useQuery({ queryKey: ['studentProfile'], queryFn: async () => { const { data } = await api.get('/students/profile'); return data.data; } });
-  const { data: enrollments } = useQuery({ queryKey: ['enrollments'], queryFn: async () => { const { data } = await api.get('/enrollments/my-courses'); return data.data; } });
   const { data: codingStats } = useQuery({ queryKey: ['codingStats'], queryFn: async () => { const { data } = await api.get('/challenges/stats'); return data.data; } });
   const { data: questions } = useQuery({
     queryKey: ['codingQuestions', ''],
@@ -96,9 +95,8 @@ export default function StudentDashboard() {
       </motion.div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {[
-          { label: 'Courses Enrolled', value: enrollments?.length ?? 0, icon: BookOpen, color: 'from-primary-500 to-blue-400', href: '/courses' },
           { label: 'XP Points', value: profile?.totalXP ?? 0, icon: Zap, color: 'from-yellow-500 to-amber-400', href: '/student/profile' },
           { label: 'Problems Solved', value: codingStats?.solvedCount ?? 0, icon: Code2, color: 'from-purple-500 to-violet-400', href: '/student/challenges' },
           { label: 'Day Streak', value: profile?.streak ?? 0, icon: Flame, color: 'from-orange-500 to-red-400', href: '/student/profile' },

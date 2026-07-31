@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "dfs-bfs",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 7
+  },
+  "questions": [
+    {
+      "title": "Flood Fill",
+      "difficulty": "medium",
+      "category": "dfs-bfs",
+      "statement": "Practice solving **Flood Fill** under topic **dfs-bfs**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Number of Provinces",
+      "difficulty": "medium",
+      "category": "dfs-bfs",
+      "statement": "Practice solving **Number of Provinces** under topic **dfs-bfs**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Rotten Oranges",
+      "difficulty": "medium",
+      "category": "dfs-bfs",
+      "statement": "Practice solving **Rotten Oranges** under topic **dfs-bfs**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Surrounded Regions",
+      "difficulty": "medium",
+      "category": "dfs-bfs",
+      "statement": "Practice solving **Surrounded Regions** under topic **dfs-bfs**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Walls and Gates",
+      "difficulty": "medium",
+      "category": "dfs-bfs",
+      "statement": "Practice solving **Walls and Gates** under topic **dfs-bfs**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Open the Lock",
+      "difficulty": "medium",
+      "category": "dfs-bfs",
+      "statement": "Practice solving **Open the Lock** under topic **dfs-bfs**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Shortest Path in Binary Matrix",
+      "difficulty": "medium",
+      "category": "dfs-bfs",
+      "statement": "Practice solving **Shortest Path in Binary Matrix** under topic **dfs-bfs**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

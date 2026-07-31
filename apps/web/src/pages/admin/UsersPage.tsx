@@ -14,7 +14,7 @@ interface UserRow { _id: string; firstName: string; lastName: string; email: str
 export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState('student'); // Default to students only
   const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery({
@@ -23,6 +23,7 @@ export default function AdminUsersPage() {
       const params = new URLSearchParams({ page: String(page), limit: '20' });
       if (search) params.set('search', search);
       if (role) params.set('role', role);
+      else params.set('role', 'student'); // Only show students by default
       const { data } = await api.get(`/admin/users?${params}`);
       return data;
     },
@@ -73,10 +74,8 @@ export default function AdminUsersPage() {
           <input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder="Search users..." className="input-field pl-9" />
         </div>
         <select value={role} onChange={(e) => { setRole(e.target.value); setPage(1); }} className="input-field w-auto">
-          <option value="">All Roles</option>
-          {['student', 'teacher', 'mentor', 'recruiter', 'admin'].map((r) => (
-            <option key={r} value={r} className="capitalize">{r}</option>
-          ))}
+          <option value="student">Students Only</option>
+          <option value="admin">Admins Only</option>
         </select>
       </div>
       <Table columns={columns} data={data?.data ?? []} keyExtractor={(r: UserRow) => r._id} loading={isLoading} emptyMessage="No users found" />

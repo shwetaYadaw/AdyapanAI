@@ -1,0 +1,517 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "searching-sorting",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 22
+  },
+  "questions": [
+    {
+      "title": "Permute Two Arrays such that Sum of Every Pair is Greater or Equal to K",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Permute Two Arrays such that Sum of Every Pair is Greater or Equal to K** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "counting sort",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **counting sort** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "find common elements three sorted arrays",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **find common elements three sorted arrays** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Searching in an array where adjacent differ by at most k",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Searching in an array where adjacent differ by at most k** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "ceiling in a sorted array",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **ceiling in a sorted array** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Pair with given difference",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Pair with given difference** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "majority element",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **majority element** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "count triplets with sum smaller that a given value",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **count triplets with sum smaller that a given value** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Maximum Sum Subsequence with no adjacent elements",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Maximum Sum Subsequence with no adjacent elements** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Merge Sorted Arrays using O(1) Space",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Merge Sorted Arrays using O(1) Space** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Inversion of Array",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Inversion of Array** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Duplicates in O(n) Time and O(1) Extra Space",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Find Duplicates in O(n) Time and O(1) Extra Space** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Radix Sort",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Radix Sort** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Make all Array Elements Equal",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Make all Array Elements Equal** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Check if Reversing a Sub Array Make the Array Sorted",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Check if Reversing a Sub Array Make the Array Sorted** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Four Elements that Sum to a Given Value",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Find Four Elements that Sum to a Given Value** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Median of Two Sorted Array with Different Size",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Median of Two Sorted Array with Different Size** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Median of Stream of Integers Running Integers",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Median of Stream of Integers Running Integers** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Print Subarrays with 0 Sum",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Print Subarrays with 0 Sum** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Aggressive Cows",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Aggressive Cows** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Allocate Minimum number of Pages",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Allocate Minimum number of Pages** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Minimum Swaps to Sort",
+      "difficulty": "medium",
+      "category": "searching-sorting",
+      "statement": "Practice solving **Minimum Swaps to Sort** under topic **searching-sorting**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

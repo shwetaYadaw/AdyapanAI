@@ -1,86 +1,144 @@
-import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
-import { Users, BookOpen, TrendingUp, DollarSign, Award, BarChart2, ShieldCheck } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
-import Card from '../../components/common/Card/Card';
-import { formatNumber, formatPrice } from '@adyapan/shared';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
-export default function AdminDashboard() {
-  const { data: overview } = useQuery({
-    queryKey: ['adminOverview'],
-    queryFn: async () => { const { data } = await api.get('/admin/analytics/overview'); return data.data; },
-  });
+export default function AdminDashboardPage() {
+  const navigate = useNavigate();
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  const { data: revenue } = useQuery({
-    queryKey: ['adminRevenue'],
-    queryFn: async () => { const { data } = await api.get('/admin/analytics/revenue?days=30'); return data.data; },
-  });
+  useEffect(() => {
+    // Check if user is admin
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user.role || user.role !== 'admin') {
+      navigate('/login');
+      return;
+    }
 
-  const stats = [
-    { label: 'Total Users', value: overview?.totalUsers ?? 0, icon: Users, color: 'from-primary-500 to-blue-400', change: '+12%' },
-    { label: 'Active Students', value: overview?.activeStudents ?? 0, icon: BookOpen, color: 'from-green-500 to-emerald-400', change: '+8%' },
-    { label: 'Total Revenue', value: `₹${formatNumber(overview?.totalRevenue ?? 0)}`, icon: DollarSign, color: 'from-purple-500 to-violet-400', change: '+23%' },
-    { label: 'Courses', value: overview?.publishedCourses ?? 0, icon: BarChart2, color: 'from-orange-500 to-amber-400', change: '+5%' },
-    { label: 'Enrollments', value: formatNumber(overview?.totalEnrollments ?? 0), icon: TrendingUp, color: 'from-cyan-500 to-teal-400', change: '+18%' },
-    { label: 'Completion Rate', value: `${overview?.completionRate ?? 0}%`, icon: Award, color: 'from-pink-500 to-rose-400', change: '+2%' },
-  ];
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      const response = await api.get('/admin/stats');
+      setStats(response.data.data);
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="page-wrapper space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Admin Dashboard</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">Platform overview and analytics</p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950/30 px-3 py-1.5 rounded-full">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          System Healthy
-        </div>
+      <div>
+        <h1 className="font-display font-bold text-3xl text-gray-900 dark:text-white">
+          Dashboard Overview
+        </h1>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+          Welcome to Adyapan Admin Panel
+        </p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        {stats.map((stat, i) => (
-          <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
-            <Card padding="md">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{stat.label}</p>
-                  <p className="font-display font-bold text-2xl text-gray-900 dark:text-white">{stat.value}</p>
-                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">{stat.change} this month</p>
-                </div>
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center`}>
-                  <stat.icon className="w-5 h-5 text-white" />
-                </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {[
+          { 
+            label: 'Total Users', 
+            value: stats?.totalStudents || 0, 
+            color: 'from-orange-500 to-orange-600',
+            icon: '👥'
+          },
+          { 
+            label: 'Coding Problems', 
+            value: stats?.totalProblems || 0, 
+            color: 'from-blue-500 to-blue-600',
+            icon: '💻'
+          },
+          { 
+            label: 'Total Submissions', 
+            value: stats?.totalSubmissions || 0, 
+            color: 'from-green-500 to-green-600',
+            icon: '📝'
+          },
+          { 
+            label: 'Submissions Today', 
+            value: stats?.submissionsToday || 0, 
+            color: 'from-purple-500 to-purple-600',
+            icon: '📊'
+          },
+        ].map((stat) => (
+          <div 
+            key={stat.label}
+            className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-3xl">{stat.icon}</span>
+              <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${stat.color} flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
+                {stat.value}
               </div>
-            </Card>
-          </motion.div>
+            </div>
+            <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              {stat.label}
+            </h3>
+          </div>
         ))}
       </div>
 
-      {/* Revenue Chart */}
-      <Card padding="md">
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Revenue (Last 30 days)</h3>
-        <ResponsiveContainer width="100%" height={240}>
-          <AreaChart data={revenue ?? []}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis dataKey="_id" tick={{ fontSize: 11 }} tickLine={false} />
-            <YAxis tick={{ fontSize: 11 }} tickLine={false} axisLine={false} />
-            <Tooltip
-              contentStyle={{ borderRadius: '12px', border: '1px solid #e5e7eb', fontSize: '12px' }}
-              formatter={(v: number) => [`₹${v.toLocaleString()}`, 'Revenue']}
-            />
-            <Area type="monotone" dataKey="revenue" stroke="#3b82f6" fill="url(#colorRevenue)" strokeWidth={2} />
-          </AreaChart>
-        </ResponsiveContainer>
-      </Card>
+      {/* Recent Activity Card */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          Recent Activity
+        </h2>
+        <div className="text-center py-12">
+          <div className="text-6xl mb-4">📈</div>
+          <p className="text-gray-500 dark:text-gray-400">
+            Activity feed coming soon...
+          </p>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <button
+          onClick={() => navigate('/admin/users')}
+          className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all hover:border-primary-500 dark:hover:border-primary-500 text-left group"
+        >
+          <div className="text-3xl mb-3">👥</div>
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+            Manage Users
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            View and manage student accounts
+          </p>
+        </button>
+
+        <button
+          onClick={() => navigate('/admin/analytics')}
+          className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all hover:border-primary-500 dark:hover:border-primary-500 text-left group"
+        >
+          <div className="text-3xl mb-3">💻</div>
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+            Coding Problems
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Manage DSA problems and test cases
+          </p>
+        </button>
+
+        <button
+          onClick={() => navigate('/admin/analytics')}
+          className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all hover:border-primary-500 dark:hover:border-primary-500 text-left group"
+        >
+          <div className="text-3xl mb-3">📊</div>
+          <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+            Submissions & Analytics
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            View submission stats and user progress
+          </p>
+        </button>
+      </div>
     </div>
   );
 }

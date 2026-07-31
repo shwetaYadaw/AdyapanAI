@@ -1,0 +1,609 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "recursion-backtracking",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 26
+  },
+  "questions": [
+    {
+      "title": "Subsets",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Subsets** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Subsets II",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Subsets II** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Permutations",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Permutations** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Combination Sum",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Combination Sum** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "N Queens",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **N Queens** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Sudoku Solver",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Sudoku Solver** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Combinational Sum",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Combinational Sum** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Crossword-Puzzle",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Crossword-Puzzle** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Possible Route in a Matrix with Hurdles",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Longest Possible Route in a Matrix with Hurdles** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Printing all solutions in N-Queen Problem",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Printing all solutions in N-Queen Problem** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Solve the Sudoku",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Solve the Sudoku** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Partition Equal Subset Sum",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Partition Equal Subset Sum** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "M Coloring Problem",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **M Coloring Problem** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Knight Tour",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Knight Tour** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Soduko",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Soduko** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Remove Invalid Parentheses",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Remove Invalid Parentheses** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Word Break Problem using Backtracking",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Word Break Problem using Backtracking** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Print all Palindromic Partitions of a String",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Print all Palindromic Partitions of a String** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find Shortest Safe Route in a Path with Landmines",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Find Shortest Safe Route in a Path with Landmines** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Partition of Set into K Subsets with Equal Sum",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Partition of Set into K Subsets with Equal Sum** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Backtracking set-7 hamiltonian cycle",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Backtracking set-7 hamiltonian cycle** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "tug-of-war",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **tug-of-war** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Maximum Possible Number by doing at most K swaps",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Maximum Possible Number by doing at most K swaps** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Backtracking set-8 solving cryptarithmetic puzzles",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Backtracking set-8 solving cryptarithmetic puzzles** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Find paths from corner cell to middle cell in maze",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Find paths from corner cell to middle cell in maze** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Arithmetic Expressions",
+      "difficulty": "medium",
+      "category": "recursion-backtracking",
+      "statement": "Practice solving **Arithmetic Expressions** under topic **recursion-backtracking**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

@@ -2,9 +2,8 @@ import { NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import {
-  LayoutDashboard, BookOpen, Briefcase, Award, Users, Target,
-  MessageSquare, GraduationCap, BarChart2, Settings, ChevronLeft,
-  UserCheck, Building2, ClipboardList, TrendingUp, ShieldCheck, Code2, Trophy
+  LayoutDashboard, BookOpen, Award, Users, 
+  BarChart2, Settings, ChevronLeft, Code2, Trophy, Brain
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { toggleSidebar } from '../../../features/ui/uiSlice';
@@ -26,44 +25,19 @@ const STUDENT_NAV: NavItem[] = [
   { label: 'Contests',     href: '/student/contests',   icon: Trophy },
 ];
 
-const TEACHER_NAV: NavItem[] = [
-  { label: 'Dashboard', href: '/teacher/dashboard', icon: LayoutDashboard },
-  { label: 'My Courses', href: '/teacher/courses', icon: BookOpen },
-  { label: 'Students', href: '/teacher/students', icon: GraduationCap },
-  { label: 'Earnings', href: '/teacher/earnings', icon: TrendingUp },
-  { label: 'Analytics', href: '/teacher/analytics', icon: BarChart2 },
-];
-
-const RECRUITER_NAV: NavItem[] = [
-  { label: 'Dashboard', href: '/recruiter/dashboard', icon: LayoutDashboard },
-  { label: 'Post Jobs', href: '/recruiter/jobs', icon: Briefcase },
-  { label: 'Candidates', href: '/recruiter/candidates', icon: Users },
-  { label: 'Applications', href: '/recruiter/applications', icon: ClipboardList },
-  { label: 'Company Profile', href: '/recruiter/company', icon: Building2 },
-];
-
-const MENTOR_NAV: NavItem[] = [
-  { label: 'Dashboard', href: '/mentor/dashboard', icon: LayoutDashboard },
-  { label: 'Sessions', href: '/mentor/sessions', icon: UserCheck },
-  { label: 'Mentees', href: '/mentor/mentees', icon: Users },
-];
-
 const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Users', href: '/admin/users', icon: Users },
+  { label: 'Problems', href: '/admin/problems', icon: Code2 },
+  { label: 'Aptitude', href: '/admin/aptitude', icon: Brain },
+  { label: 'Contests', href: '/admin/contests', icon: Trophy },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
-  { label: 'Certificates', href: '/admin/certificates', icon: Award },
-  { label: 'Security', href: '/admin/security', icon: ShieldCheck },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
 
 const NAV_MAP: Record<string, NavItem[]> = {
   student: STUDENT_NAV,
-  teacher: TEACHER_NAV,
-  recruiter: RECRUITER_NAV,
-  mentor: MENTOR_NAV,
   admin: ADMIN_NAV,
-  superadmin: ADMIN_NAV,
 };
 
 export default function Sidebar() {

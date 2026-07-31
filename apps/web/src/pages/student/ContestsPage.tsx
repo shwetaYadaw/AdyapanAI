@@ -147,49 +147,25 @@ export default function ContestsPage() {
     setSubmitting(false);
   };
 
-  // Query all active / upcoming contests
+  // Query all active / upcoming contests from backend
   const { data: contests, isLoading } = useQuery<Contest[]>({
     queryKey: ['contestsList'],
     queryFn: async () => {
       try {
-        await api.get('/courses?category=placement');
-        const { data: qRes } = await api.get('/challenges/questions');
-        const allQuestions = qRes?.data ?? [];
-        const questionSlugs = allQuestions.map((q: any) => q.slug);
-
-        const getRandomSlugs = (count: number, defaultSlugs: string[]) => {
-          if (questionSlugs.length === 0) return defaultSlugs;
-          const shuffled = [...questionSlugs].sort(() => 0.5 - Math.random());
-          return shuffled.slice(0, count);
-        };
-
-        const c1Questions = getRandomSlugs(2, ['chocolate-distribution-problem-arrays', 'two-sum-arrays']);
-        const c2Questions = getRandomSlugs(1, ['power-of-two-bit-manipulation']);
-
-        const weeklyTime = getContestOccurrence(0, 2); // Sunday (0), 2 hours duration
-        const monthlyTime = getContestOccurrence(3, 3); // Wednesday (3), 3 hours duration
-
-        return [
-          {
-            _id: 'c1',
-            title: 'ADYAPAN Weekly Speedrun #1',
-            description: 'Test your speed and accuracy in our first weekly DSA placement coding speedrun. Win up to 100 XP and platform badges!',
-            startTime: weeklyTime.startTime.toISOString(),
-            endTime: weeklyTime.endTime.toISOString(),
-            questions: c1Questions,
-            participants: [1, 2, 3, 4, 5],
-          },
-          {
-            _id: 'c2',
-            title: 'Monthly Placement Mega Contest',
-            description: 'Comprehensive 3-hour placement exam simulating FAANG and top-MNC coding screens. Solve 5 problems to grab recruiters attention!',
-            startTime: monthlyTime.startTime.toISOString(),
-            endTime: monthlyTime.endTime.toISOString(),
-            questions: c2Questions,
-            participants: [],
-          }
-        ];
-      } catch {
+        const { data } = await api.get('/contests');
+        // Map backend Contest model to frontend interface
+        const backendContests = (data.data || []).map((contest: any) => ({
+          _id: contest.id,
+          title: contest.title,
+          description: contest.description,
+          startTime: contest.startTime,
+          endTime: contest.endTime,
+          questions: Array.isArray(contest.questions) ? contest.questions : [],
+          participants: [], // Can be extended later to track participants
+        }));
+        return backendContests;
+      } catch (error) {
+        console.error('Failed to fetch contests:', error);
         return [];
       }
     }

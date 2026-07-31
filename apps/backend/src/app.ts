@@ -24,6 +24,8 @@ import forumRoutes from './routes/forum.routes';
 import resumeRoutes from './routes/resume.routes';
 import aiRoutes from './routes/ai.routes';
 import adminRoutes from './routes/admin.routes';
+import tcsNqtAdminRoutes from './routes/tcs-nqt-admin.routes';
+import questionsAdminRoutes from './routes/questions-admin.routes';
 import notificationRoutes from './routes/notification.routes';
 import uploadRoutes from './routes/upload.routes';
 import healthRoutes from './routes/health.routes';
@@ -34,6 +36,8 @@ import roadmapRoutes from './routes/roadmap.routes';
 import problemRoutes from './routes/problem.routes';
 import submissionRoutes from './routes/submission.routes';
 import puzzleRoutes from './routes/puzzle.routes';
+import contestRoutes from './routes/contest.routes';
+import aptitudeRoutes from './routes/aptitude.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -109,10 +113,14 @@ export function createApp(): Application {
   app.use('/api/v1/placement', placementRoutes);
   app.use('/api/v1/ai', aiRoutes);
   app.use('/api/v1/admin', adminRoutes);
+  app.use('/api/v1/admin/tcs-nqt', tcsNqtAdminRoutes);
+  app.use('/api/v1/admin/questions', questionsAdminRoutes);
   app.use('/api/v1/challenges', challengeRoutes);
   app.use('/api/v1/problems', problemRoutes);
   app.use('/api/v1/submissions', submissionRoutes);
   app.use('/api/v1/puzzles', puzzleRoutes);
+  app.use('/api/v1/contests', contestRoutes);
+  app.use('/api/v1/aptitude', aptitudeRoutes);
   app.use('/api/v1/roadmap', roadmapRoutes);
   app.use('/api/v1/notifications', notificationRoutes);
   app.use('/api/v1/upload', uploadRoutes);

@@ -237,7 +237,9 @@ export default function Footer() {
       <div style={{
         borderTop: '1px solid rgba(255, 255, 255, 0.1)',
         paddingTop: '20px',
-        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
         color: '#888',
         fontSize: '12px',
       }}>

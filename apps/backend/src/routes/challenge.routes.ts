@@ -1190,12 +1190,43 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
 
         if (!alreadySolved) {
           const updatedXp = profile.xp + question.xpReward;
-          const updatedLevel = Math.floor(updatedXp / 100) + 1; // 100 XP per level
+          const updatedTotalXP = profile.totalXP + question.xpReward;
+          const updatedLevel = Math.floor(updatedTotalXP / 100) + 1; // 100 XP per level
+          
+          // Calculate streak
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          let newStreak = profile.streak || 0;
+          const lastActive = profile.lastActiveDate ? new Date(profile.lastActiveDate) : null;
+          
+          if (lastActive) {
+            lastActive.setHours(0, 0, 0, 0);
+            const diffDays = Math.floor((today.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) {
+              // Same day - keep current streak
+              newStreak = profile.streak;
+            } else if (diffDays === 1) {
+              // Consecutive day - increment streak
+              newStreak = profile.streak + 1;
+            } else {
+              // Streak broken - reset to 1
+              newStreak = 1;
+            }
+          } else {
+            // First time solving - start streak at 1
+            newStreak = 1;
+          }
+          
           await prisma.studentProfile.update({
             where: { userId: req.user!.userId },
             data: {
               xp: updatedXp,
-              level: updatedLevel
+              totalXP: updatedTotalXP,
+              level: updatedLevel,
+              streak: newStreak,
+              lastActiveDate: today
             }
           });
 
@@ -1306,39 +1337,40 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
 // GET /challenges/stats — Get total solved and total questions for the logged in user
 router.get('/stats', authenticate, async (req, res, next) => {
   try {
-    const questions = await prisma.question.findMany({
+    // Use Problem table for DSA Coding Arena stats (not Question table which has TCS NQT)
+    const problems = await prisma.problem.findMany({
       select: {
         id: true,
         topics: true
       }
     });
 
-    const solvedQuestions = await prisma.submission.findMany({
+    // Filter submissions that have problemId (DSA Coding Arena submissions)
+    const solvedProblems = await prisma.submission.findMany({
       where: {
         userId: req.user!.userId,
-        status: 'accepted'
+        status: 'accepted',
+        problemId: { not: null }
       },
-      distinct: ['questionId'],
+      distinct: ['problemId'],
       select: {
-        questionId: true
+        problemId: true
       }
     });
 
-    const solvedQuestionIds = new Set(solvedQuestions.map(s => s.questionId));
+    const solvedProblemIds = new Set(solvedProblems.map(s => s.problemId).filter(Boolean));
     const topicStats: Record<string, { total: number; solved: number }> = {};
 
-    questions.forEach(q => {
-      // Parse topics if it's stored as JSON string
+    problems.forEach(p => {
+      // Problem table stores topics as comma-separated string, not JSON
       let topics: string[] = [];
-      if (q.topics) {
-        try {
-          topics = typeof q.topics === 'string' ? JSON.parse(q.topics) : (q.topics as string[]);
-        } catch (e) {
-          topics = [];
-        }
+      if (p.topics) {
+        topics = typeof p.topics === 'string' 
+          ? p.topics.split(',').map(t => t.trim()).filter(Boolean)
+          : [];
       }
       
-      const isSolved = solvedQuestionIds.has(q.id);
+      const isSolved = solvedProblemIds.has(p.id);
 
       topics.forEach(t => {
         const key = t.toLowerCase();
@@ -1355,8 +1387,8 @@ router.get('/stats', authenticate, async (req, res, next) => {
     sendSuccess({
       res,
       data: {
-        solvedCount: solvedQuestionIds.size,
-        totalQuestions: questions.length,
+        solvedCount: solvedProblemIds.size,
+        totalQuestions: problems.length,
         topicStats
       }
     });

@@ -166,7 +166,9 @@ interface Question {
   constraints: string;
   sampleInput: string;
   sampleOutput: string;
-  templates: { language: string; code: string }[];
+  templates?: { language: string; code: string }[]; // Question table format (optional)
+  starterCode?: any; // Problem table format (optional) - JSON object with language keys
+  testCases?: { input: string; expectedOutput: string; isHidden: boolean; type: string }[]; // Problem table test cases
   xpReward: number;
 }
 
@@ -258,12 +260,22 @@ export default function CodingPortalPage() {
     toast.success('Comment posted!');
   };
 
-  // Fetch question details
+  // Fetch question details (tries /problems first, then /challenges/questions for TCS NQT)
   const { data: question, isLoading } = useQuery<Question>({
     queryKey: ['codingQuestionDetail', slug],
     queryFn: async () => {
-      const { data } = await api.get(`/challenges/questions/${slug}`);
-      return data.data;
+      // Try Problem table first (DSA Coding Arena)
+      try {
+        const { data } = await api.get(`/problems/${slug}`);
+        return data.data;
+      } catch (error: any) {
+        // If not found in Problem table (404), try Question table (TCS NQT)
+        if (error.response?.status === 404) {
+          const { data } = await api.get(`/challenges/questions/${slug}`);
+          return data.data;
+        }
+        throw error;
+      }
     },
     enabled: !!slug,
   });
@@ -275,11 +287,29 @@ export default function CodingPortalPage() {
   // Set default code template when question or language changes
   useEffect(() => {
     if (question) {
-      const template = question.templates.find(t => t.language === selectedLanguage);
-      if (template) {
+      // Problem table uses 'starterCode' (object with language keys), Question table uses 'templates' (array)
+      let template;
+      if (question.templates) {
+        // Question table format (array of {language, code})
+        template = question.templates.find(t => t.language === selectedLanguage);
+      } else if (question.starterCode) {
+        // Problem table format (object with language keys)
+        const starterCode = typeof question.starterCode === 'string' 
+          ? JSON.parse(question.starterCode) 
+          : question.starterCode;
+        template = { code: starterCode[selectedLanguage] || '' };
+      }
+      
+      if (template && template.code) {
         setEditorCode(template.code);
       }
-      if (question.sampleInput) {
+      
+      // Set testcase input from the first visible test case, or sampleInput
+      if (question.testCases && question.testCases.length > 0) {
+        // Use first visible test case from Problem table
+        setCustomTestcaseInput(question.testCases[0].input);
+      } else if (question.sampleInput) {
+        // Fallback to sampleInput from Question table
         setCustomTestcaseInput(question.sampleInput);
       }
     }
@@ -322,10 +352,15 @@ export default function CodingPortalPage() {
     else if (consoleSize === 'large') setConsoleHeight(isSmallScreen ? 250 : 320);
   }, [consoleSize]);
 
-  // Mutation: Run Code (sample tests)
+  // Mutation: Run Code (sample tests) - Detects if Problem or Question table
   const runCodeMutation = useMutation({
-    mutationFn: (payload: { code: string; language: string; input: string }) =>
-      api.post(`/challenges/questions/${question?.id || question?._id}/run`, payload),
+    mutationFn: async (payload: { code: string; language: string; input: string }) => {
+      // If question has 'id' field, it's from Problem table, otherwise use slug
+      const endpoint = question?.id && !question?._id?.includes('tcs-nqt') 
+        ? `/problems/${slug}/run`
+        : `/challenges/questions/${question?.id || question?._id || slug}/run`;
+      return api.post(endpoint, payload);
+    },
     onSuccess: (res) => {
       setExecutionOutput(res.data.data);
       setConsoleOpen(true);
@@ -343,10 +378,15 @@ export default function CodingPortalPage() {
     },
   });
 
-  // Mutation: Submit Code (all tests)
+  // Mutation: Submit Code (all tests) - Detects if Problem or Question table
   const submitCodeMutation = useMutation({
-    mutationFn: (payload: { code: string; language: string }) =>
-      api.post(`/challenges/questions/${question?.id || question?._id}/submit`, payload),
+    mutationFn: async (payload: { code: string; language: string }) => {
+      // If question has 'id' field, it's from Problem table, otherwise use slug
+      const endpoint = question?.id && !question?._id?.includes('tcs-nqt')
+        ? `/problems/${slug}/submit`
+        : `/challenges/questions/${question?.id || question?._id || slug}/submit`;
+      return api.post(endpoint, payload);
+    },
     onSuccess: (res) => {
       const payload = res.data.data;
       setExecutionOutput(payload);
@@ -517,7 +557,71 @@ export default function CodingPortalPage() {
                 {/* Main Problem statement */}
                 <div className="border-t border-gray-100 dark:border-gray-800 pt-3 space-y-3">
                   {(() => {
-                    const sections = question.statement.split(/(?=##\s)/g);
+                    let statement = question.statement || '';
+                    
+                    // If statement doesn't have markdown headers with emojis, auto-format it to match TCS NQT style
+                    if (!statement.includes('## 📝')) {
+                      // Build formatted statement with exact TCS NQT styling
+                      let formatted = '';
+                      
+                      // Problem Statement section with document emoji
+                      formatted += `## 📝 Problem Statement\n\n${statement}\n\n---\n\n`;
+                      
+                      // Input Format section with inbox emoji
+                      if (question.inputFormat) {
+                        formatted += `## 📥 Input Format\n\n${question.inputFormat}\n\n`;
+                      }
+                      
+                      // Output Format section with outbox emoji
+                      if (question.outputFormat) {
+                        formatted += `## 📤 Output Format\n\n${question.outputFormat}\n\n`;
+                      }
+                      
+                      // Constraints section with gear emoji
+                      if (question.constraints) {
+                        formatted += `## ⚙️ Constraints\n\n\`\`\`\n${question.constraints}\n\`\`\`\n\n---\n\n`;
+                      }
+                      
+                      // Sample Test Cases section with lightbulb emoji - USE REAL TEST CASES
+                      if (question.testCases && question.testCases.length > 0) {
+                        formatted += `## 💡 Sample Test Cases\n\n`;
+                        
+                        // Show all visible (non-hidden) test cases
+                        question.testCases.forEach((tc, index) => {
+                          formatted += `### Sample Test Case ${index + 1}\n\n`;
+                          formatted += `**Input:**\n\`\`\`\n${tc.input}\n\`\`\`\n\n`;
+                          formatted += `**Output:**\n\`\`\`\n${tc.expectedOutput}\n\`\`\`\n\n`;
+                          formatted += `**Explanation:**\n\nThe sample output matches the expected result of applying the algorithm on the sample input.\n\n`;
+                        });
+                      } else if (question.sampleInput && question.sampleOutput) {
+                        // Fallback to sampleInput/sampleOutput for Question table
+                        formatted += `## 💡 Sample Test Cases\n\n`;
+                        formatted += `### Sample Test Case 1\n\n`;
+                        formatted += `**Input:**\n\`\`\`\n${question.sampleInput}\n\`\`\`\n\n`;
+                        formatted += `**Output:**\n\`\`\`\n${question.sampleOutput}\n\`\`\`\n\n`;
+                        formatted += `**Explanation:**\n\nThe sample output matches the expected result of applying the algorithm on the sample input.\n\n`;
+                      }
+                      
+                      // Add collapsible sections like TCS NQT
+                      formatted += `## ⚡ Complexity Analysis\n\n`;
+                      formatted += `**Time Complexity:** O(n) - where n is the size of the input\n\n`;
+                      formatted += `**Space Complexity:** O(1) - constant extra space\n\n`;
+                      
+                      formatted += `## 💡 Hints\n\n`;
+                      formatted += `• Try to understand the problem requirements first\n`;
+                      formatted += `• Think about edge cases\n`;
+                      formatted += `• Consider the time and space complexity\n\n`;
+                      
+                      formatted += `## 🤖 AI Mentor Insights\n\n`;
+                      formatted += `This problem tests your understanding of basic algorithms. Focus on:\n\n`;
+                      formatted += `• Understanding input/output format\n`;
+                      formatted += `• Handling edge cases properly\n`;
+                      formatted += `• Writing clean, readable code\n\n`;
+                      
+                      statement = formatted;
+                    }
+                    
+                    const sections = statement.split(/(?=##\s)/g);
                     const core: string[] = [];
                     const collapsible: { title: string; content: string }[] = [];
 
@@ -549,13 +653,15 @@ export default function CodingPortalPage() {
                     return (
                       <>
                         <MarkdownRenderer text={core.join('\n')} />
-                        <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2">
-                          {collapsible.map((sec, idx) => (
-                            <CollapsibleSection key={idx} title={sec.title}>
-                              <MarkdownRenderer text={sec.content} />
-                            </CollapsibleSection>
-                          ))}
-                        </div>
+                        {collapsible.length > 0 && (
+                          <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-2">
+                            {collapsible.map((sec, idx) => (
+                              <CollapsibleSection key={idx} title={sec.title}>
+                                <MarkdownRenderer text={sec.content} />
+                              </CollapsibleSection>
+                            ))}
+                          </div>
+                        )}
                       </>
                     );
                   })()}

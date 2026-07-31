@@ -1,10 +1,6 @@
 export const ROLES = {
   STUDENT: 'student',
-  TEACHER: 'teacher',
-  MENTOR: 'mentor',
-  RECRUITER: 'recruiter',
   ADMIN: 'admin',
-  SUPER_ADMIN: 'superadmin',
 } as const;
 
 export type Role = (typeof ROLES)[keyof typeof ROLES];
@@ -25,37 +21,8 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     'build:resume',
     'take:quizzes',
     'attend:live_classes',
-  ],
-  teacher: [
-    'read:courses',
-    'create:courses',
-    'update:own_courses',
-    'delete:own_courses',
-    'read:own_students',
-    'create:quizzes',
-    'issue:certificates',
-    'host:live_classes',
-    'read:own_earnings',
-    'read:forum',
-    'write:forum',
-    'manage:own_profile',
-  ],
-  mentor: [
-    'read:courses',
-    'manage:mentor_profile',
-    'manage:mentor_sessions',
-    'read:mentee_profiles',
-    'read:forum',
-    'write:forum',
-  ],
-  recruiter: [
-    'create:jobs',
-    'update:own_jobs',
-    'delete:own_jobs',
-    'read:student_profiles',
-    'manage:applications',
-    'schedule:interviews',
-    'manage:company_profile',
+    'submit:code',
+    'view:submissions',
   ],
   admin: [
     'manage:users',
@@ -67,6 +34,9 @@ export const ROLE_PERMISSIONS: Record<string, string[]> = {
     'manage:cms',
     'manage:support_tickets',
     'read:ai_usage',
+    'manage:problems',
+    'view:all_submissions',
+    'manage:settings',
+    '*', // Full access
   ],
-  superadmin: ['*'],
 };
