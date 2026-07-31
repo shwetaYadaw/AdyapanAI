@@ -37,6 +37,9 @@ const CodingTopicPage      = lazy(() => import('../pages/student/CodingTopicPage
 // Admin
 const AdminDashboard     = lazy(() => import('../pages/admin/DashboardPage'));
 const AdminUsersPage     = lazy(() => import('../pages/admin/UsersPage'));
+const AdminProblemsPage  = lazy(() => import('../pages/admin/ProblemsPage'));
+const AdminAptitudePage  = lazy(() => import('../pages/admin/AptitudePage'));
+const AdminContestsPage  = lazy(() => import('../pages/admin/ContestsPage'));
 const AdminAnalyticsPage = lazy(() => import('../pages/admin/AnalyticsPage'));
 const AdminSecurityPage  = lazy(() => import('../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../pages/admin/SettingsPage'));
@@ -94,6 +97,9 @@ export default function AppRouter() {
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsersPage />} />
+            <Route path="problems" element={<AdminProblemsPage />} />
+            <Route path="aptitude" element={<AdminAptitudePage />} />
+            <Route path="contests" element={<AdminContestsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="certificates" element={<AdminCertificatesPage />} />
             <Route path="security" element={<AdminSecurityPage />} />

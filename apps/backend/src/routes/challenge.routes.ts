@@ -1190,12 +1190,43 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
 
         if (!alreadySolved) {
           const updatedXp = profile.xp + question.xpReward;
-          const updatedLevel = Math.floor(updatedXp / 100) + 1; // 100 XP per level
+          const updatedTotalXP = profile.totalXP + question.xpReward;
+          const updatedLevel = Math.floor(updatedTotalXP / 100) + 1; // 100 XP per level
+          
+          // Calculate streak
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          let newStreak = profile.streak || 0;
+          const lastActive = profile.lastActiveDate ? new Date(profile.lastActiveDate) : null;
+          
+          if (lastActive) {
+            lastActive.setHours(0, 0, 0, 0);
+            const diffDays = Math.floor((today.getTime() - lastActive.getTime()) / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 0) {
+              // Same day - keep current streak
+              newStreak = profile.streak;
+            } else if (diffDays === 1) {
+              // Consecutive day - increment streak
+              newStreak = profile.streak + 1;
+            } else {
+              // Streak broken - reset to 1
+              newStreak = 1;
+            }
+          } else {
+            // First time solving - start streak at 1
+            newStreak = 1;
+          }
+          
           await prisma.studentProfile.update({
             where: { userId: req.user!.userId },
             data: {
               xp: updatedXp,
-              level: updatedLevel
+              totalXP: updatedTotalXP,
+              level: updatedLevel,
+              streak: newStreak,
+              lastActiveDate: today
             }
           });
 
