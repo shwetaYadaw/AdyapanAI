@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { authenticate } from '../middleware/auth.middleware';
 import { prisma } from '../config/prisma';
 import { JudgeService } from '../services/judge.service';
-import { executionEngineService } from '../services/executionEngine.service';
 import { sendSuccess } from '../utils/response.utils';
 import { AppError } from '../middleware/errorHandler.middleware';
 import { logger } from '../utils/logger';
@@ -659,37 +658,30 @@ router.post('/questions/:id/run', authenticate, async (req, res, next) => {
     const runInput = typeof input === 'string' ? input : question.sampleInput;
     const isCustomRun = typeof input === 'string' && input !== question.sampleInput;
     
-    // Use Execution Engine instead of Judge0
-    const result = await executionEngineService.runCode(
+    // Use Judge0 for code execution
+    const result = await judge.runTestCase(
       code,
       language,
       runInput,
-      question.timeLimit,
-      question.memoryLimit
+      isCustomRun ? undefined : question.sampleOutput,
+      question.timeLimit
     );
 
     // Check if output matches expected (only for non-custom runs)
-    let passed = result.verdict === 'AC';
-    if (!isCustomRun && question.sampleOutput) {
-      const normalizeOutput = (str: string) => str.trim().replace(/\s+/g, ' ');
-      passed = normalizeOutput(result.output) === normalizeOutput(question.sampleOutput);
-    }
+    const passed = result.passed;
 
     sendSuccess({
       res,
       data: {
         passed,
-        actualOutput: result.output,
+        actualOutput: result.actualOutput,
         expectedOutput: isCustomRun ? undefined : question.sampleOutput,
         input: runInput,
         isCustomRun,
         runtime: result.runtime,
-        memory: result.memory,
-        verdict: result.verdict,
-        errorType: result.verdict === 'CE' ? 'compile_error' : 
-                   result.verdict === 'RE' ? 'runtime_error' : 
-                   result.verdict === 'TLE' ? 'time_limit_exceeded' : undefined,
-        errorMessage: result.error || undefined,
+        memory: 0,
+        errorType: result.errorType,
+        errorMessage: result.errorMessage,
       },
     });
   } catch (err) { next(err); }
@@ -1086,19 +1078,19 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
         const tc = testCases[idx];
         
         try {
-          // Use Execution Engine instead of Judge0
-          const result = await executionEngineService.runCode(
+          // Use Judge0 for code execution
+          const result = await judge.runTestCase(
             code,
             language,
             tc.input,
-            question.timeLimit,
-            question.memoryLimit
+            tc.output,
+            question.timeLimit
           );
 
-          // Use the enhanced comparison
-          const passed = result.verdict === 'AC' || compareOutputs(result.output, tc.output);
+          // Use the result from Judge0
+          const passed = result.passed;
 
-          logger.info(`[TC ${idx + 1}/${testCases.length}] Input: "${tc.input.substring(0,20)}", Expected: "${tc.output}", Got: "${result.output.substring(0,20)}", Passed: ${passed}, Verdict: ${result.verdict}`);
+          logger.info(`[TC ${idx + 1}/${testCases.length}] Input: "${tc.input.substring(0,20)}", Expected: "${tc.output}", Got: "${result.actualOutput.substring(0,20)}", Passed: ${passed}`);
 
           // Store test case result
           testCaseResults.push({
@@ -1108,9 +1100,9 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
             // Only include input/output for non-hidden test cases
             input: tc.isHidden ? undefined : tc.input,
             expectedOutput: tc.isHidden ? undefined : tc.output,
-            actualOutput: tc.isHidden ? undefined : result.output,
+            actualOutput: tc.isHidden ? undefined : result.actualOutput,
             runtime: result.runtime,
-            errorMessage: result.error || undefined,
+            errorMessage: result.errorMessage,
           });
 
           if (passed) {
@@ -1118,12 +1110,12 @@ router.post('/questions/:id/submit', authenticate, async (req, res, next) => {
             maxRuntime = Math.max(maxRuntime, result.runtime);
           } else {
             if (finalStatus === 'accepted') {
-              // Map execution engine verdict to status
-              if (result.verdict === 'TLE') {
+              // Map error type to status
+              if (result.errorType === 'time_limit_exceeded') {
                 finalStatus = 'time_limit_exceeded';
-              } else if (result.verdict === 'CE') {
+              } else if (result.errorType === 'compile_error') {
                 finalStatus = 'compile_error';
-              } else if (result.verdict === 'RE') {
+              } else if (result.errorType === 'runtime_error') {
                 finalStatus = 'runtime_error';
               } else {
                 finalStatus = 'wrong_answer';
