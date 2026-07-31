@@ -117,6 +117,7 @@ router.post('/', async (req, res, next) => {
         testCases: testCases || [{ input: '', output: '', isHidden: false }],
         timeLimit: 1000,
         memoryLimit: 128,
+        templates: {},
       },
     });
 

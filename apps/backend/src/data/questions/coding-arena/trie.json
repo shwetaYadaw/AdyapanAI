@@ -1,0 +1,172 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "trie",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 7
+  },
+  "questions": [
+    {
+      "title": "Implement Trie",
+      "difficulty": "medium",
+      "category": "trie",
+      "statement": "Practice solving **Implement Trie** under topic **trie**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Design Add and Search Words Data Structure",
+      "difficulty": "medium",
+      "category": "trie",
+      "statement": "Design a data structure that supports adding new words and checking whether a query matches any previously added word.\r\n\r\nImplement the \\`WordDictionary\\` class:\r\n\r\n- \\`WordDictionary()\\` initializes the object.\r\n- \\`void addWord(word)\\` adds \\`word\\` to the data structure.\r\n- \\`bool search(word)\\` returns \\`true\\` if any added word matches \\`word\\`; otherwise, returns \\`false\\`. A dot \\`.\\` in a search query can match any letter.\r\n\r\n### Example\r\n\r\n**Input:**\r\n\r\n\\`[\"WordDictionary\", \"addWord\", \"addWord\", \"addWord\", \"search\", \"search\", \"search\", \"search\"]\\`\r\n\r\n\\`[[], [\"bad\"], [\"dad\"], [\"mad\"], [\"pad\"], [\"bad\"], [\".ad\"], [\"b..\"]]\\`\r\n\r\n**Output:** \\`[null, null, null, null, false, true, true, true]\\`\r\n\r\n**Explanation:** Add \\`\"bad\"\\",
+      "inputFormat": "The first line contains q. Each of the next q lines is either \"addWord word\" or \"search word\".",
+      "outputFormat": "For every search operation, print true or false on a new line.",
+      "constraints": "1 <= word.length <= 25\\nWords added with addWord contain lowercase English letters.\\nSearch words contain lowercase English letters or dots.\\nThere are at most 2 dots in a search query.\\nAt most 10^4 addWord and search calls will be made.",
+      "sampleInput": "7\\naddWord bad\\naddWord dad\\naddWord mad\\nsearch pad\\nsearch bad\\nsearch .ad\\nsearch b..",
+      "sampleOutput": "false\\ntrue\\ntrue\\ntrue",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Word Search II",
+      "difficulty": "hard",
+      "category": "trie",
+      "statement": "Given an \\`m × n\\` board of characters and a list of strings \\`words\\",
+      "inputFormat": "The first line contains m and n. The next m lines contain n space-separated board characters. The next line contains w, followed by w lines containing one word each.",
+      "outputFormat": "Print every matching word in lexicographic order, separated by spaces. Print an empty line if no words match.",
+      "constraints": "m == board.length\\nn == board[i].length\\n1 <= m, n <= 12\\nboard[i][j] is a lowercase English letter.\\n1 <= words.length <= 3 * 10^4\\n1 <= words[i].length <= 10\\nwords[i] consists of lowercase English letters and all words are unique.",
+      "sampleInput": "4 4\\no a a n\\ne t a e\\ni h k r\\ni f l v\\n4\\noath\\npea\\neat\\nrain",
+      "sampleOutput": "eat oath",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Replace Words",
+      "difficulty": "medium",
+      "category": "trie",
+      "statement": "Practice solving **Replace Words** under topic **trie**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Longest Word in Dictionary",
+      "difficulty": "medium",
+      "category": "trie",
+      "statement": "Practice solving **Longest Word in Dictionary** under topic **trie**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Map Sum Pairs",
+      "difficulty": "medium",
+      "category": "trie",
+      "statement": "Practice solving **Map Sum Pairs** under topic **trie**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Maximum XOR of Two Numbers",
+      "difficulty": "medium",
+      "category": "trie",
+      "statement": "Practice solving **Maximum XOR of Two Numbers** under topic **trie**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "inputFormat": "A single line of space-separated integers representing target inputs.",
+      "outputFormat": "Expected solved outputs.",
+      "constraints": "1 <= nums.length <= 10^5",
+      "sampleInput": "1 2 3",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}

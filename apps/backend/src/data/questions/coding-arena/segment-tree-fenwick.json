@@ -1,0 +1,126 @@
+{
+  "metadata": {
+    "source": "coding-arena",
+    "topic": "segment-tree-fenwick",
+    "version": "1.0.0",
+    "lastUpdated": "2026-07-31",
+    "questionCount": 5
+  },
+  "questions": [
+    {
+      "title": "Range Sum Query - Immutable",
+      "difficulty": "easy",
+      "category": "segment-tree-fenwick",
+      "statement": "Given an integer array \\`nums\\",
+      "inputFormat": "The first line contains the space-separated elements of nums. The second line contains q. Each of the next q lines contains \"sumRange left right\".",
+      "outputFormat": "Print the sum for every sumRange operation on a new line.",
+      "constraints": "1 <= nums.length <= 10^4\\n-10^5 <= nums[i] <= 10^5\\n0 <= left <= right < nums.length\\nAt most 10^4 sumRange calls will be made.",
+      "sampleInput": "-2 0 3 -5 2 -1\\n3\\nsumRange 0 2\\nsumRange 2 5\\nsumRange 0 5",
+      "sampleOutput": "1\\n-1\\n-3",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Range Sum Query - Mutable",
+      "difficulty": "medium",
+      "category": "segment-tree-fenwick",
+      "statement": "Given an integer array \\`nums\\",
+      "inputFormat": "The first line contains the space-separated elements of nums. The second line contains q. Each of the next q lines is either \"update index val\" or \"sumRange left right\".",
+      "outputFormat": "For every sumRange operation, print the resulting sum on a new line.",
+      "constraints": "1 <= nums.length <= 3 * 10^4\\n-100 <= nums[i], val <= 100\\n0 <= index < nums.length\\n0 <= left <= right < nums.length\\nAt most 3 * 10^4 update and sumRange calls will be made.",
+      "sampleInput": "1 3 5\\n3\\nsumRange 0 2\\nupdate 1 2\\nsumRange 0 2",
+      "sampleOutput": "9\\n8",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Count of Smaller Numbers After Self",
+      "difficulty": "hard",
+      "category": "segment-tree-fenwick",
+      "statement": "Given an integer array \\`nums\\",
+      "inputFormat": "The first line contains the space-separated elements of nums.",
+      "outputFormat": "Print the count for every element as space-separated integers.",
+      "constraints": "1 <= nums.length <= 10^5\\n-10^4 <= nums[i] <= 10^4",
+      "sampleInput": "5 2 6 1",
+      "sampleOutput": "2 1 1 0",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Queue Reconstruction by Height",
+      "difficulty": "medium",
+      "category": "segment-tree-fenwick",
+      "statement": "You are given an array \\`people\\` describing people in a queue, in arbitrary order. Each \\`people[i] = [hi, ki]\\` represents a person of height \\`hi\\` with exactly \\`ki\\` people in front of them whose height is greater than or equal to \\`hi\\`.\r\n\r\nReconstruct and return the queue. The result must be formatted as an array where \\`queue[j] = [hj, kj]\\` is the person at position \\`j\\`.\r\n\r\n### Example 1\r\n\r\n**Input:** \\`people = [[7, 0], [4, 4], [7, 1], [5, 0], [6, 1], [5, 2]]\\`\r\n\r\n**Output:** \\`[[5, 0], [7, 0], [5, 2], [6, 1], [4, 4], [7, 1]]\\`\r\n\r\n**Explanation:** In the reconstructed queue, each person has exactly the required number of people of at least their height before them.\r\n\r\n### Example 2\r\n\r\n**Input:** \\`people = [[6, 0], [5, 0], [4, 0], [3, 2], [2, 2], [1, 4]]\\`\r\n\r\n**Output:** \\`[[4, 0], [5, 0], [2, 2], [3, 2], [1, 4], [6, 0]]\\`",
+      "inputFormat": "The first line contains n. Each of the next n lines contains hi and ki for one person.",
+      "outputFormat": "Print the reconstructed queue as n lines, each containing hi and ki.",
+      "constraints": "1 <= people.length <= 2000\\n0 <= hi <= 10^6\\n0 <= ki < people.length\\nThe queue can be reconstructed.",
+      "sampleInput": "6\\n7 0\\n4 4\\n7 1\\n5 0\\n6 1\\n5 2",
+      "sampleOutput": "5 0\\n7 0\\n5 2\\n6 1\\n4 4\\n7 1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    },
+    {
+      "title": "Create Sorted Array through Instructions",
+      "difficulty": "hard",
+      "category": "segment-tree-fenwick",
+      "statement": "Given an integer array \\`instructions\\",
+      "inputFormat": "The first line contains the space-separated elements of instructions.",
+      "outputFormat": "Print the total insertion cost modulo 10^9 + 7.",
+      "constraints": "1 <= instructions.length <= 10^5\\n1 <= instructions[i] <= 10^5",
+      "sampleInput": "1 5 6 2",
+      "sampleOutput": "1",
+      "testCases": [
+        {
+          "input": "1 2 3",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "4 5 6",
+          "output": "1",
+          "isHidden": true
+        }
+      ]
+    }
+  ]
+}
