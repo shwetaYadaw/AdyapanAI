@@ -1,56 +1,39 @@
-version: '3.9'
-
 services:
-  backend:
-    build:
-      context: .
-      dockerfile: apps/backend/Dockerfile
-    container_name: adyapan-backend
+  # Judge0 Server for code execution
+  judge0_server:
+    image: judge0/judge0:1.13.1
+    container_name: judge0
     ports:
-      - "5000:5000"
+      - "2358:8080"
+    privileged: true
+    restart: unless-stopped
     environment:
-      - NODE_ENV=development
-      - MONGODB_URI=${MONGODB_URI}
-      - REDIS_URL=redis://redis:6379
-    env_file:
-      - apps/backend/.env
+      REDIS_URL: redis://redis:6379
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: admin
+      DJANGO_SUPERUSER_EMAIL: admin@judge0.local
     depends_on:
       - redis
-    restart: unless-stopped
-    networks:
-      - adyapan-network
-
-  ai-service:
-    build:
-      context: .
-      dockerfile: apps/ai-service/Dockerfile
-    container_name: adyapan-ai
-    ports:
-      - "8000:8000"
-    env_file:
-      - apps/ai-service/.env
-    restart: unless-stopped
-    networks:
-      - adyapan-network
-    volumes:
-      - ai-models:/app/models
+      - postgres
 
   redis:
     image: redis:7-alpine
-    container_name: adyapan-redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
+    container_name: judge0_redis
     restart: unless-stopped
-    networks:
-      - adyapan-network
-    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: judge0_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  redis-data:
-  ai-models:
-
-networks:
-  adyapan-network:
-    driver: bridge
+  redis_data:
+  postgres_data:
