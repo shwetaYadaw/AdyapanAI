@@ -52,12 +52,13 @@ export default function CodingChallengesPage() {
   const { data: questions, isLoading } = useQuery<Question[]>({
     queryKey: ['codingQuestions', ''],
     queryFn: async () => {
-      const { data } = await api.get('/challenges/questions');
+      // Use /problems endpoint for DSA Coding Arena (not /challenges/questions which is for TCS NQT)
+      const { data } = await api.get('/problems');
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,
-        topics: Array.isArray(q.topics) ? q.topics : (typeof q.topics === 'string' ? JSON.parse(q.topics) : []),
-        companies: Array.isArray(q.companies) ? q.companies : (typeof q.companies === 'string' ? JSON.parse(q.companies) : []),
+        topics: Array.isArray(q.topics) ? q.topics : (typeof q.topics === 'string' ? q.topics.split(',').map((t: string) => t.trim()) : []),
+        companies: Array.isArray(q.companies) ? q.companies : (typeof q.companies === 'string' ? q.companies.split(',').map((c: string) => c.trim()) : []),
       }));
     },
   });
