@@ -34,30 +34,9 @@ const AptitudeQuizPage     = lazy(() => import('../pages/student/AptitudeQuizPag
 const TestAttemptPage      = lazy(() => import('../pages/student/TestAttemptPage'));
 const CodingTopicPage      = lazy(() => import('../pages/student/CodingTopicPage'));
 
-// Teacher
-const TeacherDashboard   = lazy(() => import('../pages/teacher/DashboardPage'));
-const CourseManagerPage  = lazy(() => import('../pages/teacher/CourseManagerPage'));
-const CourseEditorPage   = lazy(() => import('../pages/teacher/CourseEditorPage'));
-const StudentsPage       = lazy(() => import('../pages/teacher/StudentsPage'));
-const EarningsPage       = lazy(() => import('../pages/teacher/EarningsPage'));
-const AnalyticsPage      = lazy(() => import('../pages/teacher/AnalyticsPage'));
-
-
-
-// Recruiter
-const RecruiterDashboard = lazy(() => import('../pages/recruiter/DashboardPage'));
-const RecruiterJobsPage  = lazy(() => import('../pages/recruiter/JobsPage'));
-const CandidatesPage     = lazy(() => import('../pages/recruiter/CandidatesPage'));
-const ApplicationsPage   = lazy(() => import('../pages/recruiter/ApplicationsPage'));
-
-// Mentor
-const MentorDashboard    = lazy(() => import('../pages/mentor/DashboardPage'));
-
 // Admin
 const AdminDashboard     = lazy(() => import('../pages/admin/DashboardPage'));
 const AdminUsersPage     = lazy(() => import('../pages/admin/UsersPage'));
-const AdminCoursesPage   = lazy(() => import('../pages/admin/CoursesPage'));
-const AdminPaymentsPage  = lazy(() => import('../pages/admin/PaymentsPage'));
 const AdminAnalyticsPage = lazy(() => import('../pages/admin/AnalyticsPage'));
 const AdminSecurityPage  = lazy(() => import('../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../pages/admin/SettingsPage'));
@@ -110,37 +89,8 @@ export default function AppRouter() {
             <Route path="tests/:testId" element={<TestAttemptPage />} />
           </Route>
 
-          {/* Teacher */}
-          <Route path="/teacher" element={<ProtectedRoute><RoleRoute roles={['teacher', 'admin', 'superadmin']} /></ProtectedRoute>}>
-            <Route index element={<Navigate to="/teacher/dashboard" replace />} />
-            <Route path="dashboard" element={<TeacherDashboard />} />
-            <Route path="courses" element={<CourseManagerPage />} />
-            <Route path="courses/new" element={<CourseEditorPage />} />
-            <Route path="courses/:id/edit" element={<CourseEditorPage />} />
-            <Route path="students" element={<StudentsPage />} />
-            <Route path="earnings" element={<EarningsPage />} />
-            <Route path="analytics" element={<AnalyticsPage />} />
-          </Route>
-
-
-
-          {/* Recruiter */}
-          <Route path="/recruiter" element={<ProtectedRoute><RoleRoute roles={['recruiter', 'admin', 'superadmin']} /></ProtectedRoute>}>
-            <Route index element={<Navigate to="/recruiter/dashboard" replace />} />
-            <Route path="dashboard" element={<RecruiterDashboard />} />
-            <Route path="jobs" element={<RecruiterJobsPage />} />
-            <Route path="candidates" element={<CandidatesPage />} />
-            <Route path="applications" element={<ApplicationsPage />} />
-          </Route>
-
-          {/* Mentor */}
-          <Route path="/mentor" element={<ProtectedRoute><RoleRoute roles={['mentor', 'admin', 'superadmin']} /></ProtectedRoute>}>
-            <Route index element={<Navigate to="/mentor/dashboard" replace />} />
-            <Route path="dashboard" element={<MentorDashboard />} />
-          </Route>
-
           {/* Admin */}
-          <Route path="/admin" element={<ProtectedRoute><RoleRoute roles={['admin', 'superadmin']} /></ProtectedRoute>}>
+          <Route path="/admin" element={<ProtectedRoute><RoleRoute roles={['admin']} /></ProtectedRoute>}>
             <Route index element={<Navigate to="/admin/dashboard" replace />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsersPage />} />
