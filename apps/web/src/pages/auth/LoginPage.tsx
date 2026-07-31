@@ -60,7 +60,7 @@ export default function LoginPage() {
         });
         window.google.accounts.id.renderButton(
           document.getElementById('google-signin-btn-container'),
-          { theme: 'outline', size: 'large', type: 'standard', shape: 'pill', text: 'signin_with', width: '280' }
+          { theme: 'outline', size: 'large', type: 'standard', shape: 'pill', text: 'signup_with', width: '280' }
         );
       }
     };

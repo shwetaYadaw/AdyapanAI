@@ -47,15 +47,18 @@ model User {
 }
 
 model StudentProfile {
-  id          String   @id @default(uuid())
-  userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  xp          Int      @default(0)
-  level       Int      @default(1)
-  skills      Json?
-  resumeUrl   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  xp              Int      @default(0)
+  totalXP         Int      @default(0)
+  level           Int      @default(1)
+  streak          Int      @default(0)
+  lastActiveDate  DateTime?
+  skills          Json?
+  resumeUrl       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Course {
@@ -583,4 +586,22 @@ model PuzzleReview {
   updatedAt DateTime @updatedAt
 
   @@unique([puzzleId, userId])
+}
+
+// ─── Aptitude Questions ────────────────────────────────────────────────────
+
+model AptitudeQuestion {
+  id             String   @id @default(uuid())
+  question       String   @db.Text
+  options        Json     // Array of strings
+  answer         String
+  explanation    String   @db.Text
+  module         String   // "quantitative", "verbal", "logical"
+  topic          String   // "percentage", "numbers", "profit-loss", etc.
+  difficulty     String   @default("medium") // "easy", "medium", "hard"
+  questionImage  String?  // Optional image path
+  optionImages   Json?    // Optional: Map of option to image path
+  isImageBased   Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

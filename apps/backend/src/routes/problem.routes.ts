@@ -455,3 +455,127 @@ router.get('/execution-logs/:submissionId', authenticate, async (req, res, next)
 });
 
 export default router;
+
+
+// PUT /problems/:id — Update existing problem (admin only)
+router.put('/:id', authenticate, async (req, res, next) => {
+  try {
+    const {
+      title,
+      slug,
+      difficulty,
+      statement,
+      constraints,
+      inputFormat,
+      outputFormat,
+      timeLimit,
+      memoryLimit,
+      starterCode,
+      referenceSolution,
+      topics,
+      companies,
+      testCases,
+    } = req.body;
+
+    // Check if problem exists
+    const existingProblem = await prisma.problem.findUnique({
+      where: { id: req.params.id },
+    });
+
+    if (!existingProblem) {
+      throw new AppError('Problem not found', 404);
+    }
+
+    // Update problem and test cases in transaction
+    const problem = await prisma.$transaction(async (tx) => {
+      // Update problem
+      const updatedProblem = await tx.problem.update({
+        where: { id: req.params.id },
+        data: {
+          title: title || existingProblem.title,
+          slug: slug || existingProblem.slug,
+          difficulty: difficulty || existingProblem.difficulty,
+          statement: statement || existingProblem.statement,
+          constraints: constraints || existingProblem.constraints,
+          inputFormat: inputFormat || existingProblem.inputFormat,
+          outputFormat: outputFormat || existingProblem.outputFormat,
+          timeLimit: timeLimit || existingProblem.timeLimit,
+          memoryLimit: memoryLimit || existingProblem.memoryLimit,
+          starterCode: starterCode || existingProblem.starterCode,
+          referenceSolution: referenceSolution || existingProblem.referenceSolution,
+          topics: topics !== undefined ? topics : existingProblem.topics,
+          companies: companies !== undefined ? companies : existingProblem.companies,
+        },
+      });
+
+      // Update test cases if provided
+      if (testCases && Array.isArray(testCases)) {
+        // Delete existing test cases
+        await tx.problemTestCase.deleteMany({
+          where: { problemId: req.params.id },
+        });
+
+        // Create new test cases
+        for (const tc of testCases) {
+          await tx.problemTestCase.create({
+            data: {
+              problemId: req.params.id,
+              input: tc.input,
+              expectedOutput: tc.expectedOutput || '',
+              isHidden: tc.isHidden ?? true,
+              type: tc.type || 'hidden',
+            },
+          });
+        }
+      }
+
+      return updatedProblem;
+    });
+
+    sendSuccess({ res, message: 'Problem updated successfully', data: problem });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE /problems/:id — Delete problem (admin only)
+router.delete('/:id', authenticate, async (req, res, next) => {
+  try {
+    const problem = await prisma.problem.findUnique({
+      where: { id: req.params.id },
+    });
+
+    if (!problem) {
+      throw new AppError('Problem not found', 404);
+    }
+
+    // Delete problem (test cases will be cascade deleted)
+    await prisma.problem.delete({
+      where: { id: req.params.id },
+    });
+
+    sendSuccess({ res, message: 'Problem deleted successfully' });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /problems/:id/admin — Get full problem details including test cases (admin only)
+router.get('/:id/admin', authenticate, async (req, res, next) => {
+  try {
+    const problem = await prisma.problem.findUnique({
+      where: { id: req.params.id },
+      include: {
+        testCases: true, // Include all test cases for admin
+      },
+    });
+
+    if (!problem) {
+      throw new AppError('Problem not found', 404);
+    }
+
+    sendSuccess({ res, data: problem });
+  } catch (err) {
+    next(err);
+  }
+});
