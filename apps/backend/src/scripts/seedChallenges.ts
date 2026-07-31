@@ -111,7 +111,7 @@ const TOPIC_QUESTIONS: Record<string, string[]> = {
     'Largest Subarray with 0 Sum', 'Count distinct elements in every window of size k',
     'Group Shifted Strings', 'Merge K Sorted lists', 'Find Median from Data Stream',
     'Sliding Window Maximum', 'Find the smallest positive number',
-    'Find Surpasser Count of each element in array', 'Tournament Tree and Binary Heap',
+    'Find Surpasser Count of each element in array', 'Binary Heap Operations',
     'Check for palindrome', 'Length of the largest subarray with contiguous elements',
     'Palindrome Substring Queries', 'Subarray distinct elements', 'Find the recurring function',
     'K maximum sum combinations from two arrays'
@@ -188,10 +188,7 @@ const TOPIC_QUESTIONS: Record<string, string[]> = {
     'Largest Subarray with 0 Sum', 'Count distinct elements in every window of size k',
     'Group Shifted Strings', 'Merge K Sorted lists', 'Find Median from Data Stream',
     'Sliding Window Maximum', 'Find the smallest positive number',
-    'Find Surpasser Count of each element in array', 'Tournament Tree and Binary Heap',
-    'Check for palindrome', 'Length of the largest subarray with contiguous elements',
-    'Palindrome Substring Queries', 'Subarray distinct elements', 'Find the recurring function',
-    'K maximum sum combinations from two arrays'
+    'Find Surpasser Count of each element in array'
   ],
   'graphs': [
     'Number of Islands', 'Clone Graph', 'Course Schedule',
@@ -1378,39 +1375,174 @@ Given a string \`s\`, return \`true\` if it is a palindrome, or \`false\` otherw
     ]
   },
   "Subarray distinct elements": {
-    title: 'Subarrays with distinct elements',
-    statement: `_Last Updated: 13 Aug, 2025_
+    title: 'Subarrays With At Most K Distinct',
+    statement: `## 📝 Problem Statement
+You are given an array arr[] of positive integers and an integer k, find the number of subarrays in arr[] where the count of distinct integers is at most k.
 
-Given an array, calculate the sum of the lengths of all contiguous subarrays whose elements are distinct.
+**Note:** A subarray is a contiguous part of an array.
 
-### Example 1
+**Problem Details:**
+- Given an array of positive integers
+- Given an integer k
+- Count all subarrays with at most k distinct elements
+- A subarray is a contiguous portion of the array
 
-**Input:** \`arr[] = [1, 2, 3]\`
+**Algorithm Approach:**
+1. **Brute Force Approach:**
+   - Generate all subarrays
+   - For each subarray, count distinct elements
+   - Check if distinct count ≤ k
+   - Time: O(n²), Space: O(n)
 
-**Output:** \`10\`
+2. **Sliding Window with Hash Map (Recommended):**
+   - Use a hash map to track element frequencies
+   - Maintain a sliding window of at most k distinct elements
+   - Expand right pointer, contract left pointer when needed
+   - Time: O(n), Space: O(k)
 
-**Explanation:** \`{1, 2, 3}\` has length \`3\`. The two length-2 subarrays, \`{1, 2}\` and \`{2, 3}\`, contribute \`2 + 2 = 4\`. The three length-1 subarrays contribute \`1 + 1 + 1 = 3\`. Thus, the total is \`3 + 4 + 3 = 10\`.
+3. **Two Pointer Approach:**
+   - Count subarrays with exactly k distinct = subarrays(≤ k) - subarrays(≤ k-1)
+   - Use two pointer technique for each calculation
+   - Time: O(n), Space: O(k)
 
-### Example 2
+**Key Insight:**
+- For each position i, if we can extend the window to include it, all subarrays ending at i with left pointer from any valid position are valid
+- Use the formula: number of subarrays = (number of valid positions for left pointer)
 
-**Input:** \`arr[] = [1, 2, 1]\`
+**Examples:**
 
-**Output:** \`7\`
+Input: arr[] = [1, 2, 2, 3], k = 2
+Output: 9
+Explanation: Subarrays with at most 2 distinct elements are: [1], [2], [2], [3], [1, 2], [2, 2], [2, 3], [1, 2, 2] and [2, 2, 3].
 
-### Example 3
+Input: arr[] = [1, 1, 1], k = 1
+Output: 6
+Explanation: Subarrays with at most 1 distinct element are: [1], [1], [1], [1, 1], [1, 1] and [1, 1, 1].
 
-**Input:** \`arr[] = [1, 2, 3, 4]\`
+Input: arr[] = [1, 2, 1, 1, 3, 3, 4, 2, 1], k = 2
+Output: 24
+Explanation: There are 24 subarrays with at most 2 distinct elements.
 
-**Output:** \`20\``,
-    inputFormat: 'The first line contains the space-separated elements of arr.',
-    outputFormat: 'Print the sum of lengths of all contiguous subarrays with distinct elements.',
-    sampleInput: '1 2 3',
-    sampleOutput: '10',
+**Time Complexity:** O(n) using sliding window with hash map
+**Space Complexity:** O(k) for the hash map storing at most k distinct elements
+
+Complete the function to find the number of subarrays with at most k distinct elements.`,
+    inputFormat: 'First line: array arr[] as space-separated integers. Second line: integer k (number of allowed distinct elements).',
+    outputFormat: 'Return the count of subarrays with at most k distinct elements as a single integer.',
+    constraints: '1 ≤ arr.length ≤ 10^5\n1 ≤ k ≤ 26 (or number of unique elements)\n1 ≤ arr[i] ≤ 10^9',
+    sampleInput: '1 2 2 3\n2',
+    sampleOutput: '9',
     testCases: [
-      { input: '1 2 3', output: '10', isHidden: false },
-      { input: '1 2 1', output: '7', isHidden: false },
-      { input: '1 2 3 4', output: '20', isHidden: false }
-    ]
+      { input: '1 2 2 3\n2', output: '9', isHidden: false },
+      { input: '1 1 1\n1', output: '6', isHidden: false },
+      { input: '1 2 1 1 3 3 4 2 1\n2', output: '24', isHidden: false },
+      { input: '1 2 3\n2', output: '6', isHidden: true },
+      { input: '1 2 3 4\n2', output: '6', isHidden: true },
+      { input: '1\n1', output: '1', isHidden: true },
+      { input: '1 1 1 1\n1', output: '10', isHidden: true },
+      { input: '1 2 1 2 1\n2', output: '12', isHidden: true }
+    ],
+    difficulty: 'medium',
+    xpReward: 400,
+    timeLimit: 2000,
+    memoryLimit: 256
+  },
+  "Tournament Tree and Binary Heap": {
+    title: 'Binary Heap Operations',
+    statement: `## 📝 Problem Statement
+
+Given an initially empty Binary Min Heap and a list of queries. Process each query by performing the corresponding heap operation.
+
+**Query Types:**
+- **[1, x]**: Insert the value x into the Binary Min Heap.
+- **[2, x]**: Delete the element present at index x in the current Binary Min Heap. If the index is invalid, ignore the query.
+- **[3]**: Remove and return the minimum element from the Binary Min Heap. If the heap is empty, return -1.
+
+**Methods to Implement:**
+1. **insertKey(x)**: Inserts x into the Binary Min Heap.
+2. **deleteKey(i)**: Deletes the element at index i from the Binary Min Heap.
+3. **extractMin()**: Removes and returns the minimum element from the Binary Min Heap, or -1 if the heap is empty.
+
+**Problem Details:**
+- Maintain a valid Binary Min Heap throughout all operations
+- After each operation, the heap must satisfy the min-heap property (parent ≤ children)
+- Handle edge cases: empty heap, invalid indices, operations on single elements
+
+**Algorithm Approach:**
+
+1. **Data Structure:**
+   - Use an array to store heap elements
+   - For index i: left child at 2i+1, right child at 2i+2, parent at (i-1)/2
+   - Time: O(1) space for n elements
+
+2. **Insert Operation:**
+   - Add element at end of array
+   - Compare with parent, swap if smaller (bubble up)
+   - Time: O(log n)
+
+3. **Extract Min Operation:**
+   - Remove root (minimum element)
+   - Move last element to root
+   - Compare with children, swap with smaller child (bubble down)
+   - Time: O(log n)
+
+4. **Delete at Index Operation:**
+   - Replace element at index with last element
+   - If new element > parent: bubble up
+   - Else if new element > children: bubble down
+   - Time: O(log n)
+
+**Examples:**
+
+Input: queries[][] = [[1, 4], [1, 2], [3], [1, 6], [2, 0], [3], [3]]
+Output: [2, 6, -1]
+Explanation:
+- Initially, the Min Heap is empty.
+- Insert 4. The heap contains 4.
+- Insert 2. The heap is rearranged: 2 at root, 4 as child.
+- Extract the minimum element. Value 2 is removed and printed.
+- Insert 6. The heap contains 4 and 6.
+- Delete the element at index 0. Value 4 is removed, leaving only 6.
+- Extract the minimum element. Value 6 is removed and printed.
+- Extract the minimum element again. Since the heap is empty, -1 is returned.
+
+Input: queries[][] = [[1, 8], [1, 9], [2, 1], [3], [3]]
+Output: [8, -1]
+Explanation:
+- Initially, the Min Heap is empty.
+- Insert 8. The heap contains 8.
+- Insert 9. The heap contains 8 and 9.
+- Delete the element at index 1. Value 9 is removed, leaving only 8.
+- Extract the minimum element. Value 8 is removed and printed.
+- Extract the minimum element again. Since the heap is empty, -1 is returned.
+
+**Time Complexity:**
+- Insert: O(log n)
+- Delete: O(log n)
+- Extract Min: O(log n)
+
+**Space Complexity:** O(n) for storing heap elements
+
+Complete the implementation to handle all heap operations while maintaining the min-heap property.`,
+    inputFormat: 'First line: number of queries q. Next q lines: each line contains a query [type, value] or [type]. Query type 1: insert value. Query type 2: delete at index. Query type 3: extract minimum.',
+    outputFormat: 'For each type 3 query, print the extracted minimum element. If heap is empty, print -1. Print results on separate lines.',
+    constraints: '1 ≤ q ≤ 10^5\n1 ≤ x ≤ 10^9\n0 ≤ index < heap.size()',
+    sampleInput: '7\n1 4\n1 2\n3\n1 6\n2 0\n3\n3',
+    sampleOutput: '2\n6\n-1',
+    testCases: [
+      { input: '7\n1 4\n1 2\n3\n1 6\n2 0\n3\n3', output: '2\n6\n-1', isHidden: false },
+      { input: '5\n1 8\n1 9\n2 1\n3\n3', output: '8\n-1', isHidden: false },
+      { input: '4\n1 5\n1 3\n3\n3', output: '3\n5', isHidden: false },
+      { input: '6\n1 10\n1 5\n1 8\n3\n3\n3', output: '5\n8\n10', isHidden: true },
+      { input: '3\n1 7\n2 0\n3', output: '-1', isHidden: true },
+      { input: '8\n1 2\n1 4\n1 1\n3\n1 3\n2 1\n3\n3', output: '1\n2\n4', isHidden: true },
+      { input: '4\n3\n1 100\n3\n3', output: '-1\n100\n-1', isHidden: true },
+      { input: '9\n1 15\n1 10\n1 20\n3\n1 5\n2 2\n3\n3\n3', output: '10\n5\n15\n20', isHidden: true }
+    ],
+    difficulty: 'medium',
+    xpReward: 400,
+    timeLimit: 2000,
+    memoryLimit: 256
   },
   "Top K Frequent Elements": {
     statement: `Given an integer array \`nums\` and an integer \`k\`, return the \`k\` most frequent elements. You may return the answer in any order.
@@ -2625,6 +2757,69 @@ Reconstruct and return the queue. The result must be formatted as an array where
       { input: "a", output: "1", isHidden: false },
       { input: "abbbbbbbbbbbbb", output: "4", isHidden: false },
       { input: "aaaaaaaaaa", output: "3", isHidden: true }
+    ]
+  },
+  "Binary Heap Operations": {
+    title: "Binary Heap Operations",
+    statement: `Given an initially empty Binary Min Heap and a list of queries. Process each query by performing the corresponding heap operation.
+
+The queries are of the following types:
+- [1, x]: Insert the value x into the Binary Min Heap.
+- [2, x]: Delete the element present at index x in the current Binary Min Heap. If the index is invalid, ignore the query.
+- [3]: Remove and return the minimum element from the Binary Min Heap. If the heap is empty, return -1.
+
+Implement the following methods:
+- insertKey(x): Inserts x into the Binary Min Heap.
+- deleteKey(i): Deletes the element at index i from the Binary Min Heap.
+- extractMin(): Removes and returns the minimum element from the Binary Min Heap, or -1 if the heap is empty.
+
+The driver code will invoke these methods according to the given queries.
+
+### Example 1
+
+**Input:** queries[][] = [[1, 4], [1, 2], [3], [1, 6], [2, 0], [3], [3]]
+
+**Output:** [2, 6, -1]
+
+**Explanation:**
+- Initially, the Min Heap is empty.
+- Insert 4. The heap contains 4.
+- Insert 2. The heap is rearranged to satisfy the Min Heap property, with 2 at the root.
+- Extract the minimum element. The value 2 is removed and printed.
+- Insert 6. The heap contains 4 and 6.
+- Delete the element at index 0. The value 4 is removed, leaving only 6 in the heap.
+- Extract the minimum element. The value 6 is removed and printed.
+- Extract the minimum element again. Since the heap is empty, -1 is returned.
+
+### Example 2
+
+**Input:** queries[][] = [[1, 8], [1, 9], [2, 1], [3], [3]]
+
+**Output:** [8, -1]
+
+**Explanation:**
+- Initially, the Min Heap is empty.
+- Insert 8. The heap contains 8.
+- Insert 9. The heap contains 8 and 9.
+- Delete the element at index 1. The value 9 is removed, leaving only 8 in the heap.
+- Extract the minimum element. The value 8 is removed and printed.
+- Extract the minimum element again. Since the heap is empty, -1 is returned.`,
+    difficulty: "medium",
+    xpReward: 15,
+    inputFormat: "First line contains q (number of queries). Each of the next q lines contains a query in format: [operation, value] where value is optional for operation 3.",
+    outputFormat: "Print the result of each extractMin or extract operation on a new line.",
+    constraints: "1 <= q <= 10^5\n1 <= x <= 10^9\n0 <= index < heap_size",
+    sampleInput: "7\n1 4\n1 2\n3\n1 6\n2 0\n3\n3",
+    sampleOutput: "2\n6\n-1",
+    testCases: [
+      { input: "7\n1 4\n1 2\n3\n1 6\n2 0\n3\n3", output: "2\n6\n-1", isHidden: false },
+      { input: "5\n1 8\n1 9\n2 1\n3\n3", output: "8\n-1", isHidden: false },
+      { input: "3\n3\n1 5\n3", output: "-1\n5", isHidden: false },
+      { input: "6\n1 1\n1 2\n1 3\n3\n3\n3", output: "1\n2\n3", isHidden: true },
+      { input: "8\n1 10\n1 20\n1 5\n3\n2 1\n3\n1 7\n3", output: "5\n10\n7", isHidden: true },
+      { input: "4\n2 0\n1 100\n2 1\n3", output: "100", isHidden: true },
+      { input: "5\n1 50\n1 40\n1 30\n3\n3", output: "30\n40", isHidden: true },
+      { input: "9\n1 15\n1 10\n1 20\n2 0\n3\n1 5\n3\n1 25\n3", output: "10\n5\n15", isHidden: true }
     ]
   }
 };
