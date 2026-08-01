@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 120" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.circ{fill:#fff;stroke:#333;stroke-width:1.5}</style>
+  <!-- Group 1: 5 [0] 6, top=4, bottom=7 -->
+  <circle class="circ" cx="85" cy="60" r="22"/>
+  <text x="78" y="65">0</text>
+  <text x="55" y="63">5</text><text x="108" y="63">6</text>
+  <text x="78" y="25">4</text><text x="78" y="98">7</text>
+  <!-- Group 2: 7 [1] 6, top=8, bottom=4 -->
+  <circle class="circ" cx="190" cy="60" r="22"/>
+  <text x="183" y="65">1</text>
+  <text x="160" y="63">7</text><text x="213" y="63">6</text>
+  <text x="183" y="25">8</text><text x="183" y="98">4</text>
+  <!-- Group 3: 11 [?] 2, top=0, bottom=2 -->
+  <circle class="circ" cx="295" cy="60" r="22"/>
+  <text x="283" y="65" fill="#c00">?</text>
+  <text x="262" y="63">11</text><text x="318" y="63">2</text>
+  <text x="288" y="25">0</text><text x="288" y="98">2</text>
+  <text x="20" y="115" font-size="11" fill="#555">(right+bottom)-(left+top) = center  →  (2+2)-(11+0)=... actually (11+2)-(2+0)=11</text>
+</svg>

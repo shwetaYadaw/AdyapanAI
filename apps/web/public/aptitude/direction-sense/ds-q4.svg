@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 220" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:12px;fill:#333}.arrow{stroke:#333;stroke-width:1.5;marker-end:url(#arr)}</style>
+  <defs><marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#333"/></marker></defs>
+  <!-- Start A at top -->
+  <text x="130" y="20">A</text>
+  <!-- South 5km to D -->
+  <line class="arrow" x1="135" y1="25" x2="135" y2="95"/>
+  <text x="140" y="65" font-size="10">5 km</text>
+  <text x="130" y="108">D</text>
+  <!-- Right (West) 3km to B -->
+  <line class="arrow" x1="130" y1="105" x2="70" y2="105"/>
+  <text x="88" y="98" font-size="10">3 km</text>
+  <text x="55" y="108">B</text>
+  <!-- Left (South) 5km to C -->
+  <line class="arrow" x1="60" y1="108" x2="60" y2="168"/>
+  <text x="65" y="143" font-size="10">5 km</text>
+  <text x="55" y="182">C</text>
+  <text x="30" y="205" font-size="11" fill="#1565c0">C is South-West of A (starting point)</text>
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 80" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:12px;fill:#333}.dot{fill:#333}</style>
+  <circle class="dot" cx="30" cy="30" r="5"/>
+  <circle class="dot" cx="110" cy="30" r="5"/>
+  <circle class="dot" cx="200" cy="30" r="5"/>
+  <circle class="dot" cx="300" cy="30" r="5"/>
+  <circle class="dot" cx="400" cy="30" r="5"/>
+  <line x1="30" y1="30" x2="400" y2="30" stroke="#999" stroke-width="1"/>
+  <text x="15" y="55" font-size="11">Bindu</text>
+  <text x="95" y="55" font-size="11">Seema</text>
+  <text x="190" y="55" font-size="11">Rani</text>
+  <text x="285" y="55" font-size="11">Reeta</text>
+  <text x="388" y="55" font-size="11">Mary</text>
+  <text x="140" y="75" font-size="10" fill="#1565c0">Order: Bindu → Seema → Rani → Reeta → Mary</text>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 160" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.circ{fill:#fff;stroke:#333;stroke-width:1.5}</style>
+  <!-- Circle divided into 4 quadrants: top-left=1, top-right=8, bottom-left=?, bottom-right=27 -->
+  <circle class="circ" cx="100" cy="80" r="60"/>
+  <line x1="100" y1="20" x2="100" y2="140" stroke="#333" stroke-width="1.5"/>
+  <line x1="40" y1="80" x2="160" y2="80" stroke="#333" stroke-width="1.5"/>
+  <text x="60" y="65">1</text>
+  <text x="122" y="65">8</text>
+  <text x="60" y="108" fill="#c00">?</text>
+  <text x="120" y="108">27</text>
+  <text x="20" y="150" font-size="11" fill="#555">1³=1, 2³=8, 3³=27 → 4³=64</text>
+</svg>

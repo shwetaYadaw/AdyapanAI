@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 120" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:12px;fill:#333}.line{stroke:#333;stroke-width:1.5}</style>
+  <!-- Tree 1: 12,18,30 top → 6 bottom -->
+  <text x="15" y="20">12</text><text x="40" y="20">18</text><text x="65" y="20">30</text>
+  <line class="line" x1="22" y1="25" x2="35" y2="55"/>
+  <line class="line" x1="48" y1="25" x2="35" y2="55"/>
+  <line class="line" x1="72" y1="25" x2="35" y2="55"/>
+  <text x="30" y="70">6</text>
+  <!-- Tree 2: 16,24,40 top → 8 bottom -->
+  <text x="130" y="20">16</text><text x="155" y="20">24</text><text x="180" y="20">40</text>
+  <line class="line" x1="137" y1="25" x2="150" y2="55"/>
+  <line class="line" x1="163" y1="25" x2="150" y2="55"/>
+  <line class="line" x1="187" y1="25" x2="150" y2="55"/>
+  <text x="145" y="70">8</text>
+  <!-- Tree 3: 45,18,27 top → ? bottom -->
+  <text x="245" y="20">45</text><text x="270" y="20">18</text><text x="295" y="20">27</text>
+  <line class="line" x1="252" y1="25" x2="265" y2="55"/>
+  <line class="line" x1="278" y1="25" x2="265" y2="55"/>
+  <line class="line" x1="302" y1="25" x2="265" y2="55"/>
+  <text x="258" y="70" fill="#c00">?</text>
+  <text x="30" y="100" font-size="11" fill="#555">(a+b+c)/10 = result  →  (45+18+27)/10 = 9</text>
+</svg>

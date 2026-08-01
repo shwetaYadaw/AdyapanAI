@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 200" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#333}.arrow{stroke:#333;stroke-width:1.5;marker-end:url(#arr)}.dot{fill:#333}</style>
+  <defs><marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#333"/></marker></defs>
+  <!-- Car 1: A→B(25km E), B→C(15km S), C→D(25km E), D→F(back to road) -->
+  <!-- Car 2: X←35km from Y, F is between -->
+  <text x="10" y="90">X</text>
+  <line x1="25" y1="86" x2="300" y2="86" stroke="#333" stroke-width="1.5"/>
+  <text x="305" y="90">Y</text>
+  <text x="148" y="100" font-size="10">150 km</text>
+  <!-- Car 1 path -->
+  <circle class="dot" cx="30" cy="86" r="3"/>
+  <text x="22" y="78">A</text>
+  <line class="arrow" x1="33" y1="86" x2="83" y2="86"/>
+  <text x="45" y="78" font-size="10">25km</text>
+  <circle class="dot" cx="85" cy="86" r="3"/><text x="87" y="78">B</text>
+  <line class="arrow" x1="85" y1="89" x2="85" y2="126"/>
+  <text x="90" y="112" font-size="10">15km</text>
+  <circle class="dot" cx="85" cy="128" r="3"/><text x="87" y="140">C</text>
+  <line class="arrow" x1="88" y1="128" x2="138" y2="128"/>
+  <text x="100" y="140" font-size="10">25km</text>
+  <circle class="dot" cx="140" cy="128" r="3"/><text x="142" y="140">D</text>
+  <line class="arrow" x1="140" y1="125" x2="140" y2="89"/>
+  <circle class="dot" cx="140" cy="86" r="3"/><text x="142" y="78">F</text>
+  <!-- Car 2 from Y: 35km -->
+  <circle class="dot" cx="270" cy="86" r="3"/>
+  <text x="255" y="78" font-size="10">35km</text>
+  <text x="250" y="100" font-size="10">Car2 pos</text>
+  <text x="30" y="180" font-size="11" fill="#1565c0">DF = 150-(25+25+35) = 150-85 = 65km</text>
+</svg>

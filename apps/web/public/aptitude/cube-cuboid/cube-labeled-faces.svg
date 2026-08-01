@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 260" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#333}.dashed{stroke:#bbb;stroke-width:1;stroke-dasharray:4,3}</style>
+  <!-- Cube with labelled faces ABEF=Red, DCHG=Black, ABCD=Green, EFGH=Blue, AFGD=White, BCHE=Brown -->
+  <!-- Front face ABEF -->
+  <polygon points="30,80 150,80 150,200 30,200" fill="#ffebee" stroke="#333" stroke-width="1.5"/>
+  <!-- Top face ABCD (ABCD → Green) -->
+  <polygon points="30,80 150,80 195,45 75,45" fill="#e8f5e9" stroke="#333" stroke-width="1.5"/>
+  <!-- Right face BCHE (BCHE → Brown) -->
+  <polygon points="150,80 195,45 195,165 150,200" fill="#f3e5d0" stroke="#333" stroke-width="1.5"/>
+  <!-- Corner labels -->
+  <text x="22" y="210">A</text>
+  <text x="148" y="210">B</text>
+  <text x="148" y="72">E</text>
+  <text x="22" y="72">F</text>
+  <text x="62" y="40">G</text>
+  <text x="192" y="40">H</text>
+  <text x="192" y="165">C</text>
+  <text x="62" y="165" class="dashed-label">D</text>
+  <!-- Face labels -->
+  <text x="70" y="145" fill="#c62828" font-weight="bold">ABEF→Red</text>
+  <text x="90" y="65" fill="#2e7d32" font-weight="bold">ABCD→Green</text>
+  <text x="155" y="110" fill="#795548" font-weight="bold">BCHE→Brown</text>
+  <!-- Legend -->
+  <text x="230" y="70" font-size="10">ABEF → Red</text>
+  <text x="230" y="85" font-size="10">DCHG → Black</text>
+  <text x="230" y="100" font-size="10">ABCD → Green</text>
+  <text x="230" y="115" font-size="10">EFGH → Blue</text>
+  <text x="230" y="130" font-size="10">AFGD → White</text>
+  <text x="230" y="145" font-size="10">BCHE → Brown</text>
+</svg>

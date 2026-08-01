@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 130" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:12px;fill:#333}.circ{fill:#fff;stroke:#333;stroke-width:1.5}</style>
+  <!-- Circle 1: top=6, left=5, right=8, bottom-left=7, bottom=4, center=492 -->
+  <circle class="circ" cx="55" cy="65" r="40"/>
+  <text x="46" y="30">6</text><text x="10" y="68">5</text><text x="93" y="53">8</text>
+  <text x="16" y="97">7</text><text x="57" y="108">4</text>
+  <text x="35" y="70">492</text>
+  <!-- Circle 2: top=5, left=7, right=4, bottom-left=6, bottom=9+8 -->
+  <circle class="circ" cx="190" cy="65" r="40"/>
+  <text x="181" y="30">5</text><text x="145" y="68">7</text><text x="228" y="53">4</text>
+  <text x="151" y="97">6</text><text x="187" y="108">9 8</text>
+  <text x="170" y="70">572</text>
+  <!-- Circle 3: top=3, left=4, right=5, bottom-left=7, bottom=2+5 -->
+  <circle class="circ" cx="315" cy="65" r="40"/>
+  <text x="306" y="30">3</text><text x="270" y="68">4</text><text x="353" y="53">5</text>
+  <text x="276" y="97">7</text><text x="310" y="108">2 5</text>
+  <text x="302" y="70" fill="#c00">?</text>
+  <text x="20" y="125" font-size="11" fill="#555">(top×left×right)+(bottom-l×bottom-r×bottom) → (4×3×5)+(7×2×5)=130</text>
+</svg>

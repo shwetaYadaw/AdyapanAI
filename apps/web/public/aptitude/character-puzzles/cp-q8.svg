@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 200" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.cell{fill:#fff;stroke:#333;stroke-width:1.5}</style>
+  <!-- 3x4 grid -->
+  <rect class="cell" x="20" y="10" width="50" height="35"/><text x="37" y="33">18</text>
+  <rect class="cell" x="70" y="10" width="50" height="35"/><text x="87" y="33">24</text>
+  <rect class="cell" x="120" y="10" width="50" height="35"/><text x="137" y="33">32</text>
+  <rect class="cell" x="20" y="45" width="50" height="35"/><text x="37" y="68">12</text>
+  <rect class="cell" x="70" y="45" width="50" height="35"/><text x="87" y="68">14</text>
+  <rect class="cell" x="120" y="45" width="50" height="35"/><text x="137" y="68">16</text>
+  <rect class="cell" x="20" y="80" width="50" height="35"/><text x="37" y="103">3</text>
+  <rect class="cell" x="70" y="80" width="50" height="35"/><text x="84" y="103" fill="#c00">?</text>
+  <rect class="cell" x="120" y="80" width="50" height="35"/><text x="137" y="103">4</text>
+  <rect class="cell" x="20" y="115" width="50" height="35"/><text x="37" y="138">72</text>
+  <rect class="cell" x="70" y="115" width="50" height="35"/><text x="82" y="138">112</text>
+  <rect class="cell" x="120" y="115" width="50" height="35"/><text x="132" y="138">128</text>
+  <text x="20" y="175" font-size="11" fill="#555">(row1 × row2) / row3 = row4</text>
+  <text x="20" y="192" font-size="11" fill="#555">(24×14)/? = 112 → ?=3</text>
+</svg>

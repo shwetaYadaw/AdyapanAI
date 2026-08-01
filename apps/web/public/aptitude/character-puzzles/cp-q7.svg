@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.line{stroke:#333;stroke-width:1.5}</style>
+  <!-- V-shape 1: left=21, right=31, bottom=52 -->
+  <line class="line" x1="30" y1="20" x2="55" y2="70"/>
+  <line class="line" x1="80" y1="20" x2="55" y2="70"/>
+  <text x="12" y="18">21</text><text x="75" y="18">31</text><text x="45" y="90">52</text>
+  <!-- V-shape 2: left=39, right=46, bottom=85 -->
+  <line class="line" x1="155" y1="20" x2="180" y2="70"/>
+  <line class="line" x1="205" y1="20" x2="180" y2="70"/>
+  <text x="137" y="18">39</text><text x="200" y="18">46</text><text x="170" y="90">85</text>
+  <!-- V-shape 3: left=16, right=83, bottom=? -->
+  <line class="line" x1="270" y1="20" x2="295" y2="70"/>
+  <line class="line" x1="320" y1="20" x2="295" y2="70"/>
+  <text x="252" y="18">16</text><text x="315" y="18">83</text><text x="283" y="90" fill="#c00">?</text>
+  <text x="30" y="108" font-size="11" fill="#555">left + right = bottom  →  16+83 = 99</text>
+</svg>

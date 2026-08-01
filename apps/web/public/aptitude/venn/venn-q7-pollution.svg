@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+    .shape { fill: none; stroke: #333; stroke-width: 1.5; }
+  </style>
+  <!-- Circle = Engineers -->
+  <circle class="shape" cx="80" cy="90" r="50"/>
+  <!-- Square = Legal Experts -->
+  <rect class="shape" x="50" y="60" width="80" height="80"/>
+  <!-- Triangle = Environmentalists -->
+  <polygon class="shape" points="100,40 60,130 140,130"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60" fill="none">
+  <style>.c{fill:none;stroke:#333;stroke-width:1.5}</style>
+  <!-- Concentric circles (one inside another) -->
+  <circle class="c" cx="50" cy="30" r="25"/>
+  <circle class="c" cx="50" cy="30" r="15"/>
+</svg>

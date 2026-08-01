@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 220" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+    .shape { fill: none; stroke: #333; stroke-width: 1.5; }
+    .label { font-size: 10px; fill: #555; }
+  </style>
+  <!-- Square = Boys -->
+  <rect class="shape" x="20" y="40" width="120" height="120"/>
+  <!-- Circle = Athletics -->
+  <circle class="shape" cx="100" cy="80" r="45"/>
+  <!-- Triangle = Girls -->
+  <polygon class="shape" points="60,160 20,100 100,100"/>
+  <!-- Diamond = Disciplined -->
+  <polygon class="shape" points="80,40 130,90 80,140 30,90"/>
+  <!-- Numbers in regions -->
+  <text x="35" y="78">6</text>
+  <text x="55" y="95">4</text>
+  <text x="75" y="78">2</text>
+  <text x="95" y="95">1</text>
+  <text x="55" y="115">3</text>
+  <text x="35" y="130">5</text>
+  <text x="25" y="60">10</text>
+  <text x="110" y="60">7</text>
+  <text x="50" y="155">8</text>
+  <text x="100" y="155">9</text>
+  <!-- Legend -->
+  <rect x="200" y="50" width="15" height="15" fill="none" stroke="#333" stroke-width="1"/>
+  <text x="220" y="62">→ Boys</text>
+  <circle cx="207" cy="90" r="7" fill="none" stroke="#333" stroke-width="1"/>
+  <text x="220" y="93">→ Athletics</text>
+  <polygon points="207,115 200,128 214,128" fill="none" stroke="#333" stroke-width="1"/>
+  <text x="220" y="125">→ Girls</text>
+  <polygon points="207,145 214,152 207,159 200,152" fill="none" stroke="#333" stroke-width="1"/>
+  <text x="220" y="155">→ Disciplined</text>
+</svg>

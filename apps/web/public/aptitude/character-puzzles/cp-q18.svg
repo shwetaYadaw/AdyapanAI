@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 130" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.cell{fill:#fff;stroke:#333;stroke-width:1.5}.tri{fill:#f0f0f0;stroke:#333;stroke-width:1.5}</style>
+  <!-- Row 1: [4][5][3] /8\ -->
+  <rect class="cell" x="10" y="10" width="40" height="30"/><text x="24" y="31">4</text>
+  <rect class="cell" x="50" y="10" width="40" height="30"/><text x="64" y="31">5</text>
+  <rect class="cell" x="90" y="10" width="40" height="30"/><text x="104" y="31">3</text>
+  <polygon class="tri" points="130,10 160,40 100,40"/><text x="120" y="35">8</text>
+  <!-- Row 2: [6][10][5] /12\ -->
+  <rect class="cell" x="10" y="50" width="40" height="30"/><text x="24" y="71">6</text>
+  <rect class="cell" x="50" y="50" width="40" height="30"/><text x="64" y="71">10</text>
+  <rect class="cell" x="90" y="50" width="40" height="30"/><text x="104" y="71">5</text>
+  <polygon class="tri" points="130,50 165,80 95,80"/><text x="118" y="74">12</text>
+  <!-- Row 3: [4][8][2] /?\ -->
+  <rect class="cell" x="10" y="90" width="40" height="30"/><text x="24" y="111">4</text>
+  <rect class="cell" x="50" y="90" width="40" height="30"/><text x="64" y="111">8</text>
+  <rect class="cell" x="90" y="90" width="40" height="30"/><text x="104" y="111">2</text>
+  <polygon class="tri" points="130,90 165,120 95,120"/><text x="118" y="114" fill="#c00">?</text>
+  <text x="185" y="55" font-size="11" fill="#555">(a×b) mod c</text>
+  <text x="185" y="72" font-size="11" fill="#555">(4×6)%3=8</text>
+  <text x="185" y="89" font-size="11" fill="#555">(6×10)%5=12</text>
+  <text x="185" y="106" font-size="11" fill="#555">(4×8)%2=16</text>
+</svg>

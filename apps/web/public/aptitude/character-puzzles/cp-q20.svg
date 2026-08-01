@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.cell{fill:#fff;stroke:#333;stroke-width:1.5}</style>
+  <rect class="cell" x="20" y="10" width="50" height="35"/><text x="38" y="33">4</text>
+  <rect class="cell" x="70" y="10" width="50" height="35"/><text x="88" y="33">5</text>
+  <rect class="cell" x="120" y="10" width="50" height="35"/><text x="138" y="33">6</text>
+  <rect class="cell" x="20" y="45" width="50" height="35"/><text x="38" y="68">2</text>
+  <rect class="cell" x="70" y="45" width="50" height="35"/><text x="88" y="68">3</text>
+  <rect class="cell" x="120" y="45" width="50" height="35"/><text x="138" y="68">7</text>
+  <rect class="cell" x="20" y="80" width="50" height="35"/><text x="38" y="103">1</text>
+  <rect class="cell" x="70" y="80" width="50" height="35"/><text x="88" y="103">8</text>
+  <rect class="cell" x="120" y="80" width="50" height="35"/><text x="138" y="103">3</text>
+  <rect class="cell" x="20" y="115" width="50" height="35"/><text x="38" y="138">21</text>
+  <rect class="cell" x="70" y="115" width="50" height="35"/><text x="88" y="138">98</text>
+  <rect class="cell" x="120" y="115" width="50" height="35"/><text x="134" y="138" fill="#c00">?</text>
+  <text x="20" y="170" font-size="11" fill="#555">Sum of squares of each column</text>
+  <text x="20" y="185" font-size="11" fill="#555">6²+7²+3² = 36+49+9 = 94</text>
+</svg>

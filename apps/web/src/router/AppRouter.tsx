@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 import RoleRoute from './RoleRoute';
 import PageLoader from '../components/common/Loader/PageLoader';
+import ScrollToTop from './ScrollToTop';
 
 // Lazy-loaded pages
 const LandingPage        = lazy(() => import('../pages/Landing/LandingPage'));
@@ -53,6 +54,7 @@ const GetStartedPage     = lazy(() => import('../pages/GetStartedPage'));
 export default function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>
            {/* Public */}

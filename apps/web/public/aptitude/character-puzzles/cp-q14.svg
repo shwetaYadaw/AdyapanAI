@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.line{stroke:#333;stroke-width:1.5}</style>
+  <!-- V-shape 1: left=12, right=8, bottom=80 -->
+  <line class="line" x1="40" y1="20" x2="65" y2="70"/>
+  <line class="line" x1="90" y1="20" x2="65" y2="70"/>
+  <text x="20" y="18">12</text><text x="85" y="18">8</text><text x="52" y="90">80</text>
+  <!-- V-shape 2: left=16, right=7, bottom=207 -->
+  <line class="line" x1="165" y1="20" x2="190" y2="70"/>
+  <line class="line" x1="215" y1="20" x2="190" y2="70"/>
+  <text x="143" y="18">16</text><text x="210" y="18">7</text><text x="174" y="90">207</text>
+  <!-- V-shape 3: left=25, right=21, bottom=? -->
+  <line class="line" x1="285" y1="20" x2="310" y2="70"/>
+  <line class="line" x1="335" y1="20" x2="310" y2="70"/>
+  <text x="263" y="18">25</text><text x="330" y="18">21</text><text x="297" y="90" fill="#c00">?</text>
+  <text x="20" y="108" font-size="11" fill="#555">left² - right² = bottom  →  25²-21² = 625-441 = 184</text>
+</svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 110" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.tri{fill:#f0f0f0;stroke:#333;stroke-width:1.5}</style>
+  <!-- Triangle 1: top-left=5, top-right=3, inside=19, bottom=4 -->
+  <polygon class="tri" points="60,10 10,90 110,90"/>
+  <text x="53" y="30">19</text>
+  <text x="18" y="55">5</text><text x="92" y="55">3</text>
+  <text x="53" y="88">4</text>
+  <!-- Triangle 2: top-left=7, top-right=5, inside=?, bottom=6 -->
+  <polygon class="tri" points="190,10 140,90 240,90"/>
+  <text x="176" y="30" fill="#c00">?</text>
+  <text x="148" y="55">7</text><text x="222" y="55">5</text>
+  <text x="183" y="88">6</text>
+  <!-- Triangle 3: top-left=6, top-right=4, inside=29, bottom=5 -->
+  <polygon class="tri" points="310,10 260,90 360,90"/>
+  <text x="300" y="30">29</text>
+  <text x="268" y="55">6</text><text x="342" y="55">4</text>
+  <text x="303" y="88">5</text>
+  <text x="30" y="108" font-size="11" fill="#555">(left × right) + bottom = inside  →  7×5+6 = 41</text>
+</svg>

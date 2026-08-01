@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#333}.arrow{stroke:#333;stroke-width:1.5;marker-end:url(#arr)}.dot{fill:#333}</style>
+  <defs><marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#333"/></marker></defs>
+  <!-- Flat layout: North row P R U, South row S T Q -->
+  <circle class="dot" cx="40" cy="40" r="4"/><text x="35" y="30">P</text>
+  <circle class="dot" cx="100" cy="40" r="4"/><text x="95" y="30">R</text>
+  <circle class="dot" cx="160" cy="40" r="4"/><text x="155" y="30">U</text>
+  <line x1="30" y1="70" x2="175" y2="70" stroke="#999" stroke-width="1" stroke-dasharray="4,3"/>
+  <circle class="dot" cx="40" cy="100" r="4"/><text x="35" y="118">S</text>
+  <circle class="dot" cx="100" cy="100" r="4"/><text x="95" y="118">T</text>
+  <circle class="dot" cx="160" cy="100" r="4"/><text x="155" y="118">Q</text>
+  <!-- Compass -->
+  <text x="215" y="55" font-size="11">N</text>
+  <line x1="223" y1="58" x2="223" y2="73" stroke="#333" stroke-width="1.5"/>
+  <line x1="213" y1="68" x2="233" y2="68" stroke="#333" stroke-width="1.5"/>
+  <text x="235" y="71" font-size="11">E</text>
+  <text x="212" y="82" font-size="11">S</text>
+  <text x="200" y="71" font-size="11">W</text>
+  <text x="20" y="150" font-size="11" fill="#555">North row: P R U | South row: S T Q</text>
+  <text x="20" y="165" font-size="11" fill="#1565c0">URP faces South. T is between Q and S.</text>
+</svg>

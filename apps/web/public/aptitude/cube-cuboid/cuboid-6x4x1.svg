@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 200" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#333}.line{stroke:#333;stroke-width:1.5}.dashed{stroke:#999;stroke-width:1;stroke-dasharray:4,3}</style>
+  <!-- Cuboid 6x4x1 isometric view -->
+  <!-- Bottom face (front-bottom) -->
+  <polygon points="40,160 220,160 260,130 80,130" fill="#f9f9f9" stroke="#333" stroke-width="1.5"/>
+  <!-- Top face -->
+  <polygon points="40,155 220,155 260,125 80,125" fill="#d4edda" stroke="#333" stroke-width="1.5"/>
+  <!-- Left face -->
+  <polygon points="40,130 40,160 80,130" fill="#fff3cd" stroke="#333" stroke-width="1.5"/>
+  <!-- Right face -->
+  <polygon points="220,160 260,130 260,135 220,165" fill="#f8d7da" stroke="#333" stroke-width="1.5"/>
+  <!-- Grid lines on top (6x4) -->
+  <line class="dashed" x1="77" y1="125" x2="113" y2="155"/>
+  <line class="dashed" x1="114" y1="125" x2="150" y2="155"/>
+  <line class="dashed" x1="151" y1="125" x2="187" y2="155"/>
+  <line class="dashed" x1="188" y1="125" x2="224" y2="155"/>
+  <line class="dashed" x1="80" y1="135" x2="260" y2="135"/>
+  <!-- Labels -->
+  <text x="130" y="143" fill="#2d6a2d" font-weight="bold">Green</text>
+  <text x="30" y="148" fill="#333" transform="rotate(-70,40,145)" font-size="10">Black</text>
+  <text x="230" y="148" fill="#c00" transform="rotate(-70,240,145)" font-size="10">Black</text>
+  <text x="120" y="170" fill="#c00">Red</text>
+  <text x="290" y="140" fill="#c00">Red</text>
+  <text x="10" y="175" font-size="10">1 cm</text>
+  <text x="120" y="185" font-size="10">6 cm</text>
+  <text x="270" y="170" font-size="10">4 cm</text>
+  <text x="290" y="155" fill="#2d6a2d" font-size="10">Green</text>
+</svg>

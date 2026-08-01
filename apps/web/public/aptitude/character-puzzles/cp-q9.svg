@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 120" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:13px;fill:#333}.diam{fill:#fff;stroke:#333;stroke-width:1.5}</style>
+  <!-- Diamond 1: top=0, left=2, right=6, bottom=4, center=10 -->
+  <polygon class="diam" points="55,10 15,55 55,100 95,55"/>
+  <text x="49" y="9">0</text><text x="3" y="58">2</text><text x="95" y="58">6</text><text x="49" y="108">4</text>
+  <text x="42" y="60">10</text>
+  <!-- Diamond 2: top=6, left=8, right=2, bottom=10, center=24 -->
+  <polygon class="diam" points="180,10 140,55 180,100 220,55"/>
+  <text x="174" y="9">6</text><text x="128" y="58">8</text><text x="220" y="58">2</text><text x="174" y="108">10</text>
+  <text x="167" y="60">24</text>
+  <!-- Diamond 3: top=4, left=10, right=14, bottom=12, center=? -->
+  <polygon class="diam" points="295,10 255,55 295,100 335,55"/>
+  <text x="289" y="9">4</text><text x="243" y="58">10</text><text x="335" y="58">14</text><text x="289" y="108">12</text>
+  <text x="282" y="60" fill="#c00">?</text>
+  <text x="20" y="118" font-size="11" fill="#555">(top+left+right+bottom)-2 = center  →  (4+10+14+12)-2 = 38</text>
+</svg>

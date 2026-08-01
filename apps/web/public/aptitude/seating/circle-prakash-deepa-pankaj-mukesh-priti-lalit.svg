@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 240" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#333}.dot{fill:#333}</style>
+  <circle cx="110" cy="120" r="75" fill="none" stroke="#999" stroke-width="1.5"/>
+  <!-- Clockwise: Prakash(top), Deepa(top-right), Pankaj(bottom-right), Mukesh(bottom), Priti(bottom-left), Lalit(top-left) -->
+  <circle class="dot" cx="110" cy="45" r="4"/><text x="93" y="37">Prakash</text>
+  <circle class="dot" cx="175" cy="78" r="4"/><text x="178" y="82">Deepa</text>
+  <circle class="dot" cx="175" cy="162" r="4"/><text x="178" y="166">Pankaj</text>
+  <circle class="dot" cx="110" cy="195" r="4"/><text x="95" y="210">Mukesh</text>
+  <circle class="dot" cx="45" cy="162" r="4"/><text x="2" y="166">Priti</text>
+  <circle class="dot" cx="45" cy="78" r="4"/><text x="5" y="72">Lalit</text>
+</svg>

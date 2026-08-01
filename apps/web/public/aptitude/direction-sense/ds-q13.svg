@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 180" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#333}.arrow{stroke:#333;stroke-width:1.5;marker-end:url(#arr)}.dot{fill:#333}</style>
+  <defs><marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#333"/></marker></defs>
+  <!-- M # N $ T: M→N right(east), N→T north -->
+  <circle class="dot" cx="40" cy="120" r="4"/><text x="32" y="137">M</text>
+  <line class="arrow" x1="45" y1="120" x2="105" y2="120"/>
+  <text x="65" y="112" font-size="10">1m (right/east)</text>
+  <circle class="dot" cx="110" cy="120" r="4"/><text x="115" y="137">N</text>
+  <line class="arrow" x1="110" y1="115" x2="110" y2="55"/>
+  <text x="115" y="90" font-size="10">1m (north)</text>
+  <circle class="dot" cx="110" cy="50" r="4"/><text x="115" y="48">T</text>
+  <text x="30" y="165" font-size="11" fill="#1565c0">T is North-East of M</text>
+</svg>

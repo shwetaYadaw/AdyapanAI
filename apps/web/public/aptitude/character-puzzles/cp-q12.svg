@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 130" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:12px;fill:#333}.circ{fill:#fff;stroke:#333;stroke-width:1.5}</style>
+  <!-- Wheel 1: center=551, spokes: 9,1,5 top; 3,5,4 bottom-left; 6 -->
+  <circle class="circ" cx="65" cy="65" r="40"/>
+  <!-- spokes -->
+  <line x1="65" y1="25" x2="65" y2="105" stroke="#333" stroke-width="1"/>
+  <line x1="25" y1="65" x2="105" y2="65" stroke="#333" stroke-width="1"/>
+  <line x1="37" y1="37" x2="93" y2="93" stroke="#333" stroke-width="1"/>
+  <line x1="93" y1="37" x2="37" y2="93" stroke="#333" stroke-width="1"/>
+  <text x="57" y="18">1</text><text x="37" y="42">9</text><text x="92" y="42">5</text>
+  <text x="15" y="68">3</text><text x="105" y="68">5</text>
+  <text x="37" y="98">4</text><text x="80" y="98">6</text>
+  <text x="48" y="70">551</text>
+  <!-- Wheel 2: center=246 -->
+  <circle class="circ" cx="195" cy="65" r="40"/>
+  <line x1="195" y1="25" x2="195" y2="105" stroke="#333" stroke-width="1"/>
+  <line x1="155" y1="65" x2="235" y2="65" stroke="#333" stroke-width="1"/>
+  <line x1="167" y1="37" x2="223" y2="93" stroke="#333" stroke-width="1"/>
+  <line x1="223" y1="37" x2="167" y2="93" stroke="#333" stroke-width="1"/>
+  <text x="187" y="18">4</text><text x="167" y="42">5</text><text x="222" y="42">3</text>
+  <text x="145" y="68">7</text><text x="235" y="68">9</text>
+  <text x="167" y="98">8</text><text x="210" y="98">7</text>
+  <text x="178" y="70">246</text>
+  <!-- Wheel 3: center=? -->
+  <circle class="circ" cx="320" cy="65" r="40"/>
+  <line x1="320" y1="25" x2="320" y2="105" stroke="#333" stroke-width="1"/>
+  <line x1="280" y1="65" x2="360" y2="65" stroke="#333" stroke-width="1"/>
+  <line x1="292" y1="37" x2="348" y2="93" stroke="#333" stroke-width="1"/>
+  <line x1="348" y1="37" x2="292" y2="93" stroke="#333" stroke-width="1"/>
+  <text x="312" y="18">6</text><text x="292" y="42">8</text><text x="347" y="42">3</text>
+  <text x="265" y="68">2</text><text x="360" y="68">1</text>
+  <text x="292" y="98">4</text><text x="335" y="98">2</text>
+  <text x="310" y="70" fill="#c00">?</text>
+  <text x="20" y="125" font-size="11" fill="#555">Outer numbers form two 3-digit numbers; subtract → 915-364=551; 789-543=246; 863-241=622</text>
+</svg>

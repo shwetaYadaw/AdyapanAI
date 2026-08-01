@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 200" fill="none">
+  <style>
+    text { font-family: Arial, sans-serif; font-size: 11px; fill: #333; }
+    .shape { fill: none; stroke: #333; stroke-width: 1.5; }
+    .label { font-size: 10px; fill: #555; }
+  </style>
+  <!-- Square = Doctors -->
+  <rect class="shape" x="20" y="50" width="120" height="120"/>
+  <!-- Triangle = Ladies -->
+  <polygon class="shape" points="70,30 20,150 120,150"/>
+  <!-- Circle = Surgeon -->
+  <circle class="shape" cx="150" cy="110" r="55"/>
+  <!-- Regions -->
+  <text x="35" y="80">P</text>
+  <text x="65" y="100">R</text>
+  <text x="80" y="140">S</text>
+  <text x="110" y="120">T</text>
+  <text x="140" y="130">U</text>
+  <text x="55" y="160">Q</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 160" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:12px;fill:#333}.line{stroke:#333;stroke-width:1.5}</style>
+  <!-- Clock at 6PM: hour hand at 12 (North), minute hand at 12 -->
+  <circle cx="55" cy="75" r="40" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="50" y="30" font-size="11">6</text>
+  <line class="line" x1="55" y1="75" x2="55" y2="40"/><!-- North = 12 -->
+  <line class="line" x1="55" y1="75" x2="55" y2="110"/><!-- 6 = hour hand pointing down (South) -->
+  <text x="30" y="120" font-size="10">At 6 PM</text>
+  <!-- Clock at 9:15PM: minute hand at 3 (East) -->
+  <circle cx="175" cy="75" r="40" fill="#fff" stroke="#333" stroke-width="1.5"/>
+  <text x="170" y="30" font-size="11">6</text>
+  <line class="line" x1="175" y1="75" x2="175" y2="40"/>
+  <line class="line" x1="175" y1="75" x2="140" y2="75"/><!-- minute at 9 = West -->
+  <text x="148" y="120" font-size="10">At 9:15 PM</text>
+  <!-- Compass result -->
+  <text x="235" y="60" font-size="11">N</text>
+  <line x1="243" y1="63" x2="243" y2="78" stroke="#333" stroke-width="1.5"/>
+  <line x1="233" y1="73" x2="253" y2="73" stroke="#333" stroke-width="1.5"/>
+  <text x="255" y="76" font-size="11">E</text>
+  <text x="232" y="87" font-size="11">S</text>
+  <text x="220" y="76" font-size="11">W</text>
+  <text x="40" y="148" font-size="11" fill="#1565c0">At 9:15 PM, minute hand points to 3 → which is West (as 12=North). Answer: West.</text>
+</svg>

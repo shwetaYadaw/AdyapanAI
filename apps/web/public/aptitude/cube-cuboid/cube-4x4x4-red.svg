@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" fill="none">
+  <style>text{font-family:Arial,sans-serif;font-size:11px;fill:#333}.dashed{stroke:#bbb;stroke-width:1;stroke-dasharray:4,3}</style>
+  <!-- Cube 4x4x4 all faces red -->
+  <!-- Front face -->
+  <polygon points="30,70 150,70 150,190 30,190" fill="#ffebee" stroke="#c62828" stroke-width="1.5"/>
+  <!-- Top face -->
+  <polygon points="30,70 150,70 195,35 75,35" fill="#ffcdd2" stroke="#c62828" stroke-width="1.5"/>
+  <!-- Right face -->
+  <polygon points="150,70 195,35 195,155 150,190" fill="#ef9a9a" stroke="#c62828" stroke-width="1.5"/>
+  <!-- Front grid 4x4 -->
+  <line class="dashed" x1="60" y1="70" x2="60" y2="190"/>
+  <line class="dashed" x1="90" y1="70" x2="90" y2="190"/>
+  <line class="dashed" x1="120" y1="70" x2="120" y2="190"/>
+  <line class="dashed" x1="30" y1="100" x2="150" y2="100"/>
+  <line class="dashed" x1="30" y1="130" x2="150" y2="130"/>
+  <line class="dashed" x1="30" y1="160" x2="150" y2="160"/>
+  <!-- Top grid 4x4 -->
+  <line class="dashed" x1="75" y1="70" x2="120" y2="35"/>
+  <line class="dashed" x1="105" y1="70" x2="150" y2="35"/>
+  <line class="dashed" x1="135" y1="70" x2="180" y2="35"/>
+  <line class="dashed" x1="37" y1="53" x2="157" y2="53"/>
+  <line class="dashed" x1="56" y1="35" x2="56" y2="155"/><!-- approx -->
+  <!-- Right grid 4x4 -->
+  <line class="dashed" x1="150" y1="100" x2="195" y2="65"/>
+  <line class="dashed" x1="150" y1="130" x2="195" y2="95"/>
+  <line class="dashed" x1="150" y1="160" x2="195" y2="125"/>
+  <line class="dashed" x1="161" y1="35" x2="161" y2="155"/>
+  <line class="dashed" x1="172" y1="35" x2="172" y2="155"/>
+  <line class="dashed" x1="183" y1="35" x2="183" y2="155"/>
+  <!-- Labels -->
+  <text x="55" y="35" fill="#c62828">Red</text>
+  <text x="158" y="90" fill="#c62828">Red</text>
+  <text x="75" y="130" fill="#c62828">Red</text>
+  <!-- Dimensions -->
+  <text x="5" y="135" font-size="10" transform="rotate(-90,10,135)">4 cm</text>
+  <text x="80" y="210" font-size="10">4 cm</text>
+  <text x="200" y="110" font-size="10">4 cm</text>
+</svg>
