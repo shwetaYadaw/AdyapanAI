@@ -308,10 +308,10 @@
       ]
     },
     {
-      "title": "Repeat and Missing Number Array",
+      "title": "Missing And Repeating",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Repeat and Missing Number Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "statement": "Practice solving **Missing And Repeating** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
       "inputFormat": "A single line of space-separated integers representing target inputs.",
       "outputFormat": "Expected solved outputs.",
       "constraints": "1 <= nums.length <= 10^5",
@@ -512,10 +512,10 @@
       ]
     },
     {
-      "title": "Given Sum Pair",
+      "title": "Two Sum - Pair with given Sum",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Given Sum Pair** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "statement": "Practice solving **Two Sum - Pair with given Sum** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
       "inputFormat": "A single line of space-separated integers representing target inputs.",
       "outputFormat": "Expected solved outputs.",
       "constraints": "1 <= nums.length <= 10^5",
@@ -535,10 +535,10 @@
       ]
     },
     {
-      "title": "Kth - Smallest Element",
+      "title": "Kth Smallest",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Kth - Smallest Element** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "statement": "Practice solving **Kth Smallest** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
       "inputFormat": "A single line of space-separated integers representing target inputs.",
       "outputFormat": "Expected solved outputs.",
       "constraints": "1 <= nums.length <= 10^5",
@@ -558,10 +558,10 @@
       ]
     },
     {
-      "title": "Merge Overlapping Intervals",
+      "title": "Overlapping Intervals",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Merge Overlapping Intervals** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "statement": "Practice solving **Overlapping Intervals** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
       "inputFormat": "A single line of space-separated integers representing target inputs.",
       "outputFormat": "Expected solved outputs.",
       "constraints": "1 <= nums.length <= 10^5",
@@ -680,10 +680,10 @@
       ]
     },
     {
-      "title": "Subarray Sum Divisible K",
+      "title": "Subarray Sums Divisible by K",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Subarray Sum Divisible K** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
+      "statement": "Practice solving **Subarray Sums Divisible by K** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
       "inputFormat": "A single line of space-separated integers representing target inputs.",
       "outputFormat": "Expected solved outputs.",
       "constraints": "1 <= nums.length <= 10^5",
