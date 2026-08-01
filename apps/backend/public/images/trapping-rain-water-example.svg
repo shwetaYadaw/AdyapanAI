@@ -1,0 +1,87 @@
+<svg viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1000" height="600" fill="white"/>
+  
+  <!-- Title -->
+  <text x="500" y="40" font-size="28" font-weight="bold" text-anchor="middle" fill="#333">
+    Trapping Rain Water - Example 1
+  </text>
+  <text x="500" y="75" font-size="16" text-anchor="middle" fill="#666">
+    Array: [3,0,1,0,4,0,2] → Total Water Trapped: 10 units
+  </text>
+  
+  <!-- Grid and axes -->
+  <line x1="80" y1="480" x2="950" y2="480" stroke="#000" stroke-width="2"/>
+  <line x1="80" y1="50" x2="80" y2="480" stroke="#000" stroke-width="2"/>
+  
+  <!-- Y-axis labels (height) -->
+  <text x="65" y="485" font-size="12" text-anchor="end" fill="#333">0</text>
+  <text x="65" y="385" font-size="12" text-anchor="end" fill="#333">1</text>
+  <text x="65" y="285" font-size="12" text-anchor="end" fill="#333">2</text>
+  <text x="65" y="185" font-size="12" text-anchor="end" fill="#333">3</text>
+  <text x="65" y="85" font-size="12" text-anchor="end" fill="#333">4</text>
+  
+  <!-- Grid lines -->
+  <line x1="75" y1="380" x2="950" y2="380" stroke="#eee" stroke-width="1"/>
+  <line x1="75" y1="280" x2="950" y2="280" stroke="#eee" stroke-width="1"/>
+  <line x1="75" y1="180" x2="950" y2="180" stroke="#eee" stroke-width="1"/>
+  <line x1="75" y1="80" x2="950" y2="80" stroke="#eee" stroke-width="1"/>
+  
+  <!-- Blocks (Heights) -->
+  <!-- Block 0: height=3 -->
+  <rect x="100" y="180" width="80" height="300" fill="#333" stroke="#000" stroke-width="1"/>
+  <text x="140" y="510" font-size="12" text-anchor="middle" fill="#333">3</text>
+  
+  <!-- Block 1: height=0 (water fills to 3) -->
+  <rect x="200" y="180" width="80" height="300" fill="#87CEEB" opacity="0.7" stroke="#0088cc" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="240" y="510" font-size="12" text-anchor="middle" fill="#333">0</text>
+  <text x="240" y="150" font-size="11" fill="#0088cc" font-weight="bold">+3</text>
+  
+  <!-- Block 2: height=1 (water fills to 3) -->
+  <rect x="300" y="380" width="80" height="100" fill="#333" stroke="#000" stroke-width="1"/>
+  <rect x="300" y="180" width="80" height="200" fill="#87CEEB" opacity="0.7" stroke="#0088cc" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="340" y="510" font-size="12" text-anchor="middle" fill="#333">1</text>
+  <text x="340" y="150" font-size="11" fill="#0088cc" font-weight="bold">+2</text>
+  
+  <!-- Block 3: height=0 (water fills to 3) -->
+  <rect x="400" y="180" width="80" height="300" fill="#87CEEB" opacity="0.7" stroke="#0088cc" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="440" y="510" font-size="12" text-anchor="middle" fill="#333">0</text>
+  <text x="440" y="150" font-size="11" fill="#0088cc" font-weight="bold">+3</text>
+  
+  <!-- Block 4: height=4 -->
+  <rect x="500" y="80" width="80" height="400" fill="#333" stroke="#000" stroke-width="1"/>
+  <text x="540" y="510" font-size="12" text-anchor="middle" fill="#333">4</text>
+  
+  <!-- Block 5: height=0 (water fills to 2) -->
+  <rect x="600" y="280" width="80" height="200" fill="#87CEEB" opacity="0.7" stroke="#0088cc" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="640" y="510" font-size="12" text-anchor="middle" fill="#333">0</text>
+  <text x="640" y="250" font-size="11" fill="#0088cc" font-weight="bold">+2</text>
+  
+  <!-- Block 6: height=2 -->
+  <rect x="700" y="280" width="80" height="200" fill="#333" stroke="#000" stroke-width="1"/>
+  <text x="740" y="510" font-size="12" text-anchor="middle" fill="#333">2</text>
+  
+  <!-- X-axis label -->
+  <text x="515" y="540" font-size="14" text-anchor="middle" fill="#333">
+    Index →
+  </text>
+  
+  <!-- Y-axis label -->
+  <text x="20" y="280" font-size="14" text-anchor="middle" fill="#333" transform="rotate(-90 20 280)">
+    Height →
+  </text>
+  
+  <!-- Legend -->
+  <g>
+    <rect x="100" y="550" width="20" height="20" fill="#333" stroke="#000" stroke-width="1"/>
+    <text x="130" y="565" font-size="12" fill="#333">Block Height</text>
+    
+    <rect x="380" y="550" width="20" height="20" fill="#87CEEB" opacity="0.7" stroke="#0088cc" stroke-width="1" stroke-dasharray="2,2"/>
+    <text x="410" y="565" font-size="12" fill="#333">Trapped Water</text>
+  </g>
+  
+  <!-- Calculation breakdown -->
+  <text x="100" y="590" font-size="11" fill="#666">
+    Water trapped = 3 + 2 + 3 + 0 + 2 + 0 = 10 units
+  </text>
+</svg>

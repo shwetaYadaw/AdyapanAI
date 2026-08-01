@@ -52,8 +52,8 @@ export default function CodingChallengesPage() {
   const { data: questions, isLoading } = useQuery<Question[]>({
     queryKey: ['codingQuestions', ''],
     queryFn: async () => {
-      // Use /problems endpoint for DSA Coding Arena (not /challenges/questions which is for TCS NQT)
-      const { data } = await api.get('/problems');
+      // Use /challenges/questions endpoint for all Coding Arena questions
+      const { data } = await api.get('/challenges/questions');
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,

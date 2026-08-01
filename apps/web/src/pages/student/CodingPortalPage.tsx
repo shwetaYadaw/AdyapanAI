@@ -260,22 +260,13 @@ export default function CodingPortalPage() {
     toast.success('Comment posted!');
   };
 
-  // Fetch question details (tries /problems first, then /challenges/questions for TCS NQT)
+  // Fetch question details from /challenges/questions endpoint (all Coding Arena questions are there)
   const { data: question, isLoading } = useQuery<Question>({
     queryKey: ['codingQuestionDetail', slug],
     queryFn: async () => {
-      // Try Problem table first (DSA Coding Arena)
-      try {
-        const { data } = await api.get(`/problems/${slug}`);
-        return data.data;
-      } catch (error: any) {
-        // If not found in Problem table (404), try Question table (TCS NQT)
-        if (error.response?.status === 404) {
-          const { data } = await api.get(`/challenges/questions/${slug}`);
-          return data.data;
-        }
-        throw error;
-      }
+      // All questions (both TCS NQT and Coding Arena) are in the challenges/questions endpoint
+      const { data } = await api.get(`/challenges/questions/${slug}`);
+      return data.data;
     },
     enabled: !!slug,
   });

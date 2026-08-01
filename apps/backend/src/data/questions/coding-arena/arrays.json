@@ -9,46 +9,66 @@
   "questions": [
     {
       "title": "Best Time to Buy and Sell Stock",
-      "difficulty": "medium",
+      "difficulty": "easy",
       "category": "arrays",
-      "statement": "Practice solving **Best Time to Buy and Sell Stock** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "7 1 5 3 6 4",
+      "statement": "You are given an integer array prices where prices[i] is the price of a given stock on the ith day.\n\nYou want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.\n\nReturn the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.\n\nNote: You may not engage in multiple transactions (i.e., you must sell the stock before you buy again).\n\n**Example 1:**\n- Input: prices = [7,1,5,3,6,4]\n- Output: 5\n- Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.\n\n**Example 2:**\n- Input: prices = [7,6,4,3,1]\n- Output: 0\n- Explanation: In this case, no transactions are done and the max profit = 0.\n\n**Example 3:**\n- Input: prices = [2,4,1]\n- Output: 2\n- Explanation: Buy on day 1 (price = 2) and sell on day 2 (price = 4), profit = 4-2 = 2.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers representing stock prices.",
+      "outputFormat": "Return the maximum profit possible.",
+      "constraints": "1 ≤ n ≤ 10^5, 0 ≤ prices[i] ≤ 10^4",
+      "sampleInput": "6\n7 1 5 3 6 4",
       "sampleOutput": "5",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "6\n7 1 5 3 6 4",
+          "output": "5",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "5\n7 6 4 3 1",
+          "output": "0",
+          "isHidden": false
+        },
+        {
+          "input": "3\n2 4 1",
+          "output": "2",
+          "isHidden": true
+        },
+        {
+          "input": "4\n3 2 6 5",
+          "output": "4",
           "isHidden": true
         }
       ]
     },
     {
       "title": "Contains Duplicate",
-      "difficulty": "medium",
+      "difficulty": "easy",
       "category": "arrays",
-      "statement": "Practice solving **Contains Duplicate** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "1 2 3 1",
+      "statement": "Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.\n\n**Example 1:**\n- Input: nums = [1,2,3,1]\n- Output: true\n- Explanation: The value 1 appears twice in the array.\n\n**Example 2:**\n- Input: nums = [1,2,3,4]\n- Output: false\n- Explanation: All elements are distinct.\n\n**Example 3:**\n- Input: nums = [99,99]\n- Output: true\n- Explanation: The value 99 appears twice in the array.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array).",
+      "outputFormat": "Return true if there are duplicates, otherwise return false.",
+      "constraints": "1 ≤ n ≤ 10^5, -10^9 ≤ nums[i] ≤ 10^9",
+      "sampleInput": "4\n1 2 3 1",
       "sampleOutput": "true",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "4\n1 2 3 1",
+          "output": "true",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "4\n1 2 3 4",
+          "output": "false",
+          "isHidden": false
+        },
+        {
+          "input": "2\n99 99",
+          "output": "true",
+          "isHidden": true
+        },
+        {
+          "input": "5\n1 2 3 4 5",
+          "output": "false",
           "isHidden": true
         }
       ]
@@ -57,21 +77,31 @@
       "title": "Product of Array Except Self",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Product of Array Except Self** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "1 2 3 4",
+      "statement": "Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].\n\nYou must write an algorithm that runs in O(n) time and without using the division operation.\n\n**Example 1:**\n- Input: nums = [1,2,3,4]\n- Output: [24,12,8,6]\n- Explanation: The product of all elements except 1 is 2*3*4 = 24. The product of all elements except 2 is 1*3*4 = 12. The product of all elements except 3 is 1*2*4 = 8. The product of all elements except 4 is 1*2*3 = 6.\n\n**Example 2:**\n- Input: nums = [-1,1,0,-3,3]\n- Output: [0,0,9,0,0]\n- Explanation: Use prefix and suffix products to handle zeros efficiently.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array).",
+      "outputFormat": "Return an array where each element is the product of all other elements.",
+      "constraints": "2 ≤ n ≤ 10^5, -30 ≤ nums[i] ≤ 30",
+      "sampleInput": "4\n1 2 3 4",
       "sampleOutput": "24 12 8 6",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "4\n1 2 3 4",
+          "output": "24 12 8 6",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "5\n-1 1 0 -3 3",
+          "output": "0 0 9 0 0",
+          "isHidden": false
+        },
+        {
+          "input": "2\n2 3",
+          "output": "3 2",
+          "isHidden": true
+        },
+        {
+          "input": "3\n5 2 6",
+          "output": "12 30 10",
           "isHidden": true
         }
       ]
@@ -80,21 +110,31 @@
       "title": "Maximum Subarray (Kadane\\'s Algorithm)",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Maximum Subarray (Kadane\\'s Algorithm)** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "1 2 3",
-      "sampleOutput": "1",
+      "statement": "You are given an integer array arr[]. You need to find the maximum sum of a subarray (containing at least one element) in the array arr[].\n\n**Example 1:**\n- Input: arr[] = [2, 3, -8, 7, -1, 2, 3]\n- Output: 11\n- Explanation: The subarray [7, -1, 2, 3] has the largest sum 11.\n\n**Example 2:**\n- Input: arr[] = [-2, -4]\n- Output: -2\n- Explanation: The subarray [-2] has the largest sum -2.\n\n**Example 3:**\n- Input: arr[] = [5, 4, 1, 7, 8]\n- Output: 25\n- Explanation: The subarray [5, 4, 1, 7, 8] has the largest sum 25.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array).",
+      "outputFormat": "Return the maximum sum of any contiguous subarray.",
+      "constraints": "1 ≤ n ≤ 10^5, -10^4 ≤ arr[i] ≤ 10^4",
+      "sampleInput": "7\n2 3 -8 7 -1 2 3",
+      "sampleOutput": "11",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "7\n2 3 -8 7 -1 2 3",
+          "output": "11",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "2\n-2 -4",
+          "output": "-2",
+          "isHidden": false
+        },
+        {
+          "input": "5\n5 4 1 7 8",
+          "output": "25",
+          "isHidden": true
+        },
+        {
+          "input": "4\n-2 -1 -3 -4",
+          "output": "-1",
           "isHidden": true
         }
       ]
@@ -103,21 +143,31 @@
       "title": "Merge Intervals",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Merge Intervals** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "1 3 2 4 6 8 9 10",
-      "sampleOutput": "1 4\\n6 8\\n9 10",
+      "statement": "Given an array of intervals where intervals[i] = [start_i, end_i], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.\n\n**Example 1:**\n- Input: intervals = [[1,3],[2,6],[8,10],[15,18]]\n- Output: [[1,6],[8,10],[15,18]]\n- Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].\n\n**Example 2:**\n- Input: intervals = [[1,4],[4,5]]\n- Output: [[1,5]]\n- Explanation: Intervals [1,4] and [4,5] are considered overlapping.\n\n**Example 3:**\n- Input: intervals = [[4,7],[1,4]]\n- Output: [[1,7]]\n- Explanation: Intervals [1,4] and [4,7] are considered overlapping.",
+      "inputFormat": "First line contains n (number of intervals), followed by n lines each containing two space-separated integers [start, end].",
+      "outputFormat": "Return merged intervals as pairs [start, end], each on a new line.",
+      "constraints": "1 ≤ n ≤ 10^4, 0 ≤ start_i ≤ end_i ≤ 10^4",
+      "sampleInput": "4\n1 3\n2 6\n8 10\n15 18",
+      "sampleOutput": "1 6\n8 10\n15 18",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "4\n1 3\n2 6\n8 10\n15 18",
+          "output": "1 6\n8 10\n15 18",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "2\n1 4\n4 5",
+          "output": "1 5",
+          "isHidden": false
+        },
+        {
+          "input": "2\n4 7\n1 4",
+          "output": "1 7",
+          "isHidden": true
+        },
+        {
+          "input": "5\n1 2\n3 4\n5 6\n7 8\n9 10",
+          "output": "1 2\n3 4\n5 6\n7 8\n9 10",
           "isHidden": true
         }
       ]
@@ -126,44 +176,64 @@
       "title": "Rotate Array",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Rotate Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "1 2 3 4 5\\n2",
-      "sampleOutput": "3 4 5 1 2",
+      "statement": "Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.\n\n**Example 1:**\n- Input: nums = [1,2,3,4,5,6,7], k = 3\n- Output: [5,6,7,1,2,3,4]\n- Explanation: rotate 1 steps to the right: [7,1,2,3,4,5,6]\nrotate 2 steps to the right: [6,7,1,2,3,4,5]\nrotate 3 steps to the right: [5,6,7,1,2,3,4]\n\n**Example 2:**\n- Input: nums = [-1,-100,3,99], k = 2\n- Output: [3,99,-1,-100]\n- Explanation: rotate 1 steps to the right: [99,-1,-100,3]\nrotate 2 steps to the right: [3,99,-1,-100]",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array), third line contains k (number of rotation steps).",
+      "outputFormat": "Return the rotated array.",
+      "constraints": "1 ≤ n ≤ 10^5, -2^31 ≤ nums[i] ≤ 2^31 - 1, 0 ≤ k ≤ 10^5",
+      "sampleInput": "7\n1 2 3 4 5 6 7\n3",
+      "sampleOutput": "5 6 7 1 2 3 4",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "7\n1 2 3 4 5 6 7\n3",
+          "output": "5 6 7 1 2 3 4",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "4\n-1 -100 3 99\n2",
+          "output": "3 99 -1 -100",
+          "isHidden": false
+        },
+        {
+          "input": "2\n1 2\n1",
+          "output": "2 1",
+          "isHidden": true
+        },
+        {
+          "input": "5\n1 2 3 4 5\n2",
+          "output": "4 5 1 2 3",
           "isHidden": true
         }
       ]
     },
     {
       "title": "Reverse the Array",
-      "difficulty": "medium",
+      "difficulty": "easy",
       "category": "arrays",
-      "statement": "Practice solving **Reverse the Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "1 4 3 2 6 5",
-      "sampleOutput": "5 6 2 3 4 1",
+      "statement": "Given an integer array arr, reverse the elements of the array in-place.\n\nYou must modify the array in place without using extra space (apart from the recursion call stack or a single temporary variable).\n\n**Example 1:**\n- Input: arr = [1,2,3,4,5]\n- Output: [5,4,3,2,1]\n- Explanation: The array is reversed in place.\n\n**Example 2:**\n- Input: arr = [1]\n- Output: [1]\n- Explanation: A single element is already reversed.\n\n**Example 3:**\n- Input: arr = [1,2]\n- Output: [2,1]\n- Explanation: The two-element array is reversed.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array to reverse).",
+      "outputFormat": "Return the reversed array.",
+      "constraints": "1 ≤ n ≤ 10^5, -10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "5\n1 2 3 4 5",
+      "sampleOutput": "5 4 3 2 1",
       "testCases": [
         {
-          "input": "1 2 3",
+          "input": "5\n1 2 3 4 5",
+          "output": "5 4 3 2 1",
+          "isHidden": false
+        },
+        {
+          "input": "1\n1",
           "output": "1",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "2\n1 2",
+          "output": "2 1",
+          "isHidden": true
+        },
+        {
+          "input": "6\n1 4 3 2 6 5",
+          "output": "5 6 2 3 4 1",
           "isHidden": true
         }
       ]
@@ -264,21 +334,31 @@
       "title": "Kth-Largest Element in an Array",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Kth-Largest Element in an Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "3 5 4 2 9\\n3",
-      "sampleOutput": "4",
+      "statement": "Given an integer array nums and an integer k, return the kth largest element in the array.\n\nNote that it is the kth largest element in the sorted order, not the kth distinct element.\n\nYou must solve it in better than O(n log n) time complexity if possible.\n\n**Example 1:**\n- Input: nums = [3,2,1,5,6,4], k = 2\n- Output: 5\n- Explanation: The sorted array is [1,2,3,4,5,6] and the 2nd largest element is 5.\n\n**Example 2:**\n- Input: nums = [3,2,3,1,2,4,5,5,6], k = 4\n- Output: 4\n- Explanation: The sorted array is [1,2,2,3,3,4,5,5,6] and the 4th largest element is 4.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array), third line contains k.",
+      "outputFormat": "Return the kth largest element.",
+      "constraints": "1 ≤ k ≤ n ≤ 10^5, -10^4 ≤ nums[i] ≤ 10^4",
+      "sampleInput": "6\n3 2 1 5 6 4\n2",
+      "sampleOutput": "5",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "6\n3 2 1 5 6 4\n2",
+          "output": "5",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
+          "input": "9\n3 2 3 1 2 4 5 5 6\n4",
+          "output": "4",
+          "isHidden": false
+        },
+        {
+          "input": "3\n1 1 1\n1",
           "output": "1",
+          "isHidden": true
+        },
+        {
+          "input": "5\n4 3 2 1 5\n1",
+          "output": "5",
           "isHidden": true
         }
       ]
@@ -333,20 +413,30 @@
       "title": "Find Minimum in Rotated Sorted Array",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Find Minimum in Rotated Sorted Array** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "5 6 1 2 3 4",
+      "statement": "Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:\n- [4,5,6,7,0,1,2] if it was rotated 4 times.\n- [0,1,2,4,5,6,7] if it was rotated 7 times.\n\nNotice that rotating an array [a[0], a[1], a[2], ..., a[n-1]] 1 time results in the array [a[n-1], a[0], a[1], a[2], ..., a[n-2]].\n\nGiven the sorted rotated array nums of unique elements, return the minimum element of this array.\n\n**Example 1:**\n- Input: nums = [3,4,5,1,2]\n- Output: 1\n- Explanation: The original array was [1,2,3,4,5] rotated 3 times.\n\n**Example 2:**\n- Input: nums = [2,1]\n- Output: 1\n\n**Example 3:**\n- Input: nums = [1]\n- Output: 1",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the rotated sorted array).",
+      "outputFormat": "Return the minimum element in the rotated array.",
+      "constraints": "1 ≤ n ≤ 10^5, -10^9 ≤ nums[i] ≤ 10^9, All integers of nums are unique",
+      "sampleInput": "5\n3 4 5 1 2",
       "sampleOutput": "1",
       "testCases": [
         {
-          "input": "1 2 3",
+          "input": "5\n3 4 5 1 2",
           "output": "1",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
+          "input": "2\n2 1",
+          "output": "1",
+          "isHidden": false
+        },
+        {
+          "input": "1\n1",
+          "output": "1",
+          "isHidden": true
+        },
+        {
+          "input": "6\n5 6 1 2 3 4",
           "output": "1",
           "isHidden": true
         }
@@ -494,21 +584,31 @@
       "title": "Find Minimum Number of Merge Operations to Make an Array Palindrome",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Find Minimum Number of Merge Operations to Make an Array Palindrome** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "aabb",
-      "sampleOutput": "2",
+      "statement": "Given an array of positive integers arr[], the task is to find the minimum number of operations required to make the array a palindrome by merging adjacent elements.\n\nWhen two adjacent elements are merged, they are replaced by their sum, and the count of elements in the array decreases by one.\n\n**Example 1:**\n- Input: arr[] = [1, 4, 5, 9, 5]\n- Output: 1\n- Explanation: Merge 4 and 5 to make [1, 9, 9, 5] which is now a palindrome after 1 operation.\n\n**Example 2:**\n- Input: arr[] = [1, 2, 3, 4, 5]\n- Output: 2\n- Explanation: Merge elements to make array [1, 7, 4, 7] or similar palindrome.\n\n**Example 3:**\n- Input: arr[] = [1, 1, 1, 1]\n- Output: 0\n- Explanation: Already a palindrome, no operations needed.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array).",
+      "outputFormat": "Return the minimum number of merge operations needed to make the array a palindrome.",
+      "constraints": "1 ≤ n ≤ 10^5, 1 ≤ arr[i] ≤ 10^5",
+      "sampleInput": "5\n1 4 5 9 5",
+      "sampleOutput": "1",
       "testCases": [
         {
-          "input": "1 2 3",
+          "input": "5\n1 4 5 9 5",
           "output": "1",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "5\n1 2 3 4 5",
+          "output": "2",
+          "isHidden": false
+        },
+        {
+          "input": "4\n1 1 1 1",
+          "output": "0",
+          "isHidden": true
+        },
+        {
+          "input": "6\n1 2 3 3 2 1",
+          "output": "0",
           "isHidden": true
         }
       ]
@@ -517,21 +617,31 @@
       "title": "Given an Array of Numbers Arrange the Numbers to Form the Biggest Number",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Given an Array of Numbers Arrange the Numbers to Form the Biggest Number** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "3 30 34 5 9",
+      "statement": "Given an array of numbers, arrange them in such a way that they form the largest number possible.\n\nFor example, given [3, 30, 34, 5, 9], the largest number that can be formed is 9534330.\n\nNote: The result should be returned as a string since the number might be very large to fit in any integer type.\n\n**Example 1:**\n- Input: nums = [3, 30, 34, 5, 9]\n- Output: \"9534330\"\n- Explanation: Arranging [9, 5, 34, 3, 30] forms the largest number.\n\n**Example 2:**\n- Input: nums = [0, 0]\n- Output: \"0\"\n- Explanation: If all numbers are 0, the result should be \"0\".\n\n**Example 3:**\n- Input: nums = [121, 12]\n- Output: \"12121\"\n- Explanation: 12121 > 12112, so \"12121\" is the answer.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the numbers to arrange).",
+      "outputFormat": "Return the largest number formed as a string.",
+      "constraints": "1 ≤ n ≤ 100, 0 ≤ nums[i] ≤ 10^9",
+      "sampleInput": "5\n3 30 34 5 9",
       "sampleOutput": "9534330",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "5\n3 30 34 5 9",
+          "output": "9534330",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "2\n0 0",
+          "output": "0",
+          "isHidden": false
+        },
+        {
+          "input": "2\n121 12",
+          "output": "12121",
+          "isHidden": true
+        },
+        {
+          "input": "4\n10 2 20 1",
+          "output": "20210110",
           "isHidden": true
         }
       ]
@@ -540,21 +650,31 @@
       "title": "Space Optimization Using Bit Manipulations",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Space Optimization Using Bit Manipulations** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "2 10",
-      "sampleOutput": "2 4 5 6 8 10",
+      "statement": "Given an integer range from start to end, find all the numbers in that range that can be represented using bit manipulation concepts. Specifically, find all numbers that don't have adjacent set bits (no two consecutive 1s in binary representation).\n\nFor example, in range [1, 10], the numbers without adjacent set bits are: 1, 2, 4, 5, 8, 9 (binary: 1, 10, 100, 101, 1000, 1001).\n\n**Example 1:**\n- Input: start = 1, end = 10\n- Output: [1, 2, 4, 5, 8, 9]\n- Explanation: These numbers don't have consecutive 1s in their binary representation.\n\n**Example 2:**\n- Input: start = 5, end = 15\n- Output: [5, 8, 9, 10, 12, 13]\n\n**Example 3:**\n- Input: start = 1, end = 5\n- Output: [1, 2, 4, 5]",
+      "inputFormat": "First line contains start, second line contains end (defining the range to search).",
+      "outputFormat": "Return an array of numbers in the range without adjacent set bits.",
+      "constraints": "1 ≤ start ≤ end ≤ 10^6",
+      "sampleInput": "1\n10",
+      "sampleOutput": "1 2 4 5 8 9",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "1\n10",
+          "output": "1 2 4 5 8 9",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "5\n15",
+          "output": "5 8 9 10 12 13",
+          "isHidden": false
+        },
+        {
+          "input": "1\n5",
+          "output": "1 2 4 5",
+          "isHidden": true
+        },
+        {
+          "input": "10\n20",
+          "output": "10 12 13 16 17 18 20",
           "isHidden": true
         }
       ]
@@ -586,21 +706,31 @@
       "title": "Print all Possible Combinations of r Elements in a Given Array of Size n",
       "difficulty": "medium",
       "category": "arrays",
-      "statement": "Practice solving **Print all Possible Combinations of r Elements in a Given Array of Size n** under topic **arrays**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "1 2 3 4\\n2",
-      "sampleOutput": "1 2\\n1 3\\n1 4\\n2 3\\n2 4\\n3 4",
+      "statement": "Given an array of n elements and a number r, find and print all combinations of r elements from the given array.\n\nA combination is a selection of items without regard to order. For example, combinations of [1, 2, 3, 4] taken 2 at a time are: (1,2), (1,3), (1,4), (2,3), (2,4), (3,4).\n\n**Example 1:**\n- Input: arr = [1, 2, 3, 4], r = 2\n- Output: [[1,2], [1,3], [1,4], [2,3], [2,4], [3,4]]\n- Explanation: All combinations of 2 elements from the array.\n\n**Example 2:**\n- Input: arr = [1, 2, 3], r = 1\n- Output: [[1], [2], [3]]\n\n**Example 3:**\n- Input: arr = [1, 2], r = 2\n- Output: [[1,2]]\n- Explanation: Only one way to choose 2 elements from 2 elements.",
+      "inputFormat": "First line contains n (size of array), second line contains n space-separated integers (the array), third line contains r (size of combination).",
+      "outputFormat": "Return all combinations of r elements, each combination on a new line.",
+      "constraints": "1 ≤ r ≤ n ≤ 20, 1 ≤ arr[i] ≤ 100",
+      "sampleInput": "4\n1 2 3 4\n2",
+      "sampleOutput": "1 2\n1 3\n1 4\n2 3\n2 4\n3 4",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "4\n1 2 3 4\n2",
+          "output": "1 2\n1 3\n1 4\n2 3\n2 4\n3 4",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
-          "output": "1",
+          "input": "3\n1 2 3\n1",
+          "output": "1\n2\n3",
+          "isHidden": false
+        },
+        {
+          "input": "2\n1 2\n2",
+          "output": "1 2",
+          "isHidden": true
+        },
+        {
+          "input": "3\n1 2 3\n3",
+          "output": "1 2 3",
           "isHidden": true
         }
       ]

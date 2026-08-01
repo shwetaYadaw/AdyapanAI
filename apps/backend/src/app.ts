@@ -5,6 +5,7 @@ import cors from 'cors';
 import compression from 'compression';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 import { env } from './config/env';
 import { globalRateLimiter } from './middleware/rateLimiter.middleware';
@@ -79,6 +80,9 @@ export function createApp(): Application {
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true, limit: '10mb' }));
   app.use(cookieParser());
+
+  // Static files - Images
+  app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
   // Compression
   app.use(compression() as any);
