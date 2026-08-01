@@ -68,6 +68,10 @@ async function loadQuestionsFromJson() {
                   topics: [topic],
                   companies: source === 'tcs-nqt' ? ['TCS'] : (question.companies || []),
                   testCases: question.testCases || [],
+                  templates: question.templates || {},
+                  timeLimit: question.timeLimit || 5000,
+                  memoryLimit: question.memoryLimit || 256,
+                  xpReward: question.xpReward || 10,
                 }
               });
             } else {
@@ -86,9 +90,10 @@ async function loadQuestionsFromJson() {
                   topics: [topic],
                   companies: source === 'tcs-nqt' ? ['TCS'] : (question.companies || []),
                   testCases: question.testCases || [],
-                  templates: {}, // Empty templates for now - can be added via admin API
-                  timeLimit: 5000,
-                  memoryLimit: 256,
+                  templates: question.templates || {},
+                  timeLimit: question.timeLimit || 5000,
+                  memoryLimit: question.memoryLimit || 256,
+                  xpReward: question.xpReward || 10,
                 }
               });
             }

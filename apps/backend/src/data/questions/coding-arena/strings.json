@@ -446,22 +446,32 @@
     },
     {
       "title": "Word Wrap",
-      "difficulty": "medium",
+      "difficulty": "hard",
       "category": "strings",
-      "statement": "Practice solving **Word Wrap** under topic **strings**. Complete the function signature provided in the editor to parse the input parameters and return the correct result.",
-      "inputFormat": "A single line of space-separated integers representing target inputs.",
-      "outputFormat": "Expected solved outputs.",
-      "constraints": "1 <= nums.length <= 10^5",
-      "sampleInput": "3 2 2 5\\n6",
+      "statement": "Given an array arr[], where arr[i] denotes the number of characters in one word. Let k be the limit on the number of characters that can be put in one line (line width). Put line breaks in the given sequence such that the lines are printed neatly.\n\nAssume that the length of each word is smaller than the line width.\n\nWhen line breaks are inserted there is a possibility that extra spaces are present in each line. The extra spaces include spaces put at the end of every line except the last one. You have to minimize the following total cost:\n\n**Total Cost = Sum of cost of all lines**\n**Cost of line = (Number of extra spaces in the line)²**\n\n**Example 1:**\n- Input: arr[] = [3,2,2,5], k = 6\n- Output: 10\n- Explanation: Line 1: From word 1 to 1 (\"word of length 3\") → extra spaces = 6 - 3 = 3 → cost = 3² = 9\nLine 2: From word 2 to 3 (\"words of length 2 and 2 with 1 space between\") → extra spaces = 6 - 2 - 2 - 1 = 1 → cost = 1² = 1\nLine 3: From word 4 to 4 (last line, no extra space cost) → cost = 0\nTotal cost = 9 + 1 + 0 = 10\n\n**Example 2:**\n- Input: arr[] = [3,2,2], k = 4\n- Output: 5\n- Explanation: Line 1: Word 1 → extra spaces = 4 - 3 = 1 → cost = 1² = 1\nLine 2: Word 2 → extra spaces = 4 - 2 = 2 → cost = 2² = 4\nLine 3: Word 3 (last line) → cost = 0\nTotal cost = 1 + 4 + 0 = 5",
+      "inputFormat": "First line contains n (number of words), second line contains n space-separated integers representing word lengths, third line contains k (line width limit).",
+      "outputFormat": "Return the minimum total cost to arrange the words optimally.",
+      "constraints": "1 ≤ n ≤ 500, 1 ≤ arr[i] < k, 1 ≤ k ≤ 2000",
+      "sampleInput": "4\n3 2 2 5\n6",
       "sampleOutput": "10",
       "testCases": [
         {
-          "input": "1 2 3",
-          "output": "1",
+          "input": "4\n3 2 2 5\n6",
+          "output": "10",
           "isHidden": false
         },
         {
-          "input": "4 5 6",
+          "input": "3\n3 2 2\n4",
+          "output": "5",
+          "isHidden": false
+        },
+        {
+          "input": "2\n5 5\n6",
+          "output": "1",
+          "isHidden": true
+        },
+        {
+          "input": "4\n1 1 1 1\n3",
           "output": "1",
           "isHidden": true
         }
