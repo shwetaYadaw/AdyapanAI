@@ -52,11 +52,6 @@ async function autoSeedQuestions() {
     // Step 2: Delete duplicate questions that are NOT in the valid set
     // This removes old duplicates like "Given Sum Pair", "Kth - Smallest Element", etc.
     const existingQuestions = await prisma.question.findMany({
-      where: {
-        topics: {
-          array_contains: ['arrays']
-        }
-      },
       select: { id: true, slug: true, title: true }
     });
 
