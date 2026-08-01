@@ -3,6 +3,7 @@ import { connectRedis } from './config/redis';
 import { env } from './config/env';
 import { logger } from './utils/logger';
 import { prisma } from './config/prisma';
+import { autoSeedQuestions } from './utils/autoSeed';
 
 const PORT = env.PORT;
 
@@ -35,6 +36,13 @@ async function bootstrap() {
       await initializeMysql();
     } catch (initError) {
       logger.warn('⚠️  MySQL initialization failed, skipping');
+    }
+
+    // Auto-seed questions from JSON files
+    try {
+      await autoSeedQuestions();
+    } catch (seedError) {
+      logger.warn('⚠️  Auto-seed questions failed, skipping');
     }
 
     // Create Express app
