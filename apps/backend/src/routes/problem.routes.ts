@@ -126,6 +126,8 @@ router.post('/', authenticate, async (req, res, next) => {
 // GET /problems — Get list of all problems
 router.get('/', async (req, res, next) => {
   try {
+    const { onlyUpdated } = req.query;
+    
     const problems = await prisma.problem.findMany({
       select: {
         id: true,
@@ -135,10 +137,32 @@ router.get('/', async (req, res, next) => {
         topics: true,
         companies: true,
         createdAt: true,
+        testCases: {
+          select: {
+            isHidden: true
+          }
+        }
       },
       orderBy: { createdAt: 'desc' },
     });
-    sendSuccess({ res, data: problems });
+    
+    // Filter problems based on test case format if requested
+    let filteredProblems = problems;
+    
+    if (onlyUpdated === 'true') {
+      // Show only problems with target format: 1 visible + 6 hidden = 7 total
+      filteredProblems = problems.filter(p => {
+        const visibleCount = p.testCases.filter(tc => !tc.isHidden).length;
+        const hiddenCount = p.testCases.filter(tc => tc.isHidden).length;
+        const totalCount = p.testCases.length;
+        return visibleCount === 1 && hiddenCount === 6 && totalCount === 7;
+      });
+    }
+    
+    // Remove testCases from response (we only needed it for filtering)
+    const response = filteredProblems.map(({ testCases, ...problem }) => problem);
+    
+    sendSuccess({ res, data: response });
   } catch (err) { next(err); }
 });
 
@@ -159,28 +183,19 @@ router.get('/:id', async (req, res, next) => {
 
     if (!problem) throw new AppError('Problem not found', 404);
     
-    // Return first 2 test cases as visible (for sample display), rest as hidden
-    const visibleTestCases = problem.testCases.slice(0, 2).map(tc => ({
-      ...tc,
-      isHidden: false, // Force first 2 to be visible for display
-      type: 'visible'
-    }));
-    
-    const hiddenTestCases = problem.testCases.slice(2).map(tc => ({
-      ...tc,
-      isHidden: true,
-      type: 'hidden'
-    }));
+    // Only return VISIBLE test cases to frontend (for display purposes)
+    // Hidden test cases are only used during submission evaluation
+    const visibleTestCases = problem.testCases.filter(tc => !tc.isHidden);
     
     // Omit sensitive reference solution fields before returning
-    const { referenceSolution, ...safeProblem } = problem;
+    const { referenceSolution, testCases, ...safeProblem } = problem;
     
-    // Return with modified test cases
+    // Return problem with ONLY visible test cases
     sendSuccess({ 
       res, 
       data: {
         ...safeProblem,
-        testCases: [...visibleTestCases, ...hiddenTestCases]
+        testCases: visibleTestCases
       }
     });
   } catch (err) { next(err); }

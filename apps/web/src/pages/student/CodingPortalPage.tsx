@@ -263,12 +263,12 @@ export default function CodingPortalPage() {
     toast.success('Comment posted!');
   };
 
-  // Fetch question details from /challenges/questions endpoint (all Coding Arena questions are there)
+  // Fetch question details from /problems endpoint (Coding Arena uses Problem table)
   const { data: question, isLoading } = useQuery<Question>({
-    queryKey: ['codingQuestionDetail', slug],
+    queryKey: ['codingArenaProblemDetail', slug],
     queryFn: async () => {
-      // All questions (both TCS NQT and Coding Arena) are in the challenges/questions endpoint
-      const { data } = await api.get(`/challenges/questions/${slug}`);
+      // Coding Arena problems are in the Problem table, fetched from /problems endpoint
+      const { data } = await api.get(`/problems/${slug}`);
       return data.data;
     },
     enabled: !!slug,
@@ -350,9 +350,8 @@ export default function CodingPortalPage() {
   const runCodeMutation = useMutation({
     mutationFn: async (payload: { code: string; language: string; input: string }) => {
       // If question has 'id' field, it's from Problem table, otherwise use slug
-      const endpoint = question?.id && !question?._id?.includes('tcs-nqt') 
-        ? `/problems/${slug}/run`
-        : `/challenges/questions/${question?.id || question?._id || slug}/run`;
+      // Coding Arena uses /problems endpoint (Problem table)
+      const endpoint = `/problems/${slug}/run`;
       return api.post(endpoint, payload);
     },
     onSuccess: (res) => {
@@ -376,9 +375,8 @@ export default function CodingPortalPage() {
   const submitCodeMutation = useMutation({
     mutationFn: async (payload: { code: string; language: string }) => {
       // If question has 'id' field, it's from Problem table, otherwise use slug
-      const endpoint = question?.id && !question?._id?.includes('tcs-nqt')
-        ? `/problems/${slug}/submit`
-        : `/challenges/questions/${question?.id || question?._id || slug}/submit`;
+      // Coding Arena uses /problems endpoint (Problem table)
+      const endpoint = `/problems/${slug}/submit`;
       return api.post(endpoint, payload);
     },
     onSuccess: (res) => {
