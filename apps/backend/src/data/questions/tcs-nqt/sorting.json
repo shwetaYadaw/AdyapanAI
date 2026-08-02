@@ -1,0 +1,97 @@
+{
+  "questions": [
+    {
+      "title": "Bubble Sort Algorithm",
+      "difficulty": "easy",
+      "statement": "Implement the Bubble Sort algorithm to sort an array in ascending order.\n\n**Examples:**\n- Input: [64, 34, 25, 12, 22, 11, 90] → Output: [11, 12, 22, 25, 34, 64, 90]\n- Input: [5, 2, 8, 1, 9] → Output: [1, 2, 5, 8, 9]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the sorted array as space-separated integers.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "7\n64 34 25 12 22 11 90",
+      "sampleOutput": "11 12 22 25 34 64 90",
+      "testCases": [
+        { "input": "7\n64 34 25 12 22 11 90", "output": "11 12 22 25 34 64 90", "isHidden": false },
+        { "input": "5\n5 2 8 1 9", "output": "1 2 5 8 9", "isHidden": false },
+        { "input": "1\n42", "output": "42", "isHidden": false },
+        { "input": "3\n3 2 1", "output": "1 2 3", "isHidden": true },
+        { "input": "4\n-1 -5 3 2", "output": "-5 -1 2 3", "isHidden": true }
+      ],
+      "timeLimit": 2000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Selection Sort Algorithm",
+      "difficulty": "easy",
+      "statement": "Implement the Selection Sort algorithm to sort an array in ascending order.\n\n**Examples:**\n- Input: [64, 34, 25, 12, 22, 11, 90] → Output: [11, 12, 22, 25, 34, 64, 90]\n- Input: [5, 2, 8, 1, 9] → Output: [1, 2, 5, 8, 9]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the sorted array as space-separated integers.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "7\n64 34 25 12 22 11 90",
+      "sampleOutput": "11 12 22 25 34 64 90",
+      "testCases": [
+        { "input": "7\n64 34 25 12 22 11 90", "output": "11 12 22 25 34 64 90", "isHidden": false },
+        { "input": "5\n5 2 8 1 9", "output": "1 2 5 8 9", "isHidden": false },
+        { "input": "1\n42", "output": "42", "isHidden": false },
+        { "input": "3\n3 2 1", "output": "1 2 3", "isHidden": true },
+        { "input": "4\n-1 -5 3 2", "output": "-5 -1 2 3", "isHidden": true }
+      ],
+      "timeLimit": 2000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Insertion Sort Algorithm",
+      "difficulty": "easy",
+      "statement": "Implement the Insertion Sort algorithm to sort an array in ascending order.\n\n**Examples:**\n- Input: [64, 34, 25, 12, 22, 11, 90] → Output: [11, 12, 22, 25, 34, 64, 90]\n- Input: [5, 2, 8, 1, 9] → Output: [1, 2, 5, 8, 9]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the sorted array as space-separated integers.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "7\n64 34 25 12 22 11 90",
+      "sampleOutput": "11 12 22 25 34 64 90",
+      "testCases": [
+        { "input": "7\n64 34 25 12 22 11 90", "output": "11 12 22 25 34 64 90", "isHidden": false },
+        { "input": "5\n5 2 8 1 9", "output": "1 2 5 8 9", "isHidden": false },
+        { "input": "1\n42", "output": "42", "isHidden": false },
+        { "input": "3\n3 2 1", "output": "1 2 3", "isHidden": true },
+        { "input": "4\n-1 -5 3 2", "output": "-5 -1 2 3", "isHidden": true }
+      ],
+      "timeLimit": 2000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Quick Sort Algorithm",
+      "difficulty": "medium",
+      "statement": "Implement the Quick Sort algorithm to sort an array in ascending order.\n\n**Examples:**\n- Input: [64, 34, 25, 12, 22, 11, 90] → Output: [11, 12, 22, 25, 34, 64, 90]\n- Input: [5, 2, 8, 1, 9] → Output: [1, 2, 5, 8, 9]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the sorted array as space-separated integers.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "7\n64 34 25 12 22 11 90",
+      "sampleOutput": "11 12 22 25 34 64 90",
+      "testCases": [
+        { "input": "7\n64 34 25 12 22 11 90", "output": "11 12 22 25 34 64 90", "isHidden": false },
+        { "input": "5\n5 2 8 1 9", "output": "1 2 5 8 9", "isHidden": false },
+        { "input": "1\n42", "output": "42", "isHidden": true },
+        { "input": "3\n3 2 1", "output": "1 2 3", "isHidden": true }
+      ],
+      "timeLimit": 2000,
+      "memoryLimit": 256
+    },
+    {
+      "title": "Merge sort algorithm",
+      "difficulty": "medium",
+      "statement": "Implement the Merge Sort algorithm to sort an array in ascending order.\n\n**Examples:**\n- Input: [64, 34, 25, 12, 22, 11, 90] → Output: [11, 12, 22, 25, 34, 64, 90]\n- Input: [5, 2, 8, 1, 9] → Output: [1, 2, 5, 8, 9]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the sorted array as space-separated integers.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "7\n64 34 25 12 22 11 90",
+      "sampleOutput": "11 12 22 25 34 64 90",
+      "testCases": [
+        { "input": "7\n64 34 25 12 22 11 90", "output": "11 12 22 25 34 64 90", "isHidden": false },
+        { "input": "5\n5 2 8 1 9", "output": "1 2 5 8 9", "isHidden": false },
+        { "input": "1\n42", "output": "42", "isHidden": true },
+        { "input": "3\n3 2 1", "output": "1 2 3", "isHidden": true }
+      ],
+      "timeLimit": 2000,
+      "memoryLimit": 256
+    }
+  ]
+}

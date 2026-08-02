@@ -35,6 +35,7 @@ import studentRoutes from './routes/student.routes';
 import challengeRoutes from './routes/challenge.routes';
 import roadmapRoutes from './routes/roadmap.routes';
 import problemRoutes from './routes/problem.routes';
+import problemAdminRoutes from './routes/problem-admin.routes';
 import submissionRoutes from './routes/submission.routes';
 import problemSubmissionRoutes from './routes/problemSubmission.routes';
 import questionSubmissionRoutes from './routes/questionSubmission.routes';
@@ -123,6 +124,7 @@ export function createApp(): Application {
   app.use('/api/v1/admin/questions', questionsAdminRoutes);
   app.use('/api/v1/challenges', challengeRoutes);
   app.use('/api/v1/problems', problemRoutes);
+  app.use('/api/v1/admin/problems', problemAdminRoutes);
   app.use('/api/v1/submissions', submissionRoutes); // Legacy submissions
   app.use('/api/v1/problem-submissions', problemSubmissionRoutes); // Coding Arena submissions
   app.use('/api/v1/question-submissions', questionSubmissionRoutes); // TCS NQT submissions

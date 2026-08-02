@@ -1,0 +1,182 @@
+{
+  "questions": [
+    {
+      "title": "Check if a given string is palindrome or not",
+      "difficulty": "easy",
+      "statement": "Given a string, check if it is a palindrome (reads the same forwards and backwards).\n\n**Examples:**\n- Input: 'racecar' → Output: true\n- Input: 'hello' → Output: false\n- Input: 'a' → Output: true",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return 'true' if palindrome, 'false' otherwise.",
+      "constraints": "1 ≤ s.length ≤ 10^5\ns contains only lowercase letters",
+      "sampleInput": "racecar",
+      "sampleOutput": "true",
+      "testCases": [
+        { "input": "racecar", "output": "true", "isHidden": false },
+        { "input": "hello", "output": "false", "isHidden": false },
+        { "input": "a", "output": "true", "isHidden": false },
+        { "input": "madam", "output": "true", "isHidden": true },
+        { "input": "abc", "output": "false", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Reverse a String",
+      "difficulty": "easy",
+      "statement": "Reverse a given string.\n\n**Examples:**\n- Input: 'hello' → Output: 'olleh'\n- Input: 'world' → Output: 'dlrow'",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return the reversed string.",
+      "constraints": "1 ≤ s.length ≤ 10^5",
+      "sampleInput": "hello",
+      "sampleOutput": "olleh",
+      "testCases": [
+        { "input": "hello", "output": "olleh", "isHidden": false },
+        { "input": "world", "output": "dlrow", "isHidden": false },
+        { "input": "a", "output": "a", "isHidden": false },
+        { "input": "abc", "output": "cba", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Find the ASCII value of a character",
+      "difficulty": "easy",
+      "statement": "Find the ASCII value of a given character.\n\n**Examples:**\n- Input: 'A' → Output: 65\n- Input: 'a' → Output: 97\n- Input: '0' → Output: 48",
+      "inputFormat": "A single character ch.",
+      "outputFormat": "Return the ASCII value as an integer.",
+      "constraints": "ch is a single character",
+      "sampleInput": "A",
+      "sampleOutput": "65",
+      "testCases": [
+        { "input": "A", "output": "65", "isHidden": false },
+        { "input": "a", "output": "97", "isHidden": false },
+        { "input": "0", "output": "48", "isHidden": false },
+        { "input": "Z", "output": "90", "isHidden": true },
+        { "input": "z", "output": "122", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Remove all vowels from the string",
+      "difficulty": "easy",
+      "statement": "Remove all vowels from a given string.\n\n**Examples:**\n- Input: 'hello' → Output: 'hll'\n- Input: 'aeiou' → Output: ''\n- Input: 'programming' → Output: 'prgrmmng'",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return the string with all vowels removed.",
+      "constraints": "1 ≤ s.length ≤ 10^5\ns contains only lowercase letters",
+      "sampleInput": "hello",
+      "sampleOutput": "hll",
+      "testCases": [
+        { "input": "hello", "output": "hll", "isHidden": false },
+        { "input": "aeiou", "output": "", "isHidden": false },
+        { "input": "programming", "output": "prgrmmng", "isHidden": false },
+        { "input": "code", "output": "cd", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Remove spaces from a string",
+      "difficulty": "easy",
+      "statement": "Remove all spaces from a given string.\n\n**Examples:**\n- Input: 'hello world' → Output: 'helloworld'\n- Input: 'a b c d' → Output: 'abcd'",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return the string with all spaces removed.",
+      "constraints": "1 ≤ s.length ≤ 10^5",
+      "sampleInput": "hello world",
+      "sampleOutput": "helloworld",
+      "testCases": [
+        { "input": "hello world", "output": "helloworld", "isHidden": false },
+        { "input": "a b c d", "output": "abcd", "isHidden": false },
+        { "input": "no spaces", "output": "nospaces", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Check if two strings are anagram of each other",
+      "difficulty": "easy",
+      "statement": "Check if two given strings are anagrams of each other.\n\n**Examples:**\n- Input: s1='listen', s2='silent' → Output: true\n- Input: s1='hello', s2='world' → Output: false",
+      "inputFormat": "Two strings s1 and s2 on separate lines.",
+      "outputFormat": "Return 'true' if anagrams, 'false' otherwise.",
+      "constraints": "1 ≤ s1.length, s2.length ≤ 10^5\nstrings contain only lowercase letters",
+      "sampleInput": "listen\nsilent",
+      "sampleOutput": "true",
+      "testCases": [
+        { "input": "listen\nsilent", "output": "true", "isHidden": false },
+        { "input": "hello\nworld", "output": "false", "isHidden": false },
+        { "input": "abc\nbca", "output": "true", "isHidden": true },
+        { "input": "aab\nab", "output": "false", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Count number of vowels, consonants, spaces in String",
+      "difficulty": "easy",
+      "statement": "Count the number of vowels, consonants, and spaces in a given string.\n\n**Examples:**\n- Input: 'hello world' → Output: vowels=3, consonants=7, spaces=1\n- Input: 'a e i o u' → Output: vowels=5, consonants=0, spaces=4",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return three space-separated integers: vowels, consonants, spaces.",
+      "constraints": "1 ≤ s.length ≤ 10^5",
+      "sampleInput": "hello world",
+      "sampleOutput": "3 7 1",
+      "testCases": [
+        { "input": "hello world", "output": "3 7 1", "isHidden": false },
+        { "input": "a e i o u", "output": "5 0 4", "isHidden": false },
+        { "input": "abc", "output": "1 2 0", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Change case of each character in a string",
+      "difficulty": "easy",
+      "statement": "Convert lowercase letters to uppercase and uppercase letters to lowercase.\n\n**Examples:**\n- Input: 'HeLLo' → Output: 'hEllO'\n- Input: 'ABC' → Output: 'abc'\n- Input: 'abc' → Output: 'ABC'",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return the string with case changed.",
+      "constraints": "1 ≤ s.length ≤ 10^5",
+      "sampleInput": "HeLLo",
+      "sampleOutput": "hEllO",
+      "testCases": [
+        { "input": "HeLLo", "output": "hEllO", "isHidden": false },
+        { "input": "ABC", "output": "abc", "isHidden": false },
+        { "input": "abc", "output": "ABC", "isHidden": true },
+        { "input": "A", "output": "a", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Calculate frequency of characters in a string",
+      "difficulty": "medium",
+      "statement": "Calculate the frequency of each character in a given string.\n\n**Examples:**\n- Input: 'hello' → Output: h:1, e:1, l:2, o:1\n- Input: 'aabbcc' → Output: a:2, b:2, c:2",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return character frequencies (format: char:count space-separated).",
+      "constraints": "1 ≤ s.length ≤ 10^5\ns contains only lowercase letters",
+      "sampleInput": "hello",
+      "sampleOutput": "h:1 e:1 l:2 o:1",
+      "testCases": [
+        { "input": "hello", "output": "h:1 e:1 l:2 o:1", "isHidden": false },
+        { "input": "aabbcc", "output": "a:2 b:2 c:2", "isHidden": false },
+        { "input": "aaa", "output": "a:3", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Reverse words in a string",
+      "difficulty": "medium",
+      "statement": "Reverse the order of words in a string.\n\n**Examples:**\n- Input: 'hello world' → Output: 'world hello'\n- Input: 'the quick brown fox' → Output: 'fox brown quick the'",
+      "inputFormat": "A single string s.",
+      "outputFormat": "Return the string with words reversed.",
+      "constraints": "1 ≤ s.length ≤ 10^5",
+      "sampleInput": "hello world",
+      "sampleOutput": "world hello",
+      "testCases": [
+        { "input": "hello world", "output": "world hello", "isHidden": false },
+        { "input": "the quick brown fox", "output": "fox brown quick the", "isHidden": false },
+        { "input": "a", "output": "a", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    }
+  ]
+}

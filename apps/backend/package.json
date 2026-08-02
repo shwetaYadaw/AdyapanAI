@@ -30,7 +30,9 @@
     "clean:reseed": "npx ts-node --transpile-only src/scripts/cleanAndReseed.ts",
     "fresh:seed": "npx ts-node --transpile-only src/scripts/freshSeed.ts",
     "delete:non-tcs-nqt": "npx ts-node --transpile-only src/scripts/deleteNonTcsNqtQuestions.ts",
-    "analyze:questions": "npx ts-node --transpile-only src/scripts/analyzeQuestionTable.ts"
+    "analyze:questions": "npx ts-node --transpile-only src/scripts/analyzeQuestionTable.ts",
+    "backup:problems": "npx ts-node --transpile-only src/scripts/backupProblems.ts",
+    "verify:data": "npx ts-node --transpile-only src/scripts/verifyDataIntegrity.ts"
   },
   "dependencies": {
     "@adyapan/shared": "*",
