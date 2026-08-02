@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Brain, Lock, GraduationCap, ArrowRight, BookOpen } from 'lucide-react';
+import { Brain, GraduationCap, ArrowRight, BookOpen } from 'lucide-react';
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
 import { topicSlug, Question, Topic } from './aptitudeData';
@@ -3652,11 +3652,6 @@ export const TCS_REASONING_TOPICS: Topic[] = [
     ]
   },
   {
-    name: 'Syllogism',
-    pageNumber: 72,
-    questions: []
-  },
-  {
     name: 'Blood Relation',
     pageNumber: 90,
     questions: []
@@ -3782,11 +3777,944 @@ export const TCS_REASONING_TOPICS: Topic[] = [
   }
 ];
 
+export const TCS_VERBAL_TOPICS: Topic[] = [
+  {
+    name: 'Synonyms',
+    pageNumber: 1,
+    questions: [
+      {
+        question: 'Choose the word closest in meaning to the given word: "Abundant"',
+        options: ['Scarce', 'Plentiful', 'Rare', 'Meagre'],
+        answer: 'Plentiful',
+        explanation: 'Abundant means existing in large quantities; plentiful.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Candid"',
+        options: ['Secretive', 'Frank', 'Devious', 'Hesitant'],
+        answer: 'Frank',
+        explanation: 'Candid means truthful and straightforward; frank.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Benevolent"',
+        options: ['Malevolent', 'Generous', 'Stingy', 'Hostile'],
+        answer: 'Generous',
+        explanation: 'Benevolent means well-meaning and kindly; generous.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Courage"',
+        options: ['Fear', 'Bravery', 'Timidity', 'Cowardice'],
+        answer: 'Bravery',
+        explanation: 'Courage means the ability to do something that frightens one; bravery.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Vacant"',
+        options: ['Occupied', 'Empty', 'Crowded', 'Filled'],
+        answer: 'Empty',
+        explanation: 'Vacant means not occupied; empty.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Weary"',
+        options: ['Energetic', 'Tired', 'Fresh', 'Lively'],
+        answer: 'Tired',
+        explanation: 'Weary means feeling or showing extreme tiredness.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Zeal"',
+        options: ['Apathy', 'Enthusiasm', 'Indifference', 'Lethargy'],
+        answer: 'Enthusiasm',
+        explanation: 'Zeal means great energy or enthusiasm in pursuit of a cause or objective.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Hostile"',
+        options: ['Friendly', 'Unfriendly', 'Warm', 'Welcoming'],
+        answer: 'Unfriendly',
+        explanation: 'Hostile means unfriendly; antagonistic.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Prompt"',
+        options: ['Slow', 'Punctual', 'Late', 'Delayed'],
+        answer: 'Punctual',
+        explanation: 'Prompt means done without delay; punctual.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Transparent"',
+        options: ['Opaque', 'Clear', 'Cloudy', 'Murky'],
+        answer: 'Clear',
+        explanation: 'Transparent means allowing light to pass through; clear.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Enigma"',
+        options: ['Mystery', 'Solution', 'Obvious', 'Clarity'],
+        answer: 'Mystery',
+        explanation: 'Enigma means a person or thing that is mysterious, puzzling, or difficult to understand.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Profuse"',
+        options: ['Scanty', 'Abundant', 'Limited', 'Sparse'],
+        answer: 'Abundant',
+        explanation: 'Profuse means abundant, copious, or produced in large quantities.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Adversity"',
+        options: ['Prosperity', 'Misfortune', 'Comfort', 'Ease'],
+        answer: 'Misfortune',
+        explanation: 'Adversity means difficulties or misfortune.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Covert"',
+        options: ['Open', 'Hidden', 'Public', 'Visible'],
+        answer: 'Hidden',
+        explanation: 'Covert means not openly acknowledged or displayed; secret or hidden.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Lethargic"',
+        options: ['Energetic', 'Sluggish', 'Active', 'Lively'],
+        answer: 'Sluggish',
+        explanation: 'Lethargic means affected by lethargy; sluggish and apathetic.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Obsolete"',
+        options: ['Modern', 'Outdated', 'Current', 'New'],
+        answer: 'Outdated',
+        explanation: 'Obsolete means no longer produced or used; out of date.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Reluctant"',
+        options: ['Eager', 'Unwilling', 'Ready', 'Willing'],
+        answer: 'Unwilling',
+        explanation: 'Reluctant means unwilling and hesitant.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Voracious"',
+        options: ['Hungry', 'Insatiable', 'Satisfied', 'Reluctant'],
+        answer: 'Insatiable',
+        explanation: 'Voracious means wanting or devouring great quantities of food; also having a very eager approach to an activity (insatiable).'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Frugal"',
+        options: ['Wasteful', 'Economical', 'Extravagant', 'Generous'],
+        answer: 'Economical',
+        explanation: 'Frugal means sparing or economical with regard to money or food.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Plausible"',
+        options: ['Unbelievable', 'Believable', 'Doubtful', 'Impossible'],
+        answer: 'Believable',
+        explanation: 'Plausible means seeming reasonable or probable; believable.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Hinder"',
+        options: ['Assist', 'Impede', 'Help', 'Facilitate'],
+        answer: 'Impede',
+        explanation: 'Hinder means to create difficulties for someone or something, resulting in delay or obstruction; impede.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Reliable"',
+        options: ['Unpredictable', 'Dependable', 'Careless', 'Irrresponsible'],
+        answer: 'Dependable',
+        explanation: 'Reliable means consistently good in quality or performance; able to be trusted; dependable.'
+      },
+      {
+        question: 'Choose the word closest in meaning to the given word: "Timid"',
+        options: ['Bold', 'Shy', 'Brave', 'Confident'],
+        answer: 'Shy',
+        explanation: 'Timid means showing a lack of courage or confidence; easily frightened; shy.'
+      }
+    ]
+  },
+  {
+    name: 'Antonyms',
+    pageNumber: 2,
+    questions: [
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Expand"',
+        options: ['Grow', 'Contract', 'Increase', 'Enlarge'],
+        answer: 'Contract',
+        explanation: 'The antonym of expand is contract (to become smaller).'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Ancient"',
+        options: ['Old', 'Modern', 'Antique', 'Aged'],
+        answer: 'Modern',
+        explanation: 'The antonym of ancient is modern.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Victory"',
+        options: ['Triumph', 'Success', 'Defeat', 'Win'],
+        answer: 'Defeat',
+        explanation: 'The antonym of victory is defeat.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Major"',
+        options: ['Large', 'Big', 'Minor', 'Important'],
+        answer: 'Minor',
+        explanation: 'The antonym of major is minor.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Artificial"',
+        options: ['Synthetic', 'Natural', 'Man-made', 'Fake'],
+        answer: 'Natural',
+        explanation: 'The antonym of artificial is natural.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Appear"',
+        options: ['Show', 'Emerge', 'Vanish', 'Arrive'],
+        answer: 'Vanish',
+        explanation: 'The antonym of appear is vanish (to disappear).'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Permanent"',
+        options: ['Temporary', 'Everlasting', 'Constant', 'Durable'],
+        answer: 'Temporary',
+        explanation: 'The antonym of permanent is temporary.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Compliant"',
+        options: ['Obedient', 'Defiant', 'Submissive', 'Agreeable'],
+        answer: 'Defiant',
+        explanation: 'The antonym of compliant (yielding) is defiant.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Predecessor"',
+        options: ['Ancestor', 'Forefather', 'Successor', 'Forerunner'],
+        answer: 'Successor',
+        explanation: 'The antonym of predecessor is successor.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Barren"',
+        options: ['Infertile', 'Fertile', 'Unproductive', 'Sterile'],
+        answer: 'Fertile',
+        explanation: 'The antonym of barren (unproductive) is fertile.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Abundant"',
+        options: ['Plentiful', 'Scarce', 'Copious', 'Ample'],
+        answer: 'Scarce',
+        explanation: 'The antonym of abundant (plentiful) is scarce.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Optimistic"',
+        options: ['Hopeful', 'Positive', 'Pessimistic', 'Cheerful'],
+        answer: 'Pessimistic',
+        explanation: 'The antonym of optimistic (hopeful) is pessimistic.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Transparent"',
+        options: ['Clear', 'Opaque', 'Crystal', 'Lucid'],
+        answer: 'Opaque',
+        explanation: 'The antonym of transparent (clear) is opaque.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Honest"',
+        options: ['Truthful', 'Sincere', 'Dishonest', 'Frank'],
+        answer: 'Dishonest',
+        explanation: 'The antonym of honest is dishonest.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Courage"',
+        options: ['Bravery', 'Valour', 'Cowardice', 'Daring'],
+        answer: 'Cowardice',
+        explanation: 'The antonym of courage is cowardice.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Friend"',
+        options: ['Companion', 'Ally', 'Enemy', 'Partner'],
+        answer: 'Enemy',
+        explanation: 'The antonym of friend is enemy.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Import"',
+        options: ['Bring in', 'Export', 'Receive', 'Acquire'],
+        answer: 'Export',
+        explanation: 'The antonym of import is export.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Inferior"',
+        options: ['Lower', 'Subordinate', 'Superior', 'Minor'],
+        answer: 'Superior',
+        explanation: 'The antonym of inferior is superior.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Obscure"',
+        options: ['Unclear', 'Vague', 'Clear', 'Ambiguous'],
+        answer: 'Clear',
+        explanation: 'The antonym of obscure (unclear) is clear.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Polite"',
+        options: ['Courteous', 'Civil', 'Rude', 'Gentle'],
+        answer: 'Rude',
+        explanation: 'The antonym of polite is rude.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Virtue"',
+        options: ['Goodness', 'Morality', 'Vice', 'Integrity'],
+        answer: 'Vice',
+        explanation: 'The antonym of virtue is vice.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Accelerate"',
+        options: ['Quicken', 'Decelerate', 'Hasten', 'Expedite'],
+        answer: 'Decelerate',
+        explanation: 'The antonym of accelerate is decelerate.'
+      },
+      {
+        question: 'Choose the word opposite in meaning to the given word: "Diligent"',
+        options: ['Hardworking', 'Industrious', 'Lazy', 'Conscientious'],
+        answer: 'Lazy',
+        explanation: 'The antonym of diligent (hardworking) is lazy.'
+      }
+    ]
+  },
+  {
+    name: 'Fill in the Blanks',
+    pageNumber: 3,
+    questions: [
+      {
+        question: 'Choose the correct option to fill in the blank: "She has been working here ____ 2010."',
+        options: ['for', 'since', 'from', 'at'],
+        answer: 'since',
+        explanation: 'Use "since" with a point of time (2010).'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "Neither of the two boys ____ present."',
+        options: ['are', 'is', 'were', 'have been'],
+        answer: 'is',
+        explanation: 'Neither is singular, so the verb must be singular: "is".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "If I ____ you, I would not do it."',
+        options: ['am', 'was', 'were', 'be'],
+        answer: 'were',
+        explanation: 'In a hypothetical/subjunctive construction, use "were" for all persons.'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "He is senior ____ me by five years."',
+        options: ['than', 'to', 'from', 'over'],
+        answer: 'to',
+        explanation: 'Comparatives from Latin origin (senior, junior, superior, inferior) take "to".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "The committee ____ divided in its opinion."',
+        options: ['are', 'is', 'were', 'have'],
+        answer: 'is',
+        explanation: 'When the committee acts as a single unit, use a singular verb: "is".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "I look forward to ____ you soon."',
+        options: ['see', 'seeing', 'saw', 'seen'],
+        answer: 'seeing',
+        explanation: 'After the phrase "look forward to", use the gerund (-ing form).'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "The train had already left ____ I reached the station."',
+        options: ['when', 'than', 'then', 'while'],
+        answer: 'when',
+        explanation: '"When" is used to indicate the time of the event.'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "She prefers tea ____ coffee."',
+        options: ['than', 'to', 'over', 'from'],
+        answer: 'to',
+        explanation: 'The correct collocation is "prefer A to B".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "He is ____ honest man."',
+        options: ['a', 'an', 'the', 'no article'],
+        answer: 'an',
+        explanation: 'The word "honest" begins with a silent "h", so use "an".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "No sooner did he arrive ____ it started raining."',
+        options: ['than', 'when', 'then', 'that'],
+        answer: 'than',
+        explanation: 'The correlative pair is "no sooner ... than".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "The teacher, along with her students, ____ going on a picnic."',
+        options: ['are', 'is', 'were', 'have been'],
+        answer: 'is',
+        explanation: 'When a subject is followed by "along with", the verb agrees with the main subject, which is singular here: "is".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "He has been suffering from fever ____ Monday."',
+        options: ['for', 'since', 'from', 'at'],
+        answer: 'since',
+        explanation: 'Use "since" with a point of time (Monday).'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "Each of the boys ____ given a prize."',
+        options: ['were', 'have been', 'was', 'are'],
+        answer: 'was',
+        explanation: '"Each" is singular, so the verb must be singular: "was".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "She is ____ better than her brother at mathematics."',
+        options: ['very', 'much', 'more', 'most'],
+        answer: 'much',
+        explanation: '"Much" is used to intensify a comparative adjective ("much better").'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "I shall not go to the party ____ you come with me."',
+        options: ['unless', 'until', 'because', 'although'],
+        answer: 'unless',
+        explanation: '"Unless" means "if not"; the sentence means I will go only if you come with me.'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "He is not only intelligent ____ also hardworking."',
+        options: ['but', 'and', 'yet', 'also'],
+        answer: 'but',
+        explanation: 'The correct correlative pair is "not only ... but also".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "The manager asked the clerk ____ he had finished the work."',
+        options: ['that', 'if', 'whether', 'what'],
+        answer: 'whether',
+        explanation: '"Whether" is used to introduce an indirect yes/no question.'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "Scarcely had he arrived ____ it began to rain."',
+        options: ['than', 'when', 'then', 'that'],
+        answer: 'when',
+        explanation: 'The correct structure is "Scarcely had ... when ...".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "One should not boast ____ one\'s own achievements."',
+        options: ['of', 'for', 'about', 'at'],
+        answer: 'of',
+        explanation: '"Boast of" is the correct collocation.'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "The baby was frightened ____ the dog."',
+        options: ['from', 'of', 'with', 'at'],
+        answer: 'of',
+        explanation: 'The correct collocation is "frightened of".'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "This is the house ____ I was born."',
+        options: ['where', 'which', 'that', 'when'],
+        answer: 'where',
+        explanation: '"Where" is used to refer to a place.'
+      },
+      {
+        question: 'Choose the correct option to fill in the blank: "I have known him ____ five years."',
+        options: ['since', 'for', 'from', 'during'],
+        answer: 'for',
+        explanation: 'Use "for" with a duration of time (five years).'
+      }
+    ]
+  },
+  {
+    name: 'Spotting Errors',
+    pageNumber: 4,
+    questions: [
+      {
+        question: 'Spot the error in the sentence: "The sceneries of Kashmir are beautiful."',
+        options: ['The sceneries', 'of Kashmir', 'are beautiful', 'No error'],
+        answer: 'The sceneries',
+        explanation: '"Scenery" is an uncountable noun; it has no plural form. Correct: "The scenery of Kashmir is beautiful."'
+      },
+      {
+        question: 'Spot the error in the sentence: "One of my friend is a doctor."',
+        options: ['One of', 'my friend', 'is a doctor', 'No error'],
+        answer: 'my friend',
+        explanation: 'After "one of", the noun must be plural: "one of my friends".'
+      },
+      {
+        question: 'Spot the error in the sentence: "He does not know to swim."',
+        options: ['He does not', 'know to swim', 'No error', 'None of these'],
+        answer: 'know to swim',
+        explanation: 'The correct phrase is "know how to swim".'
+      },
+      {
+        question: 'Spot the error in the sentence: "I have seen him yesterday."',
+        options: ['I have seen', 'him', 'yesterday', 'No error'],
+        answer: 'I have seen',
+        explanation: 'With a definite past time (yesterday), use simple past: "I saw him yesterday."'
+      },
+      {
+        question: 'Spot the error in the sentence: "Each of the students have submitted their assignment."',
+        options: ['Each of', 'the students', 'have submitted', 'No error'],
+        answer: 'have submitted',
+        explanation: '"Each" is singular, so the verb should be "has submitted".'
+      },
+      {
+        question: 'Spot the error in the sentence: "The two first chapters of the book are interesting."',
+        options: ['The two first', 'chapters of the book', 'are interesting', 'No error'],
+        answer: 'The two first',
+        explanation: 'The correct order is "the first two chapters".'
+      },
+      {
+        question: 'Spot the error in the sentence: "He is suffering from fever since Monday."',
+        options: ['He is suffering', 'from fever', 'since Monday', 'No error'],
+        answer: 'He is suffering',
+        explanation: 'With "since" (point of time), use present perfect: "He has been suffering from fever since Monday."'
+      },
+      {
+        question: 'Spot the error in the sentence: "The news are good."',
+        options: ['The news', 'are good', 'No error', 'None of these'],
+        answer: 'are good',
+        explanation: '"News" is singular, so the correct sentence is "The news is good."'
+      },
+      {
+        question: 'Spot the error in the sentence: "She is more taller than her sister."',
+        options: ['She is more', 'taller than', 'her sister', 'No error'],
+        answer: 'She is more',
+        explanation: 'Double comparatives are incorrect. Use "She is taller than her sister."'
+      },
+      {
+        question: 'Spot the error in the sentence: "He asked me where did I live."',
+        options: ['He asked me', 'where did I live', 'No error', 'None of these'],
+        answer: 'where did I live',
+        explanation: 'In indirect speech, use statement order: "He asked me where I lived."'
+      }
+    ]
+  },
+  {
+    name: 'Sentence Correction',
+    pageNumber: 5,
+    questions: [
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'He is more cleverer than his brother.',
+          'He is cleverer than his brother.',
+          'He is most cleverer than his brother.',
+          'He is more clever than his brother.'
+        ],
+        answer: 'He is cleverer than his brother.',
+        explanation: 'Clever is a one-syllable word; the correct comparative is "cleverer". Avoid double comparatives.'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'I have been living here for ten years.',
+          'I have been living here since ten years.',
+          'I am living here for ten years.',
+          'I lived here for ten years since.'
+        ],
+        answer: 'I have been living here for ten years.',
+        explanation: 'Use "for" with a duration of time (ten years).'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'He did not went to school.',
+          'He did not go to school.',
+          'He does not went to school.',
+          'He did not going to school.'
+        ],
+        answer: 'He did not go to school.',
+        explanation: 'After "did", use the base form of the verb: "go".'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'Neither the manager nor his staff were present.',
+          'Neither the manager nor his staff was present.',
+          'Neither the manager nor his staff are present.',
+          'Neither the manager nor his staff have present.'
+        ],
+        answer: 'Neither the manager nor his staff was present.',
+        explanation: 'With "neither...nor", the verb agrees with the nearer subject. "Staff" (as a collective unit) takes singular here.'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'She is one of the best student in the class.',
+          'She is one of the best students in the class.',
+          'She is one of the best student of the class.',
+          'She is the one of best student in class.'
+        ],
+        answer: 'She is one of the best students in the class.',
+        explanation: 'After "one of the + superlative", use a plural noun: "students".'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'I would rather die than beg.',
+          'I would rather die than to beg.',
+          'I would rather die then beg.',
+          'I would rather die from beg.'
+        ],
+        answer: 'I would rather die than beg.',
+        explanation: 'The correct structure is "would rather ... than ..." with bare infinitives.'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'The price of these books are high.',
+          'The price of these books is high.',
+          'The price of these books have high.',
+          'The prices of this books is high.'
+        ],
+        answer: 'The price of these books is high.',
+        explanation: 'The subject is "the price" (singular), so the verb is "is".'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'He has taken his breakfast in the morning.',
+          'He has taken his breakfast since morning.',
+          'He has taken his breakfast at the morning.',
+          'He has took his breakfast in the morning.'
+        ],
+        answer: 'He has taken his breakfast in the morning.',
+        explanation: 'The past participle of "take" is "taken", and "in the morning" is the correct preposition phrase.'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'She is junior than me.',
+          'She is junior to me.',
+          'She is junior from me.',
+          'She is junior then me.'
+        ],
+        answer: 'She is junior to me.',
+        explanation: 'Latin-origin comparatives such as "junior", "senior", "superior", "inferior" take "to", not "than".'
+      },
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'Hardly had I reached the station when the train left.',
+          'Hardly had I reached the station than the train left.',
+          'Hardly I had reached the station when the train left.',
+          'Hardly had I reached the station then the train left.'
+        ],
+        answer: 'Hardly had I reached the station when the train left.',
+        explanation: 'The correct structure is "Hardly had ... when ...".'
+      }
+    ]
+  },
+  {
+    name: 'Sentence Arrangement',
+    pageNumber: 6,
+    questions: [
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. He went to the market. 2. He bought some vegetables. 3. He returned home. 4. He cooked dinner.',
+        options: ['1, 2, 3, 4', '2, 1, 3, 4', '1, 3, 2, 4', '4, 3, 2, 1'],
+        answer: '1, 2, 3, 4',
+        explanation: 'The logical sequence is: go to market → buy vegetables → return home → cook dinner.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. The sun rose. 2. The birds started singing. 3. The farmer woke up. 4. He went to the fields.',
+        options: ['1, 2, 3, 4', '2, 1, 3, 4', '1, 3, 2, 4', '3, 1, 2, 4'],
+        answer: '1, 2, 3, 4',
+        explanation: 'The sun rises first, then birds sing, the farmer wakes, and then he goes to the fields.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. She studied hard. 2. She passed the exam. 3. She celebrated with friends. 4. She was very happy.',
+        options: ['1, 2, 3, 4', '1, 2, 4, 3', '2, 1, 3, 4', '1, 3, 2, 4'],
+        answer: '1, 2, 4, 3',
+        explanation: 'Studying leads to passing, then feeling happy, then celebrating.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. The rain stopped. 2. The children came out to play. 3. The sun appeared. 4. Puddles dried up.',
+        options: ['1, 2, 3, 4', '1, 3, 2, 4', '3, 1, 2, 4', '2, 1, 3, 4'],
+        answer: '1, 3, 2, 4',
+        explanation: 'Rain stops, the sun appears, children come out to play, then puddles dry up.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. He opened the laptop. 2. He typed his password. 3. He checked his emails. 4. He started working.',
+        options: ['1, 2, 3, 4', '2, 1, 3, 4', '1, 3, 2, 4', '1, 2, 4, 3'],
+        answer: '1, 2, 3, 4',
+        explanation: 'Open laptop → type password → check emails → start working.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. The alarm rang. 2. He woke up. 3. He got ready for office. 4. He left home.',
+        options: ['1, 2, 3, 4', '2, 1, 3, 4', '1, 3, 2, 4', '1, 2, 4, 3'],
+        answer: '1, 2, 3, 4',
+        explanation: 'Alarm rings → wake up → get ready → leave home.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. The teacher entered the class. 2. The students stood up. 3. They greeted her. 4. She asked them to sit down.',
+        options: ['1, 2, 3, 4', '2, 1, 3, 4', '1, 3, 2, 4', '1, 2, 4, 3'],
+        answer: '1, 2, 3, 4',
+        explanation: 'Teacher enters → students stand → greet → she asks them to sit.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. It started raining heavily. 2. People ran for shelter. 3. Thunder roared. 4. The streets became empty.',
+        options: ['3, 1, 2, 4', '1, 3, 2, 4', '3, 2, 1, 4', '1, 2, 3, 4'],
+        answer: '3, 1, 2, 4',
+        explanation: 'Thunder roars first, then heavy rain, people run for shelter, and streets become empty.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. He saved some money. 2. He bought a bicycle. 3. He rode it to work. 4. He saved on bus fare.',
+        options: ['1, 2, 3, 4', '2, 1, 3, 4', '1, 3, 2, 4', '1, 2, 4, 3'],
+        answer: '1, 2, 3, 4',
+        explanation: 'Save money → buy bicycle → ride to work → save on bus fare.'
+      },
+      {
+        question: 'Rearrange the following sentences into a meaningful paragraph: 1. The phone rang. 2. She picked it up. 3. It was her friend. 4. They talked for an hour.',
+        options: ['1, 2, 3, 4', '2, 1, 3, 4', '1, 3, 2, 4', '1, 2, 4, 3'],
+        answer: '1, 2, 3, 4',
+        explanation: 'Phone rings → she picks up → it is her friend → they talk.'
+      }
+    ]
+  },
+  {
+    name: 'Idioms & Phrases',
+    pageNumber: 7,
+    questions: [
+      {
+        question: 'What is the meaning of the idiom "To burn the midnight oil"?',
+        options: ['To waste time', 'To work late into the night', 'To start a fire', 'To study in the morning'],
+        answer: 'To work late into the night',
+        explanation: 'To burn the midnight oil means to work or study late into the night.'
+      },
+      {
+        question: 'What is the meaning of the idiom "A piece of cake"?',
+        options: ['Something delicious', 'An easy task', 'A small portion', 'A celebration'],
+        answer: 'An easy task',
+        explanation: 'A piece of cake refers to something that is very easy to do.'
+      },
+      {
+        question: 'What is the meaning of the idiom "To let the cat out of the bag"?',
+        options: ['To adopt a pet', 'To reveal a secret', 'To make a mistake', 'To be playful'],
+        answer: 'To reveal a secret',
+        explanation: 'To let the cat out of the bag means to reveal a secret unintentionally.'
+      },
+      {
+        question: 'What is the meaning of the idiom "Once in a blue moon"?',
+        options: ['Every day', 'Very rarely', 'Frequently', 'At night'],
+        answer: 'Very rarely',
+        explanation: 'Once in a blue moon means something that happens very rarely.'
+      },
+      {
+        question: 'What is the meaning of the idiom "To beat around the bush"?',
+        options: ['To speak directly', 'To avoid the main topic', 'To work in a garden', 'To be aggressive'],
+        answer: 'To avoid the main topic',
+        explanation: 'To beat around the bush means to avoid saying what you mean directly.'
+      },
+      {
+        question: 'What is the meaning of the idiom "To break the ice"?',
+        options: ['To break something frozen', 'To start a conversation', 'To end a relationship', 'To make things worse'],
+        answer: 'To start a conversation',
+        explanation: 'To break the ice means to initiate a conversation to reduce tension or awkwardness.'
+      },
+      {
+        question: 'What is the meaning of the idiom "To bite the bullet"?',
+        options: ['To eat something hard', 'To face a difficult situation bravely', 'To be in pain', 'To attack someone'],
+        answer: 'To face a difficult situation bravely',
+        explanation: 'To bite the bullet means to endure a painful or difficult situation with courage.'
+      },
+      {
+        question: 'What is the meaning of the idiom "To hit the nail on the head"?',
+        options: ['To hurt oneself', 'To do or say exactly the right thing', 'To work as a carpenter', 'To be wrong'],
+        answer: 'To do or say exactly the right thing',
+        explanation: 'To hit the nail on the head means to describe exactly what is causing a situation or problem.'
+      },
+      {
+        question: 'What is the meaning of the idiom "To spill the beans"?',
+        options: ['To drop food', 'To reveal a secret', 'To cook a meal', 'To make a mess'],
+        answer: 'To reveal a secret',
+        explanation: 'To spill the beans means to reveal secret information.'
+      },
+      {
+        question: 'What is the meaning of the idiom "To cost an arm and a leg"?',
+        options: ['To be very expensive', 'To lose a limb', 'To be very cheap', 'To be free'],
+        answer: 'To be very expensive',
+        explanation: 'To cost an arm and a leg means to be extremely expensive.'
+      }
+    ]
+  },
+  {
+    name: 'One Word Substitution',
+    pageNumber: 8,
+    questions: [
+      {
+        question: 'One word for "a person who cannot read or write":',
+        options: ['Illiterate', 'Ignorant', 'Uneducated', 'Unaware'],
+        answer: 'Illiterate',
+        explanation: 'Illiterate means unable to read or write.'
+      },
+      {
+        question: 'One word for "a place where animals are kept":',
+        options: ['Museum', 'Zoo', 'Auditorium', 'Library'],
+        answer: 'Zoo',
+        explanation: 'A zoo is a place where animals are kept for public viewing.'
+      },
+      {
+        question: 'One word for "a person who speaks many languages":',
+        options: ['Monolingual', 'Bilingual', 'Polyglot', 'Linguist'],
+        answer: 'Polyglot',
+        explanation: 'A polyglot is a person who knows and speaks several languages.'
+      },
+      {
+        question: 'One word for "the study of ancient societies through their remains":',
+        options: ['Geology', 'Archaeology', 'Anthropology', 'History'],
+        answer: 'Archaeology',
+        explanation: 'Archaeology is the study of human history through excavation and analysis of artefacts and remains.'
+      },
+      {
+        question: 'One word for "a person who believes in the existence of God":',
+        options: ['Atheist', 'Theist', 'Agnostic', 'Skeptic'],
+        answer: 'Theist',
+        explanation: 'A theist is a person who believes in the existence of a god or gods.'
+      },
+      {
+        question: 'One word for "the murder of a king":',
+        options: ['Homicide', 'Regicide', 'Suicide', 'Genocide'],
+        answer: 'Regicide',
+        explanation: 'Regicide is the killing of a king.'
+      },
+      {
+        question: 'One word for "a person who loves his country and serves it devotedly":',
+        options: ['Patriot', 'Traitor', 'Citizen', 'Nationalist'],
+        answer: 'Patriot',
+        explanation: 'A patriot is a person who vigorously supports their country and is prepared to defend it.'
+      },
+      {
+        question: 'One word for "a building where aircraft are kept":',
+        options: ['Station', 'Hangar', 'Dock', 'Garage'],
+        answer: 'Hangar',
+        explanation: 'A hangar is a large building where aircraft are kept.'
+      },
+      {
+        question: 'One word for "a person who is appointed to settle a dispute":',
+        options: ['Judge', 'Arbitrator', 'Mediator', 'Lawyer'],
+        answer: 'Arbitrator',
+        explanation: 'An arbitrator is an impartial person appointed to settle a dispute.'
+      },
+      {
+        question: 'One word for "fear of confined spaces":',
+        options: ['Acrophobia', 'Claustrophobia', 'Agoraphobia', 'Hydrophobia'],
+        answer: 'Claustrophobia',
+        explanation: 'Claustrophobia is the fear of being in enclosed or confined spaces.'
+      }
+    ]
+  },
+  {
+    name: 'Reading Comprehension',
+    pageNumber: 9,
+    questions: [
+      {
+        question: 'Passage: "The Industrial Revolution, which began in Britain in the late 18th century, transformed economies from agrarian to industrial. It brought technological innovations like the steam engine, which increased production efficiency. However, it also led to urban overcrowding and poor working conditions in factories." What was one major technological innovation of the Industrial Revolution mentioned in the passage?',
+        options: ['The computer', 'The steam engine', 'The telephone', 'The airplane'],
+        answer: 'The steam engine',
+        explanation: 'The passage explicitly mentions the steam engine as a technological innovation of the Industrial Revolution.'
+      },
+      {
+        question: 'Passage: "The Industrial Revolution, which began in Britain in the late 18th century, transformed economies from agrarian to industrial. It brought technological innovations like the steam engine, which increased production efficiency. However, it also led to urban overcrowding and poor working conditions in factories." According to the passage, what was a negative effect of the Industrial Revolution?',
+        options: ['Increased production', 'Urban overcrowding', 'Technological innovation', 'Agrarian economy'],
+        answer: 'Urban overcrowding',
+        explanation: 'The passage states that the Industrial Revolution "led to urban overcrowding and poor working conditions in factories."'
+      },
+      {
+        question: 'Passage: "Photosynthesis is the process by which green plants use sunlight to synthesize food from carbon dioxide and water. This process primarily occurs in the leaves, which contain chlorophyll, the green pigment that captures light energy. Oxygen is released as a by-product." What pigment captures light energy during photosynthesis?',
+        options: ['Carbon dioxide', 'Chlorophyll', 'Water', 'Oxygen'],
+        answer: 'Chlorophyll',
+        explanation: 'The passage states that chlorophyll is "the green pigment that captures light energy."'
+      },
+      {
+        question: 'Passage: "Photosynthesis is the process by which green plants use sunlight to synthesize food from carbon dioxide and water. This process primarily occurs in the leaves, which contain chlorophyll, the green pigment that captures light energy. Oxygen is released as a by-product." What is released as a by-product of photosynthesis?',
+        options: ['Carbon dioxide', 'Water', 'Oxygen', 'Chlorophyll'],
+        answer: 'Oxygen',
+        explanation: 'The passage states that "Oxygen is released as a by-product."'
+      },
+      {
+        question: 'Passage: "The water cycle, also known as the hydrological cycle, describes the continuous movement of water on, above, and below the surface of the Earth. Water evaporates from the surface, condenses into clouds, and precipitates back to the ground as rain or snow. This cycle is essential for sustaining life on Earth." What is another name for the water cycle?',
+        options: ['Carbon cycle', 'Hydrological cycle', 'Nitrogen cycle', 'Oxygen cycle'],
+        answer: 'Hydrological cycle',
+        explanation: 'The passage states that the water cycle "is also known as the hydrological cycle."'
+      },
+      {
+        question: 'Passage: "The water cycle, also known as the hydrological cycle, describes the continuous movement of water on, above, and below the surface of the Earth. Water evaporates from the surface, condenses into clouds, and precipitates back to the ground as rain or snow. This cycle is essential for sustaining life on Earth." In which form does water precipitate back to the ground?',
+        options: ['Steam', 'Rain or snow', 'Ice only', 'Mist'],
+        answer: 'Rain or snow',
+        explanation: 'The passage states water "precipitates back to the ground as rain or snow."'
+      },
+      {
+        question: 'Passage: "The internet has revolutionized communication by enabling instant exchange of information across the globe. It has made education accessible to millions through online courses. However, it also raises concerns about privacy and the spread of misinformation." What is a positive effect of the internet mentioned in the passage?',
+        options: ['Privacy concerns', 'Spread of misinformation', 'Access to education', 'Instant exchange of goods'],
+        answer: 'Access to education',
+        explanation: 'The passage mentions that the internet "has made education accessible to millions through online courses."'
+      },
+      {
+        question: 'Passage: "The internet has revolutionized communication by enabling instant exchange of information across the globe. It has made education accessible to millions through online courses. However, it also raises concerns about privacy and the spread of misinformation." Which concern about the internet is mentioned in the passage?',
+        options: ['Lack of information', 'Spread of misinformation', 'High cost', 'Slow speed'],
+        answer: 'Spread of misinformation',
+        explanation: 'The passage states the internet "raises concerns about privacy and the spread of misinformation."'
+      }
+    ]
+  },
+  {
+    name: 'Spelling Test',
+    pageNumber: 10,
+    questions: [
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Occassion', 'Occasion', 'Ocassion', 'Ocasion'],
+        answer: 'Occasion',
+        explanation: 'The correct spelling is "occasion" (double c, single s).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Accomodate', 'Acommodate', 'Accommodate', 'Acomodate'],
+        answer: 'Accommodate',
+        explanation: 'The correct spelling is "accommodate" (double c, double m).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Neccessary', 'Necessary', 'Neccesary', 'Necesary'],
+        answer: 'Necessary',
+        explanation: 'The correct spelling is "necessary" (one c, double s).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Embarrass', 'Embarass', 'Embarras', 'Embbarrass'],
+        answer: 'Embarrass',
+        explanation: 'The correct spelling is "embarrass" (double r, double s).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Separate', 'Seperate', 'Separete', 'Saperate'],
+        answer: 'Separate',
+        explanation: 'The correct spelling is "separate" (e before a).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Definately', 'Definitely', 'Definitley', 'Definately'],
+        answer: 'Definitely',
+        explanation: 'The correct spelling is "definitely".'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Millenium', 'Millennium', 'Milenium', 'Millenniuum'],
+        answer: 'Millennium',
+        explanation: 'The correct spelling is "millennium" (double l, double n).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Conscience', 'Consciense', 'Consceince', 'Conscience'],
+        answer: 'Conscience',
+        explanation: 'The correct spelling is "conscience" (scie).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Gaurantee', 'Guarantee', 'Garrantee', 'Gaurantie'],
+        answer: 'Guarantee',
+        explanation: 'The correct spelling is "guarantee" (gua).'
+      },
+      {
+        question: 'Choose the correctly spelt word:',
+        options: ['Wierd', 'Weird', 'Wierrd', 'Weerd'],
+        answer: 'Weird',
+        explanation: 'The correct spelling is "weird" (ie).'
+      }
+    ]
+  }
+];
+
 export default function AptitudePage() {
   const navigate = useNavigate();
-  const [selectedSubModule, setSelectedSubModule] = useState<'tcs-numerical' | 'tcs-reasoning'>('tcs-numerical');
+  const [selectedSubModule, setSelectedSubModule] = useState<'tcs-numerical' | 'tcs-reasoning' | 'tcs-verbal'>('tcs-numerical');
 
-  const currentTopics = selectedSubModule === 'tcs-numerical' ? TCS_NUMERICAL_TOPICS : TCS_REASONING_TOPICS;
+  const currentTopics = selectedSubModule === 'tcs-numerical'
+    ? TCS_NUMERICAL_TOPICS
+    : selectedSubModule === 'tcs-reasoning'
+      ? TCS_REASONING_TOPICS
+      : TCS_VERBAL_TOPICS;
 
   const handleTopicClick = (topicName: string) => {
     const slug = topicSlug(topicName);
@@ -3834,10 +4762,14 @@ export default function AptitudePage() {
           TCS Reasoning Ability
         </button>
         <button
-          disabled
-          className="px-4 py-2 text-sm font-semibold rounded-lg text-gray-400 dark:text-gray-600 cursor-not-allowed flex items-center gap-1.5 whitespace-nowrap"
+          onClick={() => setSelectedSubModule('tcs-verbal')}
+          className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all whitespace-nowrap ${
+            selectedSubModule === 'tcs-verbal'
+              ? 'bg-primary-500 text-white shadow'
+              : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+          }`}
         >
-          <Lock className="w-3.5 h-3.5" /> Verbal Ability (Locked)
+          TCS Verbal Ability
         </button>
       </div>
 
@@ -3859,7 +4791,7 @@ export default function AptitudePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {currentTopics.map((topic, idx) => (
             <Card
-              key={topic.name}
+              key={`${selectedSubModule}-${idx}-${topic.name}`}
               padding="none"
               className="overflow-hidden border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 cursor-pointer group"
               onClick={() => handleTopicClick(topic.name)}

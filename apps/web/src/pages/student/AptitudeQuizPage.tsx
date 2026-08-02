@@ -8,13 +8,21 @@ import {
 import Card from '../../components/common/Card/Card';
 import Badge from '../../components/common/Badge/Badge';
 import { findTopic } from './aptitudeData';
-import { TCS_NUMERICAL_TOPICS, TCS_REASONING_TOPICS } from './AptitudePage';
+import {
+  TCS_NUMERICAL_TOPICS,
+  TCS_REASONING_TOPICS,
+  TCS_VERBAL_TOPICS,
+} from './AptitudePage';
 
 export default function AptitudeQuizPage() {
   const { module, topicSlug: slug } = useParams<{ module: string; topicSlug: string }>();
 
   const allTopics =
-    module === 'tcs-reasoning' ? TCS_REASONING_TOPICS : TCS_NUMERICAL_TOPICS;
+    module === 'tcs-reasoning'
+      ? TCS_REASONING_TOPICS
+      : module === 'tcs-verbal'
+        ? TCS_VERBAL_TOPICS
+        : TCS_NUMERICAL_TOPICS;
   const topic = slug ? findTopic(allTopics, slug) : undefined;
 
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
@@ -44,7 +52,11 @@ export default function AptitudeQuizPage() {
   const allAnswered = answeredCount === topic.questions.length;
 
   const moduleLabel =
-    module === 'tcs-reasoning' ? 'TCS Reasoning Ability' : 'TCS Numerical Ability';
+    module === 'tcs-reasoning'
+      ? 'TCS Reasoning Ability'
+      : module === 'tcs-verbal'
+        ? 'TCS Verbal Ability'
+        : 'TCS Numerical Ability';
 
   return (
     <div className="page-wrapper space-y-6">

@@ -10,7 +10,9 @@ async function autoSeedQuestions() {
     const questionsDataDir = path.resolve(__dirname, '../data/questions');
     let totalSeeded = 0;
     let totalUpdated = 0;
+
     let totalDeleted = 0;
+
     let totalFailed = 0;
 
     const codingArenaDir = path.join(questionsDataDir, 'coding-arena');
@@ -22,9 +24,11 @@ async function autoSeedQuestions() {
 
     const jsonFiles = fs.readdirSync(codingArenaDir).filter(f => f.endsWith('.json'));
 
+
     // Step 1: Collect all valid slugs from JSON files
     const validSlugs = new Set<string>();
     const topicQuestions = new Map<string, any[]>();
+
 
     for (const file of jsonFiles) {
       const filePath = path.join(codingArenaDir, file);
@@ -35,6 +39,13 @@ async function autoSeedQuestions() {
         const data = JSON.parse(fileContent);
 
         if (!data.questions || !Array.isArray(data.questions)) {
+
+          logger.warn(`  ⚠️  Invalid format in ${file}: missing 'questions' array`);
+          continue;
+        }
+
+        for (const question of data.questions) {
+
           continue;
         }
 
@@ -74,6 +85,7 @@ async function autoSeedQuestions() {
     for (const [topic, questions] of topicQuestions) {
       try {
         for (const question of questions) {
+
           try {
             const slug = slugify(topic, question.title);
 
@@ -132,16 +144,26 @@ async function autoSeedQuestions() {
           }
         }
 
+
+        logger.info(`  ✅ ${file}: ${data.questions.length} questions processed`);
+      } catch (err: any) {
+        logger.error(`  ❌ Error reading ${file}: ${err.message}`);
+        totalFailed += 1;
+
         logger.info(`  ✅ ${topicQuestions.get(topic)?.length || 0} questions processed for topic: ${topic}`);
       } catch (err: any) {
         logger.error(`  ❌ Error processing topic ${topic}: ${err.message}`);
+
       }
     }
 
     logger.info(`✨ Auto-seed complete!`);
     logger.info(`   ✅ Total created: ${totalSeeded}`);
     logger.info(`   ✏️  Total updated: ${totalUpdated}`);
+
+
     logger.info(`   🗑️  Total deleted (duplicates): ${totalDeleted}`);
+
     logger.info(`   ❌ Total failed: ${totalFailed}`);
   } catch (error) {
     logger.error('❌ Auto-seed failed:', error);
