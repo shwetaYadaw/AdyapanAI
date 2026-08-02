@@ -293,24 +293,36 @@ model Badge {
 }
 
 model Problem {
-  id                 String              @id @default(uuid())
-  title              String
-  slug               String              @unique
-  difficulty         String              @default("easy")
-  statement          String              @db.Text
-  constraints        String              @db.Text
-  inputFormat        String              @db.Text
-  outputFormat       String              @db.Text
-  timeLimit          Int                 @default(2000)
-  memoryLimit        Int                 @default(256)
-  starterCode        Json
-  referenceSolution  String              @db.Text
-  topics             String              @db.Text
-  companies          String              @db.Text
-  testCases          ProblemTestCase[]
-  problemSubmissions ProblemSubmission[]
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  id                    String                    @id @default(uuid())
+  title                 String
+  slug                  String                    @unique
+  difficulty            String                    @default("easy")
+  statement             String                    @db.Text
+  constraints           String                    @db.Text
+  inputFormat           String                    @db.Text
+  outputFormat          String                    @db.Text
+  timeLimit             Int                       @default(2000)
+  memoryLimit           Int                       @default(256)
+  starterCode           Json
+  referenceSolution     String                    @db.Text
+  topics                String                    @db.Text
+  companies             String                    @db.Text
+  testCases             ProblemTestCase[]
+  problemSubmissions    ProblemSubmission[]
+  solutions             ProblemSolution[]
+  versionHistory        ProblemVersion[]
+  tags                  String                    @db.Text @default("")
+  category              String                    @default("general")
+  successRate           Float                     @default(0)
+  totalAttempts         Int                       @default(0)
+  totalAccepted         Int                       @default(0)
+  averageRuntime        Int                       @default(0)
+  createdBy             String?
+  updatedBy             String?
+  isArchived            Boolean                   @default(false)
+  metadata              Json?
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
 }
 
 model ProblemTestCase {
@@ -321,7 +333,44 @@ model ProblemTestCase {
   expectedOutput String   @db.Text
   isHidden       Boolean  @default(true)
   type           String   @default("hidden")
+  explanation    String?  @db.Text
+  order          Int      @default(0)
   createdAt      DateTime @default(now())
+}
+
+model ProblemSolution {
+  id              String   @id @default(uuid())
+  problemId       String
+  problem         Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  code            String   @db.Text
+  language        String
+  approach        String   @db.Text
+  timeComplexity  String   @default("O(n)")
+  spaceComplexity String   @default("O(1)")
+  explanation     String   @db.Text
+  isOptimal       Boolean  @default(false)
+  rating          Float    @default(0)
+  createdBy       String?
+  versionNumber   Int      @default(1)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ProblemVersion {
+  id           String   @id @default(uuid())
+  problemId    String
+  problem      Problem  @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  versionNum   Int
+  title        String
+  statement    String   @db.Text
+  difficulty   String
+  changes      Json // Track what was changed
+  changedBy    String?
+  changeReason String?  @db.Text
+  createdAt    DateTime @default(now())
+  
+  @@unique([problemId, versionNum])
 }
 
 model SubmissionResult {

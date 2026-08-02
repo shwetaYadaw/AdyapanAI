@@ -1,0 +1,130 @@
+{
+  "questions": [
+    {
+      "title": "Convert Binary to Decimal",
+      "difficulty": "easy",
+      "statement": "Convert a binary number to its decimal equivalent.\n\n**Examples:**\n- Input: 1010 → Output: 10\n- Input: 1111 → Output: 15\n- Input: 10000 → Output: 16",
+      "inputFormat": "A binary number as a string.",
+      "outputFormat": "Return the decimal equivalent.",
+      "constraints": "Binary string length ≤ 32",
+      "sampleInput": "1010",
+      "sampleOutput": "10",
+      "testCases": [
+        { "input": "1010", "output": "10", "isHidden": false },
+        { "input": "1111", "output": "15", "isHidden": false },
+        { "input": "10000", "output": "16", "isHidden": false },
+        { "input": "11111111", "output": "255", "isHidden": true },
+        { "input": "0", "output": "0", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Decimal to Binary conversion",
+      "difficulty": "easy",
+      "statement": "Convert a decimal number to its binary equivalent.\n\n**Examples:**\n- Input: 10 → Output: 1010\n- Input: 15 → Output: 1111\n- Input: 16 → Output: 10000",
+      "inputFormat": "A decimal number.",
+      "outputFormat": "Return the binary equivalent as a string.",
+      "constraints": "1 ≤ n ≤ 10^9",
+      "sampleInput": "10",
+      "sampleOutput": "1010",
+      "testCases": [
+        { "input": "10", "output": "1010", "isHidden": false },
+        { "input": "15", "output": "1111", "isHidden": false },
+        { "input": "16", "output": "10000", "isHidden": false },
+        { "input": "255", "output": "11111111", "isHidden": true },
+        { "input": "1", "output": "1", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Convert binary to octal",
+      "difficulty": "medium",
+      "statement": "Convert a binary number to its octal equivalent.\n\n**Examples:**\n- Input: 110101 → Output: 65\n- Input: 111000 → Output: 70",
+      "inputFormat": "A binary number as a string.",
+      "outputFormat": "Return the octal equivalent.",
+      "constraints": "Binary string length ≤ 32",
+      "sampleInput": "110101",
+      "sampleOutput": "65",
+      "testCases": [
+        { "input": "110101", "output": "65", "isHidden": false },
+        { "input": "111000", "output": "70", "isHidden": false },
+        { "input": "1010", "output": "12", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Convert decimal to octal",
+      "difficulty": "medium",
+      "statement": "Convert a decimal number to its octal equivalent.\n\n**Examples:**\n- Input: 10 → Output: 12\n- Input: 64 → Output: 100",
+      "inputFormat": "A decimal number.",
+      "outputFormat": "Return the octal equivalent.",
+      "constraints": "1 ≤ n ≤ 10^9",
+      "sampleInput": "10",
+      "sampleOutput": "12",
+      "testCases": [
+        { "input": "10", "output": "12", "isHidden": false },
+        { "input": "64", "output": "100", "isHidden": false },
+        { "input": "8", "output": "10", "isHidden": true },
+        { "input": "1", "output": "1", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Convert octal to decimal",
+      "difficulty": "medium",
+      "statement": "Convert an octal number to its decimal equivalent.\n\n**Examples:**\n- Input: 12 → Output: 10\n- Input: 100 → Output: 64",
+      "inputFormat": "An octal number as a string.",
+      "outputFormat": "Return the decimal equivalent.",
+      "constraints": "Octal string length ≤ 32",
+      "sampleInput": "12",
+      "sampleOutput": "10",
+      "testCases": [
+        { "input": "12", "output": "10", "isHidden": false },
+        { "input": "100", "output": "64", "isHidden": false },
+        { "input": "10", "output": "8", "isHidden": true },
+        { "input": "1", "output": "1", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Convert octal to binary",
+      "difficulty": "medium",
+      "statement": "Convert an octal number to its binary equivalent.\n\n**Examples:**\n- Input: 65 → Output: 110101\n- Input: 70 → Output: 111000",
+      "inputFormat": "An octal number as a string.",
+      "outputFormat": "Return the binary equivalent.",
+      "constraints": "Octal string length ≤ 32",
+      "sampleInput": "65",
+      "sampleOutput": "110101",
+      "testCases": [
+        { "input": "65", "output": "110101", "isHidden": false },
+        { "input": "70", "output": "111000", "isHidden": false },
+        { "input": "12", "output": "1010", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Convert digits/numbers to words",
+      "difficulty": "hard",
+      "statement": "Convert a number to its English word representation.\n\n**Examples:**\n- Input: 123 → Output: One Hundred Twenty Three\n- Input: 1000 → Output: One Thousand\n- Input: 0 → Output: Zero",
+      "inputFormat": "A single integer n.",
+      "outputFormat": "Return the English word representation.",
+      "constraints": "0 ≤ n ≤ 10^9",
+      "sampleInput": "123",
+      "sampleOutput": "One Hundred Twenty Three",
+      "testCases": [
+        { "input": "123", "output": "One Hundred Twenty Three", "isHidden": false },
+        { "input": "1000", "output": "One Thousand", "isHidden": false },
+        { "input": "0", "output": "Zero", "isHidden": true },
+        { "input": "100", "output": "One Hundred", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "questions": [
+    {
+      "title": "Find the smallest number in an array",
+      "difficulty": "easy",
+      "statement": "Given an array arr[]. The task is to find the smallest element and return it.\n\n**Examples:**\n- Input: arr[] = [5, 10, 3, 8, 1] → Output: 1\n- Input: arr[] = [10, 10, 10] → Output: 10\n- Input: arr[] = [7] → Output: 7",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the smallest element in the array.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "5\n5 10 3 8 1",
+      "sampleOutput": "1",
+      "testCases": [
+        { "input": "5\n5 10 3 8 1", "output": "1", "isHidden": false },
+        { "input": "3\n10 10 10", "output": "10", "isHidden": false },
+        { "input": "1\n7", "output": "7", "isHidden": false },
+        { "input": "5\n-5 -2 -10 -1 -8", "output": "-10", "isHidden": true },
+        { "input": "6\n100 200 50 75 25 150", "output": "25", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Largest in Array",
+      "difficulty": "easy",
+      "statement": "Given an array arr[]. The task is to find the largest element and return it.\n\n**Examples:**\n- Input: arr[] = [1, 8, 7, 56, 90] → Output: 90\n- Input: arr[] = [5, 5, 5, 5] → Output: 5",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the largest element in the array.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "5\n1 8 7 56 90",
+      "sampleOutput": "90",
+      "testCases": [
+        { "input": "5\n1 8 7 56 90", "output": "90", "isHidden": false },
+        { "input": "4\n5 5 5 5", "output": "5", "isHidden": false },
+        { "input": "3\n-1 -2 -10", "output": "-1", "isHidden": true },
+        { "input": "6\n100 200 150 300 250 280", "output": "300", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Second Smallest and Second Largest",
+      "difficulty": "medium",
+      "statement": "Given an array arr[] of integers, find the second smallest and second largest elements in the array.\n\n**Examples:**\n- Input: arr[] = [12, 35, 1, 10, 34, 1] → Output: [10, 34]\n- Input: arr[] = [5, 5, 5] → Output: [-1, -1]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return two space-separated integers (second smallest and second largest), or -1 if they don't exist.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "6\n12 35 1 10 34 1",
+      "sampleOutput": "10 34",
+      "testCases": [
+        { "input": "6\n12 35 1 10 34 1", "output": "10 34", "isHidden": false },
+        { "input": "3\n5 5 5", "output": "-1 -1", "isHidden": false },
+        { "input": "4\n1 2 3 4", "output": "2 3", "isHidden": true },
+        { "input": "5\n-10 -5 0 5 10", "output": "-5 5", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Reverse a given array",
+      "difficulty": "easy",
+      "statement": "You are given an array of integers arr[]. You have to reverse the given array.\n\n**Examples:**\n- Input: arr = [1, 4, 3, 2, 6, 5] → Output: [5, 6, 2, 3, 4, 1]\n- Input: arr = [1] → Output: [1]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the reversed array as space-separated integers.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "6\n1 4 3 2 6 5",
+      "sampleOutput": "5 6 2 3 4 1",
+      "testCases": [
+        { "input": "6\n1 4 3 2 6 5", "output": "5 6 2 3 4 1", "isHidden": false },
+        { "input": "1\n1", "output": "1", "isHidden": false },
+        { "input": "5\n10 20 30 40 50", "output": "50 40 30 20 10", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Count Elements With Maximum Frequency",
+      "difficulty": "medium",
+      "statement": "You are given an array nums consisting of positive integers. Return the total frequencies of elements in nums such that those elements all have the maximum frequency.\n\n**Examples:**\n- Input: nums = [1,2,2,3,1,4] → Output: 4\n- Input: nums = [1,2,3,4,5] → Output: 5",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated positive integers.",
+      "outputFormat": "Return a single integer representing the total count of elements with maximum frequency.",
+      "constraints": "1 ≤ N ≤ 10^5\n1 ≤ nums[i] ≤ 10^9",
+      "sampleInput": "6\n1 2 2 3 1 4",
+      "sampleOutput": "4",
+      "testCases": [
+        { "input": "6\n1 2 2 3 1 4", "output": "4", "isHidden": false },
+        { "input": "5\n1 2 3 4 5", "output": "5", "isHidden": false },
+        { "input": "4\n5 5 5 5", "output": "4", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Half Ascending and Half Descending Sort",
+      "difficulty": "medium",
+      "statement": "Given an array arr of even size, sort the first half of the array in ascending order and the second half in descending order.\n\n**Examples:**\n- Input: arr[] = [10, 20, 30, 40] → Output: [10, 20, 40, 30]\n- Input: arr[] = [5, 4, 6, 2, 3, 8, 9, 7] → Output: [2, 4, 5, 6, 9, 8, 7, 3]",
+      "inputFormat": "First line contains N (size of even array), second line contains N space-separated integers.",
+      "outputFormat": "Return the sorted array as space-separated integers.",
+      "constraints": "2 ≤ N ≤ 10^5 and N is even\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "8\n5 4 6 2 3 8 9 7",
+      "sampleOutput": "2 4 5 6 9 8 7 3",
+      "testCases": [
+        { "input": "4\n10 20 30 40", "output": "10 20 40 30", "isHidden": false },
+        { "input": "8\n5 4 6 2 3 8 9 7", "output": "2 4 5 6 9 8 7 3", "isHidden": false },
+        { "input": "6\n1 2 3 4 5 6", "output": "1 2 3 6 5 4", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Sum of Array",
+      "difficulty": "easy",
+      "statement": "Given an array of integers arr[], find the sum of its elements.\n\n**Examples:**\n- Input: arr[] = [1, 2, 3] → Output: 6\n- Input: arr[] = [15, 12, 13, 10] → Output: 50",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the sum of all elements in the array.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "4\n15 12 13 10",
+      "sampleOutput": "50",
+      "testCases": [
+        { "input": "3\n1 2 3", "output": "6", "isHidden": false },
+        { "input": "4\n15 12 13 10", "output": "50", "isHidden": false },
+        { "input": "5\n-1 -2 -3 -4 -5", "output": "-15", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Rotate Array",
+      "difficulty": "hard",
+      "statement": "Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.\n\n**Examples:**\n- Input: nums = [1,2,3,4,5,6,7], k = 3 → Output: [5,6,7,1,2,3,4]\n- Input: nums = [-1,-100,3,99], k = 2 → Output: [3,99,-1,-100]",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers, third line contains k.",
+      "outputFormat": "Return the rotated array as space-separated integers.",
+      "constraints": "1 ≤ N ≤ 10^5\n0 ≤ k ≤ 10^9\n-10^9 ≤ nums[i] ≤ 10^9",
+      "sampleInput": "7\n1 2 3 4 5 6 7\n3",
+      "sampleOutput": "5 6 7 1 2 3 4",
+      "testCases": [
+        { "input": "7\n1 2 3 4 5 6 7\n3", "output": "5 6 7 1 2 3 4", "isHidden": false },
+        { "input": "4\n-1 -100 3 99\n2", "output": "3 99 -1 -100", "isHidden": false },
+        { "input": "5\n1 2 3 4 5\n1", "output": "5 1 2 3 4", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Mean or Average of an Array",
+      "difficulty": "easy",
+      "statement": "Given an array arr[], return the floor value of the mean of its elements.\n\n**Examples:**\n- Input: arr[] = [1, 3, 4, 2, 6, 5, 8, 7] → Output: 4\n- Input: arr[] = [4, 4, 4, 4, 4] → Output: 4",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the floor value of the mean as a single integer.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "8\n1 3 4 2 6 5 8 7",
+      "sampleOutput": "4",
+      "testCases": [
+        { "input": "8\n1 3 4 2 6 5 8 7", "output": "4", "isHidden": false },
+        { "input": "5\n4 4 4 4 4", "output": "4", "isHidden": false },
+        { "input": "3\n1 2 3", "output": "2", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    },
+    {
+      "title": "Median of an Array",
+      "difficulty": "easy",
+      "statement": "Given an array arr[] of integers, calculate the median.\n\n**Examples:**\n- Input: arr[] = [90, 100, 78, 89, 67] → Output: 89\n- Input: arr[] = [56, 67, 30, 79] → Output: 61.5",
+      "inputFormat": "First line contains N (size of array), second line contains N space-separated integers.",
+      "outputFormat": "Return the median as a decimal number.",
+      "constraints": "1 ≤ N ≤ 10^5\n-10^9 ≤ arr[i] ≤ 10^9",
+      "sampleInput": "5\n90 100 78 89 67",
+      "sampleOutput": "89",
+      "testCases": [
+        { "input": "5\n90 100 78 89 67", "output": "89", "isHidden": false },
+        { "input": "4\n56 67 30 79", "output": "61.5", "isHidden": false },
+        { "input": "3\n1 2 3", "output": "2", "isHidden": true }
+      ],
+      "timeLimit": 1000,
+      "memoryLimit": 128
+    }
+  ]
+}
