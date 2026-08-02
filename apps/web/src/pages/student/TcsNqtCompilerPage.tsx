@@ -172,9 +172,9 @@ interface Question {
   xpReward: number;
 }
 
-export default function CodingPortalPage() {
+export default function TcsNqtCompilerPage() {
   // Debug log to verify correct component is loading
-  console.log('🟣 CODING ARENA PAGE LOADED - Purple Theme');
+  console.log('🎯 TCS NQT COMPILER PAGE LOADED - Orange Theme');
   
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -263,11 +263,11 @@ export default function CodingPortalPage() {
     toast.success('Comment posted!');
   };
 
-  // Fetch question details from /challenges/questions endpoint (all Coding Arena questions are there)
+  // Fetch TCS NQT question details from /challenges/questions endpoint
   const { data: question, isLoading } = useQuery<Question>({
-    queryKey: ['codingQuestionDetail', slug],
+    queryKey: ['tcsNqtQuestionDetail', slug],
     queryFn: async () => {
-      // All questions (both TCS NQT and Coding Arena) are in the challenges/questions endpoint
+      // TCS NQT questions are fetched from challenges/questions endpoint
       const { data } = await api.get(`/challenges/questions/${slug}`);
       return data.data;
     },
@@ -346,13 +346,12 @@ export default function CodingPortalPage() {
     else if (consoleSize === 'large') setConsoleHeight(isSmallScreen ? 250 : 320);
   }, [consoleSize]);
 
-  // Mutation: Run Code (sample tests) - Detects if Problem or Question table
+  // Mutation: Run Code (sample tests) - TCS NQT uses QuestionSubmission routes
   const runCodeMutation = useMutation({
     mutationFn: async (payload: { code: string; language: string; input: string }) => {
-      // If question has 'id' field, it's from Problem table, otherwise use slug
-      const endpoint = question?.id && !question?._id?.includes('tcs-nqt') 
-        ? `/problems/${slug}/run`
-        : `/challenges/questions/${question?.id || question?._id || slug}/run`;
+      // TCS NQT questions use /question-submissions/:questionId/run endpoint
+      const questionId = question?.id || question?._id;
+      const endpoint = `/question-submissions/${questionId}/run`;
       return api.post(endpoint, payload);
     },
     onSuccess: (res) => {
@@ -372,13 +371,12 @@ export default function CodingPortalPage() {
     },
   });
 
-  // Mutation: Submit Code (all tests) - Detects if Problem or Question table
+  // Mutation: Submit Code (all tests) - TCS NQT uses QuestionSubmission routes
   const submitCodeMutation = useMutation({
     mutationFn: async (payload: { code: string; language: string }) => {
-      // If question has 'id' field, it's from Problem table, otherwise use slug
-      const endpoint = question?.id && !question?._id?.includes('tcs-nqt')
-        ? `/problems/${slug}/submit`
-        : `/challenges/questions/${question?.id || question?._id || slug}/submit`;
+      // TCS NQT questions use /question-submissions/:questionId/submit endpoint
+      const questionId = question?.id || question?._id;
+      const endpoint = `/question-submissions/${questionId}/submit`;
       return api.post(endpoint, payload);
     },
     onSuccess: (res) => {
@@ -388,8 +386,8 @@ export default function CodingPortalPage() {
       setConsoleTab('result');
       if (payload.status === 'accepted') {
         toast.success(`ACCEPTED! Solution passed all test cases. +${question?.xpReward} XP!`);
-        queryClient.invalidateQueries({ queryKey: ['codingStats'] });
-        queryClient.invalidateQueries({ queryKey: ['codingQuestions'] });
+        queryClient.invalidateQueries({ queryKey: ['tcsNqtStats'] });
+        queryClient.invalidateQueries({ queryKey: ['tcsNqtQuestions'] });
         if (payload.unlockedBadge) {
           setUnlockedBadgeData(payload.unlockedBadge);
         }
@@ -426,8 +424,20 @@ export default function CodingPortalPage() {
 
   const handleResetCode = () => {
     if (question) {
-      const template = question.templates.find(t => t.language === selectedLanguage);
-      if (template) {
+      // Handle both Question table (templates) and Problem table (starterCode) formats
+      let template;
+      if (question.templates) {
+        // Question table format (array of {language, code})
+        template = question.templates.find(t => t.language === selectedLanguage);
+      } else if (question.starterCode) {
+        // Problem table format (object with language keys)
+        const starterCode = typeof question.starterCode === 'string' 
+          ? JSON.parse(question.starterCode) 
+          : question.starterCode;
+        template = { code: starterCode[selectedLanguage] || '' };
+      }
+      
+      if (template && template.code) {
         setEditorCode(template.code);
         toast.success('Code reset to default template!');
       }
@@ -457,8 +467,8 @@ export default function CodingPortalPage() {
           </button>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-900/50">
-                DSA Arena
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50">
+                TCS NQT Prep
               </span>
               <h1 className="font-display font-bold text-sm text-gray-950 dark:text-white leading-none">{question.title}</h1>
             </div>
@@ -506,7 +516,7 @@ export default function CodingPortalPage() {
               onClick={() => setLeftTab('description')}
               className={`px-3 py-2 font-semibold text-xxs border-b-2 flex items-center gap-1.5 transition-all ${
                 leftTab === 'description'
-                  ? 'border-primary-500 text-primary-600 dark:text-primary-400 font-bold'
+                  ? 'border-orange-500 text-orange-600 dark:text-orange-400 font-bold'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -517,7 +527,7 @@ export default function CodingPortalPage() {
               onClick={() => setLeftTab('comments')}
               className={`px-3 py-2 font-semibold text-xxs border-b-2 flex items-center gap-1.5 transition-all ${
                 leftTab === 'comments'
-                  ? 'border-primary-500 text-primary-600 dark:text-primary-400 font-bold'
+                  ? 'border-orange-500 text-orange-600 dark:text-orange-400 font-bold'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >

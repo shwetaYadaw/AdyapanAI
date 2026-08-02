@@ -131,12 +131,24 @@ const STRING_PROBLEMS: TCSQuestion[] = [
 ];
 
 export default function TcsNqtPrepPage() {
-  const [activeTab, setActiveTab] = useState<'arrays' | 'numbers' | 'number-system' | 'sorting' | 'strings'>('arrays');
+  const [activeTab, setActiveTab] = useState<'arrays' | 'strings' | 'sorting' | 'hashing' | 'linked-list' | 'recursion'>('arrays');
 
   const { data: storedQuestions = [], isLoading, isError } = useQuery<TCSQuestion[]>({
     queryKey: ['tcsNqtQuestions'],
     queryFn: async () => {
       const { data } = await api.get('/challenges/questions');
+      
+      // Define ONLY the allowed TCS NQT topics
+      const ALLOWED_TOPICS = [
+        'arrays', 'array', '2d-arrays',
+        'strings', 'string',
+        'searching-sorting', 'sorting', 'binary-search',
+        'hashing',
+        'linked-list',
+        'recursion-backtracking', 'recursion'
+      ];
+      
+      // Filter to ONLY include questions that have at least one allowed topic
       return (data.data ?? [])
         .map((question: any) => ({
           ...question,
@@ -147,35 +159,49 @@ export default function TcsNqtPrepPage() {
               ? JSON.parse(question.topics)
               : [],
         }))
-        .filter((question: TCSQuestion) => question.topics?.includes('tcs-nqt'));
+        .filter((question: any) => {
+          // Get question topics in lowercase
+          const questionTopics = (question.topics || []).map((t: string) => t.toLowerCase());
+          
+          // Only include if question has at least one allowed topic
+          return questionTopics.some(topic => ALLOWED_TOPICS.includes(topic));
+        });
     },
   });
 
   const getQuestions = () => {
-    // Filter questions by category from database instead of using hardcoded lists
+    // Filter questions by TCS NQT relevant topics
     const categoryMap: Record<string, string[]> = {
-      'arrays': ['array', 'arrays'],
-      'numbers': ['number', 'numbers', 'math', 'mathematics'],
-      'number-system': ['number-system', 'binary', 'octal', 'decimal', 'conversion'],
-      'sorting': ['sorting', 'sort'],
-      'strings': ['string', 'strings']
+      'arrays': ['arrays', 'array', '2d-arrays'],
+      'strings': ['strings', 'string'],
+      'sorting': ['searching-sorting', 'sorting', 'binary-search'],
+      'hashing': ['hashing'],
+      'linked-list': ['linked-list'],
+      'recursion': ['recursion-backtracking', 'recursion']
     };
 
     const categoryKeywords = categoryMap[activeTab] || [];
     
-    return storedQuestions.filter((question) => {
+    const filteredQuestions = storedQuestions.filter((question) => {
       // Check if question topics include any category keywords
       const questionTopics = (question.topics || []).map((t: string) => t.toLowerCase());
       
-      // Check title and slug for category hints as fallback
-      const titleLower = question.title.toLowerCase();
-      const slugLower = question.slug.toLowerCase();
-      
       return categoryKeywords.some(keyword => 
-        questionTopics.includes(keyword) || 
-        titleLower.includes(keyword) ||
-        slugLower.includes(keyword)
+        questionTopics.includes(keyword)
       );
+    });
+
+    // Sort questions by difficulty: Easy → Medium → Hard
+    const difficultyOrder: Record<string, number> = {
+      'easy': 1,
+      'medium': 2,
+      'hard': 3
+    };
+
+    return filteredQuestions.sort((a, b) => {
+      const diffA = difficultyOrder[a.difficulty?.toLowerCase()] || 2;
+      const diffB = difficultyOrder[b.difficulty?.toLowerCase()] || 2;
+      return diffA - diffB;
     });
   };
 
@@ -199,7 +225,7 @@ export default function TcsNqtPrepPage() {
             Master the top coding challenges frequently asked in the TCS National Qualifier Test (NQT) and similar placement assessments.
           </p>
           <div className="flex flex-wrap gap-4 text-xs text-white/70 pt-2 border-t border-white/20">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-white" /> {storedQuestions.length} MySQL-backed Problems</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-white" /> {storedQuestions.length} TCS NQT Problems</span>
             <span className="flex items-center gap-1.5"><Code className="w-4 h-4 text-white" /> Multilanguage Editor</span>
             <span className="flex items-center gap-1.5"><Award className="w-4 h-4 text-white" /> TCS Specific Test Cases</span>
           </div>
@@ -209,11 +235,12 @@ export default function TcsNqtPrepPage() {
       {/* Navigation tabs */}
       <div className="flex flex-wrap gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-fit">
         {[
-          { key: 'arrays', label: 'Problems on Arrays' },
-          { key: 'numbers', label: 'Problems on Numbers' },
-          { key: 'number-system', label: 'Number System' },
-          { key: 'sorting', label: 'Sorting' },
-          { key: 'strings', label: 'String' },
+          { key: 'arrays', label: 'Arrays', count: 36 },
+          { key: 'strings', label: 'Strings', count: 20 },
+          { key: 'sorting', label: 'Searching & Sorting', count: 29 },
+          { key: 'hashing', label: 'Hashing', count: 32 },
+          { key: 'linked-list', label: 'Linked List', count: 27 },
+          { key: 'recursion', label: 'Recursion & Backtracking', count: 26 },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -225,6 +252,7 @@ export default function TcsNqtPrepPage() {
             }`}
           >
             {tab.label}
+            <span className="ml-1.5 text-xs opacity-60">({tab.count})</span>
           </button>
         ))}
       </div>
@@ -232,12 +260,12 @@ export default function TcsNqtPrepPage() {
       {/* Grid of Coding challenges */}
       {isError && (
         <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Unable to load TCS NQT questions from MySQL. Please make sure the backend and database are running.
+          Unable to load TCS NQT questions. Please make sure the backend is running on port 5000.
         </div>
       )}
       {!isError && !isLoading && questions.length === 0 && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          No TCS NQT questions have been restored for this section yet.
+          No questions found for this category. Try selecting a different topic above.
         </div>
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -268,7 +296,7 @@ export default function TcsNqtPrepPage() {
                 </h3>
               </div>
               <div className="mt-4 pt-3 border-t border-gray-50 dark:border-gray-800 flex justify-end">
-                <Link to={`/student/challenges/${q.slug}`}>
+                <Link to={`/student/tcs-nqt/${q.slug}`}>
                   <Button size="sm" variant="primary" rightIcon={<ChevronRight className="w-4 h-4" />}>
                     Solve Challenge
                   </Button>

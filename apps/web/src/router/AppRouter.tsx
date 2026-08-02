@@ -29,6 +29,7 @@ const CodingChallengesPage = lazy(() => import('../pages/student/CodingChallenge
 const CodingPortalPage     = lazy(() => import('../pages/student/CodingPortalPage'));
 const ContestsPage         = lazy(() => import('../pages/student/ContestsPage'));
 const TcsNqtPrepPage       = lazy(() => import('../pages/student/TcsNqtPrepPage'));
+const TcsNqtCompilerPage   = lazy(() => import('../pages/student/TcsNqtCompilerPage'));
 const AptitudePage         = lazy(() => import('../pages/student/AptitudePage'));
 const AptitudeQuizPage     = lazy(() => import('../pages/student/AptitudeQuizPage'));
 const TestAttemptPage      = lazy(() => import('../pages/student/TestAttemptPage'));
@@ -87,6 +88,7 @@ export default function AppRouter() {
             <Route path="challenges/:slug" element={<CodingPortalPage />} />
             <Route path="contests" element={<ContestsPage />} />
             <Route path="tcs-nqt" element={<TcsNqtPrepPage />} />
+            <Route path="tcs-nqt/:slug" element={<TcsNqtCompilerPage />} />
             <Route path="aptitude" element={<AptitudePage />} />
             <Route path="aptitude/:module/:topicSlug" element={<AptitudeQuizPage />} />
             <Route path="tests/:testId" element={<TestAttemptPage />} />
