@@ -8,37 +8,38 @@ import { AppError } from '../middleware/errorHandler.middleware';
 const router = Router();
 router.use(authenticate, authorize('admin'));
 
+// ============================================================================
+// TCS NQT QUESTION ENDPOINTS - Using NEW TcsNqtQuestion Table
+// ============================================================================
+
 // GET /admin/tcs-nqt - List all TCS NQT questions
 router.get('/', async (req, res, next) => {
   try {
     const { page, limit, skip } = getPaginationParams(req.query as Record<string, unknown>);
-    const where: any = { topics: { has: 'tcs-nqt' } };
+    const where: any = {};
+
+    // Filter by topic if provided
+    if (req.query.topic) {
+      where.topic = String(req.query.topic);
+    }
 
     if (req.query.difficulty) {
       where.difficulty = String(req.query.difficulty);
     }
 
     if (req.query.search) {
-      where.title = { contains: String(req.query.search) };
+      where.title = { contains: String(req.query.search), mode: 'insensitive' };
     }
 
+    // Fetch from NEW TcsNqtQuestion table
     const [questions, total] = await Promise.all([
-      prisma.question.findMany({
+      prisma.tcsNqtQuestion.findMany({
         where,
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          difficulty: true,
-          topics: true,
-          createdAt: true,
-          updatedAt: true,
-        },
       }),
-      prisma.question.count({ where }),
+      prisma.tcsNqtQuestion.count({ where }),
     ]);
 
     sendPaginated({ res, data: questions, total, page, limit });
@@ -50,16 +51,12 @@ router.get('/', async (req, res, next) => {
 // GET /admin/tcs-nqt/:id - Get single TCS NQT question
 router.get('/:id', async (req, res, next) => {
   try {
-    const question = await prisma.question.findUnique({
+    const question = await prisma.tcsNqtQuestion.findUnique({
       where: { id: req.params.id },
     });
 
     if (!question) {
-      throw new AppError('Question not found', 404);
-    }
-
-    if (!question.topics.includes('tcs-nqt')) {
-      throw new AppError('This question is not a TCS NQT question', 400);
+      throw new AppError('TCS NQT question not found', 404);
     }
 
     sendSuccess({ res, data: question });
@@ -78,14 +75,15 @@ router.post('/', async (req, res, next) => {
       inputFormat,
       outputFormat,
       constraints,
-      sampleInput,
-      sampleOutput,
+      referenceSolution,
       testCases,
+      topic,  // Topic name (e.g., "Arrays")
+      companies,
     } = req.body;
 
     // Validate required fields
-    if (!title || !statement || !difficulty) {
-      throw new AppError('Title, statement, and difficulty are required', 400);
+    if (!title || !statement || !difficulty || !topic) {
+      throw new AppError('Title, statement, difficulty, and topic are required', 400);
     }
 
     const slug = title
@@ -96,32 +94,31 @@ router.post('/', async (req, res, next) => {
       .replace(/^-+|-+$/g, '') + '-tcs-nqt';
 
     // Check if slug already exists
-    const existing = await prisma.question.findUnique({ where: { slug } });
+    const existing = await prisma.tcsNqtQuestion.findUnique({ where: { slug } });
     if (existing) {
       throw new AppError('Question with this title already exists', 409);
     }
 
-    const question = await prisma.question.create({
+    // Create in NEW TcsNqtQuestion table
+    const question = await prisma.tcsNqtQuestion.create({
       data: {
         title,
         slug,
         statement,
         difficulty,
-        topics: ['tcs-nqt'],
-        companies: ['TCS'],
-        inputFormat: inputFormat || 'Input format not specified',
-        outputFormat: outputFormat || 'Output format not specified',
-        constraints: constraints || 'Constraints not specified',
-        sampleInput: sampleInput || '',
-        sampleOutput: sampleOutput || '',
-        testCases: testCases || [{ input: '', output: '', isHidden: false }],
-        timeLimit: 1000,
-        memoryLimit: 128,
-        templates: {},
+        topic,  // Store the selected topic (e.g., "Arrays")
+        companies: companies || 'TCS',
+        inputFormat: inputFormat || '',
+        outputFormat: outputFormat || '',
+        constraints: constraints || '',
+        referenceSolution: referenceSolution || '',
+        testCases: testCases || [],
+        xpReward: 10,
+        createdBy: req.user?.userId,
       },
     });
 
-    sendSuccess({ res, statusCode: 201, data: question, message: 'Question created successfully' });
+    sendSuccess({ res, statusCode: 201, data: question, message: 'TCS NQT question created successfully' });
   } catch (err) {
     next(err);
   }
@@ -130,19 +127,15 @@ router.post('/', async (req, res, next) => {
 // PUT /admin/tcs-nqt/:id - Update TCS NQT question
 router.put('/:id', async (req, res, next) => {
   try {
-    const question = await prisma.question.findUnique({
+    const question = await prisma.tcsNqtQuestion.findUnique({
       where: { id: req.params.id },
     });
 
     if (!question) {
-      throw new AppError('Question not found', 404);
+      throw new AppError('TCS NQT question not found', 404);
     }
 
-    if (!question.topics.includes('tcs-nqt')) {
-      throw new AppError('This question is not a TCS NQT question', 400);
-    }
-
-    const updated = await prisma.question.update({
+    const updated = await prisma.tcsNqtQuestion.update({
       where: { id: req.params.id },
       data: {
         title: req.body.title || question.title,
@@ -151,13 +144,15 @@ router.put('/:id', async (req, res, next) => {
         inputFormat: req.body.inputFormat || question.inputFormat,
         outputFormat: req.body.outputFormat || question.outputFormat,
         constraints: req.body.constraints || question.constraints,
-        sampleInput: req.body.sampleInput || question.sampleInput,
-        sampleOutput: req.body.sampleOutput || question.sampleOutput,
-        testCases: req.body.testCases || question.testCases,
+        referenceSolution: req.body.referenceSolution || question.referenceSolution,
+        testCases: req.body.testCases !== undefined ? req.body.testCases : question.testCases,
+        topic: req.body.topic || question.topic,
+        companies: req.body.companies || question.companies,
+        updatedBy: req.user?.userId,
       },
     });
 
-    sendSuccess({ res, data: updated, message: 'Question updated successfully' });
+    sendSuccess({ res, data: updated, message: 'TCS NQT question updated successfully' });
   } catch (err) {
     next(err);
   }
@@ -166,23 +161,19 @@ router.put('/:id', async (req, res, next) => {
 // DELETE /admin/tcs-nqt/:id - Delete TCS NQT question
 router.delete('/:id', async (req, res, next) => {
   try {
-    const question = await prisma.question.findUnique({
+    const question = await prisma.tcsNqtQuestion.findUnique({
       where: { id: req.params.id },
     });
 
     if (!question) {
-      throw new AppError('Question not found', 404);
+      throw new AppError('TCS NQT question not found', 404);
     }
 
-    if (!question.topics.includes('tcs-nqt')) {
-      throw new AppError('This question is not a TCS NQT question', 400);
-    }
-
-    await prisma.question.delete({
+    await prisma.tcsNqtQuestion.delete({
       where: { id: req.params.id },
     });
 
-    sendSuccess({ res, statusCode: 204, message: 'Question deleted successfully' });
+    sendSuccess({ res, statusCode: 204, message: 'TCS NQT question deleted successfully' });
   } catch (err) {
     next(err);
   }
@@ -191,13 +182,15 @@ router.delete('/:id', async (req, res, next) => {
 // GET /admin/tcs-nqt/stats - Get TCS NQT statistics
 router.get('/admin/stats', async (_req, res, next) => {
   try {
-    const total = await prisma.question.count({
-      where: { topics: { has: 'tcs-nqt' } },
+    const total = await prisma.tcsNqtQuestion.count();
+
+    const byDifficulty = await prisma.tcsNqtQuestion.groupBy({
+      by: ['difficulty'],
+      _count: true,
     });
 
-    const byDifficulty = await prisma.question.groupBy({
-      by: ['difficulty'],
-      where: { topics: { has: 'tcs-nqt' } },
+    const byTopic = await prisma.tcsNqtQuestion.groupBy({
+      by: ['topic'],
       _count: true,
     });
 
@@ -205,6 +198,10 @@ router.get('/admin/stats', async (_req, res, next) => {
       total,
       byDifficulty: byDifficulty.reduce((acc: any, item: any) => {
         acc[item.difficulty] = item._count;
+        return acc;
+      }, {}),
+      byTopic: byTopic.reduce((acc: any, item: any) => {
+        acc[item.topic] = item._count;
         return acc;
       }, {}),
     };

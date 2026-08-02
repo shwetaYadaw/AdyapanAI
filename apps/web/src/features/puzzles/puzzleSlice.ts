@@ -68,7 +68,7 @@ const initialState: PuzzleState = {
   pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
 };
 
-const API_URL = process.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 // Thunks
 export const fetchPuzzles = createAsyncThunk(

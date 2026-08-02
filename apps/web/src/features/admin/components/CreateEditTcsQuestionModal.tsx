@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { TcsQuestion } from '../types/tcsNqt';
+import { topicAdminService, Topic } from '../services/topicAdminService';
 
 interface CreateEditTcsQuestionModalProps {
   question?: TcsQuestion | null;
@@ -31,6 +32,25 @@ export default function CreateEditTcsQuestionModal({
   });
 
   const [loading, setLoading] = useState(false);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [topicsLoading, setTopicsLoading] = useState(true);
+
+  // Fetch topics on mount
+  useEffect(() => {
+    fetchTopics();
+  }, []);
+
+  const fetchTopics = async () => {
+    try {
+      setTopicsLoading(true);
+      const data = await topicAdminService.getTopics('tcs-nqt', true);
+      setTopics(data);
+    } catch (err: any) {
+      toast.error('Failed to fetch topics');
+    } finally {
+      setTopicsLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -187,16 +207,27 @@ export default function CreateEditTcsQuestionModal({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Topics (comma-separated)
+                Topic *
               </label>
-              <input
-                type="text"
-                name="topics"
-                value={formData.topics}
-                onChange={handleInputChange}
-                placeholder="e.g., arrays, strings"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
+              {topicsLoading ? (
+                <div className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                  Loading topics...
+                </div>
+              ) : (
+                <select
+                  name="topics"
+                  value={formData.topics}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option value="">-- Select a Topic --</option>
+                  {topics.map(topic => (
+                    <option key={topic.id} value={topic.name}>
+                      {topic.name}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

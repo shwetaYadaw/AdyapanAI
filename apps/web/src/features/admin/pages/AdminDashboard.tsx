@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { BookOpen, Code2 } from 'lucide-react';
+import { BookOpen, Code2, Brain, Settings } from 'lucide-react';
 import CodingArenaDashboard from './CodingArenaDashboard';
 import TcsNqtDashboard from './TcsNqtDashboard';
+import AptitudeDashboard from './AptitudeDashboard';
+import TopicManagementModal from '../components/TopicManagementModal';
 
-type DashboardType = 'coding-arena' | 'tcs-nqt' | null;
+type DashboardType = 'coding-arena' | 'tcs-nqt' | 'aptitude' | null;
 
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState<DashboardType>(null);
+  const [showTopicManagement, setShowTopicManagement] = useState(false);
+  const [selectedSystem, setSelectedSystem] = useState<'coding-arena' | 'tcs-nqt' | 'aptitude'>('coding-arena');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -21,7 +25,18 @@ export default function AdminDashboard() {
       {/* Tab Selection */}
       {!activeTab && (
         <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Topic Management Button */}
+          <div className="mb-8 flex justify-end">
+            <button
+              onClick={() => setShowTopicManagement(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition"
+            >
+              <Settings size={20} />
+              Manage Topics
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {/* Coding Arena Card */}
             <div
               onClick={() => setActiveTab('coding-arena')}
@@ -36,7 +51,7 @@ export default function AdminDashboard() {
                 Coding Arena
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
-                Manage coding interview problems and DSA challenges
+                Manage coding interview problems for top MNC companies
               </p>
               <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
                 <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
@@ -70,15 +85,45 @@ export default function AdminDashboard() {
               </p>
               <div className="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
                 <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  <li>✅ TCS Coding problems</li>
                   <li>✅ Quantitative aptitude</li>
                   <li>✅ Verbal reasoning</li>
                   <li>✅ Technical questions</li>
-                  <li>✅ Mock tests</li>
                   <li>✅ Performance tracking</li>
                 </ul>
               </div>
               <button className="w-full mt-6 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition">
                 Manage TCS NQT
+              </button>
+            </div>
+
+            {/* Aptitude Card */}
+            <div
+              onClick={() => setActiveTab('aptitude')}
+              className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 cursor-pointer hover:shadow-xl transition transform hover:scale-105"
+            >
+              <div className="flex items-center justify-center mb-6">
+                <div className="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
+                  <Brain size={40} className="text-green-600 dark:text-green-400" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">
+                Aptitude
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
+                Manage general aptitude questions for all companies
+              </p>
+              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                  <li>✅ Quantitative aptitude</li>
+                  <li>✅ Verbal reasoning</li>
+                  <li>✅ Logical reasoning</li>
+                  <li>✅ Multiple companies</li>
+                  <li>✅ Performance tracking</li>
+                </ul>
+              </div>
+              <button className="w-full mt-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition">
+                Manage Aptitude
               </button>
             </div>
           </div>
@@ -92,6 +137,18 @@ export default function AdminDashboard() {
 
       {activeTab === 'tcs-nqt' && (
         <TcsNqtDashboard onBack={() => setActiveTab(null)} />
+      )}
+
+      {activeTab === 'aptitude' && (
+        <AptitudeDashboard onBack={() => setActiveTab(null)} />
+      )}
+
+      {/* Topic Management Modal */}
+      {showTopicManagement && (
+        <TopicManagementModal
+          system={selectedSystem}
+          onClose={() => setShowTopicManagement(false)}
+        />
       )}
     </div>
   );

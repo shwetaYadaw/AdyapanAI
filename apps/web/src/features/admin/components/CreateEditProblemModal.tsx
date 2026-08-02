@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Plus, Trash2 } from 'lucide-react';
 import { Problem, ProblemTestCase, ProblemSolution } from '../types/problem';
 import toast from 'react-hot-toast';
+import { topicAdminService, Topic } from '../services/topicAdminService';
 
 interface CreateEditProblemModalProps {
   problem?: Problem | null;
@@ -37,12 +38,32 @@ export default function CreateEditProblemModal({
 
   const [changeReason, setChangeReason] = useState('');
   const [loading, setLoading] = useState(false);
+  const [topics, setTopics] = useState<Topic[]>([]);
+  const [topicsLoading, setTopicsLoading] = useState(true);
   const [newTestCase, setNewTestCase] = useState<ProblemTestCase>({
     input: '',
     expectedOutput: '',
     isHidden: true,
     explanation: ''
   });
+
+  // Fetch topics on mount
+  useEffect(() => {
+    fetchTopics();
+  }, [type]);
+
+  const fetchTopics = async () => {
+    try {
+      setTopicsLoading(true);
+      const system = type === 'coding-arena' ? 'coding-arena' : 'tcs-nqt';
+      const data = await topicAdminService.getTopics(system, true);
+      setTopics(data);
+    } catch (err: any) {
+      toast.error('Failed to fetch topics');
+    } finally {
+      setTopicsLoading(false);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -231,6 +252,50 @@ export default function CreateEditProblemModal({
               rows={4}
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+          </div>
+
+          {/* Topic & Companies */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Topic Dropdown - Now fetched from database */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Topic *
+              </label>
+              {topicsLoading ? (
+                <div className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400">
+                  Loading topics...
+                </div>
+              ) : (
+                <select
+                  name="topics"
+                  value={formData.topics}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">-- Select a Topic --</option>
+                  {topics.map(topic => (
+                    <option key={topic.id} value={topic.name}>
+                      {topic.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            {/* Companies */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Companies (comma-separated)
+              </label>
+              <input
+                type="text"
+                name="companies"
+                value={formData.companies}
+                onChange={handleInputChange}
+                placeholder="e.g., Google, Amazon, Facebook"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
           </div>
 
           {/* Test Cases */}
