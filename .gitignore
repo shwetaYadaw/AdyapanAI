@@ -34,6 +34,13 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Temporary files and folders
+.tmp/
+temp/
+*.tmp
+**/. tmp/
+**/temp/
+
 # TypeScript build info
 *.tsbuildinfo
 tsconfig.tsbuildinfo
@@ -76,6 +83,25 @@ chroma_db/
 
 # Certificates (PDF generation temp)
 apps/backend/logs/
+
+# One-time scripts and temporary notes
+**/verify-*.js
+**/verify-*.ts
+**/check-*.js
+**/check-*.ts
+**/fix-*.js
+**/fix-*.ts
+**/cleanup-*.js
+**/cleanup-*.ts
+**/migrate-*.js
+**/migrate-*.ts
+**/debug-*.js
+**/debug-*.ts
+**/test-*.js
+**/test-*.ts
+*.FIXES.txt
+*.SUMMARY.txt
+*_ANALYSIS.txt
 
 # Docker
 .docker/

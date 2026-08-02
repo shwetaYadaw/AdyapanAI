@@ -48,12 +48,13 @@ export default function CodingChallengesPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
 
-  // Fetch all questions (used for per-topic counts + daily challenge)
+  // Fetch all problems from Problem table (Coding Arena)
   const { data: questions, isLoading } = useQuery<Question[]>({
-    queryKey: ['codingQuestions', ''],
+    queryKey: ['codingArenaProblems', ''],
     queryFn: async () => {
-      // Use /challenges/questions endpoint for all Coding Arena questions
-      const { data } = await api.get('/challenges/questions');
+      // Use /problems endpoint for Coding Arena (Problem table)
+      // onlyUpdated=true shows only problems with proper test case format (1v + 6h)
+      const { data } = await api.get('/problems?onlyUpdated=true');
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,

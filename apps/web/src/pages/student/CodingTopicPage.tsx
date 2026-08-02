@@ -48,18 +48,21 @@ export default function CodingTopicPage() {
   const group = TOPIC_GROUPS.find((g) => g.key === topicKey);
 
   const { data: questions, isLoading, isError } = useQuery<Question[]>({
-    queryKey: ['codingQuestions', search],
+    queryKey: ['codingArenaProblems', search],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (search) params.set('search', search);
-      const { data } = await api.get(`/challenges/questions?${params}`);
+      // Show only problems with proper test case format (1v + 6h)
+      params.set('onlyUpdated', 'true');
+      // Use /problems endpoint for Coding Arena (Problem table)
+      const { data } = await api.get(`/problems?${params}`);
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,
         topics: Array.isArray(q.topics) ? q.topics
-          : (typeof q.topics === 'string' ? JSON.parse(q.topics) : []),
+          : (typeof q.topics === 'string' ? q.topics.split(',').map((t: string) => t.trim()) : []),
         companies: Array.isArray(q.companies) ? q.companies
-          : (typeof q.companies === 'string' ? JSON.parse(q.companies) : []),
+          : (typeof q.companies === 'string' ? q.companies.split(',').map((c: string) => c.trim()) : []),
       }));
     },
   });
