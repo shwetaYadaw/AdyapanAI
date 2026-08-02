@@ -28,7 +28,9 @@
     "reset:seed:questions": "npm run seed:all-questions",
     "migrate:questions-to-problems": "npx ts-node --transpile-only src/scripts/migrateQuestionsToProblem.ts",
     "clean:reseed": "npx ts-node --transpile-only src/scripts/cleanAndReseed.ts",
-    "fresh:seed": "npx ts-node --transpile-only src/scripts/freshSeed.ts"
+    "fresh:seed": "npx ts-node --transpile-only src/scripts/freshSeed.ts",
+    "delete:non-tcs-nqt": "npx ts-node --transpile-only src/scripts/deleteNonTcsNqtQuestions.ts",
+    "analyze:questions": "npx ts-node --transpile-only src/scripts/analyzeQuestionTable.ts"
   },
   "dependencies": {
     "@adyapan/shared": "*",
