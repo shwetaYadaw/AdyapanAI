@@ -13,15 +13,12 @@ on:
       - 'packages/shared/**'
 
 jobs:
-  # ─── STEP 0: Architectural Guard — MySQL ONLY ────────────────────────────────
-  # This MUST pass before any other step. It prevents MongoDB from being
-  # accidentally reintroduced. This job will FAIL if any of these are found:
-  #   - import from 'mongoose'
-  #   - import from '../models/*' (Mongoose model files)
-  #   - MONGODB_URI in env files
+  # ─── STEP 0: Architectural Guard — No Mongoose ──────────────────────────────
+  # This MUST pass before any other step. It prevents Mongoose from being
+  # accidentally introduced. This project uses PostgreSQL (Supabase) + Prisma ONLY.
   mysql-only-guard:
     runs-on: ubuntu-latest
-    name: "🛡️ MySQL-Only Architecture Guard"
+    name: "🛡️ No-Mongoose Architecture Guard"
     steps:
       - uses: actions/checkout@v4
 
@@ -64,7 +61,7 @@ jobs:
         run: |
           echo "Checking package.json for mongoose dependency..."
           if grep '"mongoose"' backend/package.json; then
-            echo "❌ FATAL: mongoose found in package.json! Remove it — MySQL + Prisma only."
+            echo "❌ FATAL: mongoose found in package.json! Remove it — PostgreSQL + Prisma only."
             exit 1
           fi
           echo "✅ mongoose not in package.json"
@@ -79,14 +76,15 @@ jobs:
         node-version: [20.x]
 
     services:
-      mysql:
-        image: mysql:8.0
+      postgres:
+        image: postgres:15
         env:
-          MYSQL_ROOT_PASSWORD: test_password
-          MYSQL_DATABASE: adyapan_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: adyapan_test
         ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
       - name: Checkout repository
@@ -104,28 +102,28 @@ jobs:
       - name: Generate Prisma Client
         run: yarn workspace @adyapan/backend npx prisma generate
         env:
-          DATABASE_URL: mysql://root:test_password@127.0.0.1:3306/adyapan_test
+          DATABASE_URL: postgresql://postgres:test_password@localhost:5432/adyapan_test
 
       - name: Push Prisma schema to test DB
-        run: yarn workspace @adyapan/backend npx prisma db push --skip-generate
+        run: yarn workspace @adyapan/backend npx prisma db push --skip-generate --accept-data-loss
         env:
-          DATABASE_URL: mysql://root:test_password@127.0.0.1:3306/adyapan_test
+          DATABASE_URL: postgresql://postgres:test_password@localhost:5432/adyapan_test
 
       - name: Type check
         run: yarn workspace @adyapan/backend tsc --noEmit
         env:
-          DATABASE_URL: mysql://root:test_password@127.0.0.1:3306/adyapan_test
+          DATABASE_URL: postgresql://postgres:test_password@localhost:5432/adyapan_test
 
       - name: Build
         run: yarn workspace @adyapan/backend build
         env:
-          DATABASE_URL: mysql://root:test_password@127.0.0.1:3306/adyapan_test
+          DATABASE_URL: postgresql://postgres:test_password@localhost:5432/adyapan_test
 
       - name: Run tests
         run: yarn workspace @adyapan/backend test
         env:
           NODE_ENV: test
-          DATABASE_URL: mysql://root:test_password@127.0.0.1:3306/adyapan_test
+          DATABASE_URL: postgresql://postgres:test_password@localhost:5432/adyapan_test
           JWT_ACCESS_SECRET: test_access_secret_min_32_chars_here
           JWT_REFRESH_SECRET: test_refresh_secret_min_32_chars_here
           JWT_EMAIL_SECRET: test_email_secret

@@ -123,46 +123,52 @@ router.post('/', authenticate, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// GET /problems — Get list of all problems
+// GET /problems — Get list of all problems (supports search, difficulty filter, pagination)
 router.get('/', async (req, res, next) => {
   try {
-    const { onlyUpdated } = req.query;
-    
-    const problems = await prisma.problem.findMany({
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        difficulty: true,
-        topics: true,
-        companies: true,
-        createdAt: true,
-        testCases: {
-          select: {
-            isHidden: true
-          }
-        }
-      },
-      orderBy: { createdAt: 'desc' },
-    });
-    
-    // Filter problems based on test case format if requested
-    let filteredProblems = problems;
-    
-    if (onlyUpdated === 'true') {
-      // Show only problems with target format: 1 visible + 6 hidden = 7 total
-      filteredProblems = problems.filter(p => {
-        const visibleCount = p.testCases.filter(tc => !tc.isHidden).length;
-        const hiddenCount = p.testCases.filter(tc => tc.isHidden).length;
-        const totalCount = p.testCases.length;
-        return visibleCount === 1 && hiddenCount === 6 && totalCount === 7;
-      });
+    const { search, difficulty, page = '1', limit = '50' } = req.query;
+    const pageNum  = Math.max(1, parseInt(String(page), 10));
+    const limitNum = Math.min(200, Math.max(1, parseInt(String(limit), 10)));
+    const skip     = (pageNum - 1) * limitNum;
+
+    const where: any = {};
+    if (difficulty) where.difficulty = String(difficulty);
+    if (search) {
+      where.OR = [
+        { title: { contains: String(search), mode: 'insensitive' } },
+        { slug:  { contains: String(search), mode: 'insensitive' } },
+        { topics: { contains: String(search), mode: 'insensitive' } },
+      ];
     }
-    
-    // Remove testCases from response (we only needed it for filtering)
-    const response = filteredProblems.map(({ testCases, ...problem }) => problem);
-    
-    sendSuccess({ res, data: response });
+
+    const [problems, total] = await Promise.all([
+      prisma.problem.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          difficulty: true,
+          topics: true,
+          companies: true,
+          timeLimit: true,
+          memoryLimit: true,
+          createdAt: true,
+          _count: { select: { testCases: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limitNum,
+      }),
+      prisma.problem.count({ where }),
+    ]);
+
+    sendSuccess({
+      res,
+      data: problems,
+      // @ts-ignore
+      pagination: { total, page: pageNum, limit: limitNum, pages: Math.ceil(total / limitNum) },
+    });
   } catch (err) { next(err); }
 });
 
@@ -320,19 +326,28 @@ router.get('/:id', async (req, res, next) => {
 
     if (!problem) throw new AppError('Problem not found', 404);
     
-    // Only return VISIBLE test cases to frontend (for display purposes)
-    // Hidden test cases are only used during submission evaluation
-    const visibleTestCases = problem.testCases.filter(tc => !tc.isHidden);
+    // Return first 2 test cases as visible (for sample display), rest as hidden
+    const visibleTestCases = problem.testCases.slice(0, 2).map(tc => ({
+      ...tc,
+      isHidden: false, // Force first 2 to be visible for display
+      type: 'visible'
+    }));
+    
+    const hiddenTestCases = problem.testCases.slice(2).map(tc => ({
+      ...tc,
+      isHidden: true,
+      type: 'hidden'
+    }));
     
     // Omit sensitive reference solution fields before returning
-    const { referenceSolution, testCases, ...safeProblem } = problem;
+    const { referenceSolution, ...safeProblem } = problem;
     
-    // Return problem with ONLY visible test cases
+    // Return with modified test cases
     sendSuccess({ 
       res, 
       data: {
         ...safeProblem,
-        testCases: visibleTestCases
+        testCases: [...visibleTestCases, ...hiddenTestCases]
       }
     });
   } catch (err) { next(err); }
