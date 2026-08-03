@@ -4,13 +4,14 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "backend",
+    "frontend"
   ],
   "scripts": {
-    "dev:web": "yarn workspace @adyapan/web dev",
+    "dev:frontend": "yarn workspace @adyapan/frontend dev",
     "dev:backend": "yarn workspace @adyapan/backend dev",
-    "dev:ai": "yarn workspace @adyapan/ai-service dev",
-    "build:web": "yarn workspace @adyapan/web build",
+    "dev:all": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "build:frontend": "yarn workspace @adyapan/frontend build",
     "build:backend": "yarn workspace @adyapan/backend build",
     "lint": "yarn workspaces run lint",
     "test": "yarn workspaces run test",
