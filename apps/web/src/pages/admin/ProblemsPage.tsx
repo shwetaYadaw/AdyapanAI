@@ -1,655 +1,392 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Edit2, Trash2, Save, X, Code2 } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  Code2, Search, Filter, ChevronLeft, ChevronRight,
+  Trash2, Edit2, Plus, RefreshCw, BookOpen, Layers,
+} from 'lucide-react';
 import { api } from '../../services/api';
-import Button from '../../components/common/Button/Button';
-import Card from '../../components/common/Card/Card';
-import Modal from '../../components/common/Modal/Modal';
-import Badge from '../../components/common/Badge/Badge';
 import toast from 'react-hot-toast';
 
+// ─── Types ──────────────────────────────────────────────────────────────────
+
 interface Problem {
-  id: string;
-  title: string;
-  slug: string;
-  difficulty: string;
-  statement: string;
-  constraints: string;
-  inputFormat: string;
-  outputFormat: string;
-  timeLimit: number;
-  memoryLimit: number;
-  starterCode: any;
-  referenceSolution: string;
-  topics: string;
-  companies: string;
+  id: string; title: string; slug: string; difficulty: string;
+  topics: string; companies: string; timeLimit: number;
+  memoryLimit: number; createdAt: string;
+  _count?: { testCases: number };
+}
+
+interface Question {
+  id: string; title: string; slug: string; difficulty: string;
+  topics: string[] | string; companies: string[] | string;
+  timeLimit: number; memoryLimit: number; xpReward: number;
   createdAt: string;
 }
 
-interface TestCase {
-  input: string;
-  expectedOutput: string;
-  isHidden: boolean;
-  type: string;
+interface Pagination {
+  total: number; page: number; limit: number; pages: number;
 }
 
-interface ProblemForm {
-  title: string;
-  slug: string;
-  difficulty: string;
-  statement: string;
-  constraints: string;
-  inputFormat: string;
-  outputFormat: string;
-  timeLimit: string;
-  memoryLimit: string;
-  starterCode: string;
-  referenceSolution: string;
-  topics: string;
-  companies: string;
-  testCases: TestCase[];
+type Tab = 'problems' | 'questions';
+type Difficulty = '' | 'easy' | 'medium' | 'hard';
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const LIMIT = 50;
+
+function difficultyBadge(d: string) {
+  const map: Record<string, string> = {
+    easy:   'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+    medium: 'bg-amber-100   text-amber-700   dark:bg-amber-900/40   dark:text-amber-400',
+    hard:   'bg-red-100     text-red-700     dark:bg-red-900/40     dark:text-red-400',
+  };
+  return map[d?.toLowerCase()] ?? 'bg-gray-100 text-gray-600';
 }
 
-export default function AdminProblemsPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProblem, setEditingProblem] = useState<Problem | null>(null);
-  const [form, setForm] = useState<ProblemForm>({
-    title: '',
-    slug: '',
-    difficulty: 'easy',
-    statement: '',
-    constraints: '',
-    inputFormat: '',
-    outputFormat: '',
-    timeLimit: '2000',
-    memoryLimit: '256',
-    starterCode: '{}',
-    referenceSolution: '',
-    topics: '',
-    companies: '',
-    testCases: [{ input: '', expectedOutput: '', isHidden: false, type: 'sample' }],
-  });
+function topicList(topics: string | string[]): string[] {
+  if (!topics) return [];
+  if (Array.isArray(topics)) return topics.slice(0, 4);
+  return topics.split(',').map((t) => t.trim()).filter(Boolean).slice(0, 4);
+}
 
-  const queryClient = useQueryClient();
+// ─── Sub-components ──────────────────────────────────────────────────────────
 
-  // Fetch all problems
-  const { data: problems, isLoading } = useQuery<Problem[]>({
-    queryKey: ['adminProblems'],
-    queryFn: async () => {
-      try {
-        const { data } = await api.get('/problems');
-        return data.data || [];
-      } catch (err) {
-        console.error('Failed to fetch problems:', err);
-        return [];
-      }
-    },
-  });
-
-  // Create/Update problem
-  const saveMutation = useMutation({
-    mutationFn: async (problemData: ProblemForm) => {
-      const payload = {
-        ...problemData,
-        timeLimit: parseInt(problemData.timeLimit),
-        memoryLimit: parseInt(problemData.memoryLimit),
-        starterCode: JSON.parse(problemData.starterCode),
-        testCases: problemData.testCases,
-      };
-
-      if (editingProblem) {
-        const response = await api.put(`/problems/${editingProblem.id}`, payload);
-        return response.data;
-      } else {
-        const response = await api.post('/problems', payload);
-        return response.data;
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['adminProblems'] });
-      toast.success(editingProblem ? 'Problem updated!' : 'Problem created!');
-      closeModal();
-    },
-    onError: (error: any) => {
-      console.error('Save error:', error);
-      toast.error(error.response?.data?.message || 'Failed to save problem');
-    },
-  });
-
-  // Delete problem
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await api.delete(`/problems/${id}`);
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['adminProblems'] });
-      toast.success('Problem deleted!');
-    },
-    onError: (error: any) => {
-      console.error('Delete error:', error);
-      toast.error('Failed to delete problem');
-    },
-  });
-
-  const openCreateModal = () => {
-    setEditingProblem(null);
-    setForm({
-      title: '',
-      slug: '',
-      difficulty: 'easy',
-      statement: '',
-      constraints: '',
-      inputFormat: '',
-      outputFormat: '',
-      timeLimit: '2000',
-      memoryLimit: '256',
-      starterCode: JSON.stringify({ javascript: '// Write your code here', python: '# Write your code here', java: '// Write your code here' }, null, 2),
-      referenceSolution: '',
-      topics: '',
-      companies: '',
-      testCases: [{ input: '', expectedOutput: '', isHidden: false, type: 'sample' }],
-    });
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = async (problem: Problem) => {
-    setEditingProblem(problem);
-    
-    // Fetch full problem details including test cases
-    try {
-      const { data } = await api.get(`/problems/${problem.id}/admin`);
-      const fullProblem = data.data;
-      
-      setForm({
-        title: fullProblem.title,
-        slug: fullProblem.slug,
-        difficulty: fullProblem.difficulty,
-        statement: fullProblem.statement,
-        constraints: fullProblem.constraints,
-        inputFormat: fullProblem.inputFormat,
-        outputFormat: fullProblem.outputFormat,
-        timeLimit: String(fullProblem.timeLimit),
-        memoryLimit: String(fullProblem.memoryLimit),
-        starterCode: JSON.stringify(fullProblem.starterCode, null, 2),
-        referenceSolution: fullProblem.referenceSolution,
-        topics: fullProblem.topics,
-        companies: fullProblem.companies,
-        testCases: fullProblem.testCases || [{ input: '', expectedOutput: '', isHidden: false, type: 'sample' }],
-      });
-      setIsModalOpen(true);
-    } catch (error) {
-      toast.error('Failed to load problem details');
-    }
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setEditingProblem(null);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!form.title || !form.slug || !form.statement) {
-      toast.error('Please fill all required fields');
-      return;
-    }
-
-    // Validate starter code JSON
-    try {
-      JSON.parse(form.starterCode);
-    } catch {
-      toast.error('Starter code must be valid JSON');
-      return;
-    }
-
-    saveMutation.mutate(form);
-  };
-
-  const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`Are you sure you want to delete "${title}"? This will also delete all related submissions.`)) {
-      deleteMutation.mutate(id);
-    }
-  };
-
-  const addTestCase = () => {
-    setForm({
-      ...form,
-      testCases: [...form.testCases, { input: '', expectedOutput: '', isHidden: true, type: 'hidden' }],
-    });
-  };
-
-  const removeTestCase = (index: number) => {
-    setForm({
-      ...form,
-      testCases: form.testCases.filter((_, i) => i !== index),
-    });
-  };
-
-  const updateTestCase = (index: number, field: keyof TestCase, value: any) => {
-    const updated = [...form.testCases];
-    updated[index] = { ...updated[index], [field]: value };
-    setForm({ ...form, testCases: updated });
-  };
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty.toLowerCase()) {
-      case 'easy': return 'success';
-      case 'medium': return 'warning';
-      case 'hard': return 'danger';
-      default: return 'primary';
-    }
-  };
+function ProblemRow({
+  item, onDelete,
+}: {
+  item: Problem | Question;
+  onDelete: (id: string, title: string) => void;
+}) {
+  const topics = topicList((item as any).topics);
+  const testCount = (item as Problem)._count?.testCases;
 
   return (
+    <div className="flex items-start justify-between gap-4 px-5 py-4 border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+      <div className="flex-1 min-w-0 space-y-1">
+        {/* Title + difficulty */}
+        <div className="flex items-center gap-3 flex-wrap">
+          <Code2 className="w-4 h-4 text-primary-500 shrink-0" />
+          <span className="font-semibold text-gray-900 dark:text-white truncate max-w-md">
+            {item.title}
+          </span>
+          <span className={`px-2 py-0.5 rounded-full text-xs font-semibold capitalize ${difficultyBadge(item.difficulty)}`}>
+            {item.difficulty}
+          </span>
+          {testCount !== undefined && (
+            <span className="px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded text-xs">
+              {testCount} tests
+            </span>
+          )}
+          {(item as Question).xpReward && (
+            <span className="px-2 py-0.5 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded text-xs">
+              +{(item as Question).xpReward} XP
+            </span>
+          )}
+        </div>
+
+        {/* Meta */}
+        <div className="flex flex-wrap gap-3 text-xs text-gray-500 dark:text-gray-400">
+          <span><span className="font-medium">Slug:</span> {item.slug}</span>
+          {item.timeLimit > 0   && <span><span className="font-medium">Time:</span> {item.timeLimit}ms</span>}
+          {item.memoryLimit > 0 && <span><span className="font-medium">Memory:</span> {item.memoryLimit}MB</span>}
+        </div>
+
+        {/* Topics */}
+        {topics.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {topics.map((t) => (
+              <span key={t} className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded text-xs">
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-1 shrink-0">
+        <button
+          onClick={() => onDelete(item.id, item.title)}
+          className="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
+          title="Delete"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Pagination bar ──────────────────────────────────────────────────────────
+
+function PaginationBar({
+  pagination, page, onPage,
+}: { pagination: Pagination; page: number; onPage: (p: number) => void }) {
+  const { total, pages } = pagination;
+  const start = (page - 1) * LIMIT + 1;
+  const end   = Math.min(page * LIMIT, total);
+
+  return (
+    <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50 rounded-b-xl">
+      <span className="text-xs text-gray-500 dark:text-gray-400">
+        Showing <span className="font-semibold text-gray-700 dark:text-gray-300">{start}–{end}</span> of{' '}
+        <span className="font-semibold text-gray-700 dark:text-gray-300">{total}</span> results
+      </span>
+      <div className="flex items-center gap-1">
+        <button
+          disabled={page <= 1}
+          onClick={() => onPage(page - 1)}
+          className="p-1.5 rounded-lg disabled:opacity-40 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        {/* page numbers: show at most 7 */}
+        {Array.from({ length: Math.min(pages, 7) }, (_, i) => {
+          let p = i + 1;
+          if (pages > 7) {
+            if (page <= 4)        p = i + 1;
+            else if (page >= pages - 3) p = pages - 6 + i;
+            else                  p = page - 3 + i;
+          }
+          return (
+            <button
+              key={p}
+              onClick={() => onPage(p)}
+              className={`w-7 h-7 text-xs rounded-lg transition-colors ${
+                p === page
+                  ? 'bg-primary-600 text-white font-semibold'
+                  : 'hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300'
+              }`}
+            >
+              {p}
+            </button>
+          );
+        })}
+        <button
+          disabled={page >= pages}
+          onClick={() => onPage(page + 1)}
+          className="p-1.5 rounded-lg disabled:opacity-40 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Page ───────────────────────────────────────────────────────────────
+
+export default function AdminProblemsPage() {
+  const qc = useQueryClient();
+
+  // shared filter state
+  const [tab,        setTab]        = useState<Tab>('problems');
+  const [search,     setSearch]     = useState('');
+  const [difficulty, setDifficulty] = useState<Difficulty>('');
+  const [page,       setPage]       = useState(1);
+
+  // debounced search
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search), 400);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // reset to page 1 on any filter / tab change
+  useEffect(() => { setPage(1); }, [tab, debouncedSearch, difficulty]);
+
+  // ── Problems query ────────────────────────────────────────────────────────
+  const problemsQuery = useQuery({
+    queryKey: ['adminProblems', debouncedSearch, difficulty, page],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page:  String(page),
+        limit: String(LIMIT),
+        ...(debouncedSearch && { search: debouncedSearch }),
+        ...(difficulty       && { difficulty }),
+      });
+      const { data } = await api.get(`/problems?${params}`);
+      return { items: (data.data ?? []) as Problem[], pagination: data.pagination as Pagination };
+    },
+    enabled: tab === 'problems',
+    staleTime: 30_000,
+  });
+
+  // ── Questions query ───────────────────────────────────────────────────────
+  const questionsQuery = useQuery({
+    queryKey: ['adminQuestions', debouncedSearch, difficulty, page],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page:  String(page),
+        limit: String(LIMIT),
+        ...(debouncedSearch && { search: debouncedSearch }),
+        ...(difficulty       && { difficulty }),
+      });
+      const { data } = await api.get(`/challenges/questions?${params}`);
+      return { items: (data.data ?? []) as Question[], pagination: data.pagination as Pagination };
+    },
+    enabled: tab === 'questions',
+    staleTime: 30_000,
+  });
+
+  const active     = tab === 'problems' ? problemsQuery : questionsQuery;
+  const items      = active.data?.items      ?? [];
+  const pagination = active.data?.pagination ?? null;
+  const isLoading  = active.isLoading;
+
+  // ── Delete handlers ───────────────────────────────────────────────────────
+  const handleDeleteProblem = useCallback(async (id: string, title: string) => {
+    if (!window.confirm(`Delete "${title}"? This also removes all submissions.`)) return;
+    try {
+      await api.delete(`/problems/${id}`);
+      toast.success('Problem deleted');
+      qc.invalidateQueries({ queryKey: ['adminProblems'] });
+    } catch { toast.error('Failed to delete problem'); }
+  }, [qc]);
+
+  const handleDeleteQuestion = useCallback(async (id: string, title: string) => {
+    if (!window.confirm(`Delete "${title}"?`)) return;
+    try {
+      await api.delete(`/challenges/questions/${id}`);
+      toast.success('Question deleted');
+      qc.invalidateQueries({ queryKey: ['adminQuestions'] });
+    } catch { toast.error('Failed to delete question'); }
+  }, [qc]);
+
+  const handleDelete = tab === 'problems' ? handleDeleteProblem : handleDeleteQuestion;
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  return (
     <div className="page-wrapper space-y-5">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+
+      {/* ── Header ── */}
+      <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">
             Manage Problems
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Create and manage DSA coding problems
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
+            View and manage all DSA coding problems in the database
           </p>
         </div>
-        <Button variant="primary" size="md" onClick={openCreateModal}>
-          <Plus className="w-4 h-4" />
-          Create Problem
-        </Button>
+        <button
+          onClick={() => active.refetch()}
+          className="flex items-center gap-2 px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
+        >
+          <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
       </div>
 
-      {/* Problems List */}
-      {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-800 animate-pulse">
-              <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-3"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-2/3"></div>
-            </div>
-          ))}
+      {/* ── Tabs ── */}
+      <div className="flex gap-1 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-fit">
+        {([
+          { key: 'problems',  label: 'Coding Arena',  icon: Code2,     count: problemsQuery.data?.pagination?.total },
+          { key: 'questions', label: 'Challenges / TCS NQT', icon: BookOpen, count: questionsQuery.data?.pagination?.total },
+        ] as const).map(({ key, label, icon: Icon, count }) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              tab === key
+                ? 'bg-white dark:bg-gray-900 text-primary-600 dark:text-primary-400 shadow-sm'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+          >
+            <Icon className="w-4 h-4" />
+            {label}
+            {count !== undefined && (
+              <span className={`px-1.5 py-0.5 rounded-full text-xs font-bold ${
+                tab === key ? 'bg-primary-100 dark:bg-primary-900/40 text-primary-700 dark:text-primary-300' : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300'
+              }`}>
+                {count}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* ── Filters ── */}
+      <div className="flex flex-wrap gap-3">
+        {/* Search */}
+        <div className="relative flex-1 min-w-[220px] max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search title, slug, topic…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
         </div>
-      ) : problems && problems.length > 0 ? (
-        <div className="space-y-4">
-          {problems.map((problem) => (
-            <Card key={problem.id} padding="md" className="border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <Code2 className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-                    <h3 className="font-display font-bold text-lg text-gray-900 dark:text-white">
-                      {problem.title}
-                    </h3>
-                    <Badge variant={getDifficultyColor(problem.difficulty) as any} className="capitalize">
-                      {problem.difficulty}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-3 text-xs text-gray-500 dark:text-gray-400">
-                    <div>
-                      <span className="font-semibold">Slug:</span> {problem.slug}
-                    </div>
-                    <div>
-                      <span className="font-semibold">Time Limit:</span> {problem.timeLimit}ms
-                    </div>
-                    <div>
-                      <span className="font-semibold">Memory:</span> {problem.memoryLimit}MB
-                    </div>
-                  </div>
 
-                  {problem.topics && (
-                    <div className="flex flex-wrap gap-2">
-                      {problem.topics.split(',').map((topic, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-1 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 rounded text-xs"
-                        >
-                          {topic.trim()}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
+        {/* Difficulty */}
+        <div className="relative">
+          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          <select
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value as Difficulty)}
+            className="pl-9 pr-8 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none cursor-pointer"
+          >
+            <option value="">All difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => openEditModal(problem)}
-                    className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
-                    title="Edit problem"
-                  >
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(problem.id, problem.title)}
-                    className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
-                    title="Delete problem"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+        {/* Stats summary */}
+        {pagination && (
+          <div className="flex items-center gap-2 ml-auto">
+            <Layers className="w-4 h-4 text-gray-400" />
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-semibold text-gray-700 dark:text-gray-200">{pagination.total}</span> total
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* ── Table ── */}
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+
+        {/* Column header */}
+        <div className="flex items-center gap-4 px-5 py-3 bg-gray-50 dark:bg-gray-800/60 border-b border-gray-100 dark:border-gray-800 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+          <span className="flex-1">Problem</span>
+          <span className="w-16 text-right">Actions</span>
+        </div>
+
+        {/* Rows */}
+        {isLoading ? (
+          <div className="space-y-0">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 animate-pulse">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-4 h-4 bg-gray-200 dark:bg-gray-700 rounded" />
+                  <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-64" />
+                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-14" />
                 </div>
+                <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded w-48 ml-7" />
               </div>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <Card padding="lg" className="text-center">
-          <div className="text-6xl mb-4">💻</div>
-          <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-2">
-            No problems yet
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            Create your first coding problem to get started
-          </p>
-          <Button variant="primary" size="sm" onClick={openCreateModal}>
-            <Plus className="w-4 h-4" />
-            Create Problem
-          </Button>
-        </Card>
-      )}
-
-      {/* Create/Edit Modal */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        title={editingProblem ? 'Edit Problem' : 'Create New Problem'}
-        size="large"
-      >
-        <form onSubmit={handleSubmit} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
-          {/* Basic Info */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Title *
-              </label>
-              <input
-                type="text"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                className="input-field"
-                placeholder="Two Sum"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Slug *
-              </label>
-              <input
-                type="text"
-                value={form.slug}
-                onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-                className="input-field font-mono text-sm"
-                placeholder="two-sum"
-                required
-              />
-            </div>
+            ))}
           </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Difficulty *
-              </label>
-              <select
-                value={form.difficulty}
-                onChange={(e) => setForm({ ...form, difficulty: e.target.value })}
-                className="input-field"
-              >
-                <option value="easy">Easy</option>
-                <option value="medium">Medium</option>
-                <option value="hard">Hard</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Time Limit (ms)
-              </label>
-              <input
-                type="number"
-                value={form.timeLimit}
-                onChange={(e) => setForm({ ...form, timeLimit: e.target.value })}
-                className="input-field"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Memory Limit (MB)
-              </label>
-              <input
-                type="number"
-                value={form.memoryLimit}
-                onChange={(e) => setForm({ ...form, memoryLimit: e.target.value })}
-                className="input-field"
-              />
-            </div>
+        ) : items.length === 0 ? (
+          <div className="py-20 text-center">
+            <Code2 className="w-12 h-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+            <p className="text-gray-500 dark:text-gray-400 font-medium">No problems found</p>
+            <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Try adjusting your search or filters</p>
           </div>
+        ) : (
+          items.map((item) => (
+            <ProblemRow key={item.id} item={item} onDelete={handleDelete} />
+          ))
+        )}
 
-          {/* Statement */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Problem Statement *
-            </label>
-            <textarea
-              value={form.statement}
-              onChange={(e) => setForm({ ...form, statement: e.target.value })}
-              className="input-field resize-none font-mono text-sm"
-              rows={4}
-              placeholder="Given an array of integers..."
-              required
-            />
-          </div>
+        {/* Pagination */}
+        {pagination && pagination.pages > 1 && (
+          <PaginationBar pagination={pagination} page={page} onPage={setPage} />
+        )}
+      </div>
 
-          {/* Constraints, Input, Output */}
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Constraints
-              </label>
-              <textarea
-                value={form.constraints}
-                onChange={(e) => setForm({ ...form, constraints: e.target.value })}
-                className="input-field resize-none text-sm"
-                rows={3}
-                placeholder="1 <= n <= 10^5"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Input Format
-              </label>
-              <textarea
-                value={form.inputFormat}
-                onChange={(e) => setForm({ ...form, inputFormat: e.target.value })}
-                className="input-field resize-none text-sm"
-                rows={3}
-                placeholder="First line: n..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Output Format
-              </label>
-              <textarea
-                value={form.outputFormat}
-                onChange={(e) => setForm({ ...form, outputFormat: e.target.value })}
-                className="input-field resize-none text-sm"
-                rows={3}
-                placeholder="Single integer..."
-              />
-            </div>
-          </div>
-
-          {/* Topics and Companies */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Topics (comma-separated)
-              </label>
-              <input
-                type="text"
-                value={form.topics}
-                onChange={(e) => setForm({ ...form, topics: e.target.value })}
-                className="input-field text-sm"
-                placeholder="Arrays, Hash Table, Two Pointers"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Companies (comma-separated)
-              </label>
-              <input
-                type="text"
-                value={form.companies}
-                onChange={(e) => setForm({ ...form, companies: e.target.value })}
-                className="input-field text-sm"
-                placeholder="Google, Amazon, Facebook"
-              />
-            </div>
-          </div>
-
-          {/* Starter Code */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Starter Code (JSON) *
-            </label>
-            <textarea
-              value={form.starterCode}
-              onChange={(e) => setForm({ ...form, starterCode: e.target.value })}
-              className="input-field resize-none font-mono text-xs"
-              rows={4}
-              placeholder='{"javascript": "function solve() {}", "python": "def solve():", "java": "class Solution {}"}'
-              required
-            />
-          </div>
-
-          {/* Reference Solution */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Reference Solution *
-            </label>
-            <textarea
-              value={form.referenceSolution}
-              onChange={(e) => setForm({ ...form, referenceSolution: e.target.value })}
-              className="input-field resize-none font-mono text-sm"
-              rows={6}
-              placeholder="function solve(input) { ... }"
-              required
-            />
-          </div>
-
-          {/* Test Cases */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Test Cases
-              </label>
-              <Button type="button" variant="outline" size="xs" onClick={addTestCase}>
-                <Plus className="w-3 h-3" />
-                Add Test Case
-              </Button>
-            </div>
-
-            <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
-              {form.testCases.map((tc, idx) => (
-                <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 space-y-2">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                      Test Case {idx + 1}
-                    </span>
-                    {form.testCases.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => removeTestCase(idx)}
-                        className="text-red-600 hover:text-red-700 text-xs"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    <div>
-                      <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">Input</label>
-                      <textarea
-                        value={tc.input}
-                        onChange={(e) => updateTestCase(idx, 'input', e.target.value)}
-                        className="input-field resize-none text-xs font-mono"
-                        rows={2}
-                        placeholder="[2,7,11,15]\n9"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-xs text-gray-600 dark:text-gray-400 mb-1">Expected Output</label>
-                      <textarea
-                        value={tc.expectedOutput}
-                        onChange={(e) => updateTestCase(idx, 'expectedOutput', e.target.value)}
-                        className="input-field resize-none text-xs font-mono"
-                        rows={2}
-                        placeholder="[0,1]"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4">
-                    <label className="flex items-center gap-2 text-xs">
-                      <input
-                        type="checkbox"
-                        checked={tc.isHidden}
-                        onChange={(e) => updateTestCase(idx, 'isHidden', e.target.checked)}
-                        className="rounded"
-                      />
-                      Hidden
-                    </label>
-
-                    <select
-                      value={tc.type}
-                      onChange={(e) => updateTestCase(idx, 'type', e.target.value)}
-                      className="input-field text-xs py-1 px-2"
-                    >
-                      <option value="sample">Sample</option>
-                      <option value="hidden">Hidden</option>
-                      <option value="edge">Edge Case</option>
-                    </select>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700 sticky bottom-0 bg-white dark:bg-gray-900">
-            <Button
-              type="submit"
-              variant="primary"
-              size="md"
-              disabled={saveMutation.isPending}
-              className="flex-1"
-            >
-              <Save className="w-4 h-4" />
-              {saveMutation.isPending ? 'Saving...' : editingProblem ? 'Update Problem' : 'Create Problem'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="md"
-              onClick={closeModal}
-              disabled={saveMutation.isPending}
-            >
-              <X className="w-4 h-4" />
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 }

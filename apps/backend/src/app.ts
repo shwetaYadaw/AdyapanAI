@@ -58,7 +58,10 @@ export function createApp(): Application {
   // CORS
   const allowedOrigins = [
     env.CLIENT_URL,
-    env.MOBILE_URL,
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:5173',
+    'http://localhost:5174',
     'https://adyapan.com',
     'https://www.adyapan.com',
   ].filter(Boolean);

@@ -10,65 +10,67 @@ import axios from 'axios';
 const router = Router();
 const judge = new JudgeService();
 
-// GET /challenges/questions — List coding questions
+// GET /challenges/questions — List coding questions (supports search, difficulty, topic, company, pagination)
 router.get('/questions', async (req, res, next) => {
   try {
-    const { difficulty, topic, search, company } = req.query;
-    
+    const { difficulty, topic, search, company, page = '1', limit = '50' } = req.query;
+
+    const pageNum  = Math.max(1, parseInt(String(page), 10));
+    const limitNum = Math.min(200, Math.max(1, parseInt(String(limit), 10)));
+    const skip     = (pageNum - 1) * limitNum;
+
     // Build Prisma query condition
     const where: any = {};
 
-    if (difficulty) {
-      where.difficulty = String(difficulty);
-    }
-    
-    // Prisma JSON field filtering or simple parsing
+    if (difficulty) where.difficulty = String(difficulty);
+
     if (topic) {
-      where.topics = {
-        array_contains: String(topic).toLowerCase()
-      };
+      where.topics = { array_contains: String(topic).toLowerCase() };
     }
-    
+
     if (company) {
-      where.companies = {
-        array_contains: String(company).toLowerCase()
-      };
+      where.companies = { array_contains: String(company).toLowerCase() };
     }
-    
+
     if (search) {
       where.OR = [
-        { title: { contains: String(search) } },
+        { title:     { contains: String(search) } },
         { statement: { contains: String(search) } },
+        { slug:      { contains: String(search) } },
       ];
     }
 
-    // Retrieve all questions
-    const questions = await prisma.question.findMany({
-      where,
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        statement: true,
-        difficulty: true,
-        topics: true,
-        companies: true,
-        timeLimit: true,
-        memoryLimit: true,
-        inputFormat: true,
-        outputFormat: true,
-        constraints: true,
-        sampleInput: true,
-        sampleOutput: true,
-        templates: true,
-        xpReward: true,
-        createdAt: true,
-        updatedAt: true
-      },
-      orderBy: { createdAt: 'desc' }
-    });
+    const [questions, total] = await Promise.all([
+      prisma.question.findMany({
+        where,
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          difficulty: true,
+          topics: true,
+          companies: true,
+          timeLimit: true,
+          memoryLimit: true,
+          xpReward: true,
+          sampleInput: true,
+          sampleOutput: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limitNum,
+      }),
+      prisma.question.count({ where }),
+    ]);
 
-    sendSuccess({ res, data: questions });
+    sendSuccess({
+      res,
+      data: questions,
+      // @ts-ignore
+      pagination: { total, page: pageNum, limit: limitNum, pages: Math.ceil(total / limitNum) },
+    });
   } catch (err) { next(err); }
 });
 

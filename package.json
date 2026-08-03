@@ -9,32 +9,19 @@
   "scripts": {
     "dev:web": "yarn workspace @adyapan/web dev",
     "dev:backend": "yarn workspace @adyapan/backend dev",
-    "dev:execution": "yarn workspace @adyapan/execution-engine dev",
-    "dev:all": "concurrently \"npm:dev:backend\" \"npm:dev:web\" \"npm:dev:execution\"",
+    "dev:ai": "yarn workspace @adyapan/ai-service dev",
     "build:web": "yarn workspace @adyapan/web build",
     "build:backend": "yarn workspace @adyapan/backend build",
-    "build:execution": "yarn workspace @adyapan/execution-engine build",
-    "build:docker-runners": "cd apps/execution-engine && npm run docker:build-runners",
     "lint": "yarn workspaces run lint",
     "test": "yarn workspaces run test",
     "setup-hooks": "cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit && echo '✅ Git hooks installed'",
     "check:mysql-only": "node scripts/check-mysql-only.js"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "prisma": "^7.9.0",
     "typescript": "^5.4.5"
   },
   "engines": {
     "node": ">=20.0.0",
     "yarn": ">=1.22.0"
-  },
-  "dependencies": {
-    "@prisma/adapter-pg": "^7.9.0",
-    "@prisma/client": "^7.9.0"
-  },
-  "allowScripts": {
-    "prisma@7.9.0": true,
-    "@prisma/engines@7.9.0": true
   }
 }

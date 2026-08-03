@@ -22,8 +22,8 @@ function optionalEnv(key: string, fallback = ''): string {
 export const env = {
   NODE_ENV:   optionalEnv('NODE_ENV', 'development'),
   PORT:       parseInt(optionalEnv('PORT', '5000'), 10),
+  // The public browser URL. This is the only client origin accepted in production.
   CLIENT_URL: optionalEnv('CLIENT_URL', 'http://localhost:3000'),
-  MOBILE_URL: optionalEnv('MOBILE_URL', ''),
 
   // ── Database: PostgreSQL (Supabase) ─────────────────────────────────────
   DATABASE_URL: requireEnv('DATABASE_URL'),
