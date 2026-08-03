@@ -4,12 +4,12 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'apps/backend/**'
+      - 'backend/**'
       - 'packages/shared/**'
   pull_request:
     branches: [main, develop]
     paths:
-      - 'apps/backend/**'
+      - 'backend/**'
       - 'packages/shared/**'
 
 jobs:
@@ -28,11 +28,11 @@ jobs:
       - name: "❌ Ban mongoose imports"
         run: |
           echo "Scanning for mongoose imports..."
-          if grep -r --include="*.ts" "from 'mongoose'" apps/backend/src/; then
+          if grep -r --include="*.ts" "from 'mongoose'" backend/src/; then
             echo "❌ FATAL: 'mongoose' import detected in source! This project uses MySQL + Prisma ONLY."
             exit 1
           fi
-          if grep -r --include="*.ts" "require('mongoose')" apps/backend/src/; then
+          if grep -r --include="*.ts" "require('mongoose')" backend/src/; then
             echo "❌ FATAL: 'mongoose' require() detected in source! Use prisma instead."
             exit 1
           fi
@@ -41,11 +41,11 @@ jobs:
       - name: "❌ Ban Mongoose model imports"
         run: |
           echo "Scanning for model file imports..."
-          if grep -r --include="*.ts" "from '../models/" apps/backend/src/; then
+          if grep -r --include="*.ts" "from '../models/" backend/src/; then
             echo "❌ FATAL: Mongoose model import detected! Use prisma.* queries instead."
             exit 1
           fi
-          if grep -r --include="*.ts" "from '../../models/" apps/backend/src/; then
+          if grep -r --include="*.ts" "from '../../models/" backend/src/; then
             echo "❌ FATAL: Mongoose model import detected! Use prisma.* queries instead."
             exit 1
           fi
@@ -54,7 +54,7 @@ jobs:
       - name: "❌ Ban MONGODB_URI from .env files"
         run: |
           echo "Scanning .env files for MONGODB_URI..."
-          if grep -r "^MONGODB_URI=" apps/backend/.env* 2>/dev/null; then
+          if grep -r "^MONGODB_URI=" backend/.env* 2>/dev/null; then
             echo "❌ FATAL: MONGODB_URI found in .env file! Remove it — this project is MySQL-only."
             exit 1
           fi
@@ -63,7 +63,7 @@ jobs:
       - name: "❌ Ban mongoose from package.json"
         run: |
           echo "Checking package.json for mongoose dependency..."
-          if grep '"mongoose"' apps/backend/package.json; then
+          if grep '"mongoose"' backend/package.json; then
             echo "❌ FATAL: mongoose found in package.json! Remove it — MySQL + Prisma only."
             exit 1
           fi
@@ -165,7 +165,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./apps/backend/Dockerfile
+          file: ./backend/Dockerfile
           push: true
           tags: |
             adyapan/backend:latest

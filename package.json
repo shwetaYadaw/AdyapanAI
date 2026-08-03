@@ -4,17 +4,15 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "apps/*"
+    "backend",
+    "frontend"
   ],
   "scripts": {
-    "dev:web": "yarn workspace @adyapan/web dev",
+    "dev:frontend": "yarn workspace @adyapan/frontend dev",
     "dev:backend": "yarn workspace @adyapan/backend dev",
-    "dev:execution": "yarn workspace @adyapan/execution-engine dev",
-    "dev:all": "concurrently \"npm:dev:backend\" \"npm:dev:web\" \"npm:dev:execution\"",
-    "build:web": "yarn workspace @adyapan/web build",
+    "dev:all": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "build:frontend": "yarn workspace @adyapan/frontend build",
     "build:backend": "yarn workspace @adyapan/backend build",
-    "build:execution": "yarn workspace @adyapan/execution-engine build",
-    "build:docker-runners": "cd apps/execution-engine && npm run docker:build-runners",
     "lint": "yarn workspaces run lint",
     "test": "yarn workspaces run test",
     "setup-hooks": "cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit && echo '✅ Git hooks installed'",
