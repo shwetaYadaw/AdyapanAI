@@ -61,15 +61,6 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
                 </p>
               </div>
             </div>
-            
-            {pageState.view === 'topics' && (
-              <Button
-                rightIcon={<Plus size={18} />}
-                className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
-              >
-                Add Topic
-              </Button>
-            )}
           </div>
         </div>
 
