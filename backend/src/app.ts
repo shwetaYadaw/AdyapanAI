@@ -27,6 +27,7 @@ import aptitudeStudentRoutes from './routes/aptitude-student.routes';
 import aptitudeSeedRoutes from './routes/aptitude-seed.routes';
 import questionsAdminRoutes from './routes/questions-admin.routes';
 import topicAdminRoutes from './routes/topic-admin.routes';
+import topicStudentRoutes from './routes/topic-student.routes';
 import submissionRoutes from './routes/submission.routes';
 import problemSubmissionRoutes from './routes/problemSubmission.routes';
 import questionSubmissionRoutes from './routes/questionSubmission.routes';
@@ -124,6 +125,7 @@ export function createApp(): Application {
   app.use('/api/v1/problem-submissions', problemSubmissionRoutes); // Coding Arena
   app.use('/api/v1/question-submissions', questionSubmissionRoutes); // TCS NQT
   app.use('/api/v1/tcs-nqt', tcsNqtRoutes); // TCS NQT student-facing routes
+  app.use('/api/v1/topics', topicStudentRoutes); // Public topics endpoint for students
   
   // Practice & Tests
   app.use('/api/v1/contests', contestRoutes);

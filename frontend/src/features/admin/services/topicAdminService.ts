@@ -40,7 +40,7 @@ class TopicAdminService {
   }
 
   // Update topic
-  async updateTopic(id: string, updates: Partial<Topic>) {
+  async updateTopic(id: string, updates: Partial<Omit<Topic, 'id' | 'createdAt' | 'updatedAt'>>) {
     try {
       const response = await api.put(`/admin/topics/${id}`, updates);
       return response.data?.data;

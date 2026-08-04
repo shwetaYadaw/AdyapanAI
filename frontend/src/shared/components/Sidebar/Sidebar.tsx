@@ -26,7 +26,7 @@ const STUDENT_NAV: NavItem[] = [
 ];
 
 const ADMIN_NAV: NavItem[] = [
-  { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Users', href: '/admin/users', icon: Users },
   { label: 'Problems', href: '/admin/problems', icon: Code2 },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },

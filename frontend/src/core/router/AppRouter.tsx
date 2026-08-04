@@ -34,6 +34,7 @@ const AdminAnalyticsPage = lazy(() => import('../../pages/admin/AnalyticsPage'))
 const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
 const DualAdminDashboard = lazy(() => import('../../features/admin/pages/AdminDashboard'));
+const AptitudeManagementPage = lazy(() => import('../../features/admin/pages/AptitudeManagementPage'));
 
 // Public
 const CertVerifyPage     = lazy(() => import('../../pages/public/CertificateVerifyPage'));
@@ -82,10 +83,11 @@ export default function AppRouter() {
 
           {/* Admin */}
           <Route path="/admin" element={<ProtectedRoute><RoleRoute roles={['admin']} /></ProtectedRoute>}>
-            <Route index element={<DualAdminDashboard />} />
+            <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsersPage />} />
             <Route path="problems" element={<AdminProblemsPage />} />
+            <Route path="aptitude" element={<AptitudeManagementPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="security" element={<AdminSecurityPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />

@@ -20,8 +20,8 @@ const DASHBOARD_LINKS: Record<string, string> = {
   teacher: '/teacher/dashboard',
   mentor: '/mentor/dashboard',
   recruiter: '/recruiter/dashboard',
-  admin: '/admin/dashboard',
-  superadmin: '/admin/dashboard',
+  admin: '/admin',
+  superadmin: '/admin',
 };
 
 export default function Navbar() {

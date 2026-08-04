@@ -218,8 +218,8 @@ router.post('/bulk/seed', authenticate, isAdmin, async (req: Request, res: Respo
         isActive: true,
         createdBy: req.user?.userId
       })),
-      // TCS NQT Topics
-      ...['Quantitative Aptitude', 'Verbal Reasoning', 'Logical Reasoning', 'English', 'Reading Comprehension', 'Problem Solving', 'Time & Work', 'Profit & Loss', 'Percentage', 'Simple Interest', 'Compound Interest', 'Algebra', 'Geometry', 'Trigonometry', 'Data Interpretation', 'Permutation & Combination', 'Probability'].map((name, idx) => ({
+      // TCS NQT Topics - NEW TOPICS (replacing old ones)
+      ...['Arrays', 'Numbers System', 'Bit Manipulation', 'Sorting', 'String'].map((name, idx) => ({
         name,
         system: 'tcs-nqt',
         description: `${name} questions for TCS NQT preparation`,
@@ -320,6 +320,49 @@ router.put('/bulk/reorder', authenticate, isAdmin, async (req: Request, res: Res
       res,
       message: 'Topics reordered successfully',
       data: updated
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/admin/topics/tcs-nqt/refresh - Delete old TCS NQT topics and add new ones
+router.post('/tcs-nqt/refresh', authenticate, isAdmin, async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    // Delete all existing TCS NQT topics
+    await prisma.topic.deleteMany({
+      where: {
+        system: 'tcs-nqt'
+      }
+    });
+
+    // Create new TCS NQT topics
+    const newTopics = ['Arrays', 'Numbers System', 'Bit Manipulation', 'Sorting', 'String'].map((name, idx) => ({
+      name,
+      system: 'tcs-nqt',
+      description: `${name} questions for TCS NQT preparation`,
+      order: idx,
+      isActive: true,
+      createdBy: req.user?.userId
+    }));
+
+    const created = await Promise.all(
+      newTopics.map(topicData =>
+        prisma.topic.create({
+          data: topicData
+        })
+      )
+    );
+
+    sendSuccess({
+      res,
+      message: 'TCS NQT topics refreshed successfully',
+      data: {
+        deleted: 'All old TCS NQT topics',
+        created: created.length,
+        topics: created.map(t => ({ id: t.id, name: t.name, order: t.order }))
+      },
+      statusCode: 201
     });
   } catch (err) {
     next(err);

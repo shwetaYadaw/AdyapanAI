@@ -23,7 +23,7 @@ export default function CreateEditTcsQuestionModal({
     inputFormat: '',
     outputFormat: '',
     referenceSolution: '',
-    topics: '',
+    topic: '',
     companies: '',
     timeLimit: 2000,
     memoryLimit: 256,
@@ -63,8 +63,8 @@ export default function CreateEditTcsQuestionModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.statement) {
-      toast.error('Title and statement are required');
+    if (!formData.title || !formData.statement || !formData.topic || !formData.difficulty) {
+      toast.error('Title, statement, difficulty, and topic are required');
       return;
     }
 
@@ -215,8 +215,8 @@ export default function CreateEditTcsQuestionModal({
                 </div>
               ) : (
                 <select
-                  name="topics"
-                  value={formData.topics}
+                  name="topic"
+                  value={formData.topic}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >

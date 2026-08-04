@@ -1,13 +1,48 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from 'lucide-react';
 import { AdminProblemFilters } from '../types/problem';
+import { topicAdminService } from '../services/topicAdminService';
 
 interface ProblemFiltersProps {
   filters: AdminProblemFilters;
   onFiltersChange: (filters: AdminProblemFilters) => void;
+  system?: 'coding-arena' | 'tcs-nqt';
 }
 
-export default function ProblemFilters({ filters, onFiltersChange }: ProblemFiltersProps) {
+export default function ProblemFilters({ filters, onFiltersChange, system = 'coding-arena' }: ProblemFiltersProps) {
+  const [topics, setTopics] = useState<any[]>([]);
+  const [topicsLoading, setTopicsLoading] = useState(false);
+
+  // Fetch topics from database on mount and when system changes
+  useEffect(() => {
+    fetchTopics();
+  }, [system]);
+
+  const fetchTopics = async () => {
+    try {
+      setTopicsLoading(true);
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        console.warn('No access token found in localStorage');
+        setTopics([]);
+        return;
+      }
+      const data = await topicAdminService.getTopics(system, true);
+      console.log(`Fetched ${data?.length || 0} topics for system: ${system}`, data);
+      setTopics(data || []);
+    } catch (err: any) {
+      console.error('Failed to fetch topics:', err);
+      console.error('Error details:', {
+        message: err.message,
+        status: err.response?.status,
+        data: err.response?.data
+      });
+      setTopics([]);
+    } finally {
+      setTopicsLoading(false);
+    }
+  };
+
   const handleSearchChange = (search: string) => {
     onFiltersChange({
       ...filters,
@@ -58,19 +93,19 @@ export default function ProblemFilters({ filters, onFiltersChange }: ProblemFilt
         <option value="hard">Hard</option>
       </select>
 
-      {/* Category Filter */}
+      {/* Category Filter - Now Dynamic from Database */}
       <select
         value={filters.category || ''}
         onChange={(e) => handleCategoryChange(e.target.value)}
-        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        disabled={topicsLoading}
+        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        <option value="">All Categories</option>
-        <option value="arrays">Arrays</option>
-        <option value="strings">Strings</option>
-        <option value="trees">Trees</option>
-        <option value="graphs">Graphs</option>
-        <option value="dynamic-programming">Dynamic Programming</option>
-        <option value="general">General</option>
+        <option value="">All Categories {topicsLoading ? '(Loading...)' : `(${topics.length})`}</option>
+        {topics.map(topic => (
+          <option key={topic.id} value={topic.name}>
+            {topic.name}
+          </option>
+        ))}
       </select>
 
       {/* Items per page */}

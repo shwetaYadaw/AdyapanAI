@@ -134,10 +134,14 @@ router.get('/', async (req, res, next) => {
 
     const where: any = {};
     if (difficulty) where.difficulty = String(difficulty);
+    
     if (topic) {
-      // Exact topic slug match (e.g. "arrays", "two-pointers")
-      where.topics = { contains: String(topic), mode: 'insensitive' };
+      // Get all problems and filter in-memory for exact topic match
+      // Since topics are stored as CSV string, we need to split and match
+      const topicStr = String(topic).toLowerCase();
+      // This will be filtered in the JS after fetching
     }
+    
     if (search) {
       where.OR = [
         { title: { contains: String(search), mode: 'insensitive' } },
@@ -146,27 +150,36 @@ router.get('/', async (req, res, next) => {
       ];
     }
 
-    const [problems, total] = await Promise.all([
-      prisma.problem.findMany({
-        where,
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          difficulty: true,
-          topics: true,
-          companies: true,
-          timeLimit: true,
-          memoryLimit: true,
-          createdAt: true,
-          _count: { select: { testCases: true } },
-        },
-        orderBy: [{ topics: 'asc' }, { difficulty: 'asc' }, { title: 'asc' }],
-        skip,
-        take: limitNum,
-      }),
-      prisma.problem.count({ where }),
-    ]);
+    let allProblems = await prisma.problem.findMany({
+      where,
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        difficulty: true,
+        topics: true,
+        companies: true,
+        timeLimit: true,
+        memoryLimit: true,
+        createdAt: true,
+        _count: { select: { testCases: true } },
+      },
+      orderBy: [{ topics: 'asc' }, { difficulty: 'asc' }, { title: 'asc' }],
+    });
+
+    // Filter by exact topic match if topic parameter provided
+    if (topic) {
+      const topicStr = String(topic).toLowerCase();
+      allProblems = allProblems.filter(p => {
+        const problemTopics = p.topics
+          .split(',')
+          .map(t => t.trim().toLowerCase());
+        return problemTopics.includes(topicStr);
+      });
+    }
+
+    const total = allProblems.length;
+    const problems = allProblems.slice(skip, skip + limitNum);
 
     sendSuccess({
       res,

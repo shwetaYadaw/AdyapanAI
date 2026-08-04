@@ -164,18 +164,23 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     }
 
     if (topic) {
-      where.topics = { contains: topic, mode: 'insensitive' };
+      // Will filter in-memory for exact topic match
     }
 
-    // Get total count from Problem table
-    const total = await prisma.problem.count({ where });
-
-    // Get problems from Problem table
-    const problems = await prisma.problem.findMany({
-      where,
+    // Get all problems first (without topic filter to handle in-memory filtering)
+    let allProblems = await prisma.problem.findMany({
+      where: {
+        isArchived: false,
+        ...(search && {
+          OR: [
+            { title: { contains: search, mode: 'insensitive' } },
+            { slug: { contains: search, mode: 'insensitive' } },
+            { statement: { contains: search, mode: 'insensitive' } }
+          ]
+        }),
+        ...(difficulty && { difficulty })
+      },
       orderBy: { createdAt: 'desc' },
-      skip,
-      take: limitNum,
       select: {
         id: true,
         title: true,
@@ -201,6 +206,20 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
         updatedBy: true
       }
     });
+
+    // Filter by exact topic match if topic provided
+    if (topic) {
+      const topicLower = topic.toLowerCase();
+      allProblems = allProblems.filter(p => {
+        const problemTopics = p.topics
+          .split(',')
+          .map(t => t.trim().toLowerCase());
+        return problemTopics.includes(topicLower);
+      });
+    }
+
+    const total = allProblems.length;
+    const problems = allProblems.slice(skip, skip + limitNum);
 
     return sendSuccess({
       res,
@@ -359,6 +378,9 @@ router.delete('/:id', authenticate, isAdmin, async (req: Request, res: Response,
         updatedBy: req.user?.userId
       }
     });
+
+    // Add cache invalidation header to clear student-side cache
+    res.setHeader('X-Cache-Invalidate', 'problems,coding-arena');
 
     sendSuccess({ res, statusCode: 200, message: 'Problem archived successfully' });
   } catch (err) {

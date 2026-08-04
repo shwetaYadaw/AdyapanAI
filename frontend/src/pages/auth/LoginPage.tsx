@@ -42,7 +42,7 @@ export default function LoginPage() {
       toast.success('Welcome back!');
       const role = result.payload.user?.role;
       // Only two roles: student and admin
-      const redirectPath = role === 'admin' ? '/admin/dashboard' : '/student/dashboard';
+      const redirectPath = role === 'admin' ? '/admin' : '/student/dashboard';
       navigate(redirectPath, { replace: true });
     } else {
       toast.error('Google sign in failed');
@@ -88,7 +88,7 @@ export default function LoginPage() {
       toast.success('Welcome back!');
       const role = result.payload.user?.role;
       // Only two roles: student and admin
-      const redirectPath = role === 'admin' ? '/admin/dashboard' : '/student/dashboard';
+      const redirectPath = role === 'admin' ? '/admin' : '/student/dashboard';
       navigate(redirectPath, { replace: true });
     }
   };

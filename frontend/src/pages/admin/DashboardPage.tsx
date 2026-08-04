@@ -114,12 +114,12 @@ export default function AdminDashboardPage() {
         </button>
 
         <button
-          onClick={() => navigate('/admin/analytics')}
+          onClick={() => navigate('/admin/problems')}
           className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-800 hover:shadow-md transition-all hover:border-primary-500 dark:hover:border-primary-500 text-left group"
         >
           <div className="text-3xl mb-3">💻</div>
           <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-            Coding Problems
+            Manage Problems
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Manage DSA problems and test cases
@@ -132,7 +132,7 @@ export default function AdminDashboardPage() {
         >
           <div className="text-3xl mb-3">📊</div>
           <h3 className="font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-            Submissions & Analytics
+            Analytics
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">
             View submission stats and user progress

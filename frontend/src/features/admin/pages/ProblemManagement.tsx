@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Plus, Trash2, Edit, Archive, RotateCcw, Search, Download, Upload } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Problem, AdminProblemFilters } from '../types/problem';
@@ -9,6 +10,7 @@ import ProblemFilters from '../components/ProblemFilters';
 import BulkImportModal from '../components/BulkImportModal';
 
 export default function ProblemManagement() {
+  const queryClient = useQueryClient();
   const [problems, setProblems] = useState<Problem[]>([]);
   const [pagination, setPagination] = useState({
     total: 0,
@@ -70,7 +72,7 @@ export default function ProblemManagement() {
   const handleDeleteProblem = async (id: string) => {
     if (!confirm('Are you sure you want to archive this problem?')) return;
     try {
-      await problemAdminService.deleteProblem(id);
+      await problemAdminService.deleteProblem(id, queryClient);
       toast.success('Problem archived successfully!');
       fetchProblems();
     } catch (err: any) {
