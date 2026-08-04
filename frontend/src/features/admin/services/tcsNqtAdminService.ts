@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/v1';
 
 interface TcsQuestion {
   id?: string;
@@ -40,7 +40,7 @@ class TcsNqtAdminService {
 
     // Add auth token to requests
     this.api.interceptors.request.use((config) => {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -61,7 +61,10 @@ class TcsNqtAdminService {
    */
   async getQuestions(filters?: any): Promise<TcsQuestionResponse> {
     const { data } = await this.api.get('/', { params: filters });
-    return data.data;
+    return {
+      questions: data.data ?? [],
+      pagination: data.pagination ?? { total: 0, page: 1, limit: 20, pages: 0 },
+    };
   }
 
   /**

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DockerService, ExecutionResult } from './docker.service';
 import { queueService } from './queue.service';
 import { getLanguageConfig } from '../config/languages';

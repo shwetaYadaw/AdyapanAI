@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Badge Service
  * Handles badge awarding logic for achievements

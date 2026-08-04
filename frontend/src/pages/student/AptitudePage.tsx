@@ -879,73 +879,73 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'A sum of money at simple interest amounts to Rs. 815 in 3 years and to Rs. 854 in 4 years. The sum is:',
         options: ['Rs. 650', 'Rs. 690', 'Rs. 698', 'Rs. 700'],
         answer: 'Rs. 698',
-        explanation: 'S.I. for 1 year = Rs. (854 - 815) = Rs. 39. S.I. for 3 years = Rs. (39 × 3) = Rs. 117. Principal = Rs. (815 - 117) = Rs. 698.'
+        explanation: 'S.I. for 1 year = Rs. (854 - 815) = Rs. 39. S.I. for 3 years = Rs. (39 ï¿½ 3) = Rs. 117. Principal = Rs. (815 - 117) = Rs. 698.'
       },
       {
         question: 'Mr. Thomas invested an amount of Rs. 13,900 divided in two different schemes A and B at the simple interest rate of 14% p.a. and 11% p.a. respectively. If the total amount of simple interest earned in 2 years be Rs. 3508, what was the amount invested in Scheme B?',
         options: ['Rs. 6400', 'Rs. 6500', 'Rs. 7200', 'Rs. 7500', 'None of these'],
         answer: 'Rs. 6400',
-        explanation: 'Let the sum invested in Scheme A be Rs. x and that in Scheme B be Rs. (13900 - x). Then, (x × 14 × 2)/100 + ((13900 - x) × 11 × 2)/100 = 3508 => 28x - 22x = 350800 - (13900 × 22) => 6x = 45000 => x = 7500. So, sum invested in Scheme B = Rs. (13900 - 7500) = Rs. 6400.'
+        explanation: 'Let the sum invested in Scheme A be Rs. x and that in Scheme B be Rs. (13900 - x). Then, (x ï¿½ 14 ï¿½ 2)/100 + ((13900 - x) ï¿½ 11 ï¿½ 2)/100 = 3508 => 28x - 22x = 350800 - (13900 ï¿½ 22) => 6x = 45000 => x = 7500. So, sum invested in Scheme B = Rs. (13900 - 7500) = Rs. 6400.'
       },
       {
         question: 'A sum fetched a total simple interest of Rs. 4016.25 at the rate of 9 p.c.p.a. in 5 years. What is the sum?',
         options: ['Rs. 4462.50', 'Rs. 8032.50', 'Rs. 8900', 'Rs. 8925', 'None of these'],
         answer: 'Rs. 8925',
-        explanation: 'Principal = Rs. (100 × 4016.25)/(9 × 5) = Rs. (401625/45) = Rs. 8925.'
+        explanation: 'Principal = Rs. (100 ï¿½ 4016.25)/(9 ï¿½ 5) = Rs. (401625/45) = Rs. 8925.'
       },
       {
         question: 'How much time will it take for an amount of Rs. 450 to yield Rs. 81 as interest at 4.5% per annum of simple interest?',
         options: ['3.5 years', '4 years', '4.5 years', '5 years'],
         answer: '4 years',
-        explanation: 'Time = (100 × 81)/(450 × 4.5) years = 4 years.'
+        explanation: 'Time = (100 ï¿½ 81)/(450 ï¿½ 4.5) years = 4 years.'
       },
       {
         question: 'Reena took a loan of Rs. 1200 with simple interest for as many years as the rate of interest. If she paid Rs. 432 as interest at the end of the loan period, what was the rate of interest?',
         options: ['3.6', '6', '18', 'Cannot be determined', 'None of these'],
         answer: '6',
-        explanation: 'Let rate = R% and time = R years. Then, (1200 × R × R)/100 = 432 => 12R² = 432 => R² = 36 => R = 6.'
+        explanation: 'Let rate = R% and time = R years. Then, (1200 ï¿½ R ï¿½ R)/100 = 432 => 12Rï¿½ = 432 => Rï¿½ = 36 => R = 6.'
       },
       {
         question: 'A sum of Rs. 12,500 amounts to Rs. 15,500 in 4 years at the rate of simple interest. What is the rate of interest?',
         options: ['3%', '4%', '5%', '6%', 'None of these'],
         answer: '6%',
-        explanation: 'S.I. = Rs. (15500 - 12500) = Rs. 3000. Rate = (100 × 3000)/(12500 × 4) % = 6%.'
+        explanation: 'S.I. = Rs. (15500 - 12500) = Rs. 3000. Rate = (100 ï¿½ 3000)/(12500 ï¿½ 4) % = 6%.'
       },
       {
         question: 'An automobile financier claims to be lending money at simple interest, but he includes the interest every six months for calculating the principal. If he is charging an interest of 10%, the effective rate of interest becomes:',
         options: ['10%', '10.25%', '10.5%', 'None of these'],
         answer: '10.25%',
-        explanation: 'Let the sum be Rs. 100. Then, S.I. for first 6 months = Rs. (100 × 10 × 1)/(100 × 2) = Rs. 5. S.I. for last 6 months = Rs. (105 × 10 × 1)/(100 × 2) = Rs. 5.25. So, amount at the end of 1 year = Rs. (100 + 5 + 5.25) = Rs. 110.25. Effective rate = (110.25 - 100) = 10.25%.'
+        explanation: 'Let the sum be Rs. 100. Then, S.I. for first 6 months = Rs. (100 ï¿½ 10 ï¿½ 1)/(100 ï¿½ 2) = Rs. 5. S.I. for last 6 months = Rs. (105 ï¿½ 10 ï¿½ 1)/(100 ï¿½ 2) = Rs. 5.25. So, amount at the end of 1 year = Rs. (100 + 5 + 5.25) = Rs. 110.25. Effective rate = (110.25 - 100) = 10.25%.'
       },
       {
         question: 'A lent Rs. 5000 to B for 2 years and Rs. 3000 to C for 4 years on simple interest at the same rate of interest and received Rs. 2200 in all from both of them as interest. The rate of interest per annum is:',
         options: ['5%', '7%', '7 1/8%', '10%'],
         answer: '10%',
-        explanation: 'Let the rate be R% p.a. Then, (5000 × R × 2)/100 + (3000 × R × 4)/100 = 2200 => 100R + 120R = 2200 => R = 2200/220 = 10. Rate = 10%.'
+        explanation: 'Let the rate be R% p.a. Then, (5000 ï¿½ R ï¿½ 2)/100 + (3000 ï¿½ R ï¿½ 4)/100 = 2200 => 100R + 120R = 2200 => R = 2200/220 = 10. Rate = 10%.'
       },
       {
         question: 'A sum of Rs. 725 is lent in the beginning of a year at a certain rate of interest. After 8 months, a sum of Rs. 362.50 more is lent but at the rate twice the former. At the end of the year, Rs. 33.50 is earned as interest from both the loans. What was the original rate of interest?',
         options: ['3.6%', '4.5%', '5%', '6%', 'None of these'],
         answer: 'None of these',
-        explanation: 'Let the original rate be R%. Then, new rate = (2R)%. Note: original rate is for 1 year; the new rate is for only 4 months i.e., 1/3 year. (725 × R × 1)/100 + (362.50 × 2R × 1)/(100 × 3) = 33.50 => (2175 + 725)R = 33.50 × 100 × 3 => (2900)R = 10050 => R = 10050/2900 = 3.46. Original rate ˜ 3.46%.'
+        explanation: 'Let the original rate be R%. Then, new rate = (2R)%. Note: original rate is for 1 year; the new rate is for only 4 months i.e., 1/3 year. (725 ï¿½ R ï¿½ 1)/100 + (362.50 ï¿½ 2R ï¿½ 1)/(100 ï¿½ 3) = 33.50 => (2175 + 725)R = 33.50 ï¿½ 100 ï¿½ 3 => (2900)R = 10050 => R = 10050/2900 = 3.46. Original rate ï¿½ 3.46%.'
       },
       {
         question: 'A man took a loan from a bank at the rate of 12% p.a. simple interest. After 3 years he had to pay Rs. 5400 interest only for the period. The principal amount borrowed by him was:',
         options: ['Rs. 2000', 'Rs. 10,000', 'Rs. 15,000', 'Rs. 20,000'],
         answer: 'Rs. 15,000',
-        explanation: 'Principal = Rs. (100 × 5400)/(12 × 3) = Rs. 15000.'
+        explanation: 'Principal = Rs. (100 ï¿½ 5400)/(12 ï¿½ 3) = Rs. 15000.'
       },
       {
         question: 'A sum of money amounts to Rs. 9800 after 5 years and Rs. 12005 after 8 years at the same rate of simple interest. The rate of interest per annum is:',
         options: ['5%', '8%', '12%', '15%'],
         answer: '12%',
-        explanation: 'S.I. for 3 years = Rs. (12005 - 9800) = Rs. 2205. S.I. for 5 years = Rs. (2205/3) × 5 = Rs. 3675. Principal = Rs. (9800 - 3675) = Rs. 6125. Hence, rate = (100 × 3675)/(6125 × 5) % = 12%.'
+        explanation: 'S.I. for 3 years = Rs. (12005 - 9800) = Rs. 2205. S.I. for 5 years = Rs. (2205/3) ï¿½ 5 = Rs. 3675. Principal = Rs. (9800 - 3675) = Rs. 6125. Hence, rate = (100 ï¿½ 3675)/(6125 ï¿½ 5) % = 12%.'
       },
       {
         question: 'What will be the ratio of simple interest earned by certain amount at the same rate of interest for 6 years and that for 9 years?',
         options: ['1 : 3', '1 : 4', '2 : 3', 'Data inadequate', 'None of these'],
         answer: '2 : 3',
-        explanation: 'Let the principal be P and rate of interest be R%. Required ratio = (P × R × 6/100) / (P × R × 9/100) = 6PR/9PR = 6/9 = 2 : 3.'
+        explanation: 'Let the principal be P and rate of interest be R%. Required ratio = (P ï¿½ R ï¿½ 6/100) / (P ï¿½ R ï¿½ 9/100) = 6PR/9PR = 6/9 = 2 : 3.'
       },
       {
         question: 'A certain amount earns simple interest of Rs. 1750 after 7 years. Had the interest been 2% more, how much more interest would it have earned?',
@@ -957,31 +957,31 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'A person borrows Rs. 5000 for 2 years at 4% p.a. simple interest. He immediately lends it to another person at 6 1/4% p.a for 2 years. Find his gain in the transaction per year.',
         options: ['Rs. 112.50', 'Rs. 125', 'Rs. 225', 'Rs. 167.50'],
         answer: 'Rs. 112.50',
-        explanation: 'Gain in 2 years = Rs. [(5000 × 25/4 × 2/100) - (5000 × 4 × 2/100)] = Rs. (625 - 400) = Rs. 225. Gain in 1 year = Rs. (225/2) = Rs. 112.50.'
+        explanation: 'Gain in 2 years = Rs. [(5000 ï¿½ 25/4 ï¿½ 2/100) - (5000 ï¿½ 4 ï¿½ 2/100)] = Rs. (625 - 400) = Rs. 225. Gain in 1 year = Rs. (225/2) = Rs. 112.50.'
       },
       {
         question: 'The simple interest on a sum of money is Rs. 50. What is the sum? I. The interest rate is 10% p.a. II. The sum earned simple interest in 10 years.',
         options: ['I alone sufficient while II alone not sufficient to answer', 'II alone sufficient while I alone not sufficient to answer', 'Either I or II alone sufficient to answer', 'Both I and II are not sufficient to answer', 'Both I and II are necessary to answer'],
         answer: 'Both I and II are necessary to answer',
-        explanation: 'Given: S.I. = Rs. 50. I gives, R = 10% p.a. II gives, T = 10 years. Sum = (100 × S.I.)/(T × R) = Rs. (100 × 50)/(10 × 10) = Rs. 50. Thus, I and II together give the answer. Correct answer is (E).'
+        explanation: 'Given: S.I. = Rs. 50. I gives, R = 10% p.a. II gives, T = 10 years. Sum = (100 ï¿½ S.I.)/(T ï¿½ R) = Rs. (100 ï¿½ 50)/(10 ï¿½ 10) = Rs. 50. Thus, I and II together give the answer. Correct answer is (E).'
       },
       {
         question: 'What is the sum which earned interest? I. The total simple interest was Rs. 7000 after 7 years. II. The total of sum and simple interest was double of the sum after 5 years.',
         options: ['I alone sufficient while II alone not sufficient to answer', 'II alone sufficient while I alone not sufficient to answer', 'Either I or II alone sufficient to answer', 'Both I and II are not sufficient to answer', 'Both I and II are necessary to answer'],
         answer: 'Both I and II are necessary to answer',
-        explanation: 'Let the sum be Rs. x. I gives, S.I. = Rs. 7000 and T = 7 years. II gives, Sum + S.I. for 5 years = 2 × Sum => Sum = S.I. for 5 years. Now, S.I. for 7 years = Rs. 7000. S.I. for 1 year = Rs. 7000/7 = Rs. 1000. Thus, I and II both are needed to get the answer. Correct answer is (E).'
+        explanation: 'Let the sum be Rs. x. I gives, S.I. = Rs. 7000 and T = 7 years. II gives, Sum + S.I. for 5 years = 2 ï¿½ Sum => Sum = S.I. for 5 years. Now, S.I. for 7 years = Rs. 7000. S.I. for 1 year = Rs. 7000/7 = Rs. 1000. Thus, I and II both are needed to get the answer. Correct answer is (E).'
       },
       {
         question: 'What percentage of simple interest per annum did Anand pay to Deepak? I. Anand borrowed Rs. 8000 from Deepak for four years. II. Anand returned Rs. 8800 to Deepak at the end of two years and settled the loan.',
         options: ['I alone sufficient while II alone not sufficient to answer', 'II alone sufficient while I alone not sufficient to answer', 'Either I or II alone sufficient to answer', 'Both I and II are not sufficient to answer', 'Both I and II are necessary to answer'],
         answer: 'Both I and II are necessary to answer',
-        explanation: 'Let the rate be R% p.a. I gives, P = Rs. 8000 and T = 4 years. II gives, S.I. = Rs. (8800 - 8000) = Rs. 800. R = (100 × S.I.)/(P × T) = (100 × 800)/(8000 × 4) % = 2 1/2% p.a. Thus, I and II both are needed to get the answer. Correct answer is (E).'
+        explanation: 'Let the rate be R% p.a. I gives, P = Rs. 8000 and T = 4 years. II gives, S.I. = Rs. (8800 - 8000) = Rs. 800. R = (100 ï¿½ S.I.)/(P ï¿½ T) = (100 ï¿½ 800)/(8000 ï¿½ 4) % = 2 1/2% p.a. Thus, I and II both are needed to get the answer. Correct answer is (E).'
       },
       {
         question: 'What is the rate of simple interest? I. The total interest earned was Rs. 4000. II. The sum was invested for 4 years.',
         options: ['I alone sufficient while II alone not sufficient to answer', 'II alone sufficient while I alone not sufficient to answer', 'Either I or II alone sufficient to answer', 'Both I and II are not sufficient to answer', 'Both I and II are necessary to answer'],
         answer: 'Both I and II are not sufficient to answer',
-        explanation: 'We know that, R = (100 × S.I.)/(P × T). Now, I gives, S.I. = Rs. 4000. II gives, T = 4 years. But, P is unknown. So, we cannot find R. So, given data is insufficient to get R. Correct answer is (D).'
+        explanation: 'We know that, R = (100 ï¿½ S.I.)/(P ï¿½ T). Now, I gives, S.I. = Rs. 4000. II gives, T = 4 years. But, P is unknown. So, we cannot find R. So, given data is insufficient to get R. Correct answer is (D).'
       },
       {
         question: 'What is the principal sum? I. The sum amounts to Rs. 690 in 3 years at S.I. II. The sum amounts to Rs. 750 in 5 years at S.I. III. The rate of interest is 5% p.a.',
@@ -999,91 +999,91 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'A bank offers 5% compound interest calculated on half-yearly basis. A customer deposits Rs. 1600 each on 1st January and 1st July of a year. At the end of the year, the amount he would have gained by way of interest is:',
         options: ['Rs. 120', 'Rs. 121', 'Rs. 122', 'Rs. 123'],
         answer: 'Rs. 121',
-        explanation: 'Amount = Rs. [1600 × (1 + 5/(2×100))² + 1600 × (1 + 5/(2×100))] = Rs. [1600 × 41/40 × 41/40 + 1600 × 41/40] = Rs. [1600 × 41/40 × (41/40 + 1)] = Rs. [1600 × 41 × 81 / (40 × 40)] = Rs. 3321. C.I. = Rs. (3321 - 3200) = Rs. 121.'
+        explanation: 'Amount = Rs. [1600 ï¿½ (1 + 5/(2ï¿½100))ï¿½ + 1600 ï¿½ (1 + 5/(2ï¿½100))] = Rs. [1600 ï¿½ 41/40 ï¿½ 41/40 + 1600 ï¿½ 41/40] = Rs. [1600 ï¿½ 41/40 ï¿½ (41/40 + 1)] = Rs. [1600 ï¿½ 41 ï¿½ 81 / (40 ï¿½ 40)] = Rs. 3321. C.I. = Rs. (3321 - 3200) = Rs. 121.'
       },
       {
         question: 'The difference between simple and compound interests compounded annually on a certain sum of money for 2 years at 4% per annum is Re. 1. The sum (in Rs.) is:',
         options: ['625', '630', '640', '650'],
         answer: '625',
-        explanation: 'Let the sum be Rs. x. Then, C.I. = x[(1 + 4/100)² - x] = (676/625)x - x = 51x/625. S.I. = (x × 4 × 2)/100 = 2x/25. Difference: 51x/625 - 2x/25 = 1 => (51x - 50x)/625 = 1 => x = 625.'
+        explanation: 'Let the sum be Rs. x. Then, C.I. = x[(1 + 4/100)ï¿½ - x] = (676/625)x - x = 51x/625. S.I. = (x ï¿½ 4 ï¿½ 2)/100 = 2x/25. Difference: 51x/625 - 2x/25 = 1 => (51x - 50x)/625 = 1 => x = 625.'
       },
       {
         question: 'There is 60% increase in an amount in 6 years at simple interest. What will be the compound interest of Rs. 12,000 after 3 years at the same rate?',
         options: ['Rs. 2160', 'Rs. 3120', 'Rs. 3972', 'Rs. 6240', 'None of these'],
         answer: 'Rs. 3972',
-        explanation: 'Let P = Rs. 100. Then, S.I. = Rs. 60 and T = 6 years. R = (100 × 60)/(100 × 6) = 10% p.a. Now, P = Rs. 12000, T = 3 years and R = 10% p.a. C.I. = Rs. [12000 × {(1 + 10/100)³ - 1}] = Rs. [12000 × 331/1000] = Rs. 3972.'
+        explanation: 'Let P = Rs. 100. Then, S.I. = Rs. 60 and T = 6 years. R = (100 ï¿½ 60)/(100 ï¿½ 6) = 10% p.a. Now, P = Rs. 12000, T = 3 years and R = 10% p.a. C.I. = Rs. [12000 ï¿½ {(1 + 10/100)ï¿½ - 1}] = Rs. [12000 ï¿½ 331/1000] = Rs. 3972.'
       },
       {
         question: 'What is the difference between the compound interests on Rs. 5000 for 1 1/2 years at 4% per annum compounded yearly and half-yearly?',
         options: ['Rs. 2.04', 'Rs. 3.06', 'Rs. 4.80', 'Rs. 8.30'],
         answer: 'Rs. 2.04',
-        explanation: 'C.I. when compounded yearly = Rs. [5000 × (1 + 4/100) × (1 + (1/2 × 4)/100)] = Rs. [5000 × 26/25 × 51/50] = Rs. 5304. C.I. when compounded half-yearly = Rs. [5000 × (1 + 2/100)³] = Rs. [5000 × 51/50 × 51/50 × 51/50] = Rs. 5306.04. Difference = Rs. (5306.04 - 5304) = Rs. 2.04.'
+        explanation: 'C.I. when compounded yearly = Rs. [5000 ï¿½ (1 + 4/100) ï¿½ (1 + (1/2 ï¿½ 4)/100)] = Rs. [5000 ï¿½ 26/25 ï¿½ 51/50] = Rs. 5304. C.I. when compounded half-yearly = Rs. [5000 ï¿½ (1 + 2/100)ï¿½] = Rs. [5000 ï¿½ 51/50 ï¿½ 51/50 ï¿½ 51/50] = Rs. 5306.04. Difference = Rs. (5306.04 - 5304) = Rs. 2.04.'
       },
       {
         question: 'The compound interest on Rs. 30,000 at 7% per annum is Rs. 4347. The period (in years) is:',
         options: ['2', '2 1/2', '3', '4'],
         answer: '2',
-        explanation: 'Amount = Rs. (30000 + 4347) = Rs. 34347. Let the time be n years. Then, 30000(1 + 7/100)^n = 34347 => (107/100)^n = 34347/30000 = 11449/10000 = (107/100)². Therefore n = 2 years.'
+        explanation: 'Amount = Rs. (30000 + 4347) = Rs. 34347. Let the time be n years. Then, 30000(1 + 7/100)^n = 34347 => (107/100)^n = 34347/30000 = 11449/10000 = (107/100)ï¿½. Therefore n = 2 years.'
       },
       {
         question: 'What will be the compound interest on a sum of Rs. 25,000 after 3 years at the rate of 12 p.c.p.a.?',
         options: ['Rs. 9000.30', 'Rs. 9720', 'Rs. 10123.20', 'Rs. 10483.20', 'None of these'],
         answer: 'Rs. 10123.20',
-        explanation: 'Amount = Rs. [25000 × (1 + 12/100)³] = Rs. [25000 × 28/25 × 28/25 × 28/25] = Rs. 35123.20. C.I. = Rs. (35123.20 - 25000) = Rs. 10123.20.'
+        explanation: 'Amount = Rs. [25000 ï¿½ (1 + 12/100)ï¿½] = Rs. [25000 ï¿½ 28/25 ï¿½ 28/25 ï¿½ 28/25] = Rs. 35123.20. C.I. = Rs. (35123.20 - 25000) = Rs. 10123.20.'
       },
       {
         question: 'At what rate of compound interest per annum will a sum of Rs. 1200 become Rs. 1348.32 in 2 years?',
         options: ['6%', '6.5%', '7%', '7.5%'],
         answer: '6%',
-        explanation: 'Let the rate be R% p.a. Then, 1200 × (1 + R/100)² = 1348.32 => (1 + R/100)² = 134832/120000 = 11236/10000. Therefore (1 + R/100)² = (106/100)² => 1 + R/100 = 106/100 => R = 6%.'
+        explanation: 'Let the rate be R% p.a. Then, 1200 ï¿½ (1 + R/100)ï¿½ = 1348.32 => (1 + R/100)ï¿½ = 134832/120000 = 11236/10000. Therefore (1 + R/100)ï¿½ = (106/100)ï¿½ => 1 + R/100 = 106/100 => R = 6%.'
       },
       {
         question: 'The least number of complete years in which a sum of money put out at 20% compound interest will be more than doubled is:',
         options: ['3', '4', '5', '6'],
         answer: '4',
-        explanation: 'P(1 + 20/100)^n > 2P => (6/5)^n > 2. Now, (6/5 × 6/5 × 6/5 × 6/5) > 2. So, n = 4 years.'
+        explanation: 'P(1 + 20/100)^n > 2P => (6/5)^n > 2. Now, (6/5 ï¿½ 6/5 ï¿½ 6/5 ï¿½ 6/5) > 2. So, n = 4 years.'
       },
       {
         question: 'Albert invested an amount of Rs. 8000 in a fixed deposit scheme for 2 years at compound interest rate 5 p.c.p.a. How much amount will Albert get on maturity of the fixed deposit?',
         options: ['Rs. 8600', 'Rs. 8620', 'Rs. 8820', 'None of these'],
         answer: 'Rs. 8820',
-        explanation: 'Amount = Rs. [8000 × (1 + 5/100)²] = Rs. [8000 × 21/20 × 21/20] = Rs. 8820.'
+        explanation: 'Amount = Rs. [8000 ï¿½ (1 + 5/100)ï¿½] = Rs. [8000 ï¿½ 21/20 ï¿½ 21/20] = Rs. 8820.'
       },
       {
         question: 'The effective annual rate of interest corresponding to a nominal rate of 6% per annum payable half-yearly is:',
         options: ['6.06%', '6.07%', '6.08%', '6.09%'],
         answer: '6.09%',
-        explanation: 'Amount of Rs. 100 for 1 year when compounded half-yearly = Rs. [100 × (1 + 3/100)²] = Rs. 106.09. Effective rate = (106.09 - 100)% = 6.09%.'
+        explanation: 'Amount of Rs. 100 for 1 year when compounded half-yearly = Rs. [100 ï¿½ (1 + 3/100)ï¿½] = Rs. 106.09. Effective rate = (106.09 - 100)% = 6.09%.'
       },
       {
         question: 'Simple interest on a certain sum of money for 3 years at 8% per annum is half the compound interest on Rs. 4000 for 2 years at 10% per annum. The sum placed on simple interest is:',
         options: ['Rs. 1550', 'Rs. 1650', 'Rs. 1750', 'Rs. 2000'],
         answer: 'Rs. 1750',
-        explanation: 'C.I. = Rs. [4000 × (1 + 10/100)² - 4000] = Rs. [4000 × 11/10 × 11/10 - 4000] = Rs. 840. Sum = Rs. (420 × 100)/(3 × 8) = Rs. 1750.'
+        explanation: 'C.I. = Rs. [4000 ï¿½ (1 + 10/100)ï¿½ - 4000] = Rs. [4000 ï¿½ 11/10 ï¿½ 11/10 - 4000] = Rs. 840. Sum = Rs. (420 ï¿½ 100)/(3 ï¿½ 8) = Rs. 1750.'
       },
       {
         question: 'If the simple interest on a sum of money for 2 years at 5% per annum is Rs. 50, what is the compound interest on the same at the same rate and for the same time?',
         options: ['Rs. 51.25', 'Rs. 52', 'Rs. 54.25', 'Rs. 60'],
         answer: 'Rs. 51.25',
-        explanation: 'Sum = Rs. (50 × 100)/(2 × 5) = Rs. 500. Amount = Rs. [500 × (1 + 5/100)²] = Rs. [500 × 21/20 × 21/20] = Rs. 551.25. C.I. = Rs. (551.25 - 500) = Rs. 51.25.'
+        explanation: 'Sum = Rs. (50 ï¿½ 100)/(2 ï¿½ 5) = Rs. 500. Amount = Rs. [500 ï¿½ (1 + 5/100)ï¿½] = Rs. [500 ï¿½ 21/20 ï¿½ 21/20] = Rs. 551.25. C.I. = Rs. (551.25 - 500) = Rs. 51.25.'
       },
       {
         question: 'The difference between simple interest and compound on Rs. 1200 for one year at 10% per annum reckoned half-yearly is:',
         options: ['Rs. 2.50', 'Rs. 3', 'Rs. 3.75', 'Rs. 4', 'None of these'],
         answer: 'Rs. 3',
-        explanation: 'S.I. = Rs. (1200 × 10 × 1)/100 = Rs. 120. C.I. = Rs. [1200 × (1 + 5/100)² - 1200] = Rs. 123. Difference = Rs. (123 - 120) = Rs. 3.'
+        explanation: 'S.I. = Rs. (1200 ï¿½ 10 ï¿½ 1)/100 = Rs. 120. C.I. = Rs. [1200 ï¿½ (1 + 5/100)ï¿½ - 1200] = Rs. 123. Difference = Rs. (123 - 120) = Rs. 3.'
       },
       {
         question: 'The difference between compound interest and simple interest on an amount of Rs. 15,000 for 2 years is Rs. 96. What is the rate of interest per annum?',
         options: ['8', '10', '12', 'Cannot be determined', 'None of these'],
         answer: '8',
-        explanation: '[15000 × (1 + R/100)² - 15000] - [15000 × R × 2/100] = 96 => 15000[(1 + R/100)² - 1 - 2R/100] = 96 => 15000[(100+R)² - 10000 - 200R]/10000 = 96 => 15000 × R²/10000 = 96 => R² = (96 × 2)/3 = 64 => R = 8. Rate = 8%.'
+        explanation: '[15000 ï¿½ (1 + R/100)ï¿½ - 15000] - [15000 ï¿½ R ï¿½ 2/100] = 96 => 15000[(1 + R/100)ï¿½ - 1 - 2R/100] = 96 => 15000[(100+R)ï¿½ - 10000 - 200R]/10000 = 96 => 15000 ï¿½ Rï¿½/10000 = 96 => Rï¿½ = (96 ï¿½ 2)/3 = 64 => R = 8. Rate = 8%.'
       },
       {
         question: 'The compound interest on a certain sum for 2 years at 10% per annum is Rs. 525. The simple interest on the same sum for double the time at half the rate percent per annum is:',
         options: ['Rs. 400', 'Rs. 500', 'Rs. 600', 'Rs. 800'],
         answer: 'Rs. 500',
-        explanation: 'Let the sum be Rs. P. Then, P[(11/10)² - 1] = 525 => P × 21/100 = 525 => P = (525 × 100)/21 = 2500. Sum = Rs. 2500. S.I. = Rs. (2500 × 5 × 4)/100 = Rs. 500.'
+        explanation: 'Let the sum be Rs. P. Then, P[(11/10)ï¿½ - 1] = 525 => P ï¿½ 21/100 = 525 => P = (525 ï¿½ 100)/21 = 2500. Sum = Rs. 2500. S.I. = Rs. (2500 ï¿½ 5 ï¿½ 4)/100 = Rs. 500.'
       },
       {
         question: 'What is the rate of compound interest? I. The principal was invested for 4 years. II. The earned interest was Rs. 1491.',
@@ -1095,7 +1095,7 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'What will be compounded amount? I. Rs. 200 was borrowed for 192 months at 6% compounded annually. II. Rs. 200 was borrowed for 16 years at 6%.',
         options: ['I alone sufficient while II alone not sufficient to answer', 'II alone sufficient while I alone not sufficient to answer', 'Either I or II alone sufficient to answer', 'Both I and II are not sufficient to answer', 'Both I and II are necessary to answer'],
         answer: 'Either I or II alone sufficient to answer',
-        explanation: 'I. Amount = Rs. [200 × (1 + 6/100)^16]. II. Amount = Rs. [200 × (1 + 6/100)^16]. Thus, I as well as II gives the answer. Correct answer is (C).'
+        explanation: 'I. Amount = Rs. [200 ï¿½ (1 + 6/100)^16]. II. Amount = Rs. [200 ï¿½ (1 + 6/100)^16]. Thus, I as well as II gives the answer. Correct answer is (C).'
       },
       {
         question: 'An amount of money was lent for 3 years. What will be the difference between the simple and the compound interest earned on it at the same rate? I. The rate of interest was 8 p.c.p.a. II. The total amount of simple interest was Rs. 1200.',
@@ -1107,13 +1107,13 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'What is the rate of interest p.c.p.a.? I. An amount doubles itself in 5 years on simple interest. II. Difference between the compound interest and the simple interest earned on a certain amount in 2 years is Rs. 400. III. Simple interest earned per annum is Rs. 2000.',
         options: ['I only', 'II and III only', 'All I, II and III', 'Any two of the three', 'I only or II and III only'],
         answer: 'I only or II and III only',
-        explanation: 'I. P×R×5/100 = P => R = 20. II. P(1+R/100)² - P - P×R×2/100 = 400 => PR² = 4000000. III. P×R×1/100 = 2000 => PR = 200000. From II and III: PR²/PR = 4000000/200000 => R = 20. Thus I only or (II and III) give answer. Correct answer is (E).'
+        explanation: 'I. Pï¿½Rï¿½5/100 = P => R = 20. II. P(1+R/100)ï¿½ - P - Pï¿½Rï¿½2/100 = 400 => PRï¿½ = 4000000. III. Pï¿½Rï¿½1/100 = 2000 => PR = 200000. From II and III: PRï¿½/PR = 4000000/200000 => R = 20. Thus I only or (II and III) give answer. Correct answer is (E).'
       },
       {
         question: 'What will be the compound interest earned on an amount of Rs. 5000 in 2 years? I. The simple interest on the same amount at the same rate of interest in 5 years is Rs. 2000. II. The compound interest and the simple interest earned in one year is the same. III. The amount becomed more than double on compound interest in 10 years.',
         options: ['I only', 'I and II only', 'II and III only', 'I and III only', 'None of these'],
         answer: 'I only',
-        explanation: 'P = Rs. 5000 & T = 2 years. I. S.I. on Rs. 5000 in 5 years is Rs. 2000. 5000 × R × 5/100 = 2000 => R = 8. Thus I only gives the answer. Correct answer is (A).'
+        explanation: 'P = Rs. 5000 & T = 2 years. I. S.I. on Rs. 5000 in 5 years is Rs. 2000. 5000 ï¿½ R ï¿½ 5/100 = 2000 => R = 8. Thus I only gives the answer. Correct answer is (A).'
       }
     ]
   },
@@ -3031,63 +3031,63 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
     questions: [
       {
         question: 'An accurate clock shows 8 o\'clock in the morning. Through how many degrees will the hour hand rotate when the clock shows 2 o\'clock in the afternoon?',
-        options: ['144°', '150°', '168°', '180°'],
-        answer: '180°',
-        explanation: 'Angle traced by the hour hand in 6 hours = (360/12) × 6 = 180°.'
+        options: ['144ï¿½', '150ï¿½', '168ï¿½', '180ï¿½'],
+        answer: '180ï¿½',
+        explanation: 'Angle traced by the hour hand in 6 hours = (360/12) ï¿½ 6 = 180ï¿½.'
       },
       {
         question: 'The reflex angle between the hands of a clock at 10.25 is:',
-        options: ['180°', '192 1/2°', '195°', '197 1/2°'],
-        answer: '197 1/2°',
-        explanation: 'Angle traced by hour hand in 125/12 hrs = (360/12) × (125/12) = 312 1/2°. Angle traced by minute hand in 25 min = (360/60) × 25 = 150°. Reflex angle = 360° - (312 1/2° - 150°) = 360° - 162 1/2° = 197 1/2°.'
+        options: ['180ï¿½', '192 1/2ï¿½', '195ï¿½', '197 1/2ï¿½'],
+        answer: '197 1/2ï¿½',
+        explanation: 'Angle traced by hour hand in 125/12 hrs = (360/12) ï¿½ (125/12) = 312 1/2ï¿½. Angle traced by minute hand in 25 min = (360/60) ï¿½ 25 = 150ï¿½. Reflex angle = 360ï¿½ - (312 1/2ï¿½ - 150ï¿½) = 360ï¿½ - 162 1/2ï¿½ = 197 1/2ï¿½.'
       },
       {
         question: 'A clock is started at noon. By 10 minutes past 5, the hour hand has turned through:',
-        options: ['145°', '150°', '155°', '160°'],
-        answer: '155°',
-        explanation: 'Angle traced by hour hand in 12 hrs = 360°. Angle traced by hour hand in 5 hrs 10 min, i.e., 31/6 hrs = (360/12) × (31/6) = 155°.'
+        options: ['145ï¿½', '150ï¿½', '155ï¿½', '160ï¿½'],
+        answer: '155ï¿½',
+        explanation: 'Angle traced by hour hand in 12 hrs = 360ï¿½. Angle traced by hour hand in 5 hrs 10 min, i.e., 31/6 hrs = (360/12) ï¿½ (31/6) = 155ï¿½.'
       },
       {
         question: 'A watch which gains 5 seconds in 3 minutes was set right at 7 a.m. In the afternoon of the same day, when the watch indicated quarter past 4 o\'clock, the true time is:',
         options: ['59 7/12 min. past 3', '4 p.m.', '58 7/11 min. past 3', '2 3/11 min. past 4'],
         answer: '4 p.m.',
-        explanation: 'Time from 7 a.m. to 4.15 p.m. = 9 hrs 15 min. = 37/4 hrs. 3 min. 5 sec. of this clock = 3 min. of the correct clock. => 37/720 hrs of this clock = 1/20 hrs of the correct clock. => 37/4 hrs of this clock = (1/20 × 720/37 × 37/4) hrs of the correct clock = 9 hrs of the correct clock. The correct time is 9 hrs after 7 a.m. i.e., 4 p.m.'
+        explanation: 'Time from 7 a.m. to 4.15 p.m. = 9 hrs 15 min. = 37/4 hrs. 3 min. 5 sec. of this clock = 3 min. of the correct clock. => 37/720 hrs of this clock = 1/20 hrs of the correct clock. => 37/4 hrs of this clock = (1/20 ï¿½ 720/37 ï¿½ 37/4) hrs of the correct clock = 9 hrs of the correct clock. The correct time is 9 hrs after 7 a.m. i.e., 4 p.m.'
       },
       {
         question: 'How much does a watch lose per day, if its hands coincide every 64 minutes?',
         options: ['32 8/11 min.', '36 5/11 min.', '90 min.', '96 min.'],
         answer: '32 8/11 min.',
-        explanation: '55 min. spaces are covered in 60 min. 60 min. spaces are covered in (60/55) × 60 min. = 65 5/11 min. Loss in 64 min. = (65 5/11 - 64) = 16/11 min. Loss in 24 hrs = (16/11 × 1/64 × 24 × 60) min. = 32 8/11 min.'
+        explanation: '55 min. spaces are covered in 60 min. 60 min. spaces are covered in (60/55) ï¿½ 60 min. = 65 5/11 min. Loss in 64 min. = (65 5/11 - 64) = 16/11 min. Loss in 24 hrs = (16/11 ï¿½ 1/64 ï¿½ 24 ï¿½ 60) min. = 32 8/11 min.'
       },
       {
         question: 'At what time between 7 and 8 o\'clock will the hands of a clock be in the same straight line but, not together?',
         options: ['5 min. past 7', '5 2/11 min. past 7', '5 3/11 min. past 7', '5 5/11 min. past 7'],
         answer: '5 5/11 min. past 7',
-        explanation: 'When the hands of the clock are in the same straight line but not together, they are 30 minute spaces apart. At 7 o\'clock, they are 25 min. spaces apart. Minute hand will have to gain only 5 min. spaces. 55 min. spaces are gained in 60 min. 5 min. spaces are gained in (60/55) × 5 min = 5 5/11 min. Required time = 5 5/11 min. past 7.'
+        explanation: 'When the hands of the clock are in the same straight line but not together, they are 30 minute spaces apart. At 7 o\'clock, they are 25 min. spaces apart. Minute hand will have to gain only 5 min. spaces. 55 min. spaces are gained in 60 min. 5 min. spaces are gained in (60/55) ï¿½ 5 min = 5 5/11 min. Required time = 5 5/11 min. past 7.'
       },
       {
         question: 'At what time between 5.30 and 6 will the hands of a clock be at right angles?',
         options: ['43 5/11 min. past 5', '43 7/11 min. past 5', '40 min. past 5', '45 min. past 5'],
         answer: '43 7/11 min. past 5',
-        explanation: 'At 5 o\'clock, the hands are 25 min. spaces apart. To be at right angles and that too between 5.30 and 6, the minute hand has to gain (25 + 15) = 40 min. spaces. 55 min. spaces are gained in 60 min. 40 min. spaces are gained in (60/55) × 40 = 43 7/11 min. Required time = 43 7/11 min. past 5.'
+        explanation: 'At 5 o\'clock, the hands are 25 min. spaces apart. To be at right angles and that too between 5.30 and 6, the minute hand has to gain (25 + 15) = 40 min. spaces. 55 min. spaces are gained in 60 min. 40 min. spaces are gained in (60/55) ï¿½ 40 = 43 7/11 min. Required time = 43 7/11 min. past 5.'
       },
       {
         question: 'The angle between the minute hand and the hour hand of a clock when the time is 4.20, is:',
-        options: ['0°', '10°', '5°', '20°'],
-        answer: '10°',
-        explanation: 'Angle traced by hour hand in 13/3 hrs = (360/12) × (13/3) = 130°. Angle traced by min. hand in 20 min = (360/60) × 20 = 120°. Required angle = (130 - 120)° = 10°.'
+        options: ['0ï¿½', '10ï¿½', '5ï¿½', '20ï¿½'],
+        answer: '10ï¿½',
+        explanation: 'Angle traced by hour hand in 13/3 hrs = (360/12) ï¿½ (13/3) = 130ï¿½. Angle traced by min. hand in 20 min = (360/60) ï¿½ 20 = 120ï¿½. Required angle = (130 - 120)ï¿½ = 10ï¿½.'
       },
       {
         question: 'At what angle the hands of a clock are inclined at 15 minutes past 5?',
-        options: ['58 1/2°', '64°', '67 1/2°', '72 1/2°'],
-        answer: '67 1/2°',
-        explanation: 'Angle traced by hour hand in 21/4 hrs = (360/12) × (21/4) = 157 1/2°. Angle traced by min. hand in 15 min = (360/60) × 15 = 90°. Required angle = (157 1/2 - 90)° = 67 1/2°.'
+        options: ['58 1/2ï¿½', '64ï¿½', '67 1/2ï¿½', '72 1/2ï¿½'],
+        answer: '67 1/2ï¿½',
+        explanation: 'Angle traced by hour hand in 21/4 hrs = (360/12) ï¿½ (21/4) = 157 1/2ï¿½. Angle traced by min. hand in 15 min = (360/60) ï¿½ 15 = 90ï¿½. Required angle = (157 1/2 - 90)ï¿½ = 67 1/2ï¿½.'
       },
       {
         question: 'At 3:40, the hour hand and the minute hand of a clock form an angle of:',
-        options: ['120°', '125°', '130°', '135°'],
-        answer: '130°',
-        explanation: 'Angle traced by hour hand in 12 hrs = 360°. Angle traced by it in 11/3 hrs = (360/12) × (11/3) = 110°. Angle traced by minute hand in 60 min = 360°. Angle traced by it in 40 min = (360/60) × 40 = 240°. Required angle = (240 - 110)° = 130°.'
+        options: ['120ï¿½', '125ï¿½', '130ï¿½', '135ï¿½'],
+        answer: '130ï¿½',
+        explanation: 'Angle traced by hour hand in 12 hrs = 360ï¿½. Angle traced by it in 11/3 hrs = (360/12) ï¿½ (11/3) = 110ï¿½. Angle traced by minute hand in 60 min = 360ï¿½. Angle traced by it in 40 min = (360/60) ï¿½ 40 = 240ï¿½. Required angle = (240 - 110)ï¿½ = 130ï¿½.'
       },
       {
         question: 'How many times are the hands of a clock at right angle in a day?',
@@ -3097,9 +3097,9 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
       },
       {
         question: 'The angle between the minute hand and the hour hand of a clock when the time is 8.30, is:',
-        options: ['80°', '75°', '60°', '105°'],
-        answer: '75°',
-        explanation: 'Angle traced by hour hand in 17/2 hrs = (360/12) × (17/2) = 255°. Angle traced by min. hand in 30 min = (360/60) × 30 = 180°. Required angle = (255 - 180)° = 75°.'
+        options: ['80ï¿½', '75ï¿½', '60ï¿½', '105ï¿½'],
+        answer: '75ï¿½',
+        explanation: 'Angle traced by hour hand in 17/2 hrs = (360/12) ï¿½ (17/2) = 255ï¿½. Angle traced by min. hand in 30 min = (360/60) ï¿½ 30 = 180ï¿½. Required angle = (255 - 180)ï¿½ = 75ï¿½.'
       },
       {
         question: 'How many times in a day, are the hands of a clock in straight line but opposite in direction?',
@@ -3111,19 +3111,19 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'At what time between 4 and 5 o\'clock will the hands of a watch point in opposite directions?',
         options: ['45 min. past 4', '40 min. past 4', '50 4/11 min. past 4', '54 6/11 min. past 4'],
         answer: '54 6/11 min. past 4',
-        explanation: 'At 4 o\'clock, the hands of the watch are 20 min. spaces apart. To be in opposite directions, they must be 30 min. spaces apart. Minute hand will have to gain 50 min. spaces. 55 min. spaces are gained in 60 min. 50 min. spaces are gained in (60/55) × 50 min. or 54 6/11 min. Required time = 54 6/11 min. past 4.'
+        explanation: 'At 4 o\'clock, the hands of the watch are 20 min. spaces apart. To be in opposite directions, they must be 30 min. spaces apart. Minute hand will have to gain 50 min. spaces. 55 min. spaces are gained in 60 min. 50 min. spaces are gained in (60/55) ï¿½ 50 min. or 54 6/11 min. Required time = 54 6/11 min. past 4.'
       },
       {
         question: 'At what time between 9 and 10 o\'clock will the hands of a watch be together?',
         options: ['45 min. past 9', '50 min. past 9', '49 1/11 min. past 9', '48 2/11 min. past 9'],
         answer: '49 1/11 min. past 9',
-        explanation: 'To be together between 9 and 10 o\'clock, the minute hand has to gain 45 min. spaces. 55 min. spaces gained in 60 min. 45 min. spaces are gained in (60/55) × 45 min or 49 1/11 min. The hands are together at 49 1/11 min. past 9.'
+        explanation: 'To be together between 9 and 10 o\'clock, the minute hand has to gain 45 min. spaces. 55 min. spaces gained in 60 min. 45 min. spaces are gained in (60/55) ï¿½ 45 min or 49 1/11 min. The hands are together at 49 1/11 min. past 9.'
       },
       {
         question: 'At what time, in minutes, between 3 o\'clock and 4 o\'clock, both the needles will coincide each other?',
         options: ['5 1/11', '12 4/11', '13 4/11', '16 4/11'],
         answer: '16 4/11',
-        explanation: 'At 3 o\'clock, the minute hand is 15 min. spaces apart from the hour hand. To be coincident, it must gain 15 min. spaces. 55 min. are gained in 60 min. 15 min. are gained in (60/55) × 15 min = 16 4/11 min. The hands are coincident at 16 4/11 min. past 3.'
+        explanation: 'At 3 o\'clock, the minute hand is 15 min. spaces apart from the hour hand. To be coincident, it must gain 15 min. spaces. 55 min. are gained in 60 min. 15 min. are gained in (60/55) ï¿½ 15 min = 16 4/11 min. The hands are coincident at 16 4/11 min. past 3.'
       },
       {
         question: 'How many times do the hands of a clock coincide in a day?',
@@ -3141,7 +3141,7 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'A watch which gains uniformly is 2 minutes low at noon on Monday and is 4 min. 48 sec fast at 2 p.m. on the following Monday. When was it correct?',
         options: ['2 p.m. on Tuesday', '2 p.m. on Wednesday', '3 p.m. on Thursday', '1 p.m. on Friday'],
         answer: '2 p.m. on Wednesday',
-        explanation: 'Time from 12 p.m. on Monday to 2 p.m. on the following Monday = 7 days 2 hours = 170 hours. The watch gains (2 + 4 4/5) min. or 34/5 min. in 170 hrs. Now, 34/5 min. are gained in 170 hrs. 2 min. are gained in (170 × 5/34 × 2) hrs = 50 hrs. Watch is correct 2 days 2 hrs. after 12 p.m. on Monday i.e., it will be correct at 2 p.m. on Wednesday.'
+        explanation: 'Time from 12 p.m. on Monday to 2 p.m. on the following Monday = 7 days 2 hours = 170 hours. The watch gains (2 + 4 4/5) min. or 34/5 min. in 170 hrs. Now, 34/5 min. are gained in 170 hrs. 2 min. are gained in (170 ï¿½ 5/34 ï¿½ 2) hrs = 50 hrs. Watch is correct 2 days 2 hrs. after 12 p.m. on Monday i.e., it will be correct at 2 p.m. on Wednesday.'
       }
     ]
   },
@@ -3151,93 +3151,93 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
     questions: [
       {
         question: 'A right triangle with sides 3 cm, 4 cm and 5 cm is rotated the side of 3 cm to form a cone. The volume of the cone so formed is:',
-        options: ['12p cm³', '15p cm³', '16p cm³', '20p cm³'],
-        answer: '12p cm³',
-        explanation: '[Diagram: A right triangle with sides 3 cm, 4 cm, 5 cm is rotated about the side of 3 cm (height). The cone formed has radius r = 3 cm and height h = 4 cm.]\nWhen the triangle is rotated about the side of 3 cm, we get r = 3 cm and h = 4 cm.\n? Volume = (1/3)pr²h = (1/3) × p × 3² × 4 = 12p cm³.'
+        options: ['12p cmï¿½', '15p cmï¿½', '16p cmï¿½', '20p cmï¿½'],
+        answer: '12p cmï¿½',
+        explanation: '[Diagram: A right triangle with sides 3 cm, 4 cm, 5 cm is rotated about the side of 3 cm (height). The cone formed has radius r = 3 cm and height h = 4 cm.]\nWhen the triangle is rotated about the side of 3 cm, we get r = 3 cm and h = 4 cm.\n? Volume = (1/3)prï¿½h = (1/3) ï¿½ p ï¿½ 3ï¿½ ï¿½ 4 = 12p cmï¿½.'
       },
       {
         question: 'In a shower, 5 cm of rain falls. The volume of water that falls on 1.5 hectares of ground is:',
         options: ['75 cu. m', '750 cu. m', '7500 cu. m', '75000 cu. m'],
         answer: '750 cu. m',
-        explanation: '1 hectare = 10,000 m². So, Area = (1.5 × 10000) m² = 15000 m².\nDepth = 5/100 m = 1/20 m.\n? Volume = (Area × Depth) = 15000 × (1/20) m³ = 750 m³.'
+        explanation: '1 hectare = 10,000 mï¿½. So, Area = (1.5 ï¿½ 10000) mï¿½ = 15000 mï¿½.\nDepth = 5/100 m = 1/20 m.\n? Volume = (Area ï¿½ Depth) = 15000 ï¿½ (1/20) mï¿½ = 750 mï¿½.'
       },
       {
         question: 'A hall is 15 m long and 12 m broad. If the sum of the areas of the floor and the ceiling is equal to the sum of the areas of four walls, the volume of the hall is:',
         options: ['720', '900', '1200', '1800'],
         answer: '1200',
-        explanation: '2(15 × 12) = 2(15 + 12) × h\n? 360 = 54h\n? h = 360/54 = 20/3 m.\n? Volume = 15 × 12 × (20/3) m³ = 1200 m³.'
+        explanation: '2(15 ï¿½ 12) = 2(15 + 12) ï¿½ h\n? 360 = 54h\n? h = 360/54 = 20/3 m.\n? Volume = 15 ï¿½ 12 ï¿½ (20/3) mï¿½ = 1200 mï¿½.'
       },
       {
         question: '66 cubic centimetres of silver is drawn into a wire 1 mm in diameter. The length of the wire in metres will be:',
         options: ['84', '90', '168', '336'],
         answer: '84',
-        explanation: 'Let the length of the wire be h.\nRadius = (1/2) mm = 1/20 cm. Then,\n(22/7) × (1/20) × (1/20) × h = 66.\n? h = (66 × 20 × 20 × 7) / 22 = 8400 cm = 84 m.'
+        explanation: 'Let the length of the wire be h.\nRadius = (1/2) mm = 1/20 cm. Then,\n(22/7) ï¿½ (1/20) ï¿½ (1/20) ï¿½ h = 66.\n? h = (66 ï¿½ 20 ï¿½ 20 ï¿½ 7) / 22 = 8400 cm = 84 m.'
       },
       {
-        question: 'A hollow iron pipe is 21 cm long and its external diameter is 8 cm. If the thickness of the pipe is 1 cm and iron weighs 8 g/cm³, then the weight of the pipe is:',
+        question: 'A hollow iron pipe is 21 cm long and its external diameter is 8 cm. If the thickness of the pipe is 1 cm and iron weighs 8 g/cmï¿½, then the weight of the pipe is:',
         options: ['3.6 kg', '3.696 kg', '36 kg', '36.9 kg'],
         answer: '3.696 kg',
-        explanation: 'External radius = 4 cm,\nInternal radius = 3 cm.\nVolume of iron = (22/7) × [(4)² - (3)²] × 21 cm³\n= (22/7) × 7 × 1 × 21 cm³\n= 462 cm³.\n? Weight of iron = (462 × 8) gm = 3696 gm = 3.696 kg.'
+        explanation: 'External radius = 4 cm,\nInternal radius = 3 cm.\nVolume of iron = (22/7) ï¿½ [(4)ï¿½ - (3)ï¿½] ï¿½ 21 cmï¿½\n= (22/7) ï¿½ 7 ï¿½ 1 ï¿½ 21 cmï¿½\n= 462 cmï¿½.\n? Weight of iron = (462 ï¿½ 8) gm = 3696 gm = 3.696 kg.'
       },
       {
         question: 'A boat having a length 3 m and breadth 2 m is floating on a lake. The boat sinks by 1 cm when a man gets on it. The mass of the man is:',
         options: ['12 kg', '60 kg', '72 kg', '96 kg'],
         answer: '60 kg',
-        explanation: 'Volume of water displaced = (3 × 2 × 0.01) m³ = 0.06 m³.\n? Mass of man = Volume of water displaced × Density of water\n= (0.06 × 1000) kg\n= 60 kg.'
+        explanation: 'Volume of water displaced = (3 ï¿½ 2 ï¿½ 0.01) mï¿½ = 0.06 mï¿½.\n? Mass of man = Volume of water displaced ï¿½ Density of water\n= (0.06 ï¿½ 1000) kg\n= 60 kg.'
       },
       {
-        question: '50 men took a dip in a water tank 40 m long and 20 m broad on a religious day. If the average displacement of water by a man is 4 m³, then the rise in the water level in the tank will be:',
+        question: '50 men took a dip in a water tank 40 m long and 20 m broad on a religious day. If the average displacement of water by a man is 4 mï¿½, then the rise in the water level in the tank will be:',
         options: ['20 cm', '25 cm', '35 cm', '50 cm'],
         answer: '25 cm',
-        explanation: 'Total volume of water displaced = (4 × 50) m³ = 200 m³.\n? Rise in water level = 200 / (40 × 20) m = 0.25 m = 25 cm.'
+        explanation: 'Total volume of water displaced = (4 ï¿½ 50) mï¿½ = 200 mï¿½.\n? Rise in water level = 200 / (40 ï¿½ 20) m = 0.25 m = 25 cm.'
       },
       {
         question: 'The slant height of a right circular cone is 10 m and its height is 8 m. Find the area of its curved surface.',
-        options: ['30p m²', '40p m²', '60p m²', '80p m²'],
-        answer: '60p m²',
-        explanation: '[Diagram: A right circular cone with slant height l = 10 m and height h = 8 m]\nl = 10 m, h = 8 m.\nSo, r = v(l² - h²) = v(100 - 64) = v36 = 6 m.\n? Curved surface area = prl = (p × 6 × 10) m² = 60p m².'
+        options: ['30p mï¿½', '40p mï¿½', '60p mï¿½', '80p mï¿½'],
+        answer: '60p mï¿½',
+        explanation: '[Diagram: A right circular cone with slant height l = 10 m and height h = 8 m]\nl = 10 m, h = 8 m.\nSo, r = v(lï¿½ - hï¿½) = v(100 - 64) = v36 = 6 m.\n? Curved surface area = prl = (p ï¿½ 6 ï¿½ 10) mï¿½ = 60p mï¿½.'
       },
       {
         question: 'A cistern 6 m long and 4 m wide contains water up to a depth of 1 m 25 cm. The total area of the wet surface is:',
-        options: ['49 m²', '50 m²', '53.5 m²', '55 m²'],
-        answer: '49 m²',
-        explanation: 'Area of the wet surface = [2(lb + bh + lh) - lb]\n= 2(bh + lh) + lb\n= [2(4 × 1.25 + 6 × 1.25) + 6 × 4] m²\n= [2(5 + 7.5) + 24] m²\n= [25 + 24] m²\n= 49 m².'
+        options: ['49 mï¿½', '50 mï¿½', '53.5 mï¿½', '55 mï¿½'],
+        answer: '49 mï¿½',
+        explanation: 'Area of the wet surface = [2(lb + bh + lh) - lb]\n= 2(bh + lh) + lb\n= [2(4 ï¿½ 1.25 + 6 ï¿½ 1.25) + 6 ï¿½ 4] mï¿½\n= [2(5 + 7.5) + 24] mï¿½\n= [25 + 24] mï¿½\n= 49 mï¿½.'
       },
       {
-        question: 'A metallic sheet is of rectangular shape with dimensions 48 m × 36 m. From each of its corners, a square is cut off so as to make an open box. If the length of the square is 8 m, the volume of the box (in m³) is:',
+        question: 'A metallic sheet is of rectangular shape with dimensions 48 m ï¿½ 36 m. From each of its corners, a square is cut off so as to make an open box. If the length of the square is 8 m, the volume of the box (in mï¿½) is:',
         options: ['4830', '5120', '6420', '8960'],
         answer: '5120',
-        explanation: 'Clearly, l = (48 - 16) m = 32 m,\nb = (36 - 16) m = 20 m,\nh = 8 m.\n? Volume of the box = (32 × 20 × 8) m³ = 5120 m³.'
+        explanation: 'Clearly, l = (48 - 16) m = 32 m,\nb = (36 - 16) m = 20 m,\nh = 8 m.\n? Volume of the box = (32 ï¿½ 20 ï¿½ 8) mï¿½ = 5120 mï¿½.'
       },
       {
-        question: 'The curved surface area of a cylindrical pillar is 264 m² and its volume is 924 m³. Find the ratio of its diameter to its height.',
+        question: 'The curved surface area of a cylindrical pillar is 264 mï¿½ and its volume is 924 mï¿½. Find the ratio of its diameter to its height.',
         options: ['3 : 7', '7 : 3', '6 : 7', '7 : 6'],
         answer: '7 : 3',
-        explanation: 'pr²h / 2prh = 924 / 264 ? r = (924/264) × 2 = 7 m.\nAnd, 2prh = 264 ? h = 264 × (7/22) × (1/2) × (1/7) = 6 m.\n? Required ratio = 2r/h = 14/6 = 7 : 3.'
+        explanation: 'prï¿½h / 2prh = 924 / 264 ? r = (924/264) ï¿½ 2 = 7 m.\nAnd, 2prh = 264 ? h = 264 ï¿½ (7/22) ï¿½ (1/2) ï¿½ (1/7) = 6 m.\n? Required ratio = 2r/h = 14/6 = 7 : 3.'
       },
       {
         question: 'A cistern of capacity 8000 litres measures externally 3.3 m by 2.6 m by 1.1 m and its walls are 5 cm thick. The thickness of the bottom is:',
         options: ['90 cm', '1 dm', '1 m', '1.1 cm'],
         answer: '1 dm',
-        explanation: 'Let the thickness of the bottom be x cm.\nThen, [(330 - 10) × (260 - 10) × (110 - x)] = 8000 × 1000\n? 320 × 250 × (110 - x) = 8000000\n? (110 - x) = 8000000 / (320 × 250) = 100\n? x = 10 cm = 1 dm.'
+        explanation: 'Let the thickness of the bottom be x cm.\nThen, [(330 - 10) ï¿½ (260 - 10) ï¿½ (110 - x)] = 8000 ï¿½ 1000\n? 320 ï¿½ 250 ï¿½ (110 - x) = 8000000\n? (110 - x) = 8000000 / (320 ï¿½ 250) = 100\n? x = 10 cm = 1 dm.'
       },
       {
         question: 'What is the total surface area of a right circular cone of height 14 cm and base radius 7 cm?',
-        options: ['344.35 cm²', '462 cm²', '498.35 cm²', 'None of these'],
-        answer: '498.35 cm²',
-        explanation: '[Diagram: A right circular cone with height h = 14 cm and base radius r = 7 cm]\nh = 14 cm, r = 7 cm.\nSo, l = v(7² + 14²) = v(49 + 196) = v245 = 7v5 cm.\n? Total surface area = prl + pr²\n= (22/7 × 7 × 7v5 + 22/7 × 7 × 7) cm²\n= [154(v5 + 1)] cm²\n= (154 × 3.236) cm²\n= 498.35 cm².'
+        options: ['344.35 cmï¿½', '462 cmï¿½', '498.35 cmï¿½', 'None of these'],
+        answer: '498.35 cmï¿½',
+        explanation: '[Diagram: A right circular cone with height h = 14 cm and base radius r = 7 cm]\nh = 14 cm, r = 7 cm.\nSo, l = v(7ï¿½ + 14ï¿½) = v(49 + 196) = v245 = 7v5 cm.\n? Total surface area = prl + prï¿½\n= (22/7 ï¿½ 7 ï¿½ 7v5 + 22/7 ï¿½ 7 ï¿½ 7) cmï¿½\n= [154(v5 + 1)] cmï¿½\n= (154 ï¿½ 3.236) cmï¿½\n= 498.35 cmï¿½.'
       },
       {
         question: 'A large cube is formed from the material obtained by melting three smaller cubes of 3, 4 and 5 cm side. What is the ratio of the total surface areas of the smaller cubes and the large cube?',
         options: ['2 : 1', '3 : 2', '25 : 18', '27 : 20'],
         answer: '25 : 18',
-        explanation: 'Volume of the large cube = (3³ + 4³ + 5³) = 216 cm³.\nLet the edge of the large cube be a.\nSo, a³ = 216 ? a = 6 cm.\n? Required ratio = [6 × (3² + 4² + 5²)] / [6 × 6²] = (6 × 50) / (6 × 36) = 50/36 = 25 : 18.'
+        explanation: 'Volume of the large cube = (3ï¿½ + 4ï¿½ + 5ï¿½) = 216 cmï¿½.\nLet the edge of the large cube be a.\nSo, aï¿½ = 216 ? a = 6 cm.\n? Required ratio = [6 ï¿½ (3ï¿½ + 4ï¿½ + 5ï¿½)] / [6 ï¿½ 6ï¿½] = (6 ï¿½ 50) / (6 ï¿½ 36) = 50/36 = 25 : 18.'
       },
       {
-        question: 'How many bricks, each measuring 25 cm × 11.25 cm × 6 cm, will be needed to build a wall of 8 m × 6 m × 22.5 cm?',
+        question: 'How many bricks, each measuring 25 cm ï¿½ 11.25 cm ï¿½ 6 cm, will be needed to build a wall of 8 m ï¿½ 6 m ï¿½ 22.5 cm?',
         options: ['5600', '6000', '6400', '7200'],
         answer: '6400',
-        explanation: 'Number of bricks = Volume of the wall / Volume of 1 brick\n= (800 × 600 × 22.5) / (25 × 11.25 × 6)\n= 10800000 / 1687.5\n= 6400.'
+        explanation: 'Number of bricks = Volume of the wall / Volume of 1 brick\n= (800 ï¿½ 600 ï¿½ 22.5) / (25 ï¿½ 11.25 ï¿½ 6)\n= 10800000 / 1687.5\n= 6400.'
       }
     ]
   },
@@ -3249,7 +3249,7 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'If one-third of one-fourth of a number is 15, then three-tenth of that number is:',
         options: ['35', '36', '45', '54'],
         answer: '54',
-        explanation: 'Let the number be x.\nThen, (1/3) of (1/4) of x = 15 ? x = 15 × 3 × 4 = 180.\nSo, required number = (3/10) × 180 = 54.'
+        explanation: 'Let the number be x.\nThen, (1/3) of (1/4) of x = 15 ? x = 15 ï¿½ 3 ï¿½ 4 = 180.\nSo, required number = (3/10) ï¿½ 180 = 54.'
       },
       {
         question: 'Three times the first of three consecutive odd integers is 3 more than twice the third. The third integer is:',
@@ -3267,13 +3267,13 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'The difference between a two-digit number and the number obtained by interchanging the digits is 36. What is the difference between the sum and the difference of the digits of the number if the ratio between the digits of the number is 1:2?',
         options: ['4', '8', '16', 'None of these'],
         answer: '8',
-        explanation: 'Since the number is greater than the number obtained on reversing the digits, so the ten\'s digit is greater than the unit\'s digit.\nLet ten\'s and unit\'s digits be 2x and x respectively.\nThen, (10 × 2x + x) - (10x + 2x) = 36\n? 9x = 36\n? x = 4.\n? Required difference = (2x + x) - (2x - x) = 2x = 8.'
+        explanation: 'Since the number is greater than the number obtained on reversing the digits, so the ten\'s digit is greater than the unit\'s digit.\nLet ten\'s and unit\'s digits be 2x and x respectively.\nThen, (10 ï¿½ 2x + x) - (10x + 2x) = 36\n? 9x = 36\n? x = 4.\n? Required difference = (2x + x) - (2x - x) = 2x = 8.'
       },
       {
         question: 'A two-digit number is such that the product of the digits is 8. When 18 is added to the number, then the digits are reversed. The number is:',
         options: ['18', '24', '42', '81'],
         answer: '24',
-        explanation: 'Let the ten\'s and unit digit be x and 8/x respectively.\nThen, (10x + 8/x) + 18 = 10 × (8/x) + x\n? 10x² + 8 + 18x = 80 + x²\n? 9x² + 18x - 72 = 0\n? x² + 2x - 8 = 0\n? (x + 4)(x - 2) = 0\n? x = 2.\nSo, the number = 10 × 2 + 8/2 = 24.'
+        explanation: 'Let the ten\'s and unit digit be x and 8/x respectively.\nThen, (10x + 8/x) + 18 = 10 ï¿½ (8/x) + x\n? 10xï¿½ + 8 + 18x = 80 + xï¿½\n? 9xï¿½ + 18x - 72 = 0\n? xï¿½ + 2x - 8 = 0\n? (x + 4)(x - 2) = 0\n? x = 2.\nSo, the number = 10 ï¿½ 2 + 8/2 = 24.'
       },
       {
         question: 'The sum of the digits of a two-digit number is 15 and the difference between the digits is 3. What is the two-digit number?',
@@ -3285,7 +3285,7 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'The sum of the squares of three numbers is 138, while the sum of their products taken two at a time is 131. Their sum is:',
         options: ['20', '30', '40', 'None of these'],
         answer: '20',
-        explanation: 'Let the numbers be a, b and c.\nThen, a² + b² + c² = 138 and (ab + bc + ca) = 131.\n(a + b + c)² = a² + b² + c² + 2(ab + bc + ca) = 138 + 2 × 131 = 400.\n? (a + b + c) = v400 = 20.'
+        explanation: 'Let the numbers be a, b and c.\nThen, aï¿½ + bï¿½ + cï¿½ = 138 and (ab + bc + ca) = 131.\n(a + b + c)ï¿½ = aï¿½ + bï¿½ + cï¿½ + 2(ab + bc + ca) = 138 + 2 ï¿½ 131 = 400.\n? (a + b + c) = v400 = 20.'
       },
       {
         question: 'A number consists of two digits. If the digits interchange places and the new number is added to the original number, then the resulting number will be divisible by:',
@@ -3297,25 +3297,25 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'In a two-digit number, if it is known that its unit\'s digit exceeds its ten\'s digit by 2 and that the product of the given number and the sum of its digits is equal to 144, then the number is:',
         options: ['24', '26', '42', '46'],
         answer: '24',
-        explanation: 'Let the ten\'s digit be x.\nThen, unit\'s digit = x + 2.\nNumber = 10x + (x + 2) = 11x + 2.\nSum of digits = x + (x + 2) = 2x + 2.\n? (11x + 2)(2x + 2) = 144\n? 22x² + 26x - 140 = 0\n? 11x² + 13x - 70 = 0\n? (x - 2)(11x + 35) = 0\n? x = 2.\nHence, required number = 11x + 2 = 24.'
+        explanation: 'Let the ten\'s digit be x.\nThen, unit\'s digit = x + 2.\nNumber = 10x + (x + 2) = 11x + 2.\nSum of digits = x + (x + 2) = 2x + 2.\n? (11x + 2)(2x + 2) = 144\n? 22xï¿½ + 26x - 140 = 0\n? 11xï¿½ + 13x - 70 = 0\n? (x - 2)(11x + 35) = 0\n? x = 2.\nHence, required number = 11x + 2 = 24.'
       },
       {
         question: 'Find a positive number which when increased by 17 is equal to 60 times the reciprocal of the number.',
         options: ['3', '10', '17', '20'],
         answer: '3',
-        explanation: 'Let the number be x.\nThen, x + 17 = 60/x\n? x² + 17x - 60 = 0\n? (x + 20)(x - 3) = 0\n? x = 3.'
+        explanation: 'Let the number be x.\nThen, x + 17 = 60/x\n? xï¿½ + 17x - 60 = 0\n? (x + 20)(x - 3) = 0\n? x = 3.'
       },
       {
         question: 'The product of two numbers is 9375 and the quotient, when the larger one is divided by the smaller, is 15. The sum of the numbers is:',
         options: ['380', '395', '400', '425'],
         answer: '400',
-        explanation: 'Let the numbers be x and y.\nThen, xy = 9375 and x/y = 15.\nxy / (x/y) = 9375/15\n? y² = 625.\n? y = 25.\n? x = 15y = (15 × 25) = 375.\n? Sum of the numbers = x + y = 375 + 25 = 400.'
+        explanation: 'Let the numbers be x and y.\nThen, xy = 9375 and x/y = 15.\nxy / (x/y) = 9375/15\n? yï¿½ = 625.\n? y = 25.\n? x = 15y = (15 ï¿½ 25) = 375.\n? Sum of the numbers = x + y = 375 + 25 = 400.'
       },
       {
         question: 'The product of two numbers is 120 and the sum of their squares is 289. The sum of the numbers is:',
         options: ['20', '23', '169', 'None of these'],
         answer: '23',
-        explanation: 'Let the numbers be x and y.\nThen, xy = 120 and x² + y² = 289.\n? (x + y)² = x² + y² + 2xy = 289 + (2 × 120) = 529\n? x + y = v529 = 23.'
+        explanation: 'Let the numbers be x and y.\nThen, xy = 120 and xï¿½ + yï¿½ = 289.\n? (x + y)ï¿½ = xï¿½ + yï¿½ + 2xy = 289 + (2 ï¿½ 120) = 529\n? x + y = v529 = 23.'
       },
       {
         question: 'A number consists of 3 digits whose sum is 10. The middle digit is equal to the sum of the other two and the number will be increased by 99 if its digits are reversed. The number is:',
@@ -3327,19 +3327,19 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'The sum of two numbers is 25 and their difference is 13. Find their product.',
         options: ['104', '114', '315', '325'],
         answer: '114',
-        explanation: 'Let the numbers be x and y.\nThen, x + y = 25 and x - y = 13.\n4xy = (x + y)² - (x - y)²\n= (25)² - (13)²\n= (625 - 169)\n= 456\n? xy = 114.'
+        explanation: 'Let the numbers be x and y.\nThen, x + y = 25 and x - y = 13.\n4xy = (x + y)ï¿½ - (x - y)ï¿½\n= (25)ï¿½ - (13)ï¿½\n= (625 - 169)\n= 456\n? xy = 114.'
       },
       {
         question: 'What is the sum of two consecutive even numbers, the difference of whose squares is 84?',
         options: ['34', '38', '42', '46'],
         answer: '42',
-        explanation: 'Let the numbers be x and x + 2.\nThen, (x + 2)² - x² = 84\n? 4x + 4 = 84\n? 4x = 80\n? x = 20.\n? The required sum = x + (x + 2) = 2x + 2 = 42.'
+        explanation: 'Let the numbers be x and x + 2.\nThen, (x + 2)ï¿½ - xï¿½ = 84\n? 4x + 4 = 84\n? 4x = 80\n? x = 20.\n? The required sum = x + (x + 2) = 2x + 2 = 42.'
       },
       {
         question: 'What is the number?\nI. The sum of the two digits is 8. The ratio of the two digits is 1:3.\nII. The product of the two digits of a number is 12. The quotient of two digits is 3.',
         options: ['I alone sufficient while II alone not sufficient to answer', 'II alone sufficient while I alone not sufficient to answer', 'Either I or II alone sufficient to answer', 'Both I and II are not sufficient to answer', 'Both I and II are necessary to answer'],
         answer: 'Either I or II alone sufficient to answer',
-        explanation: 'Let the tens and units digit be x and y respectively. Then,\nI. x + y = 8 and x/y = 1/3\n? I gives, 4y = 24 ? y = 6.\nSo, x + 6 = 8 ? x = 2. Number = 26.\n\nII. xy = 12 and x/y = 3/1\n? II gives, x² = 36 ? x = 6.\nSo, 3y = 6 ? y = 2. Number = 62.\n\nTherefore, Either I or II alone sufficient to answer.'
+        explanation: 'Let the tens and units digit be x and y respectively. Then,\nI. x + y = 8 and x/y = 1/3\n? I gives, 4y = 24 ? y = 6.\nSo, x + 6 = 8 ? x = 2. Number = 26.\n\nII. xy = 12 and x/y = 3/1\n? II gives, xï¿½ = 36 ? x = 6.\nSo, 3y = 6 ? y = 2. Number = 62.\n\nTherefore, Either I or II alone sufficient to answer.'
       },
       {
         question: 'What is the two-digit number?\nI. The difference between the two digits is 9.\nII. The sum of the digits is equal to the difference between the two digits.',
@@ -3351,7 +3351,7 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'What is the two-digit number whose first digit is a and the second digit is b? The number is greater than 9.\nI. The number is multiple of 51.\nII. The sum of the digits a and b is 6.',
         options: ['I alone sufficient while II alone not sufficient to answer', 'II alone sufficient while I alone not sufficient to answer', 'Either I or II alone sufficient to answer', 'Both I and II are not sufficient to answer', 'Both I and II are necessary to answer'],
         answer: 'I alone sufficient while II alone not sufficient to answer',
-        explanation: 'From statement I:\nA two digit number, greater than 9 and multiple of 51 should be 51 itself.\nBecause, 2 × 51 = 102 (3 digit number). Therefore, I alone sufficient to answer.\n\nFrom statement II:\nA two digit number, greater than 9 and sum of the digit is 6.\nIt can be 15, 24, 33, 42, 51. So we cannot determine the required answer from the statement II alone.\n\nThus, I alone give the answer while II alone not sufficient to answer.'
+        explanation: 'From statement I:\nA two digit number, greater than 9 and multiple of 51 should be 51 itself.\nBecause, 2 ï¿½ 51 = 102 (3 digit number). Therefore, I alone sufficient to answer.\n\nFrom statement II:\nA two digit number, greater than 9 and sum of the digit is 6.\nIt can be 15, 24, 33, 42, 51. So we cannot determine the required answer from the statement II alone.\n\nThus, I alone give the answer while II alone not sufficient to answer.'
       },
       {
         question: 'What is the two-digit number?\nI. The difference between the two-digit number and the number formed by interchanging the digits is 27.\nII. The difference between the two digits is 3.\nIII. The digit at unit\'s place is less than that at ten\'s place by 3.',
@@ -3387,13 +3387,13 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'A boat running upstream takes 8 hours 48 minutes to cover a certain distance, while it takes 4 hours to cover the same distance running downstream. What is the ratio between the speed of the boat and speed of the water current respectively?',
         options: ['2 : 1', '3 : 2', '8 : 3', 'Cannot be determined', 'None of these'],
         answer: '8 : 3',
-        explanation: 'Let the man\'s rate upstream be x kmph and that downstream be y kmph.\nThen, distance covered upstream in 8 hrs 48 min = Distance covered downstream in 4 hrs.\n? x × 8(4/5) = y × 4\n? (44/5)x = 4y\n? y = (11/5)x.\n? Required ratio = [(y + x)/2] : [(y - x)/2]\n= (16x/5 × 1/2) : (6x/5 × 1/2)\n= 8/5 : 3/5\n= 8 : 3.'
+        explanation: 'Let the man\'s rate upstream be x kmph and that downstream be y kmph.\nThen, distance covered upstream in 8 hrs 48 min = Distance covered downstream in 4 hrs.\n? x ï¿½ 8(4/5) = y ï¿½ 4\n? (44/5)x = 4y\n? y = (11/5)x.\n? Required ratio = [(y + x)/2] : [(y - x)/2]\n= (16x/5 ï¿½ 1/2) : (6x/5 ï¿½ 1/2)\n= 8/5 : 3/5\n= 8 : 3.'
       },
       {
         question: 'A motorboat, whose speed in still water is 15 km/hr, goes 30 km downstream and comes back in a total of 4 hours 30 minutes. The speed of the stream (in km/hr) is:',
         options: ['4', '5', '6', '10'],
         answer: '5',
-        explanation: 'Let the speed of the stream be x km/hr. Then,\nSpeed downstream = (15 + x) km/hr,\nSpeed upstream = (15 - x) km/hr.\n? 30/(15 + x) + 30/(15 - x) = 4(1/2)\n? 900/(225 - x²) = 9/2\n? 9x² = 225\n? x² = 25\n? x = 5 km/hr.'
+        explanation: 'Let the speed of the stream be x km/hr. Then,\nSpeed downstream = (15 + x) km/hr,\nSpeed upstream = (15 - x) km/hr.\n? 30/(15 + x) + 30/(15 - x) = 4(1/2)\n? 900/(225 - xï¿½) = 9/2\n? 9xï¿½ = 225\n? xï¿½ = 25\n? x = 5 km/hr.'
       },
       {
         question: 'In one hour, a boat goes 11 km/hr along the stream and 5 km/hr against the stream. The speed of the boat in still water (in km/hr) is:',
@@ -3411,13 +3411,13 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'The speed of a boat in still water is 15 km/hr and the rate of current is 3 km/hr. The distance travelled downstream in 12 minutes is:',
         options: ['1.2 km', '1.8 km', '2.4 km', '3.6 km'],
         answer: '3.6 km',
-        explanation: 'Speed downstream = (15 + 3) kmph = 18 kmph.\nDistance travelled = 18 × (12/60) km = 3.6 km.'
+        explanation: 'Speed downstream = (15 + 3) kmph = 18 kmph.\nDistance travelled = 18 ï¿½ (12/60) km = 3.6 km.'
       },
       {
         question: 'A boat takes 90 minutes less to travel 36 miles downstream than to travel the same distance upstream. If the speed of the boat in still water is 10 mph, the speed of the stream is:',
         options: ['2 mph', '2.5 mph', '3 mph', '4 mph'],
         answer: '2 mph',
-        explanation: 'Let the speed of the stream x mph. Then,\nSpeed downstream = (10 + x) mph,\nSpeed upstream = (10 - x) mph.\n? 36/(10 - x) - 36/(10 + x) = 90/60\n? 72x × 60 = 90(100 - x²)\n? x² + 48x - 100 = 0\n? (x + 50)(x - 2) = 0\n? x = 2 mph.'
+        explanation: 'Let the speed of the stream x mph. Then,\nSpeed downstream = (10 + x) mph,\nSpeed upstream = (10 - x) mph.\n? 36/(10 - x) - 36/(10 + x) = 90/60\n? 72x ï¿½ 60 = 90(100 - xï¿½)\n? xï¿½ + 48x - 100 = 0\n? (x + 50)(x - 2) = 0\n? x = 2 mph.'
       },
       {
         question: 'A man can row at 5 kmph in still water. If the velocity of current is 1 kmph and it takes him 1 hour to row to a place and come back, how far is the place?',
@@ -3426,22 +3426,22 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         explanation: 'Speed downstream = (5 + 1) kmph = 6 kmph.\nSpeed upstream = (5 - 1) kmph = 4 kmph.\nLet the required distance be x km.\nThen, x/6 + x/4 = 1\n? 2x + 3x = 12\n? 5x = 12\n? x = 2.4 km.'
       },
       {
-        question: 'A boat covers a certain distance downstream in 1 hour, while it comes back in 1½ hours. If the speed of the stream be 3 kmph, what is the speed of the boat in still water?',
+        question: 'A boat covers a certain distance downstream in 1 hour, while it comes back in 1ï¿½ hours. If the speed of the stream be 3 kmph, what is the speed of the boat in still water?',
         options: ['12 kmph', '13 kmph', '14 kmph', '15 kmph', 'None of these'],
         answer: '15 kmph',
-        explanation: 'Let the speed of the boat in still water be x kmph. Then,\nSpeed downstream = (x + 3) kmph,\nSpeed upstream = (x - 3) kmph.\n? (x + 3) × 1 = (x - 3) × (3/2)\n? 2x + 6 = 3x - 9\n? x = 15 kmph.'
+        explanation: 'Let the speed of the boat in still water be x kmph. Then,\nSpeed downstream = (x + 3) kmph,\nSpeed upstream = (x - 3) kmph.\n? (x + 3) ï¿½ 1 = (x - 3) ï¿½ (3/2)\n? 2x + 6 = 3x - 9\n? x = 15 kmph.'
       },
       {
         question: 'A boatman goes 2 km against the current of the stream in 1 hour and goes 1 km along the current in 10 minutes. How long will it take to go 5 km in stationary water?',
         options: ['40 minutes', '1 hour', '1 hr 15 min', '1 hr 30 min'],
         answer: '1 hr 15 min',
-        explanation: 'Rate downstream = (1/10) × 60 km/hr = 6 km/hr.\nRate upstream = 2 km/hr.\nSpeed in still water = (1/2)(6 + 2) km/hr = 4 km/hr.\n? Required time = 5/4 hrs = 1(1/4) hrs = 1 hr 15 min.'
+        explanation: 'Rate downstream = (1/10) ï¿½ 60 km/hr = 6 km/hr.\nRate upstream = 2 km/hr.\nSpeed in still water = (1/2)(6 + 2) km/hr = 4 km/hr.\n? Required time = 5/4 hrs = 1(1/4) hrs = 1 hr 15 min.'
       },
       {
-        question: 'A man can row three-quarters of a kilometre against the stream in 11¼ minutes and down the stream in 7½ minutes. The speed (in km/hr) of the man in still water is:',
+        question: 'A man can row three-quarters of a kilometre against the stream in 11ï¿½ minutes and down the stream in 7ï¿½ minutes. The speed (in km/hr) of the man in still water is:',
         options: ['2', '3', '4', '5'],
         answer: '5',
-        explanation: 'We can write three-quarters of a kilometre as 750 metres,\nand 11¼ minutes as 675 seconds.\nRate upstream = (750/675) m/sec = 10/9 m/sec.\nRate downstream = (750/450) m/sec = 5/3 m/sec.\n? Rate in still water = (1/2)(10/9 + 5/3) m/sec\n= 25/18 m/sec\n= (25/18 × 18/5) km/hr\n= 5 km/hr.'
+        explanation: 'We can write three-quarters of a kilometre as 750 metres,\nand 11ï¿½ minutes as 675 seconds.\nRate upstream = (750/675) m/sec = 10/9 m/sec.\nRate downstream = (750/450) m/sec = 5/3 m/sec.\n? Rate in still water = (1/2)(10/9 + 5/3) m/sec\n= 25/18 m/sec\n= (25/18 ï¿½ 18/5) km/hr\n= 5 km/hr.'
       },
       {
         question: 'Speed of a boat in standing water is 9 kmph and the speed of the stream is 1.5 kmph. A man rows to a place at a distance of 105 km and comes back to the starting point. The total time taken by him is:',
@@ -3483,7 +3483,7 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'What is the speed of the boat in still water?\nI. The speed downstream is 12 kmph.\nII. The speed upstream is 4 kmph.\nIII. In a to and fro journey between two points, the average speed of the boat was 6 kmph.',
         options: ['I and II only', 'All I, II and III', 'III, and either I or II', 'Any two of the three', 'None of these'],
         answer: 'Any two of the three',
-        explanation: 'From I and II, speed of boat in still water = (1/2)(12 + 4) km/hr = 8 km/hr.\nFrom II and III, we get:\nUsing average speed = 2xy/(x + y), we get: (2 × 4 × y)/(4 + y) = 6\n? 8y = 24 + 6y\n? y = 12.\n? Required speed = (1/2)(12 + 4) km/hr = 8 km/hr.\nSimilarly, I and III also give the answer.\n? Correct answer is (D).'
+        explanation: 'From I and II, speed of boat in still water = (1/2)(12 + 4) km/hr = 8 km/hr.\nFrom II and III, we get:\nUsing average speed = 2xy/(x + y), we get: (2 ï¿½ 4 ï¿½ y)/(4 + y) = 6\n? 8y = 24 + 6y\n? y = 12.\n? Required speed = (1/2)(12 + 4) km/hr = 8 km/hr.\nSimilarly, I and III also give the answer.\n? Correct answer is (D).'
       }
     ]
   },
@@ -3495,79 +3495,79 @@ export const TCS_NUMERICAL_TOPICS: Topic[] = [
         question: 'In a 100 m race, A can give B 10 m and C 28 m. In the same race B can give C:',
         options: ['18 m', '20 m', '27 m', '9 m'],
         answer: '20 m',
-        explanation: 'A : B = 100 : 90.\nA : C = 100 : 72.\nB/C = (B/A) × (A/C) = (90/100) × (100/72) = 90/72.\nWhen B runs 90 m, C runs 72 m.\nWhen B runs 100 m, C runs (72/90) × 100 m = 80 m.\n? B can give C 20 m.'
+        explanation: 'A : B = 100 : 90.\nA : C = 100 : 72.\nB/C = (B/A) ï¿½ (A/C) = (90/100) ï¿½ (100/72) = 90/72.\nWhen B runs 90 m, C runs 72 m.\nWhen B runs 100 m, C runs (72/90) ï¿½ 100 m = 80 m.\n? B can give C 20 m.'
       },
       {
         question: 'A and B take part in 100 m race. A runs at 5 kmph. A gives B a start of 8 m and still beats him by 8 seconds. The speed of B is:',
         options: ['5.15 kmph', '4.14 kmph', '4.25 kmph', '4.4 kmph'],
         answer: '4.14 kmph',
-        explanation: 'A\'s speed = (5 × 5/18) m/sec = 25/18 m/sec.\nTime taken by A to cover 100 m = (100 × 18/25) sec = 72 sec.\n? Time taken by B to cover 92 m = (72 + 8) = 80 sec.\n? B\'s speed = (92/80 × 18/5) kmph = 4.14 kmph.'
+        explanation: 'A\'s speed = (5 ï¿½ 5/18) m/sec = 25/18 m/sec.\nTime taken by A to cover 100 m = (100 ï¿½ 18/25) sec = 72 sec.\n? Time taken by B to cover 92 m = (72 + 8) = 80 sec.\n? B\'s speed = (92/80 ï¿½ 18/5) kmph = 4.14 kmph.'
       },
       {
         question: 'In a 500 m race, the ratio of the speeds of two contestants A and B is 3 : 4. A has a start of 140 m. Then, A wins by:',
         options: ['60 m', '40 m', '20 m', '10 m'],
         answer: '20 m',
-        explanation: 'To reach the winning post A will have to cover a distance of (500 - 140) m, i.e., 360 m.\nWhile A covers 3 m, B covers 4 m.\nWhile A covers 360 m, B covers (4/3 × 360) m = 480 m.\nThus, when A reaches the winning post, B covers 480 m and therefore remains 20 m behind.\n? A wins by 20 m.'
+        explanation: 'To reach the winning post A will have to cover a distance of (500 - 140) m, i.e., 360 m.\nWhile A covers 3 m, B covers 4 m.\nWhile A covers 360 m, B covers (4/3 ï¿½ 360) m = 480 m.\nThus, when A reaches the winning post, B covers 480 m and therefore remains 20 m behind.\n? A wins by 20 m.'
       },
       {
         question: 'In a 100 m race, A beats B by 10 m and C by 13 m. In a race of 180 m, B will beat C by:',
         options: ['5.4 m', '4.5 m', '5 m', '6 m'],
         answer: '6 m',
-        explanation: 'A : B = 100 : 90.\nA : C = 100 : 87.\nB/C = (B/A) × (A/C) = (90/100) × (100/87) = 30/29.\nWhen B runs 30 m, C runs 29 m.\nWhen B runs 180 m, C runs (29/30 × 180) m = 174 m.\n? B beats C by (180 - 174) m = 6 m.'
+        explanation: 'A : B = 100 : 90.\nA : C = 100 : 87.\nB/C = (B/A) ï¿½ (A/C) = (90/100) ï¿½ (100/87) = 30/29.\nWhen B runs 30 m, C runs 29 m.\nWhen B runs 180 m, C runs (29/30 ï¿½ 180) m = 174 m.\n? B beats C by (180 - 174) m = 6 m.'
       },
       {
         question: 'At a game of billiards, A can give B 15 points in 60 and A can give C to 20 points in 60. How many points can B give C in a game of 90?',
         options: ['30 points', '20 points', '10 points', '12 points'],
         answer: '10 points',
-        explanation: 'A : B = 60 : 45.\nA : C = 60 : 40.\n? B/C = (B/A) × (A/C) = (45/60) × (60/40) = 45/40 = 90 : 80.\n? B can give C 10 points in a game of 90.'
+        explanation: 'A : B = 60 : 45.\nA : C = 60 : 40.\n? B/C = (B/A) ï¿½ (A/C) = (45/60) ï¿½ (60/40) = 45/40 = 90 : 80.\n? B can give C 10 points in a game of 90.'
       },
       {
         question: 'In a race of 200 m, A can beat B by 31 m and C by 18 m. In a race of 350 m, C will beat B by:',
         options: ['22.75 m', '25 m', '19.5 m', '7(4/7) m'],
         answer: '25 m',
-        explanation: 'A : B = 200 : 169.\nA : C = 200 : 182.\nC/B = (C/A) × (A/B) = (182/200) × (200/169) = 182 : 169.\nWhen C covers 182 m, B covers 169 m.\nWhen C covers 350 m, B covers (169/182 × 350) m = 325 m.\nTherefore, C beats B by (350 - 325) m = 25 m.'
+        explanation: 'A : B = 200 : 169.\nA : C = 200 : 182.\nC/B = (C/A) ï¿½ (A/B) = (182/200) ï¿½ (200/169) = 182 : 169.\nWhen C covers 182 m, B covers 169 m.\nWhen C covers 350 m, B covers (169/182 ï¿½ 350) m = 325 m.\nTherefore, C beats B by (350 - 325) m = 25 m.'
       },
       {
         question: 'In 100 m race, A covers the distance in 36 seconds and B in 45 seconds. In this race A beats B by:',
         options: ['20 m', '25 m', '22.5 m', '9 m'],
         answer: '20 m',
-        explanation: 'Distance covered by B in 9 sec. = (100/45) × 9 m = 20 m.\n? A beats B by 20 metres.'
+        explanation: 'Distance covered by B in 9 sec. = (100/45) ï¿½ 9 m = 20 m.\n? A beats B by 20 metres.'
       },
       {
         question: 'In a game of 100 points, A can give B 20 points and C 28 points. Then, B can give C:',
         options: ['8 points', '10 points', '14 points', '40 points'],
         answer: '10 points',
-        explanation: 'A : B = 100 : 80.\nA : C = 100 : 72.\n? B/C = (B/A) × (A/C) = (80/100) × (100/72) = 10/9 = 100 : 90.\n? B can give C 10 points.'
+        explanation: 'A : B = 100 : 80.\nA : C = 100 : 72.\n? B/C = (B/A) ï¿½ (A/C) = (80/100) ï¿½ (100/72) = 10/9 = 100 : 90.\n? B can give C 10 points.'
       },
       {
         question: 'In a 200 metres race A beats B by 35 m or 7 seconds. A\'s time over the course is:',
         options: ['40 sec', '47 sec', '33 sec', 'None of these'],
         answer: '33 sec',
-        explanation: 'B runs 35 m in 7 sec.\n? B covers 200 m in (7/35 × 200) = 40 sec.\nB\'s time over the course = 40 sec.\n? A\'s time over the course = (40 - 7) sec = 33 sec.'
+        explanation: 'B runs 35 m in 7 sec.\n? B covers 200 m in (7/35 ï¿½ 200) = 40 sec.\nB\'s time over the course = 40 sec.\n? A\'s time over the course = (40 - 7) sec = 33 sec.'
       },
       {
         question: 'A can run 22.5 m while B runs 25 m. In a kilometre race B beats A by:',
         options: ['100 m', '111(1/9) m', '25 m', '50 m'],
         answer: '100 m',
-        explanation: 'When B runs 25 m, A runs 45/2 m.\nWhen B runs 1000 m, A runs (45/2 × 1/25 × 1000) m = 900 m.\n? B beats A by 100 m.'
+        explanation: 'When B runs 25 m, A runs 45/2 m.\nWhen B runs 1000 m, A runs (45/2 ï¿½ 1/25 ï¿½ 1000) m = 900 m.\n? B beats A by 100 m.'
       },
       {
         question: 'In a 300 m race A beats B by 22.5 m or 6 seconds. B\'s time over the course is:',
         options: ['86 sec', '80 sec', '76 sec', 'None of these'],
         answer: '80 sec',
-        explanation: 'B runs 45/2 m in 6 sec.\n? B covers 300 m in (6 × 2/45 × 300) sec = 80 sec.'
+        explanation: 'B runs 45/2 m in 6 sec.\n? B covers 300 m in (6 ï¿½ 2/45 ï¿½ 300) sec = 80 sec.'
       },
       {
         question: 'A runs 1(2/3) times as fast as B. If A gives B a start of 80 m, how far must the winning post be so that A and B might reach it at the same time?',
         options: ['200 m', '300 m', '270 m', '160 m'],
         answer: '200 m',
-        explanation: 'Ratio of the speeds of A and B = 5/3 : 1 = 5 : 3.\nThus, in race of 5 m, A gains 2 m over B.\n2 m are gained by A in a race of 5 m.\n80 m will be gained by A in race of (5/2 × 80) m = 200 m.\n? Winning post is 200 m away from the starting point.'
+        explanation: 'Ratio of the speeds of A and B = 5/3 : 1 = 5 : 3.\nThus, in race of 5 m, A gains 2 m over B.\n2 m are gained by A in a race of 5 m.\n80 m will be gained by A in race of (5/2 ï¿½ 80) m = 200 m.\n? Winning post is 200 m away from the starting point.'
       },
       {
         question: 'In a 100 m race, A can beat B by 25 m and B can beat C by 4 m. In the same race, A can beat C by:',
         options: ['21 m', '26 m', '28 m', '29 m'],
         answer: '28 m',
-        explanation: 'A : B = 100 : 75\nB : C = 100 : 96.\n? A : C = (A/B) × (B/C) = (100/75) × (100/96) = 100/72 = 100 : 72.\n? A beats C by (100 - 72) m = 28 m.'
+        explanation: 'A : B = 100 : 75\nB : C = 100 : 96.\n? A : C = (A/B) ï¿½ (B/C) = (100/75) ï¿½ (100/96) = 100/72 = 100 : 72.\n? A beats C by (100 - 72) m = 28 m.'
       }
     ]
   }
@@ -4749,7 +4749,7 @@ export default function AptitudePage() {
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
           }`}
         >
-          TCS Numerical Ability
+          Adyapan Numerical Ability
         </button>
         <button
           onClick={() => setSelectedSubModule('tcs-reasoning')}
@@ -4759,7 +4759,7 @@ export default function AptitudePage() {
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
           }`}
         >
-          TCS Reasoning Ability
+          Adyapan Reasoning Ability
         </button>
         <button
           onClick={() => setSelectedSubModule('tcs-verbal')}
@@ -4769,7 +4769,7 @@ export default function AptitudePage() {
               : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
           }`}
         >
-          TCS Verbal Ability
+          Adyapan Verbal Ability
         </button>
       </div>
 
@@ -4779,17 +4779,17 @@ export default function AptitudePage() {
           <div>
             <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white flex items-center gap-2">
               <GraduationCap className="w-5 h-5 text-primary-500" />
-              {selectedSubModule === 'tcs-numerical' ? 'TCS Numerical Ability' : 'TCS Reasoning Ability'} Chapters
+              {selectedSubModule === 'tcs-numerical' ? 'Adyapan Numerical Ability' : selectedSubModule === 'tcs-reasoning' ? 'Adyapan Reasoning Ability' : 'Adyapan Verbal Ability'} Chapters
             </h2>
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
               Click a chapter to open the question set and start practising.
             </p>
           </div>
-          <Badge variant="primary">{currentTopics.length} Chapters</Badge>
+          <Badge variant="primary">{currentTopics.filter(t => t.questions.length > 0).length} Chapters</Badge>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {currentTopics.map((topic, idx) => (
+          {currentTopics.filter(topic => topic.questions.length > 0).map((topic, idx) => (
             <Card
               key={`${selectedSubModule}-${idx}-${topic.name}`}
               padding="none"

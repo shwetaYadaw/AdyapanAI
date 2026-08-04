@@ -64,7 +64,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 text-center">
-                TCS NQT
+                Placement Prep
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-center mb-6">
                 Manage TCS placement preparation questions
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
                 </ul>
               </div>
               <button className="w-full mt-6 bg-orange-600 hover:bg-orange-700 text-white font-semibold py-3 rounded-lg transition">
-                Manage TCS NQT
+                Manage Placement Prep
               </button>
             </div>
 

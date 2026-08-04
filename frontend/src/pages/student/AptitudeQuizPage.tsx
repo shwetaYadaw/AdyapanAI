@@ -53,10 +53,10 @@ export default function AptitudeQuizPage() {
 
   const moduleLabel =
     module === 'tcs-reasoning'
-      ? 'TCS Reasoning Ability'
+      ? 'Adyapan Reasoning Ability'
       : module === 'tcs-verbal'
-        ? 'TCS Verbal Ability'
-        : 'TCS Numerical Ability';
+        ? 'Adyapan Verbal Ability'
+        : 'Adyapan Numerical Ability';
 
   return (
     <div className="page-wrapper space-y-6">

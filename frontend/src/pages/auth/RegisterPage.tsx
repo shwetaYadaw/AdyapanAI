@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../shared/hooks/hooks';
 import { registerThunk, selectAuthLoading, selectAuthError, clearError } from '../../features/auth/authSlice';
 import { getPasswordStrength } from '@adyapan/shared';
 import toast from 'react-hot-toast';
-import Navbar from '../../components/layout/Navbar/Navbar';
+import Navbar from '../../shared/components/Navbar/Navbar';
 
 const schema = z.object({
   firstName: z.string().min(2, 'Required').max(50),

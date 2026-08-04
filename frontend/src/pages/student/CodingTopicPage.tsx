@@ -48,12 +48,12 @@ export default function CodingTopicPage() {
   const group = TOPIC_GROUPS.find((g) => g.key === topicKey);
 
   const { data: questions, isLoading, isError } = useQuery<Question[]>({
-    queryKey: ['codingArenaProblems', search],
+    queryKey: ['codingArenaProblems', topicKey, search],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (search) params.set('search', search);
-      // Removed onlyUpdated filter to show all problems
-      // Use /problems endpoint for Coding Arena (Problem table)
+      if (topicKey) params.set('topic', topicKey);
+      params.set('limit', '200');
       const { data } = await api.get(`/problems?${params}`);
       return (data.data ?? []).map((q: any) => ({
         ...q,

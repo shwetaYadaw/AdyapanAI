@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Clock, Trophy, Users, Award, Play, X, Timer } from 'lucide-react';
 import { api } from '../../core/services/api';
-import Navbar from '../../components/layout/Navbar/Navbar';
+import Navbar from '../../shared/components/Navbar/Navbar';
 import Button from '../../shared/components/Button/Button';
 import Card from '../../shared/components/Card/Card';
 import Badge from '../../shared/components/Badge/Badge';

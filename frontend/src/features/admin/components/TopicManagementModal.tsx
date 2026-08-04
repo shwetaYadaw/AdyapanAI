@@ -150,7 +150,7 @@ export default function TopicManagementModal({ system, onClose }: TopicManagemen
     }
   };
 
-  const systemLabel = system === 'coding-arena' ? 'Coding Arena' : system === 'tcs-nqt' ? 'TCS NQT' : 'Aptitude';
+  const systemLabel = system === 'coding-arena' ? 'Coding Arena' : system === 'tcs-nqt' ? 'Placement Prep' : 'Aptitude';
   const systemColor = system === 'coding-arena' ? 'blue' : system === 'tcs-nqt' ? 'orange' : 'green';
 
   return (

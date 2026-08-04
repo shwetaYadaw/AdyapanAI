@@ -54,7 +54,7 @@ export default function CodingChallengesPage() {
     queryFn: async () => {
       // Use /problems endpoint for Coding Arena (Problem table)
       // Removed onlyUpdated filter to show all problems
-      const { data } = await api.get('/problems');
+      const { data } = await api.get('/problems?limit=500');
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,

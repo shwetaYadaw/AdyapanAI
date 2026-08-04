@@ -43,7 +43,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
         setPagination(result.pagination);
       }
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to fetch TCS NQT questions');
+      toast.error(err.response?.data?.message || 'Failed to fetch placement prep questions');
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
   const handleCreateQuestion = async (question: TcsQuestion) => {
     try {
       await tcsNqtAdminService.createQuestion(question);
-      toast.success('TCS NQT question created successfully!');
+      toast.success('Placement prep question created successfully!');
       setShowCreateModal(false);
       fetchQuestions();
     } catch (err: any) {
@@ -64,7 +64,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
     try {
       if (!selectedQuestion?.id) throw new Error('No question selected');
       await tcsNqtAdminService.updateQuestion(selectedQuestion.id, question);
-      toast.success('TCS NQT question updated successfully!');
+      toast.success('Placement prep question updated!');
       setSelectedQuestion(null);
       setShowCreateModal(false);
       fetchQuestions();
@@ -74,10 +74,10 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
   };
 
   const handleDeleteQuestion = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this TCS NQT question?')) return;
+    if (!confirm('Are you sure you want to delete this placement prep question?')) return;
     try {
       await tcsNqtAdminService.deleteQuestion(id);
-      toast.success('TCS NQT question deleted successfully!');
+      toast.success('Placement prep question deleted!');
       fetchQuestions();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to delete question');
@@ -87,7 +87,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
   const handleImport = async (questions: TcsQuestion[]) => {
     try {
       await tcsNqtAdminService.importQuestions(questions);
-      toast.success('TCS NQT questions imported successfully!');
+      toast.success('Placement prep questions imported successfully!');
       setShowImportModal(false);
       fetchQuestions();
     } catch (err: any) {
@@ -110,7 +110,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
 
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">TCS NQT Management</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Placement Prep Management</h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
                 Placement Preparation Questions - Total: {pagination.total}
               </p>
@@ -124,7 +124,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
                 className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition"
               >
                 <Plus size={20} />
-                Add TCS Question
+                Add Placement Question
               </button>
             </div>
           </div>

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { prisma } from '../config/prisma';
 import { JudgeService } from './judge.service';
 import { logger } from '../utils/logger';

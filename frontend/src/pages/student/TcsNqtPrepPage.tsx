@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Code, BookOpen, ChevronRight, Award, ShieldAlert, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Code, BookOpen, ChevronRight, Award, Sparkles, CheckCircle2 } from 'lucide-react';
 import Card from '../../shared/components/Card/Card';
 import Badge from '../../shared/components/Badge/Badge';
 import Button from '../../shared/components/Button/Button';
@@ -16,289 +16,188 @@ interface TCSQuestion {
   topics?: string[];
 }
 
-// Hardcoded arrays kept for reference and backward compatibility
-// These are no longer used for filtering - questions are now loaded dynamically from database
-
-const ARRAY_PROBLEMS: TCSQuestion[] = [
-  { title: 'Find the smallest number in an array', slug: 'find-the-smallest-number-in-an-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Largest in Array', slug: 'largest-in-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Second Smallest and Second Largest', slug: 'second-smallest-and-second-largest-tcs-nqt', difficulty: 'medium' },
-  { title: 'Reverse a given array', slug: 'reverse-a-given-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Count Elements With Maximum Frequency', slug: 'count-elements-with-maximum-frequency-tcs-nqt', difficulty: 'medium' },
-  { title: 'Half Ascending and Half Descending Sort', slug: 'half-ascending-and-half-descending-sort-tcs-nqt', difficulty: 'medium' },
-  { title: 'Sum of Array', slug: 'sum-of-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Rotate Array', slug: 'rotate-array-tcs-nqt', difficulty: 'hard' },
-  { title: 'Mean or Average of an Array', slug: 'mean-or-average-of-an-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Median of an Array', slug: 'median-of-an-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Remove Duplicates from Sorted Array', slug: 'remove-duplicates-from-sorted-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Insert Element at a Given Position in an Array', slug: 'insert-element-at-a-given-position-in-an-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Find All Duplicates in an Array', slug: 'find-all-duplicates-in-an-array-tcs-nqt', difficulty: 'medium' },
-  { title: 'First Non-Repeating Element', slug: 'first-non-repeating-element-tcs-nqt', difficulty: 'easy' },
-  { title: 'Symmetric pairs in an array', slug: 'symmetric-pairs-in-an-array-tcs-nqt', difficulty: 'medium' },
-  { title: 'Maximum Product Subarray', slug: 'maximum-product-subarray-tcs-nqt', difficulty: 'hard' },
-  { title: 'Rank Transform of an Array', slug: 'rank-transform-of-an-array-tcs-nqt', difficulty: 'easy' },
-  { title: 'Sort elements by frequency', slug: 'sort-elements-by-frequency-tcs-nqt', difficulty: 'hard' },
-  { title: 'Equilibrium Index', slug: 'equilibrium-index-tcs-nqt', difficulty: 'medium' },
-  { title: 'Array after k Rotations', slug: 'array-after-k-rotations-tcs-nqt', difficulty: 'medium' },
-  { title: 'Sort an array according to the order defined by another array', slug: 'sort-an-array-according-to-the-order-defined-by-another-array-tcs-nqt', difficulty: 'hard' },
-  { title: 'Array Search', slug: 'array-search-tcs-nqt', difficulty: 'easy' },
-  { title: 'Check if an array is subset of another array', slug: 'check-if-an-array-is-subset-of-another-array-tcs-nqt', difficulty: 'easy' },
-];
-
-const NUMBER_PROBLEMS: TCSQuestion[] = [
-  { title: 'Check if a number is Palindrome', slug: 'check-if-a-number-is-palindrome-tcs-nqt', difficulty: 'easy' },
-  { title: 'Palindromes in a Range', slug: 'palindromes-in-a-range-tcs-nqt', difficulty: 'medium' },
-  { title: 'Check if a number is prime', slug: 'check-if-a-number-is-prime-tcs-nqt', difficulty: 'easy' },
-  { title: 'Primes in a Range', slug: 'primes-in-a-range-tcs-nqt', difficulty: 'medium' },
-  { title: 'Check if a number is armstrong number of not', slug: 'check-if-a-number-is-armstrong-number-of-not-tcs-nqt', difficulty: 'easy' },
-  { title: 'Check if a number is perfect number', slug: 'check-if-a-number-is-perfect-number-tcs-nqt', difficulty: 'easy' },
-  { title: 'Even or Odd', slug: 'even-or-odd-tcs-nqt', difficulty: 'easy' },
-  { title: 'Check weather a given number is positive or negative', slug: 'check-weather-a-given-number-is-positive-or-negative-tcs-nqt', difficulty: 'easy' },
-  { title: 'Sum of first N natural numbers', slug: 'sum-of-first-n-natural-numbers-tcs-nqt', difficulty: 'easy' },
-  { title: 'Find Sum of AP Series', slug: 'find-sum-of-ap-series-tcs-nqt', difficulty: 'easy' },
-  { title: 'Program to find sum of GP Series', slug: 'program-to-find-sum-of-gp-series-tcs-nqt', difficulty: 'medium' },
-  { title: 'Greatest of two numbers', slug: 'greatest-of-two-numbers-tcs-nqt', difficulty: 'easy' },
-  { title: 'Greatest of three numbers', slug: 'greatest-of-three-numbers-tcs-nqt', difficulty: 'easy' },
-  { title: 'Leap Year or not', slug: 'leap-year-or-not-tcs-nqt', difficulty: 'easy' },
-  { title: 'Reverse digits of a number', slug: 'reverse-digits-of-a-number-tcs-nqt', difficulty: 'easy' },
-  { title: 'Maximum and Minimum digit in a number', slug: 'maximum-and-minimum-digit-in-a-number-tcs-nqt', difficulty: 'easy' },
-  { title: 'Print Fibonacci upto Nth Term', slug: 'print-fibonacci-upto-nth-term-tcs-nqt', difficulty: 'easy' },
-  { title: 'Factorial of a number', slug: 'factorial-of-a-number-tcs-nqt', difficulty: 'easy' },
-  { title: 'Power of a number', slug: 'power-of-a-number-tcs-nqt', difficulty: 'medium' },
-  { title: 'Factors of a given number', slug: 'factors-of-a-given-number-tcs-nqt', difficulty: 'easy' },
-  { title: 'Print all prime factors of the given number', slug: 'print-all-prime-factors-of-the-given-number-tcs-nqt', difficulty: 'medium' },
-  { title: 'Check if a number is a strong number or not', slug: 'check-if-a-number-is-a-strong-number-or-not-tcs-nqt', difficulty: 'medium' },
-  { title: 'Check if a Number is Automorphic', slug: 'check-if-a-number-is-automorphic-tcs-nqt', difficulty: 'medium' },
-  { title: 'GCD of two numbers', slug: 'gcd-of-two-numbers-tcs-nqt', difficulty: 'easy' },
-  { title: 'LCM of two numbers', slug: 'lcm-of-two-numbers-tcs-nqt', difficulty: 'easy' },
-  { title: 'Sum of digits of a number', slug: 'sum-of-digits-of-a-number-tcs-nqt', difficulty: 'easy' },
-  { title: 'Sum of numbers in the given range', slug: 'sum-of-numbers-in-the-given-range-tcs-nqt', difficulty: 'easy' },
-  { title: 'Permutations in which N people can occupy R seats in a classroom', slug: 'permutations-in-which-n-people-can-occupy-r-seats-in-a-classroom-tcs-nqt', difficulty: 'medium' },
-  { title: 'Program to add two fractions', slug: 'program-to-add-two-fractions-tcs-nqt', difficulty: 'medium' },
-  { title: 'Replace all 0s with 1s in a given integer', slug: 'replace-all-0s-with-1s-in-a-given-integer-tcs-nqt', difficulty: 'easy' },
-  { title: 'Can a number be expressed as a sum of two prime numbers', slug: 'can-a-number-be-expressed-as-a-sum-of-two-prime-numbers-tcs-nqt', difficulty: 'medium' },
-  { title: 'Calculate the area of circle', slug: 'calculate-the-area-of-circle-tcs-nqt', difficulty: 'easy' },
-  { title: 'Program to find roots of a Quadratic Equation', slug: 'program-to-find-roots-of-a-quadratic-equation-tcs-nqt', difficulty: 'hard' },
-];
-
-const NUMBER_SYSTEM_PROBLEMS: TCSQuestion[] = [
-  { title: 'Convert Binary to Decimal', slug: 'convert-binary-to-decimal-tcs-nqt', difficulty: 'easy' },
-  { title: 'Convert binary to octal', slug: 'convert-binary-to-octal-tcs-nqt', difficulty: 'medium' },
-  { title: 'Decimal to Binary conversion', slug: 'decimal-to-binary-conversion-tcs-nqt', difficulty: 'easy' },
-  { title: 'Convert decimal to octal', slug: 'convert-decimal-to-octal-tcs-nqt', difficulty: 'medium' },
-  { title: 'Convert octal to binary', slug: 'convert-octal-to-binary-tcs-nqt', difficulty: 'medium' },
-  { title: 'Convert octal to decimal', slug: 'convert-octal-to-decimal-tcs-nqt', difficulty: 'medium' },
-  { title: 'Convert digits/numbers to words', slug: 'convert-digitsnumbers-to-words-tcs-nqt', difficulty: 'hard' },
-];
-
-const SORTING_PROBLEMS: TCSQuestion[] = [
-  { title: 'Bubble Sort Algorithm', slug: 'bubble-sort-algorithm-tcs-nqt', difficulty: 'easy' },
-  { title: 'Selection Sort Algorithm', slug: 'selection-sort-algorithm-tcs-nqt', difficulty: 'easy' },
-  { title: 'Insertion Sort Algorithm', slug: 'insertion-sort-algorithm-tcs-nqt', difficulty: 'easy' },
-  { title: 'Quick Sort Algorithm', slug: 'quick-sort-algorithm-tcs-nqt', difficulty: 'medium' },
-  { title: 'Merge sort algorithm', slug: 'merge-sort-algorithm-tcs-nqt', difficulty: 'medium' },
-];
-
-const STRING_PROBLEMS: TCSQuestion[] = [
-  { title: 'Check if a given string is palindrome or not', slug: 'check-if-a-given-string-is-palindrome-or-not-tcs-nqt', difficulty: 'easy' },
-  { title: 'Count number of vowels, consonants, spaces in String', slug: 'count-number-of-vowels-consonants-spaces-in-string-tcs-nqt', difficulty: 'easy' },
-  { title: 'Find the ASCII value of a character', slug: 'find-the-ascii-value-of-a-character-tcs-nqt', difficulty: 'easy' },
-  { title: 'Remove all vowels from the string', slug: 'remove-all-vowels-from-the-string-tcs-nqt', difficulty: 'easy' },
-  { title: 'Remove spaces from a string', slug: 'remove-spaces-from-a-string-tcs-nqt', difficulty: 'easy' },
-  { title: 'Remove characters from a string except alphabets', slug: 'remove-characters-from-a-string-except-alphabets-tcs-nqt', difficulty: 'easy' },
-  { title: 'Reverse a String', slug: 'reverse-a-string-tcs-nqt', difficulty: 'easy' },
-  { title: 'Remove brackets from an algebraic expression', slug: 'remove-brackets-from-an-algebraic-expression-tcs-nqt', difficulty: 'medium' },
-  { title: 'Sum of the numbers in a String', slug: 'sum-of-the-numbers-in-a-string-tcs-nqt', difficulty: 'easy' },
-  { title: 'Capitalize first and last character of each word', slug: 'capitalize-first-and-last-character-of-each-word-tcs-nqt', difficulty: 'medium' },
-  { title: 'Calculate frequency of characters in a string', slug: 'calculate-frequency-of-characters-in-a-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Find Non-repeating characters of a String', slug: 'find-non-repeating-characters-of-a-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Check if two strings are anagram of each other', slug: 'check-if-two-strings-are-anagram-of-each-other-tcs-nqt', difficulty: 'easy' },
-  { title: 'Count common sub-sequence in two strings', slug: 'count-common-sub-sequence-in-two-strings-tcs-nqt', difficulty: 'hard' },
-  { title: 'Check if two strings match where one string contains wildcard characters', slug: 'check-if-two-strings-match-where-one-string-contains-wildcard-characters-tcs-nqt', difficulty: 'hard' },
-  { title: 'Return maximum occurring character in the input string', slug: 'return-maximum-occurring-character-in-the-input-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Remove all duplicates from the input string', slug: 'remove-all-duplicates-from-the-input-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Print all the duplicates in the input string', slug: 'print-all-the-duplicates-in-the-input-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Remove characters from first string present in the second string', slug: 'remove-characters-from-first-string-present-in-the-second-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Change every letter with the next lexicographic alphabet in the given string', slug: 'change-every-letter-with-the-next-lexicographic-alphabet-in-the-given-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Write a program to find the largest word in a given string', slug: 'write-a-program-to-find-the-largest-word-in-a-given-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Write a program to sort characters in a string', slug: 'write-a-program-to-sort-characters-in-a-string-tcs-nqt', difficulty: 'medium' },
-  { title: 'Count number of words in a given string', slug: 'count-number-of-words-in-a-given-string-tcs-nqt', difficulty: 'easy' },
-  { title: 'Write a program to find a word in a given string which has the highest number of repeated letters', slug: 'write-a-program-to-find-a-word-in-a-given-string-which-has-the-highest-number-of-repeated-letters-tcs-nqt', difficulty: 'hard' },
-  { title: 'Change case of each character in a string', slug: 'change-case-of-each-character-in-a-string-tcs-nqt', difficulty: 'easy' },
-  { title: 'Concatenate one string to another', slug: 'concatenate-one-string-to-another-tcs-nqt', difficulty: 'easy' },
-  { title: 'Write a program to find a substring within a string, if found display its starting position', slug: 'write-a-program-to-find-a-substring-within-a-string-if-found-display-its-starting-position-tcs-nqt', difficulty: 'medium' },
-  { title: 'Reverse words in a string', slug: 'reverse-words-in-a-string-tcs-nqt', difficulty: 'medium' },
-];
-
-export default function TcsNqtPrepPage() {
-  const [activeTab, setActiveTab] = useState<'arrays' | 'strings' | 'sorting' | 'hashing' | 'linked-list' | 'recursion'>('arrays');
+export default function PlacementPrepPage() {
+  type TabKey = 'arrays' | 'strings' | 'sorting' | 'hashing' | 'linked-list' | 'recursion' | 'numbers' | 'number-system';
+  const [activeTab, setActiveTab] = useState<TabKey>('arrays');
+  const [search, setSearch]       = useState('');
+  const [difficulty, setDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
 
   const { data: storedQuestions = [], isLoading, isError } = useQuery<TCSQuestion[]>({
-    queryKey: ['tcsNqtQuestions'],
+    queryKey: ['placementPrepQuestions'],
     queryFn: async () => {
-      const { data } = await api.get('/tcs-nqt');
-      
-      // Define ONLY the allowed TCS NQT topics
-      const ALLOWED_TOPICS = [
-        'arrays', 'array', '2d-arrays',
-        'strings', 'string',
-        'searching-sorting', 'sorting', 'binary-search',
-        'hashing',
-        'linked-list',
-        'recursion-backtracking', 'recursion'
-      ];
-      
-      // Filter to ONLY include questions that have at least one allowed topic
-      return (data.data ?? [])
-        .map((question: any) => ({
-          ...question,
-          id: question.id ?? question._id,
-          topics: Array.isArray(question.topics)
-            ? question.topics
-            : typeof question.topics === 'string'
-              ? JSON.parse(question.topics)
-              : [],
-        }))
-        .filter((question: any) => {
-          // Get question topics in lowercase
-          const questionTopics = (question.topics || []).map((t: string) => t.toLowerCase());
-          
-          // Only include if question has at least one allowed topic
-          return questionTopics.some(topic => ALLOWED_TOPICS.includes(topic));
-        });
+      const { data } = await api.get('/tcs-nqt?limit=500');
+      return (data.data ?? []).map((q: any) => ({
+        ...q,
+        id: q.id ?? q._id,
+        // topic is a single string — normalise to lowercase array
+        topics: [String(q.topic ?? '').toLowerCase()].filter(Boolean),
+      }));
     },
   });
 
-  const getQuestions = () => {
-    // Filter questions by TCS NQT relevant topics
-    const categoryMap: Record<string, string[]> = {
-      'arrays': ['arrays', 'array', '2d-arrays'],
-      'strings': ['strings', 'string'],
-      'sorting': ['searching-sorting', 'sorting', 'binary-search'],
-      'hashing': ['hashing'],
-      'linked-list': ['linked-list'],
-      'recursion': ['recursion-backtracking', 'recursion']
-    };
-
-    const categoryKeywords = categoryMap[activeTab] || [];
-    
-    const filteredQuestions = storedQuestions.filter((question) => {
-      // Check if question topics include any category keywords
-      const questionTopics = (question.topics || []).map((t: string) => t.toLowerCase());
-      
-      return categoryKeywords.some(keyword => 
-        questionTopics.includes(keyword)
-      );
-    });
-
-    // Sort questions by difficulty: Easy → Medium → Hard
-    const difficultyOrder: Record<string, number> = {
-      'easy': 1,
-      'medium': 2,
-      'hard': 3
-    };
-
-    return filteredQuestions.sort((a, b) => {
-      const diffA = difficultyOrder[a.difficulty?.toLowerCase()] || 2;
-      const diffB = difficultyOrder[b.difficulty?.toLowerCase()] || 2;
-      return diffA - diffB;
-    });
+  // topic key → db topic slug(s)
+  const TAB_TOPICS: Record<TabKey, string[]> = {
+    'arrays':         ['arrays'],
+    'strings':        ['strings'],
+    'sorting':        ['sorting'],
+    'hashing':        ['hashing'],
+    'linked-list':    ['linked-list'],
+    'recursion':      ['recursion-backtracking'],
+    'numbers':        ['numbers'],
+    'number-system':  ['number-system'],
   };
 
-  const questions = getQuestions();
+  const TABS: { key: TabKey; label: string }[] = [
+    { key: 'arrays',        label: 'Arrays' },
+    { key: 'strings',       label: 'Strings' },
+    { key: 'sorting',       label: 'Searching & Sorting' },
+    { key: 'hashing',       label: 'Hashing' },
+    { key: 'linked-list',   label: 'Linked List' },
+    { key: 'recursion',     label: 'Recursion & Backtracking' },
+    { key: 'numbers',       label: 'Numbers' },
+    { key: 'number-system', label: 'Number System' },
+  ];
+
+  // per-tab counts (unfiltered by search/difficulty)
+  const tabCounts = Object.fromEntries(
+    TABS.map(t => [t.key, storedQuestions.filter(q =>
+      TAB_TOPICS[t.key].some(k => q.topics?.includes(k))
+    ).length])
+  ) as Record<TabKey, number>;
+
+  // questions for current tab + filters
+  const filtered = storedQuestions
+    .filter(q => TAB_TOPICS[activeTab].some(k => q.topics?.includes(k)))
+    .filter(q => difficulty === 'all' || q.difficulty?.toLowerCase() === difficulty)
+    .filter(q => !search || q.title.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) =>
+      ({ easy: 1, medium: 2, hard: 3 }[a.difficulty?.toLowerCase() ?? 'medium'] ?? 2) -
+      ({ easy: 1, medium: 2, hard: 3 }[b.difficulty?.toLowerCase() ?? 'medium'] ?? 2)
+    );
 
   return (
-    <div className="page-wrapper">
-      {/* Header Banner */}
+    <div className="page-wrapper space-y-5">
+      {/* Hero Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
         <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
           <Code className="w-96 h-96 text-white" />
         </div>
-        <div className="relative z-10 max-w-2xl space-y-4">
+        <div className="relative z-10 max-w-2xl space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 border border-white/30 text-white text-xs font-bold uppercase tracking-wider">
-            <Sparkles className="w-3.5 h-3.5" /> Special Prep Track
+            <Sparkles className="w-3.5 h-3.5" /> Placement Prep Track
           </div>
           <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
-            TCS NQT Coding Sheet
+            Placement Prep Questions
           </h1>
           <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-            Master the top coding challenges frequently asked in the TCS National Qualifier Test (NQT) and similar placement assessments.
+            Master the top coding challenges frequently asked in placement assessments by TCS, Infosys, Wipro, Accenture and more.
           </p>
           <div className="flex flex-wrap gap-4 text-xs text-white/70 pt-2 border-t border-white/20">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-white" /> {storedQuestions.length} TCS NQT Problems</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-white" /> {storedQuestions.length} Problems</span>
             <span className="flex items-center gap-1.5"><Code className="w-4 h-4 text-white" /> Multilanguage Editor</span>
-            <span className="flex items-center gap-1.5"><Award className="w-4 h-4 text-white" /> TCS Specific Test Cases</span>
+            <span className="flex items-center gap-1.5"><Award className="w-4 h-4 text-white" /> Company Specific Test Cases</span>
           </div>
         </div>
       </div>
 
-      {/* Navigation tabs */}
-      <div className="flex flex-wrap gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-fit">
-        {[
-          { key: 'arrays', label: 'Arrays', count: 36 },
-          { key: 'strings', label: 'Strings', count: 20 },
-          { key: 'sorting', label: 'Searching & Sorting', count: 29 },
-          { key: 'hashing', label: 'Hashing', count: 32 },
-          { key: 'linked-list', label: 'Linked List', count: 27 },
-          { key: 'recursion', label: 'Recursion & Backtracking', count: 26 },
-        ].map((tab) => (
-          <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key as any)}
-            className={`px-4 py-2 text-sm font-semibold rounded-lg transition-all ${
-              activeTab === tab.key
-                ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-300 shadow-sm'
-                : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
-            }`}
-          >
-            {tab.label}
-            <span className="ml-1.5 text-xs opacity-60">({tab.count})</span>
-          </button>
-        ))}
+      {/* Category tabs */}
+      <div className="overflow-x-auto pb-1">
+        <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-max min-w-full">
+          {TABS.map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => { setActiveTab(tab.key); setSearch(''); setDifficulty('all'); }}
+              className={`px-4 py-2 text-sm font-semibold rounded-lg whitespace-nowrap transition-all ${
+                activeTab === tab.key
+                  ? 'bg-white dark:bg-gray-700 text-orange-600 dark:text-orange-400 shadow-sm'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+              }`}
+            >
+              {tab.label}
+              <span className="ml-1.5 text-xs opacity-60">
+                ({isLoading ? '…' : tabCounts[tab.key]})
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Grid of Coding challenges */}
+      {/* Search + Difficulty filter bar */}
+      <div className="flex flex-col sm:flex-row gap-3">
+        {/* Search */}
+        <div className="relative flex-1">
+          <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder="Search questions..."
+            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400"
+          />
+        </div>
+
+        {/* Difficulty select */}
+        <select
+          value={difficulty}
+          onChange={e => setDifficulty(e.target.value as any)}
+          className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400 cursor-pointer"
+        >
+          <option value="all">All Difficulties</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+
+        {/* Result count */}
+        {!isLoading && (
+          <div className="flex items-center px-4 py-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/40 text-sm font-semibold text-orange-700 dark:text-orange-400 whitespace-nowrap">
+            {filtered.length} / {tabCounts[activeTab]} shown
+          </div>
+        )}
+      </div>
+
+      {/* Error / empty states */}
       {isError && (
-        <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          Unable to load TCS NQT questions. Please make sure the backend is running on port 5000.
+        <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/20 px-4 py-3 text-sm text-red-700 dark:text-red-400">
+          Unable to load questions. Make sure the backend is running on port 5000.
         </div>
       )}
-      {!isError && !isLoading && questions.length === 0 && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          No questions found for this category. Try selecting a different topic above.
+      {!isError && !isLoading && filtered.length === 0 && (
+        <div className="rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
+          {search || difficulty !== 'all'
+            ? 'No questions match your filters. Try adjusting the search or difficulty.'
+            : 'No questions found for this category yet.'}
         </div>
       )}
+
+      {/* Question grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {questions.map((q, idx) => (
+        {filtered.map((q, idx) => (
           <motion.div
             key={q.slug}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: idx * 0.015 }}
+            transition={{ duration: 0.2, delay: Math.min(idx * 0.015, 0.3) }}
           >
-            <Card padding="md" className="hover:border-purple-500/30 transition-all group flex flex-col justify-between h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+            <Card padding="md" className="hover:border-orange-400/40 transition-all group flex flex-col justify-between h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
               <div className="space-y-2">
                 <div className="flex justify-between items-start gap-2">
-                  <span className="text-xs font-bold font-mono text-purple-500/80">
-                    Q{idx + 1}.
-                  </span>
+                  <span className="text-xs font-bold font-mono text-orange-500/80">Q{idx + 1}.</span>
                   <Badge
-                    variant={
-                      q.difficulty === 'easy' ? 'success' : q.difficulty === 'medium' ? 'warning' : 'danger'
-                    }
+                    variant={q.difficulty === 'easy' ? 'success' : q.difficulty === 'medium' ? 'warning' : 'danger'}
                     className="capitalize"
                   >
                     {q.difficulty}
                   </Badge>
                 </div>
-                <h3 className="font-display font-bold text-gray-900 dark:text-white group-hover:text-purple-600 transition-colors text-sm sm:text-base pr-4">
+                <h3 className="font-display font-bold text-gray-900 dark:text-white group-hover:text-orange-600 transition-colors text-sm sm:text-base pr-4">
                   {q.title}
                 </h3>
               </div>
               <div className="mt-4 pt-3 border-t border-gray-50 dark:border-gray-800 flex justify-end">
                 <Link to={`/student/tcs-nqt/${q.slug}`}>
                   <Button size="sm" variant="primary" rightIcon={<ChevronRight className="w-4 h-4" />}>
-                    Solve Challenge
+                    Solve
                   </Button>
                 </Link>
               </div>

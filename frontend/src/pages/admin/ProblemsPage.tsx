@@ -102,17 +102,17 @@ export default function AdminProblemsPage() {
               </div>
               
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 text-center">
-                TCS NQT
+                Placement Prep
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-center mb-6 text-sm leading-relaxed">
-                Add TCS placement preparation coding questions
+                Add placement preparation coding questions for top MNC companies
               </p>
               
               <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 p-5 rounded-xl border border-amber-200 dark:border-amber-800">
                 <ul className="space-y-3 text-sm text-gray-700 dark:text-gray-300">
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
-                    TCS coding questions
+                    Placement coding questions
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="w-2 h-2 bg-amber-500 rounded-full"></span>
@@ -134,7 +134,7 @@ export default function AdminProblemsPage() {
               </div>
               
               <button className="w-full mt-6 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl transform hover:scale-105">
-                Add TCS NQT Questions →
+                Add Placement Prep Questions →
               </button>
             </div>
 

@@ -468,7 +468,7 @@ export default function TcsNqtCompilerPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50">
-                TCS NQT Prep
+                Placement Prep
               </span>
               <h1 className="font-display font-bold text-sm text-gray-950 dark:text-white leading-none">{question.title}</h1>
             </div>

@@ -1,9 +1,18 @@
 ﻿// ─── Analytics Dashboard ─────────────────────────────────────────────────
 // Sections: Overall Progress | Individual Student | Comparative Overview
 import { useState } from 'react';
-import { useQuery } from '@tantml:invoke>
-<invoke name="execute_pwsh">
-<parameter name="command">git add -A
+import { useQuery } from '@tanstack/react-query';
+import {
+  Users, Zap, Code2, Activity, Target, Trophy, TrendingUp, TrendingDown,
+  Search, RefreshCw, BarChart2, User, Award, Zap as Lightning, Calendar,
+  Clock, CheckCircle, XCircle, Filter, Download, Mail, MoreVertical,
+  Eye, Edit2, Trash2, UserCheck, UserX, Shield
+} from 'lucide-react';
+import {
+  ResponsiveContainer, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
+} from 'recharts';
+import { api } from '../../core/services/api';
 
 // ─── Palette ───────────────────────────────────────────────────────────────
 const C = {
