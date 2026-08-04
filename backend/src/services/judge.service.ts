@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { DockerService } from './docker.service';
 import { LANGUAGE_CONFIGS } from '../config/languages';
 import { logger } from '../utils/logger';

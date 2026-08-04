@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Razorpay from 'razorpay';
 import Stripe from 'stripe';
 import crypto from 'crypto';

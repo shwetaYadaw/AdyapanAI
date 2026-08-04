@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import {
   LayoutDashboard, BookOpen, Award, Users, 
-  BarChart2, Settings, ChevronLeft, Code2, Trophy, Brain
+  BarChart2, Settings, ChevronLeft, Code2, Trophy
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { toggleSidebar } from '../../../features/ui/uiSlice';
@@ -20,7 +20,7 @@ const STUDENT_NAV: NavItem[] = [
   { label: 'Dashboard',    href: '/student/dashboard',  icon: LayoutDashboard },
   { label: 'Certificates', href: '/student/certificates', icon: Award },
   { label: 'Coding Arena', href: '/student/challenges',  icon: Code2 },
-  { label: 'TCS NQT Prep', href: '/student/tcs-nqt',    icon: Trophy },
+  { label: 'Placement Prep', href: '/student/tcs-nqt',    icon: Trophy },
   { label: 'Aptitude Prep',href: '/student/aptitude',   icon: BookOpen },
   { label: 'Contests',     href: '/student/contests',   icon: Trophy },
 ];
@@ -29,8 +29,6 @@ const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { label: 'Users', href: '/admin/users', icon: Users },
   { label: 'Problems', href: '/admin/problems', icon: Code2 },
-  { label: 'Aptitude', href: '/admin/aptitude', icon: Brain },
-  { label: 'Contests', href: '/admin/contests', icon: Trophy },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];

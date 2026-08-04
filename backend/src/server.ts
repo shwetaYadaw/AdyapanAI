@@ -38,17 +38,8 @@ async function bootstrap() {
       logger.warn('⚠️  MySQL initialization failed, skipping');
     }
 
-    // Auto-seed questions from JSON files (ONLY if enabled)
-    if (env.AUTO_SEED_ENABLED === 'true') {
-      try {
-        logger.info('🌱 Auto-seed is ENABLED - loading questions from JSON files...');
-        await autoSeedQuestions();
-      } catch (seedError) {
-        logger.warn('⚠️  Auto-seed questions failed, skipping');
-      }
-    } else {
-      logger.info('⏭️  Auto-seed is DISABLED - questions will be managed through admin panel only');
-    }
+    // Auto-seed disabled — manage questions through admin panel
+    logger.info('⏭️  Auto-seed is DISABLED - questions will be managed through admin panel only');
 
     // Create Express app
     const app = createApp();

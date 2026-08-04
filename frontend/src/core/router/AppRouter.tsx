@@ -30,8 +30,6 @@ const CodingTopicPage      = lazy(() => import('../../pages/student/CodingTopicP
 const AdminDashboard     = lazy(() => import('../../pages/admin/DashboardPage'));
 const AdminUsersPage     = lazy(() => import('../../pages/admin/UsersPage'));
 const AdminProblemsPage  = lazy(() => import('../../pages/admin/ProblemsPage'));
-const AdminAptitudePage  = lazy(() => import('../../pages/admin/AptitudePage'));
-const AdminContestsPage  = lazy(() => import('../../pages/admin/ContestsPage'));
 const AdminAnalyticsPage = lazy(() => import('../../pages/admin/AnalyticsPage'));
 const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
@@ -72,7 +70,7 @@ export default function AppRouter() {
             <Route path="challenges/:slug" element={<CodingPortalPage />} />
             <Route path="contests" element={<ContestsPage />} />
             
-            {/* TCS NQT Preparation */}
+            {/* Placement Prep */}
             <Route path="tcs-nqt" element={<TcsNqtPrepPage />} />
             <Route path="tcs-nqt/:slug" element={<TcsNqtCompilerPage />} />
             
@@ -88,8 +86,6 @@ export default function AppRouter() {
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsersPage />} />
             <Route path="problems" element={<AdminProblemsPage />} />
-            <Route path="aptitude" element={<AdminAptitudePage />} />
-            <Route path="contests" element={<AdminContestsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="security" element={<AdminSecurityPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />

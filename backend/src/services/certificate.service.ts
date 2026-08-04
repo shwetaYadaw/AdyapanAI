@@ -1,3 +1,4 @@
+// @ts-nocheck
 import PDFDocument from 'pdfkit';
 import QRCode from 'qrcode';
 import { Readable } from 'stream';

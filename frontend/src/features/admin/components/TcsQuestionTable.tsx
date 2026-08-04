@@ -19,7 +19,7 @@ export default function TcsQuestionTable({
     return (
       <div className="p-8 text-center">
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
-        <p className="mt-4 text-gray-600 dark:text-gray-400">Loading TCS NQT questions...</p>
+        <p className="mt-4 text-gray-600 dark:text-gray-400">Loading placement prep questions...</p>
       </div>
     );
   }
@@ -27,7 +27,7 @@ export default function TcsQuestionTable({
   if (questions.length === 0) {
     return (
       <div className="p-8 text-center">
-        <p className="text-gray-600 dark:text-gray-400">No TCS NQT questions found</p>
+        <p className="text-gray-600 dark:text-gray-400">No placement prep questions found</p>
       </div>
     );
   }

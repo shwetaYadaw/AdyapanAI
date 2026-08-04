@@ -84,7 +84,7 @@ export default function CreateEditTcsQuestionModal({
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            {question ? 'Edit TCS NQT Question' : 'Create New TCS NQT Question'}
+            {question ? 'Edit Placement Prep Question' : 'Create New Placement Prep Question'}
           </h2>
           <button
             onClick={onClose}

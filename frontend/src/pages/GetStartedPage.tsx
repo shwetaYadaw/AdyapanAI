@@ -9,8 +9,8 @@ import { useAppDispatch, useAppSelector } from '../shared/hooks/hooks';
 import { loginThunk, selectAuthLoading, selectAuthError, clearError, googleLoginThunk } from '../features/auth/authSlice';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { env } from '../config/env';
-import Navbar from '../components/layout/Navbar/Navbar';
+import { env } from '../core/config/env';
+import Navbar from '../shared/components/Navbar/Navbar';
 
 declare global {
   interface Window {

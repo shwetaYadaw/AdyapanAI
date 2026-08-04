@@ -27,7 +27,7 @@ const STRENGTH_TOPICS = [
 const QUICK_START = [
   { label: 'Coding Arena', desc: 'DSA problems & topics', icon: Code2, href: '/student/challenges', color: 'from-violet-500 to-purple-600' },
   { label: 'Placement Prep', desc: 'Reasoning & aptitude tests', icon: Trophy, href: '/student/placement', color: 'from-orange-500 to-amber-500' },
-  { label: 'TCS NQT Prep', desc: 'Mock tests & patterns', icon: Trophy, href: '/student/tcs-nqt', color: 'from-blue-500 to-cyan-500' },
+  { label: 'Placement Prep', desc: 'Mock tests & patterns', icon: Trophy, href: '/student/tcs-nqt', color: 'from-blue-500 to-cyan-500' },
   { label: 'Aptitude Prep', desc: 'Quant, verbal, logical', icon: Brain, href: '/student/aptitude', color: 'from-green-500 to-emerald-500' },
   { label: 'Contests', desc: 'Weekly & monthly events', icon: Target, href: '/student/contests', color: 'from-orange-500 to-amber-500' },
   { label: 'Certificates', desc: 'Your earned badges', icon: Award, href: '/student/certificates', color: 'from-pink-500 to-rose-500' },
@@ -182,7 +182,7 @@ export default function StudentDashboard() {
               {[
                 { label: 'Coding Arena', solved: codingStats?.solvedCount ?? 0, total: codingStats?.totalQuestions ?? 154, color: 'bg-purple-500', href: '/student/challenges' },
                 { label: 'Placement Tests', solved: 0, total: 16, color: 'bg-orange-500', href: '/student/placement' },
-                { label: 'TCS NQT Prep', solved: 0, total: 50, color: 'bg-blue-500', href: '/student/tcs-nqt' },
+                { label: 'Placement Prep', solved: 0, total: 220, color: 'bg-blue-500', href: '/student/tcs-nqt' },
                 { label: 'Aptitude Prep', solved: 0, total: 100, color: 'bg-green-500', href: '/student/aptitude' },
               ].map(item => {
                 const pct = item.total ? Math.round((item.solved / item.total) * 100) : 0;

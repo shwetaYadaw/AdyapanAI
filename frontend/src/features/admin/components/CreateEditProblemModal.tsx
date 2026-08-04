@@ -102,7 +102,7 @@ export default function CreateEditProblemModal({
   };
 
   const handleSeedTopics = async () => {
-    if (!confirm('This will create initial topics for all systems (Coding Arena, TCS NQT, Aptitude). Continue?')) {
+    if (!confirm('This will create initial topics for all systems (Coding Arena, Placement Prep, Aptitude). Continue?')) {
       return;
     }
 
@@ -144,7 +144,7 @@ export default function CreateEditProblemModal({
         {/* Header */}
         <div className="flex justify-between items-center p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white">
-            {problem ? `Edit ${type === 'tcs-nqt' ? 'TCS NQT Question' : 'Coding Arena Problem'}` : `Create New ${type === 'tcs-nqt' ? 'TCS NQT Question' : 'Coding Arena Problem'}`}
+            {problem ? `Edit ${type === 'tcs-nqt' ? 'Placement Prep Question' : 'Coding Arena Problem'}` : `Create New ${type === 'tcs-nqt' ? 'Placement Prep Question' : 'Coding Arena Problem'}`}
           </h2>
           <button
             onClick={onClose}
@@ -290,7 +290,7 @@ export default function CreateEditProblemModal({
               ) : topics.length === 0 ? (
                 <div className="space-y-2">
                   <div className="w-full px-4 py-3 border border-red-300 dark:border-red-600 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm">
-                    ⚠️ No topics found for {type === 'coding-arena' ? 'Coding Arena' : 'TCS NQT'}!
+                    ⚠️ No topics found for {type === 'coding-arena' ? 'Coding Arena' : 'Placement Prep'}!
                   </div>
                   <button
                     type="button"

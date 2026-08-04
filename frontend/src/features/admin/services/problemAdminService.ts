@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import { Problem, AdminProblemFilters, AdminProblemResponse, ProblemVersion } from '../types/problem';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || 'http://localhost:5000') + '/api/v1';
 
 class ProblemAdminService {
   private api: AxiosInstance;
@@ -14,7 +14,7 @@ class ProblemAdminService {
 
     // Add auth token to requests
     this.api.interceptors.request.use((config) => {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('accessToken');
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -35,7 +35,12 @@ class ProblemAdminService {
    */
   async getProblems(filters?: AdminProblemFilters): Promise<AdminProblemResponse> {
     const { data } = await this.api.get('/', { params: filters });
-    return data.data;
+    // Backend returns: { success, data: { problems: [], pagination: {} } }
+    const inner = data.data ?? {};
+    return {
+      problems: Array.isArray(inner.problems) ? inner.problems : (Array.isArray(inner) ? inner : []),
+      pagination: inner.pagination ?? data.pagination ?? { total: 0, page: 1, limit: 20, pages: 0 },
+    };
   }
 
   /**

@@ -1,5 +1,5 @@
 /**
- * Submission Domain Models
+ * Submission Domain Models — aligned with Prisma schema
  */
 
 export interface ProblemSubmission {
@@ -8,20 +8,20 @@ export interface ProblemSubmission {
   problemId: string;
   code: string;
   language: string;
-  status: SubmissionStatus;
-  runtime?: number;
+  status: string;
+  runtime: number;
   passedCount: number;
   totalCount: number;
-  errorMessage?: string;
+  errorMessage?: string | null;
   createdAt: Date;
 }
 
-export type SubmissionStatus = 
-  | 'pending' 
-  | 'accepted' 
-  | 'wrong_answer' 
-  | 'compile_error' 
-  | 'runtime_error' 
+export type SubmissionStatus =
+  | 'pending'
+  | 'accepted'
+  | 'wrong_answer'
+  | 'compile_error'
+  | 'runtime_error'
   | 'time_limit_exceeded'
   | 'memory_limit_exceeded';
 
@@ -35,12 +35,13 @@ export interface CreateSubmissionDTO {
 export interface SubmissionResult {
   id: string;
   problemSubmissionId: string;
-  status: SubmissionStatus;
+  status: string;
   totalCount: number;
   passedCount: number;
-  failedCount: number;
   score: number;
-  errorMessage?: string;
+  runtime: number;
+  memory: number;
+  errorMessage?: string | null;
   createdAt: Date;
 }
 
@@ -54,7 +55,7 @@ export interface TestCaseResult {
 }
 
 export interface SubmissionWithResults extends ProblemSubmission {
-  problemSubmissionResult?: SubmissionResult;
+  problemSubmissionResult?: SubmissionResult | null;
   problem: {
     id: string;
     title: string;
