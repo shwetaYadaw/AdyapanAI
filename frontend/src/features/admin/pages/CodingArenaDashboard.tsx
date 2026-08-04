@@ -7,6 +7,7 @@ import CreateEditProblemModal from '../components/CreateEditProblemModal';
 import ProblemTable from '../components/ProblemTable';
 import ProblemFilters from '../components/ProblemFilters';
 import BulkImportModal from '../components/BulkImportModal';
+import CacheManager from '../../../utils/cacheManager';
 
 interface CodingArenaDashboardProps {
   onBack: () => void;
@@ -52,6 +53,8 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
       await problemAdminService.createProblem(problem);
       toast.success('Coding Arena problem created successfully!');
       setShowCreateModal(false);
+      // Clear cache after creation
+      CacheManager.clearProblemCache();
       fetchProblems();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to create problem');
@@ -65,6 +68,8 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
       toast.success('Coding Arena problem updated successfully!');
       setSelectedProblem(null);
       setShowCreateModal(false);
+      // Clear cache after update
+      CacheManager.clearProblemCache(selectedProblem.id);
       fetchProblems();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to update problem');
@@ -72,13 +77,18 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
   };
 
   const handleDeleteProblem = async (id: string) => {
-    if (!confirm('Are you sure you want to archive this problem?')) return;
+    if (!confirm('Are you sure you want to delete this problem?')) return;
     try {
       await problemAdminService.deleteProblem(id);
-      toast.success('Coding Arena problem archived successfully!');
+      toast.success('Coding Arena problem deleted successfully!');
+      
+      // Clear cache for this problem
+      CacheManager.clearProblemCache(id);
+      
+      // Refresh list
       fetchProblems();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to archive problem');
+      toast.error(err.response?.data?.message || 'Failed to delete problem');
     }
   };
 
@@ -87,6 +97,8 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
       await problemAdminService.importProblems(problems);
       toast.success('Coding Arena problems imported successfully!');
       setShowImportModal(false);
+      // Clear all problem cache after import
+      CacheManager.clearProblemCache();
       fetchProblems();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to import problems');
@@ -97,6 +109,7 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
     try {
       // You can implement restore logic here if needed
       toast.success('Problem restored successfully!');
+      CacheManager.clearProblemCache(id);
       fetchProblems();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to restore problem');

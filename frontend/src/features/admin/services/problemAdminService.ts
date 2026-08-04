@@ -68,6 +68,9 @@ class ProblemAdminService {
    */
   async deleteProblem(id: string): Promise<void> {
     await this.api.delete(`/${id}`);
+    // Clear cache after deletion
+    localStorage.removeItem(`problem_${id}`);
+    localStorage.removeItem('problems_list_cache');
   }
 
   /**

@@ -21,6 +21,10 @@ import problemRoutes from './routes/problem.routes';
 import problemAdminRoutes from './routes/problem-admin.routes';
 import tcsNqtAdminRoutes from './routes/tcs-nqt-admin.routes';
 import tcsNqtRoutes from './routes/tcs-nqt.routes';
+import codingArenaAdminRoutes from './routes/coding-arena-admin.routes';
+import aptitudeAdminRoutes from './routes/aptitude-admin.routes';
+import aptitudeStudentRoutes from './routes/aptitude-student.routes';
+import aptitudeSeedRoutes from './routes/aptitude-seed.routes';
 import questionsAdminRoutes from './routes/questions-admin.routes';
 import topicAdminRoutes from './routes/topic-admin.routes';
 import submissionRoutes from './routes/submission.routes';
@@ -31,6 +35,7 @@ import aptitudeRoutes from './routes/aptitude.routes';
 import notificationRoutes from './routes/notification.routes';
 import uploadRoutes from './routes/upload.routes';
 import healthRoutes from './routes/health.routes';
+import adminSetupRoutes from './routes/admin-setup.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -98,6 +103,7 @@ export function createApp(): Application {
 
   // Routes - Core Features Only
   app.use('/api/v1/health', healthRoutes);
+  app.use('/api/v1/admin-setup', adminSetupRoutes);
   app.use('/api/v1/auth', authRoutes);
   app.use('/api/v1/users', userRoutes);
   app.use('/api/v1/students', studentRoutes);
@@ -105,6 +111,9 @@ export function createApp(): Application {
   // Admin routes
   app.use('/api/v1/admin', adminRoutes);
   app.use('/api/v1/admin/tcs-nqt', tcsNqtAdminRoutes);
+  app.use('/api/v1/admin/coding-arena', codingArenaAdminRoutes);
+  app.use('/api/v1/admin/aptitude', aptitudeAdminRoutes);
+  app.use('/api/v1/admin/aptitude/seed', aptitudeSeedRoutes);
   app.use('/api/v1/admin/questions', questionsAdminRoutes);
   app.use('/api/v1/admin/problems', problemAdminRoutes);
   app.use('/api/v1/admin/topics', topicAdminRoutes);
@@ -118,7 +127,7 @@ export function createApp(): Application {
   
   // Practice & Tests
   app.use('/api/v1/contests', contestRoutes);
-  app.use('/api/v1/aptitude', aptitudeRoutes);
+  app.use('/api/v1/aptitude', aptitudeStudentRoutes);
   
   // Utilities
   app.use('/api/v1/notifications', notificationRoutes);

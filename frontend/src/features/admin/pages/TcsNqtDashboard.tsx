@@ -7,6 +7,7 @@ import CreateEditTcsQuestionModal from '../components/CreateEditTcsQuestionModal
 import TcsQuestionTable from '../components/TcsQuestionTable';
 import TcsQuestionFilters from '../components/TcsQuestionFilters';
 import TcsBulkImportModal from '../components/TcsBulkImportModal';
+import CacheManager from '../../../utils/cacheManager';
 
 interface TcsNqtDashboardProps {
   onBack: () => void;
@@ -54,6 +55,8 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
       await tcsNqtAdminService.createQuestion(question);
       toast.success('Placement prep question created successfully!');
       setShowCreateModal(false);
+      // Clear cache after creation
+      CacheManager.clearQuestionCache();
       fetchQuestions();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to create question');
@@ -67,6 +70,8 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
       toast.success('Placement prep question updated!');
       setSelectedQuestion(null);
       setShowCreateModal(false);
+      // Clear cache after update
+      CacheManager.clearQuestionCache(selectedQuestion.id);
       fetchQuestions();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to update question');
@@ -78,6 +83,11 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
     try {
       await tcsNqtAdminService.deleteQuestion(id);
       toast.success('Placement prep question deleted!');
+      
+      // Clear cache for this question
+      CacheManager.clearQuestionCache(id);
+      
+      // Refresh list
       fetchQuestions();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to delete question');
@@ -89,6 +99,8 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
       await tcsNqtAdminService.importQuestions(questions);
       toast.success('Placement prep questions imported successfully!');
       setShowImportModal(false);
+      // Clear all question cache after import
+      CacheManager.clearQuestionCache();
       fetchQuestions();
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to import questions');
