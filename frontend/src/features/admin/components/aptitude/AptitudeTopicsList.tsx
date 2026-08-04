@@ -35,9 +35,14 @@ interface Chapter {
 interface AptitudeTopicsListProps {
   onSelectTopic: (topicId: string) => void;
   refreshTrigger: number;
+  onAddTopicClick?: () => void;
 }
 
-export default function AptitudeTopicsList({ onSelectTopic, refreshTrigger }: AptitudeTopicsListProps) {
+export default function AptitudeTopicsList({ 
+  onSelectTopic, 
+  refreshTrigger,
+  onAddTopicClick,
+}: AptitudeTopicsListProps) {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -90,13 +95,6 @@ export default function AptitudeTopicsList({ onSelectTopic, refreshTrigger }: Ap
           placeholder="Search topics..."
           className="flex-1 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
         />
-        <Button
-          onClick={() => setShowAddModal(true)}
-          rightIcon={<Plus size={18} />}
-          className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
-        >
-          Add Topic
-        </Button>
       </div>
 
       {/* Topics Grid */}

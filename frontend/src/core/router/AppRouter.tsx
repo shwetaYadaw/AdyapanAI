@@ -21,7 +21,7 @@ const CodingPortalPage     = lazy(() => import('../../pages/student/CodingPortal
 const ContestsPage         = lazy(() => import('../../pages/student/ContestsPage'));
 const TcsNqtPrepPage       = lazy(() => import('../../pages/student/TcsNqtPrepPage'));
 const TcsNqtCompilerPage   = lazy(() => import('../../pages/student/TcsNqtCompilerPage'));
-const AptitudePage         = lazy(() => import('../../pages/student/AptitudePage'));
+const AptitudeStudentPage  = lazy(() => import('../../pages/student/AptitudeStudentPage'));
 const AptitudeQuizPage     = lazy(() => import('../../pages/student/AptitudeQuizPage'));
 const TestAttemptPage      = lazy(() => import('../../pages/student/TestAttemptPage'));
 const CodingTopicPage      = lazy(() => import('../../pages/student/CodingTopicPage'));
@@ -76,7 +76,7 @@ export default function AppRouter() {
             <Route path="tcs-nqt/:slug" element={<TcsNqtCompilerPage />} />
             
             {/* Aptitude Preparation */}
-            <Route path="aptitude" element={<AptitudePage />} />
+            <Route path="aptitude" element={<AptitudeStudentPage />} />
             <Route path="aptitude/:module/:topicSlug" element={<AptitudeQuizPage />} />
             <Route path="tests/:testId" element={<TestAttemptPage />} />
           </Route>
