@@ -124,23 +124,58 @@ router.post('/reset-password', async (req: Request, res: Response) => {
     // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 12);
 
-    // Update password
+    // Update password and ensure email is verified
     await prisma.user.update({
       where: { id: admin.id },
-      data: { password: hashedPassword },
+      data: { password: hashedPassword, isEmailVerified: true, isVerified: true },
     });
 
     sendSuccess({
       res,
       data: {
         email: admin.email,
-        message: 'Password reset successfully',
+        message: 'Password reset successfully and email verified',
       },
       message: 'Admin password has been reset',
     });
   } catch (err: any) {
     console.error('Error resetting password:', err);
     sendError({ res, statusCode: 500, message: 'Error resetting password' });
+  }
+});
+
+/**
+ * @route   POST /api/v1/admin-setup/verify-email
+ * @desc    Force verify email for an admin account
+ * @access  Public (for setup only)
+ */
+router.post('/verify-email', async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      sendError({ res, statusCode: 400, message: 'Email is required' });
+      return;
+    }
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      sendError({ res, statusCode: 404, message: 'User not found' });
+      return;
+    }
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { isEmailVerified: true, isVerified: true },
+    });
+
+    sendSuccess({
+      res,
+      data: { email: user.email, isEmailVerified: true },
+      message: 'Email verified successfully',
+    });
+  } catch (err: any) {
+    console.error('Error verifying email:', err);
+    sendError({ res, statusCode: 500, message: 'Error verifying email' });
   }
 });
 

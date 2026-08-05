@@ -85,7 +85,15 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await dispatch(logoutThunk());
-    toast.success('Logged out successfully');
+    toast.success('Logged out successfully', {
+      position: 'top-center',
+      style: {
+        padding: '16px 24px',
+        borderRadius: '12px',
+        fontSize: '15px',
+        fontWeight: '600',
+      },
+    });
     navigate('/');
   };
 
