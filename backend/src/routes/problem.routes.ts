@@ -422,12 +422,15 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
       problem.timeLimit
     );
 
+    // If no test case exists, just return the output without pass/fail judgment
+    const hasExpected = !!sampleTestCase?.expectedOutput;
+
     sendSuccess({
       res,
       data: {
-        passed: sampleTestCase ? result.passed : undefined,
+        passed: hasExpected ? result.passed : true,
         actualOutput: result.actualOutput,
-        expectedOutput: sampleTestCase?.expectedOutput || 'N/A (no test case)',
+        expectedOutput: hasExpected ? sampleTestCase.expectedOutput : null,
         input: inputToUse,
         runtime: result.runtime,
         errorMessage: result.errorMessage,
@@ -470,64 +473,142 @@ router.post('/:id/submit', authenticate, async (req, res, next) => {
 
     if (!problem) throw new AppError('Problem not found', 404);
 
-    // Anti-cheat check: detect static hardcoding of outputs
-    const visibleOutputs = problem.testCases.filter(t => !t.isHidden).map(t => t.expectedOutput);
-    const expectedOutputs = Array.from(new Set(visibleOutputs));
-    const isCheating = detectHardcoding(code, expectedOutputs);
+    const testCases = problem.testCases || [];
 
-    if (isCheating) {
-      const submission = await prisma.submission.create({
+    // If problem has test cases, use the queue system for proper validation
+    if (testCases.length > 0) {
+      // Anti-cheat check: detect static hardcoding of outputs
+      const visibleOutputs = testCases.filter(t => !t.isHidden).map(t => t.expectedOutput);
+      const expectedOutputs = Array.from(new Set(visibleOutputs));
+      const isCheating = detectHardcoding(code, expectedOutputs);
+
+      if (isCheating) {
+        const submission = await prisma.problemSubmission.create({
+          data: {
+            userId: req.user!.userId,
+            problemId: problem.id,
+            code,
+            language,
+            status: 'wrong_answer',
+            errorMessage: 'Cheat Detected: Hardcoded output values found.',
+          },
+        });
+
+        await prisma.problemSubmissionResult.create({
+          data: {
+            problemSubmissionId: submission.id,
+            status: 'wrong_answer',
+            errorMessage: 'Cheat Detected: Hardcoded output values found.',
+            totalCount: testCases.length,
+            passedCount: 0,
+          },
+        });
+
+        return sendSuccess({
+          res,
+          message: 'Cheat detected, submission rejected.',
+          data: { submissionId: submission.id, status: 'wrong_answer' },
+        });
+      }
+
+      // Create pending submission record
+      const submission = await prisma.problemSubmission.create({
         data: {
           userId: req.user!.userId,
           problemId: problem.id,
           code,
           language,
-          status: 'wrong_answer',
-          errorMessage: 'Cheat Detected: Hardcoded output values found.',
+          status: 'pending',
         },
       });
 
-      await prisma.submissionResult.create({
-        data: {
-          submissionId: submission.id,
-          status: 'wrong_answer',
-          errorMessage: 'Cheat Detected: Hardcoded output values found.',
-          totalCount: problem.testCases.length,
-          passedCount: 0,
-        },
-      });
-
-      return sendSuccess({
-        res,
-        message: 'Cheat detected, submission rejected.',
-        data: submission,
-      });
-    }
-
-    // Create pending submission record
-    const submission = await prisma.submission.create({
-      data: {
-        userId: req.user!.userId,
+      // Enqueue for processing
+      await queueService.enqueue({
+        submissionId: submission.id,
         problemId: problem.id,
         code,
         language,
-        status: 'pending',
-      },
-    });
+      });
 
-    // Enqueue for background worker processing
-    await queueService.enqueue({
-      submissionId: submission.id,
-      problemId: problem.id,
-      code,
-      language,
-    });
+      sendSuccess({
+        res,
+        message: 'Submission enqueued successfully',
+        data: { submissionId: submission.id, status: 'pending' },
+      });
+    } else {
+      // No test cases: run code directly with custom input and accept if it runs without errors
+      const customInput = req.body.input || '';
+      
+      const result = await judge.runTestCase(code, language, customInput, undefined, problem.timeLimit || 5000);
+      
+      const status = result.errorMessage ? 'runtime_error' : 'accepted';
+      
+      // Save submission
+      const submission = await prisma.problemSubmission.create({
+        data: {
+          userId: req.user!.userId,
+          problemId: problem.id,
+          code,
+          language,
+          status,
+          runtime: result.runtime,
+          passedCount: status === 'accepted' ? 1 : 0,
+          totalCount: 1,
+          errorMessage: result.errorMessage || null,
+        },
+      });
 
-    sendSuccess({
-      res,
-      message: 'Submission enqueued successfully',
-      data: { submissionId: submission.id, status: 'pending' },
-    });
+      // Award XP on successful submission (first time only)
+      if (status === 'accepted') {
+        const previousAccepted = await prisma.problemSubmission.findFirst({
+          where: {
+            userId: req.user!.userId,
+            problemId: problem.id,
+            status: 'accepted',
+            id: { not: submission.id },
+          },
+        });
+
+        let xpAwarded = 0;
+        if (!previousAccepted) {
+          xpAwarded = problem.xpReward || 10;
+          try {
+            await prisma.studentProfile.updateMany({
+              where: { userId: req.user!.userId },
+              data: { xp: { increment: xpAwarded } },
+            });
+          } catch (e) {
+            // StudentProfile might not exist for admin users
+          }
+        }
+
+        sendSuccess({
+          res,
+          data: {
+            submissionId: submission.id,
+            status: 'accepted',
+            actualOutput: result.actualOutput,
+            runtime: result.runtime,
+            passedCount: 1,
+            totalCount: 1,
+            xpAwarded,
+          },
+        });
+      } else {
+        sendSuccess({
+          res,
+          data: {
+            submissionId: submission.id,
+            status,
+            actualOutput: result.actualOutput,
+            runtime: result.runtime,
+            errorMessage: result.errorMessage,
+            passedCount: 0,
+            totalCount: 1,
+          },
+        });
+      }
+    }
   } catch (err) { next(err); }
 });
 
