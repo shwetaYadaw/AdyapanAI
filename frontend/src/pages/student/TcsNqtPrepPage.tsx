@@ -34,7 +34,8 @@ export default function PlacementPrepPage() {
 
   // Fetch topics dynamically
   const { data: topics = [] } = useQuery<Topic[]>({
-    queryKey: ['tcsNqtTopics'],
+    queryKey: ['tcsNqtTopics', 'v2'],
+    staleTime: 0,
     queryFn: async () => {
       const { data } = await api.get('/topics?system=tcs-nqt');
       return data.data ?? [];
@@ -42,7 +43,8 @@ export default function PlacementPrepPage() {
   });
 
   const { data: storedQuestions = [], isLoading, isError } = useQuery<TCSQuestion[]>({
-    queryKey: ['placementPrepQuestions'],
+    queryKey: ['placementPrepQuestions', 'v2'],
+    staleTime: 0, // Always fetch fresh data so new questions show immediately
     queryFn: async () => {
       const { data } = await api.get('/tcs-nqt?limit=500');
       return (data.data ?? []).map((q: any) => ({

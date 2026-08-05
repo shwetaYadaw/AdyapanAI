@@ -48,12 +48,15 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-// GET /admin/tcs-nqt/:id - Get single TCS NQT question
+// GET /admin/tcs-nqt/:id - Get single TCS NQT question (supports both id and slug)
 router.get('/:id', async (req, res, next) => {
   try {
-    const question = await prisma.tcsNqtQuestion.findUnique({
-      where: { id: req.params.id },
-    });
+    const param = req.params.id;
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(param);
+
+    const question = isUUID
+      ? await prisma.tcsNqtQuestion.findUnique({ where: { id: param } })
+      : await prisma.tcsNqtQuestion.findUnique({ where: { slug: param } });
 
     if (!question) {
       throw new AppError('TCS NQT question not found', 404);
