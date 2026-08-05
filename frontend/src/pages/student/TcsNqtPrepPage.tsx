@@ -2,11 +2,13 @@ import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Code, BookOpen, ChevronRight, Award, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Code, BookOpen, ChevronRight, Award, Sparkles, CheckCircle2, Users, Briefcase } from 'lucide-react';
 import Card from '../../shared/components/Card/Card';
 import Badge from '../../shared/components/Badge/Badge';
 import Button from '../../shared/components/Button/Button';
 import { api } from '../../core/services/api';
+
+type ExperienceLevel = 'freshers' | 'experienced';
 
 interface TCSQuestion {
   id?: string;
@@ -14,6 +16,7 @@ interface TCSQuestion {
   slug: string;
   difficulty: 'easy' | 'medium' | 'hard';
   topics?: string[];
+  experienceLevel?: ExperienceLevel;
 }
 
 interface Topic {
@@ -24,6 +27,11 @@ interface Topic {
 }
 
 export default function PlacementPrepPage() {
+  const [activeLevel, setActiveLevel] = useState<ExperienceLevel>('freshers');
+  const [activeTab, setActiveTab]     = useState<string>('');
+  const [search, setSearch]           = useState('');
+  const [difficulty, setDifficulty]   = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
+
   // Fetch topics dynamically
   const { data: topics = [] } = useQuery<Topic[]>({
     queryKey: ['tcsNqtTopics'],
@@ -32,14 +40,6 @@ export default function PlacementPrepPage() {
       return data.data ?? [];
     },
   });
-
-  // Get first topic or 'arrays' as default
-  const [activeTab, setActiveTab] = useState<string>('');
-  const [search, setSearch]       = useState('');
-  const [difficulty, setDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
-
-  // Set active tab to first topic when topics load
-  const tabKey = activeTab || (topics.length > 0 ? topics[0].name.toLowerCase() : '');
 
   const { data: storedQuestions = [], isLoading, isError } = useQuery<TCSQuestion[]>({
     queryKey: ['placementPrepQuestions'],
@@ -50,25 +50,48 @@ export default function PlacementPrepPage() {
         id: q.id ?? q._id,
         // topic is a single string — normalise to lowercase array
         topics: [String(q.topic ?? '').toLowerCase()].filter(Boolean),
+        experienceLevel: q.experienceLevel || 'freshers',
       }));
     },
   });
 
-  // per-tab counts (unfiltered by search/difficulty)
-  const tabCounts = useMemo(() => 
+  // Split questions by experience level
+  const fresherQuestions    = useMemo(() => storedQuestions.filter(q => (q.experienceLevel || 'freshers') === 'freshers'), [storedQuestions]);
+  const experiencedQuestions = useMemo(() => storedQuestions.filter(q => (q.experienceLevel || 'freshers') === 'experienced'), [storedQuestions]);
+
+  const levelQuestions = activeLevel === 'freshers' ? fresherQuestions : experiencedQuestions;
+
+  // Derive active tab key (first topic of current level, or empty)
+  const levelTopicNames = useMemo(() => {
+    const names = new Set<string>();
+    levelQuestions.forEach(q => q.topics?.forEach(t => names.add(t)));
+    return names;
+  }, [levelQuestions]);
+
+  const filteredTopics = useMemo(
+    () => topics.filter(t => levelTopicNames.has(t.name.toLowerCase())).sort((a, b) => a.order - b.order),
+    [topics, levelTopicNames]
+  );
+
+  const tabKey = activeTab && levelTopicNames.has(activeTab)
+    ? activeTab
+    : (filteredTopics.length > 0 ? filteredTopics[0].name.toLowerCase() : '');
+
+  // per-tab counts (unfiltered by search/difficulty) within the current level
+  const tabCounts = useMemo(() =>
     Object.fromEntries(
-      topics.map(t => [
-        t.name.toLowerCase(), 
-        storedQuestions.filter(q => q.topics?.includes(t.name.toLowerCase())).length
+      filteredTopics.map(t => [
+        t.name.toLowerCase(),
+        levelQuestions.filter(q => q.topics?.includes(t.name.toLowerCase())).length
       ])
     ),
-    [topics, storedQuestions]
+    [filteredTopics, levelQuestions]
   );
 
   // questions for current tab + filters
   const filtered = useMemo(() => {
     if (!tabKey) return [];
-    return storedQuestions
+    return levelQuestions
       .filter(q => q.topics?.includes(tabKey))
       .filter(q => difficulty === 'all' || q.difficulty?.toLowerCase() === difficulty)
       .filter(q => !search || q.title.toLowerCase().includes(search.toLowerCase()))
@@ -76,7 +99,14 @@ export default function PlacementPrepPage() {
         ({ easy: 1, medium: 2, hard: 3 }[a.difficulty?.toLowerCase() ?? 'medium'] ?? 2) -
         ({ easy: 1, medium: 2, hard: 3 }[b.difficulty?.toLowerCase() ?? 'medium'] ?? 2)
       );
-  }, [tabKey, storedQuestions, difficulty, search]);
+  }, [tabKey, levelQuestions, difficulty, search]);
+
+  const handleLevelChange = (level: ExperienceLevel) => {
+    setActiveLevel(level);
+    setActiveTab(''); // reset tab when level changes
+    setSearch('');
+    setDifficulty('all');
+  };
 
   return (
     <div className="page-wrapper space-y-5">
@@ -96,24 +126,91 @@ export default function PlacementPrepPage() {
             Master the top coding challenges frequently asked in placement assessments by TCS, Infosys, Wipro, Accenture and more.
           </p>
           <div className="flex flex-wrap gap-4 text-xs text-white/70 pt-2 border-t border-white/20">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-white" /> {storedQuestions.length} Problems</span>
-            <span className="flex items-center gap-1.5"><Code className="w-4 h-4 text-white" /> Multilanguage Editor</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-white" /> {storedQuestions.length} Total Problems</span>
+            <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-white" /> {fresherQuestions.length} Fresher Level</span>
+            <span className="flex items-center gap-1.5"><Briefcase className="w-4 h-4 text-white" /> {experiencedQuestions.length} Experienced Level</span>
             <span className="flex items-center gap-1.5"><Award className="w-4 h-4 text-white" /> Company Specific Test Cases</span>
           </div>
         </div>
       </div>
 
-      {/* Category tabs */}
-      <div className="overflow-x-auto pb-1">
-        <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-max min-w-full">
-          {topics.length > 0 ? (
-            topics.map((topic) => (
+      {/* ── Experience Level Tabs ── */}
+      <div className="flex gap-3">
+        {/* Freshers Tab */}
+        <button
+          id="tab-freshers"
+          onClick={() => handleLevelChange('freshers')}
+          className={`flex items-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all border-2 ${
+            activeLevel === 'freshers'
+              ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 text-blue-700 dark:text-blue-300 shadow-md'
+              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-blue-300 hover:bg-blue-50/50'
+          }`}
+        >
+          <div className={`p-2 rounded-lg ${activeLevel === 'freshers' ? 'bg-blue-100 dark:bg-blue-900' : 'bg-gray-100 dark:bg-gray-700'}`}>
+            <Users className={`w-5 h-5 ${activeLevel === 'freshers' ? 'text-blue-600' : 'text-gray-500'}`} />
+          </div>
+          <div className="text-left">
+            <div className="text-sm font-bold">Freshers Level</div>
+            <div className="text-xs opacity-70">{fresherQuestions.length} questions</div>
+          </div>
+        </button>
+
+        {/* Experienced Tab */}
+        <button
+          id="tab-experienced"
+          onClick={() => handleLevelChange('experienced')}
+          className={`flex items-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all border-2 ${
+            activeLevel === 'experienced'
+              ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-500 text-purple-700 dark:text-purple-300 shadow-md'
+              : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-purple-300 hover:bg-purple-50/50'
+          }`}
+        >
+          <div className={`p-2 rounded-lg ${activeLevel === 'experienced' ? 'bg-purple-100 dark:bg-purple-900' : 'bg-gray-100 dark:bg-gray-700'}`}>
+            <Briefcase className={`w-5 h-5 ${activeLevel === 'experienced' ? 'text-purple-600' : 'text-gray-500'}`} />
+          </div>
+          <div className="text-left">
+            <div className="text-sm font-bold">Experienced Level</div>
+            <div className="text-xs opacity-70">{experiencedQuestions.length} questions</div>
+          </div>
+        </button>
+      </div>
+
+      {/* ── Level Info Banner ── */}
+      {activeLevel === 'freshers' ? (
+        <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800">
+          <Users className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-blue-700 dark:text-blue-300">Freshers Level</p>
+            <p className="text-xs text-blue-600 dark:text-blue-400 mt-0.5">
+              These questions cover fundamental topics like Arrays, Strings, Sorting etc. — perfect for students who are just starting their placement preparation.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
+          <Briefcase className="w-5 h-5 text-purple-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-sm font-semibold text-purple-700 dark:text-purple-300">Experienced Level</p>
+            <p className="text-xs text-purple-600 dark:text-purple-400 mt-0.5">
+              Advanced problems covering Dynamic Programming, Graphs, System Design etc. — ideal for students with prior coding experience targeting senior roles.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Topic Tabs (within selected level) ── */}
+      {filteredTopics.length > 0 ? (
+        <div className="overflow-x-auto pb-1">
+          <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-max min-w-full">
+            {filteredTopics.map((topic) => (
               <button
                 key={topic.id}
                 onClick={() => { setActiveTab(topic.name.toLowerCase()); setSearch(''); setDifficulty('all'); }}
                 className={`px-4 py-2 text-sm font-semibold rounded-lg whitespace-nowrap transition-all ${
                   tabKey === topic.name.toLowerCase()
-                    ? 'bg-white dark:bg-gray-700 text-orange-600 dark:text-orange-400 shadow-sm'
+                    ? activeLevel === 'freshers'
+                      ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                      : 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
                 }`}
               >
@@ -122,54 +219,64 @@ export default function PlacementPrepPage() {
                   ({isLoading ? '…' : tabCounts[topic.name.toLowerCase()] ?? 0})
                 </span>
               </button>
-            ))
-          ) : (
-            <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">No topics available</div>
+            ))}
+          </div>
+        </div>
+      ) : (
+        !isLoading && (
+          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
+            No topics with questions available for this level yet. Check back soon!
+          </div>
+        )
+      )}
+
+      {/* ── Search + Difficulty filter bar ── */}
+      {filteredTopics.length > 0 && (
+        <div className="flex flex-col sm:flex-row gap-3">
+          {/* Search */}
+          <div className="relative flex-1">
+            <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            <input
+              type="text"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search questions..."
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400"
+            />
+          </div>
+
+          {/* Difficulty select */}
+          <select
+            value={difficulty}
+            onChange={e => setDifficulty(e.target.value as any)}
+            className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400 cursor-pointer"
+          >
+            <option value="all">All Difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+
+          {/* Result count */}
+          {!isLoading && (
+            <div className={`flex items-center px-4 py-2.5 rounded-xl border text-sm font-semibold whitespace-nowrap ${
+              activeLevel === 'freshers'
+                ? 'bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-900/40 text-blue-700 dark:text-blue-400'
+                : 'bg-purple-50 dark:bg-purple-950/30 border-purple-100 dark:border-purple-900/40 text-purple-700 dark:text-purple-400'
+            }`}>
+              {filtered.length} / {tabCounts[tabKey] ?? 0} shown
+            </div>
           )}
         </div>
-      </div>
+      )}
 
-      {/* Search + Difficulty filter bar */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        {/* Search */}
-        <div className="relative flex-1">
-          <BookOpen className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-          <input
-            type="text"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            placeholder="Search questions..."
-            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-800 dark:text-gray-200 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400"
-          />
-        </div>
-
-        {/* Difficulty select */}
-        <select
-          value={difficulty}
-          onChange={e => setDifficulty(e.target.value as any)}
-          className="px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-200 outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400 cursor-pointer"
-        >
-          <option value="all">All Difficulties</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-
-        {/* Result count */}
-        {!isLoading && (
-          <div className="flex items-center px-4 py-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/40 text-sm font-semibold text-orange-700 dark:text-orange-400 whitespace-nowrap">
-            {filtered.length} / {tabCounts[tabKey] ?? 0} shown
-          </div>
-        )}
-      </div>
-
-      {/* Error / empty states */}
+      {/* ── Error / empty states ── */}
       {isError && (
         <div className="rounded-xl border border-red-200 bg-red-50 dark:bg-red-950/20 px-4 py-3 text-sm text-red-700 dark:text-red-400">
           Unable to load questions. Make sure the backend is running on port 5000.
         </div>
       )}
-      {!isError && !isLoading && filtered.length === 0 && (
+      {!isError && !isLoading && filteredTopics.length > 0 && filtered.length === 0 && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 px-4 py-3 text-sm text-amber-800 dark:text-amber-300">
           {search || difficulty !== 'all'
             ? 'No questions match your filters. Try adjusting the search or difficulty.'
@@ -177,7 +284,7 @@ export default function PlacementPrepPage() {
         </div>
       )}
 
-      {/* Question grid */}
+      {/* ── Question grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map((q, idx) => (
           <motion.div
@@ -186,10 +293,14 @@ export default function PlacementPrepPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: Math.min(idx * 0.015, 0.3) }}
           >
-            <Card padding="md" className="hover:border-orange-400/40 transition-all group flex flex-col justify-between h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800">
+            <Card padding="md" className={`hover:border-opacity-60 transition-all group flex flex-col justify-between h-full bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 ${
+              activeLevel === 'freshers' ? 'hover:border-blue-400/40' : 'hover:border-purple-400/40'
+            }`}>
               <div className="space-y-2">
                 <div className="flex justify-between items-start gap-2">
-                  <span className="text-xs font-bold font-mono text-orange-500/80">Q{idx + 1}.</span>
+                  <span className={`text-xs font-bold font-mono ${activeLevel === 'freshers' ? 'text-blue-500/80' : 'text-purple-500/80'}`}>
+                    Q{idx + 1}.
+                  </span>
                   <Badge
                     variant={q.difficulty === 'easy' ? 'success' : q.difficulty === 'medium' ? 'warning' : 'danger'}
                     className="capitalize"
@@ -197,11 +308,20 @@ export default function PlacementPrepPage() {
                     {q.difficulty}
                   </Badge>
                 </div>
-                <h3 className="font-display font-bold text-gray-900 dark:text-white group-hover:text-orange-600 transition-colors text-sm sm:text-base pr-4">
+                <h3 className={`font-display font-bold text-gray-900 dark:text-white transition-colors text-sm sm:text-base pr-4 ${
+                  activeLevel === 'freshers' ? 'group-hover:text-blue-600' : 'group-hover:text-purple-600'
+                }`}>
                   {q.title}
                 </h3>
               </div>
-              <div className="mt-4 pt-3 border-t border-gray-50 dark:border-gray-800 flex justify-end">
+              <div className="mt-4 pt-3 border-t border-gray-50 dark:border-gray-800 flex justify-between items-center">
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                  activeLevel === 'freshers'
+                    ? 'bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
+                    : 'bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400'
+                }`}>
+                  {activeLevel === 'freshers' ? '🎓 Fresher' : '💼 Experienced'}
+                </span>
                 <Link to={`/student/tcs-nqt/${q.slug}`}>
                   <Button size="sm" variant="primary" rightIcon={<ChevronRight className="w-4 h-4" />}>
                     Solve

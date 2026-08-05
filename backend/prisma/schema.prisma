@@ -185,6 +185,7 @@ model TcsNqtQuestion {
   referenceSolution String   @db.Text
   testCases         Json?
   xpReward          Int      @default(10)
+  experienceLevel   String   @default("freshers") // "freshers" | "experienced"
   createdBy         String?
   updatedBy         String?
   createdAt         DateTime @default(now())
@@ -194,6 +195,7 @@ model TcsNqtQuestion {
 
   @@index([topic])
   @@index([difficulty])
+  @@index([experienceLevel])
 }
 
 model QuestionSubmission {
