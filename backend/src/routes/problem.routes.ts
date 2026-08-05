@@ -127,19 +127,17 @@ router.post('/', authenticate, async (req, res, next) => {
 // GET /problems — Get list of all problems (supports search, difficulty, topic filter, pagination)
 router.get('/', async (req, res, next) => {
   try {
-    const { search, difficulty, topic, page = '1', limit = '50' } = req.query;
+    const { search, difficulty, topic, courseId, page = '1', limit = '50' } = req.query;
     const pageNum  = Math.max(1, parseInt(String(page), 10));
     const limitNum = Math.min(500, Math.max(1, parseInt(String(limit), 10)));
     const skip     = (pageNum - 1) * limitNum;
 
     const where: any = {};
     if (difficulty) where.difficulty = String(difficulty);
+    if (courseId) where.courseId = String(courseId);
     
     if (topic) {
-      // Get all problems and filter in-memory for exact topic match
-      // Since topics are stored as CSV string, we need to split and match
       const topicStr = String(topic).toLowerCase();
-      // This will be filtered in the JS after fetching
     }
     
     if (search) {

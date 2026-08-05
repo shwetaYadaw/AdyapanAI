@@ -83,6 +83,7 @@ router.post('/', async (req, res, next) => {
       topic,  // Topic name (e.g., "Arrays")
       companies,
       experienceLevel,  // "freshers" | "experienced"
+      courseId,
     } = req.body;
 
     // Validate required fields
@@ -110,6 +111,7 @@ router.post('/', async (req, res, next) => {
         slug,
         statement,
         difficulty,
+        courseId: courseId || null,
         topic,  // Store the selected topic (e.g., "Arrays")
         companies: companies || 'TCS',
         inputFormat: inputFormat || '',

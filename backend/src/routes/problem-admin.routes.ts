@@ -46,7 +46,8 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
       tags,
       category,
       testCases,
-      starterCode
+      starterCode,
+      courseId
     } = req.body;
 
     // Validate required fields
@@ -73,6 +74,7 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
         slug,
         statement,
         difficulty,
+        courseId: courseId || null,
         topics,  // Store the selected topic (e.g., "Arrays")
         companies: companies || 'MNC',
         inputFormat: inputFormat || '',

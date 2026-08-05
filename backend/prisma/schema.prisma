@@ -60,6 +60,7 @@ model Problem {
   title              String
   slug               String              @unique
   difficulty         String              @default("easy")
+  courseId           String?             // Links problem to a specific course
   statement          String              @db.Text
   constraints        String              @db.Text
   inputFormat        String              @db.Text
@@ -87,6 +88,8 @@ model Problem {
   problemSubmissions ProblemSubmission[]
   solutions          ProblemSolution[]
   versionHistory     ProblemVersion[]
+
+  @@index([courseId])
 }
 
 model ProblemTestCase {
@@ -176,6 +179,7 @@ model TcsNqtQuestion {
   slug              String   @unique
   statement         String   @db.Text
   difficulty        String   @default("easy")
+  courseId          String?  // Links question to a specific course
   topic             String
   companies         String   @default("TCS")
   timeLimit         Int      @default(2000)
@@ -195,6 +199,7 @@ model TcsNqtQuestion {
   submissions QuestionSubmission[]
 
   @@index([topic])
+  @@index([courseId])
   @@index([difficulty])
   @@index([experienceLevel])
 }

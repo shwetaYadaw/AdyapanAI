@@ -13,9 +13,11 @@ import CacheManager from '../../../utils/cacheManager';
 
 interface CodingArenaDashboardProps {
   onBack: () => void;
+  courseId?: string;
+  courseName?: string;
 }
 
-export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardProps) {
+export default function CodingArenaDashboard({ onBack, courseId, courseName }: CodingArenaDashboardProps) {
   const queryClient = useQueryClient();
   const [problems, setProblems] = useState<Problem[]>([]);
   const [pagination, setPagination] = useState({
@@ -63,7 +65,8 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      const result = await problemAdminService.getProblems(filters);
+      const queryFilters = courseId ? { ...filters, courseId } : filters;
+      const result = await problemAdminService.getProblems(queryFilters);
       setProblems(result.problems);
       setPagination(result.pagination);
     } catch (err: any) {
@@ -75,10 +78,10 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
 
   const handleCreateProblem = async (problem: Problem) => {
     try {
-      await problemAdminService.createProblem(problem);
+      const problemData = courseId ? { ...problem, courseId } : problem;
+      await problemAdminService.createProblem(problemData);
       toast.success('Coding Arena problem created successfully!');
       setShowCreateModal(false);
-      // Clear cache after creation
       CacheManager.clearProblemCache();
       fetchProblems();
     } catch (err: any) {

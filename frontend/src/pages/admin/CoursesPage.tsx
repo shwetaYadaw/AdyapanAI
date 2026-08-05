@@ -42,11 +42,11 @@ export default function AdminCoursesPage() {
 
   // If a course is selected and a section is active, show that section
   if (selectedCourse && activeSection === 'coding-arena') {
-    return <CodingArenaDashboard onBack={() => setActiveSection('overview')} />;
+    return <CodingArenaDashboard onBack={() => setActiveSection('overview')} courseId={selectedCourse.id} courseName={selectedCourse.name} />;
   }
 
   if (selectedCourse && activeSection === 'placement-prep') {
-    return <TcsNqtDashboard onBack={() => setActiveSection('overview')} />;
+    return <TcsNqtDashboard onBack={() => setActiveSection('overview')} courseId={selectedCourse.id} courseName={selectedCourse.name} />;
   }
 
   // If a course is selected, show its detail page

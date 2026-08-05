@@ -12,11 +12,13 @@ import CacheManager from '../../../utils/cacheManager';
 
 interface TcsNqtDashboardProps {
   onBack: () => void;
+  courseId?: string;
+  courseName?: string;
 }
 
 type ExperienceLevel = 'freshers' | 'experienced';
 
-export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
+export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqtDashboardProps) {
   const [questions, setQuestions] = useState<TcsQuestion[]>([]);
   const [pagination, setPagination] = useState({
     total: 0,
