@@ -29,7 +29,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 font-sans selection:bg-brand-orange selection:text-white overflow-x-hidden">
       <Navbar />
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
 
       {/* ── HERO SECTION ──────────────────────────────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
