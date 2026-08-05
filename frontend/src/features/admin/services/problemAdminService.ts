@@ -66,8 +66,20 @@ class ProblemAdminService {
   /**
    * Archive a problem (soft delete)
    */
-  async deleteProblem(id: string): Promise<void> {
+  async deleteProblem(id: string, queryClient?: any): Promise<void> {
     await this.api.delete(`/${id}`);
+    
+    // Invalidate React Query caches if queryClient is provided
+    if (queryClient) {
+      // Invalidate all problems queries
+      queryClient.invalidateQueries({ queryKey: ['codingArenaProblems'] });
+      // Also invalidate specific topic pages
+      queryClient.invalidateQueries({ queryKey: ['codingArenaProblems', /.*/ ] });
+    }
+    
+    // Clear local storage cache as fallback
+    localStorage.removeItem(`problem_${id}`);
+    localStorage.removeItem('problems_list_cache');
   }
 
   /**

@@ -16,36 +16,48 @@ interface Question {
   xpReward: number;
 }
 
-const TOPIC_GROUPS = [
-  { title: '1. Arrays', key: 'arrays', description: "Kadane's, Two Pointer, Sliding Window, Prefix Sum, and other Array essentials." },
-  { title: '2. Strings', key: 'strings', description: 'Anagrams, Palindromes, Group Anagrams, and other String algorithms.' },
-  { title: '3. 2D Arrays', key: '2d-arrays', description: 'Matrix operations, Zigzag traversals, Set zeroes, Spiral and Rotate matrix.' },
-  { title: '4. Hashing', key: 'hashing', description: 'Hashing concepts, Two Sum, Top K elements, Majority Element, Consecutive sequences.' },
-  { title: '5. Two Pointers', key: 'two-pointers', description: 'Sorted array operations, 3Sum, Container with most water, and Trapping water.' },
-  { title: '6. Sliding Window', key: 'sliding-window', description: 'Maximum sum subarray, character replacement, permutation matching.' },
-  { title: '7. Binary Search', key: 'binary-search', description: 'Rotated arrays search, insert positions, peak elements, and search bounds.' },
-  { title: '8. Searching & Sorting', key: 'searching-sorting', description: 'Counting sort, merge sorted arrays, inversion counts, aggressive cows, and page allocation.' },
-  { title: '9. Linked List', key: 'linked-list', description: 'Reversing lists, cycle detection, middle node, LRU Cache.' },
-  { title: '10. Stack', key: 'stack', description: 'Valid Parentheses, Min Stack, Next Greater Element, and Histogram problems.' },
-  { title: '11. Queue & Deque', key: 'queue-deque', description: 'Queues using stacks, circular queues, sliding window maximums, and rotten oranges.' },
-  { title: '12. Recursion & Backtracking', key: 'recursion-backtracking', description: 'Generate Parentheses, subsets, permutations, combination sums, N-Queens.' },
-  { title: '13. Trees', key: 'trees', description: 'Binary trees depth, LCA, level order traversals, inversion, serialization.' },
-  { title: '14. Binary Search Tree', key: 'binary-search-tree', description: 'BST validation, Lowest Common Ancestor, recovering BST, BST Iterator.' },
-  { title: '15. Heap / Priority Queue', key: 'heap-priority-queue', description: 'Kth largest element, top K frequent, merging K sorted lists, median streaming.' },
-  { title: '16. Graphs', key: 'graphs', description: 'Number of islands, course scheduling, clone graph, network delay time.' },
-  { title: '17. DFS/BFS', key: 'dfs-bfs', description: 'Flood fill, provinces count, surrounded regions, shortest paths in binary matrices.' },
-  { title: '18. Dynamic Programming', key: 'dynamic-programming', description: 'Climbing Stairs, House Robber, Coin Change, LIS, LCS, Edit Distance.' },
-  { title: '19. Greedy', key: 'greedy', description: 'Jump Game I & II, Gas Station, Cookies assignment, Non-overlapping intervals.' },
-  { title: '20. Bit Manipulation', key: 'bit-manipulation', description: 'Single Number, counting bits, missing number, power of two checks.' },
-  { title: '21. Trie', key: 'trie', description: 'Implement Trie, replace words, map sum pairs, maximum XOR of two numbers.' },
-  { title: '22. Segment Tree / Fenwick Tree', key: 'segment-tree-fenwick', description: 'Range sum queries, mutable range queries, lazy propagation.' },
-];
+interface Topic {
+  id: string;
+  name: string;
+  description?: string;
+  order: number;
+}
+
+// Helper to convert topic name to key format
+const topicNameToKey = (name: string) => {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[&/]/g, '').replace('queue-deque', 'queue-deque');
+};
 
 export default function CodingTopicPage() {
   const { topicKey } = useParams<{ topicKey: string }>();
   const [search, setSearch] = useState('');
 
-  const group = TOPIC_GROUPS.find((g) => g.key === topicKey);
+  // Fetch all topics dynamically
+  const { data: allTopics } = useQuery<Topic[]>({
+    queryKey: ['codingTopics'],
+    queryFn: async () => {
+      try {
+        const { data } = await api.get('/topics', {
+          params: { system: 'coding-arena' }
+        });
+        return data.data ?? [];
+      } catch (error) {
+        console.error('Failed to fetch topics:', error);
+        return [];
+      }
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Find the current topic by matching the key
+  const currentTopic = allTopics?.find(t => topicNameToKey(t.name) === topicKey);
+  
+  // Build group object for display
+  const group = currentTopic ? {
+    title: currentTopic.name,
+    key: topicKey!,
+    description: currentTopic.description || `${currentTopic.name} problems for top MNC companies`
+  } : null;
 
   const { data: questions, isLoading, isError } = useQuery<Question[]>({
     queryKey: ['codingArenaProblems', topicKey, search],

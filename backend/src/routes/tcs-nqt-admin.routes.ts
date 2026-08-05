@@ -173,6 +173,10 @@ router.delete('/:id', async (req, res, next) => {
       where: { id: req.params.id },
     });
 
+    // Add cache invalidation header so frontend knows to clear cache
+    res.setHeader('X-Cache-Invalidate', 'tcs-nqt');
+    res.setHeader('X-Entity-ID', req.params.id);
+
     sendSuccess({ res, statusCode: 204, message: 'TCS NQT question deleted successfully' });
   } catch (err) {
     next(err);

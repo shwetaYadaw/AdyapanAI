@@ -11,10 +11,10 @@ const handler = (_req: Request, res: Response) => {
   });
 };
 
-/** General API rate limiter: 100 requests per 15 minutes */
+/** General API rate limiter: 1000 requests per 15 minutes (increased for dev) */
 export const globalRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: env.isProduction() ? 100 : 1000,
   standardHeaders: true,
   legacyHeaders: false,
   handler,

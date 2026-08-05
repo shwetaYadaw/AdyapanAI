@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -16,11 +16,30 @@ interface TCSQuestion {
   topics?: string[];
 }
 
+interface Topic {
+  id: string;
+  name: string;
+  system: string;
+  order: number;
+}
+
 export default function PlacementPrepPage() {
-  type TabKey = 'arrays' | 'strings' | 'sorting' | 'hashing' | 'linked-list' | 'recursion' | 'numbers' | 'number-system';
-  const [activeTab, setActiveTab] = useState<TabKey>('arrays');
+  // Fetch topics dynamically
+  const { data: topics = [] } = useQuery<Topic[]>({
+    queryKey: ['tcsNqtTopics'],
+    queryFn: async () => {
+      const { data } = await api.get('/topics?system=tcs-nqt');
+      return data.data ?? [];
+    },
+  });
+
+  // Get first topic or 'arrays' as default
+  const [activeTab, setActiveTab] = useState<string>('');
   const [search, setSearch]       = useState('');
   const [difficulty, setDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
+
+  // Set active tab to first topic when topics load
+  const tabKey = activeTab || (topics.length > 0 ? topics[0].name.toLowerCase() : '');
 
   const { data: storedQuestions = [], isLoading, isError } = useQuery<TCSQuestion[]>({
     queryKey: ['placementPrepQuestions'],
@@ -35,45 +54,29 @@ export default function PlacementPrepPage() {
     },
   });
 
-  // topic key → db topic slug(s)
-  const TAB_TOPICS: Record<TabKey, string[]> = {
-    'arrays':         ['arrays'],
-    'strings':        ['strings'],
-    'sorting':        ['sorting'],
-    'hashing':        ['hashing'],
-    'linked-list':    ['linked-list'],
-    'recursion':      ['recursion-backtracking'],
-    'numbers':        ['numbers'],
-    'number-system':  ['number-system'],
-  };
-
-  const TABS: { key: TabKey; label: string }[] = [
-    { key: 'arrays',        label: 'Arrays' },
-    { key: 'strings',       label: 'Strings' },
-    { key: 'sorting',       label: 'Searching & Sorting' },
-    { key: 'hashing',       label: 'Hashing' },
-    { key: 'linked-list',   label: 'Linked List' },
-    { key: 'recursion',     label: 'Recursion & Backtracking' },
-    { key: 'numbers',       label: 'Numbers' },
-    { key: 'number-system', label: 'Number System' },
-  ];
-
   // per-tab counts (unfiltered by search/difficulty)
-  const tabCounts = Object.fromEntries(
-    TABS.map(t => [t.key, storedQuestions.filter(q =>
-      TAB_TOPICS[t.key].some(k => q.topics?.includes(k))
-    ).length])
-  ) as Record<TabKey, number>;
+  const tabCounts = useMemo(() => 
+    Object.fromEntries(
+      topics.map(t => [
+        t.name.toLowerCase(), 
+        storedQuestions.filter(q => q.topics?.includes(t.name.toLowerCase())).length
+      ])
+    ),
+    [topics, storedQuestions]
+  );
 
   // questions for current tab + filters
-  const filtered = storedQuestions
-    .filter(q => TAB_TOPICS[activeTab].some(k => q.topics?.includes(k)))
-    .filter(q => difficulty === 'all' || q.difficulty?.toLowerCase() === difficulty)
-    .filter(q => !search || q.title.toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) =>
-      ({ easy: 1, medium: 2, hard: 3 }[a.difficulty?.toLowerCase() ?? 'medium'] ?? 2) -
-      ({ easy: 1, medium: 2, hard: 3 }[b.difficulty?.toLowerCase() ?? 'medium'] ?? 2)
-    );
+  const filtered = useMemo(() => {
+    if (!tabKey) return [];
+    return storedQuestions
+      .filter(q => q.topics?.includes(tabKey))
+      .filter(q => difficulty === 'all' || q.difficulty?.toLowerCase() === difficulty)
+      .filter(q => !search || q.title.toLowerCase().includes(search.toLowerCase()))
+      .sort((a, b) =>
+        ({ easy: 1, medium: 2, hard: 3 }[a.difficulty?.toLowerCase() ?? 'medium'] ?? 2) -
+        ({ easy: 1, medium: 2, hard: 3 }[b.difficulty?.toLowerCase() ?? 'medium'] ?? 2)
+      );
+  }, [tabKey, storedQuestions, difficulty, search]);
 
   return (
     <div className="page-wrapper space-y-5">
@@ -103,22 +106,26 @@ export default function PlacementPrepPage() {
       {/* Category tabs */}
       <div className="overflow-x-auto pb-1">
         <div className="flex gap-2 p-1 bg-gray-100 dark:bg-gray-800 rounded-xl w-max min-w-full">
-          {TABS.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => { setActiveTab(tab.key); setSearch(''); setDifficulty('all'); }}
-              className={`px-4 py-2 text-sm font-semibold rounded-lg whitespace-nowrap transition-all ${
-                activeTab === tab.key
-                  ? 'bg-white dark:bg-gray-700 text-orange-600 dark:text-orange-400 shadow-sm'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
-              }`}
-            >
-              {tab.label}
-              <span className="ml-1.5 text-xs opacity-60">
-                ({isLoading ? '…' : tabCounts[tab.key]})
-              </span>
-            </button>
-          ))}
+          {topics.length > 0 ? (
+            topics.map((topic) => (
+              <button
+                key={topic.id}
+                onClick={() => { setActiveTab(topic.name.toLowerCase()); setSearch(''); setDifficulty('all'); }}
+                className={`px-4 py-2 text-sm font-semibold rounded-lg whitespace-nowrap transition-all ${
+                  tabKey === topic.name.toLowerCase()
+                    ? 'bg-white dark:bg-gray-700 text-orange-600 dark:text-orange-400 shadow-sm'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
+                }`}
+              >
+                {topic.name}
+                <span className="ml-1.5 text-xs opacity-60">
+                  ({isLoading ? '…' : tabCounts[topic.name.toLowerCase()] ?? 0})
+                </span>
+              </button>
+            ))
+          ) : (
+            <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400">No topics available</div>
+          )}
         </div>
       </div>
 
@@ -151,7 +158,7 @@ export default function PlacementPrepPage() {
         {/* Result count */}
         {!isLoading && (
           <div className="flex items-center px-4 py-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-100 dark:border-orange-900/40 text-sm font-semibold text-orange-700 dark:text-orange-400 whitespace-nowrap">
-            {filtered.length} / {tabCounts[activeTab]} shown
+            {filtered.length} / {tabCounts[tabKey] ?? 0} shown
           </div>
         )}
       </div>

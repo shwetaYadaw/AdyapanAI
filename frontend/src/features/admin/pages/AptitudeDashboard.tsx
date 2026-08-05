@@ -1,118 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit, Search, Download, Upload, ArrowLeft } from 'lucide-react';
+import { Plus, Trash2, Edit, ChevronRight, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { TcsQuestion } from '../types/tcsNqt';
-import { tcsNqtAdminService } from '../services/tcsNqtAdminService';
-import CreateEditTcsQuestionModal from '../components/CreateEditTcsQuestionModal';
-import TcsQuestionTable from '../components/TcsQuestionTable';
-import TcsQuestionFilters from '../components/TcsQuestionFilters';
-import TcsBulkImportModal from '../components/TcsBulkImportModal';
+import { aptitudeAdminService, AptitudeTopic } from '../services/aptitudeAdminService';
+import AptitudeTopicModal from '../components/aptitude/AptitudeTopicModal';
+import AptitudeChapterDetail from './AptitudeChapterDetail';
+import CacheManager from '../../../utils/cacheManager';
 
 interface AptitudeDashboardProps {
   onBack: () => void;
 }
 
-interface AptitudeQuestion {
-  id?: string;
-  title: string;
-  slug?: string;
-  difficulty: 'easy' | 'medium' | 'hard';
-  statement: string;
-  constraints: string;
-  inputFormat: string;
-  outputFormat: string;
-  timeLimit?: number;
-  memoryLimit?: number;
-  referenceSolution: string;
-  topics?: string;
-  companies?: string;
-  testCases?: any[];
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 export default function AptitudeDashboard({ onBack }: AptitudeDashboardProps) {
-  const [questions, setQuestions] = useState<AptitudeQuestion[]>([]);
-  const [pagination, setPagination] = useState({
-    total: 0,
-    page: 1,
-    limit: 20,
-    pages: 0
-  });
+  const [topics, setTopics] = useState<AptitudeTopic[]>([]);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({
-    page: 1,
-    limit: 20
-  });
-  const [selectedQuestion, setSelectedQuestion] = useState<AptitudeQuestion | null>(null);
-  const [showCreateModal, setShowCreateModal] = useState(false);
-  const [showImportModal, setShowImportModal] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<AptitudeTopic | null>(null);
+  const [showTopicModal, setShowTopicModal] = useState(false);
+  const [editingTopic, setEditingTopic] = useState<AptitudeTopic | null>(null);
 
-  // Fetch questions
   useEffect(() => {
-    fetchQuestions();
-  }, [filters]);
+    fetchTopics();
+  }, []);
 
-  const fetchQuestions = async () => {
+  const fetchTopics = async () => {
     try {
       setLoading(true);
-      // For now, we'll use the same TCS NQT service
-      // In production, this would be a separate aptitude service
-      const result = await tcsNqtAdminService.getQuestions(filters);
-      setQuestions(result.questions as any);
-      setPagination(result.pagination);
+      const result = await aptitudeAdminService.getTopics();
+      setTopics(result.topics);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to fetch Aptitude questions');
+      toast.error(err.response?.data?.message || 'Failed to fetch topics');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreateQuestion = async (question: AptitudeQuestion) => {
+  const handleCreateTopic = async (data: any) => {
     try {
-      await tcsNqtAdminService.createQuestion(question as any);
-      toast.success('Aptitude question created successfully!');
-      setShowCreateModal(false);
-      fetchQuestions();
+      await aptitudeAdminService.createTopic(data);
+      toast.success('Topic created successfully!');
+      setShowTopicModal(false);
+      // Clear cache after creation
+      CacheManager.clearQuestionCache();
+      fetchTopics();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to create question');
+      toast.error(err.response?.data?.message || 'Failed to create topic');
     }
   };
 
-  const handleUpdateQuestion = async (question: AptitudeQuestion) => {
+  const handleUpdateTopic = async (data: any) => {
     try {
-      if (!selectedQuestion?.id) throw new Error('No question selected');
-      await tcsNqtAdminService.updateQuestion(selectedQuestion.id, question as any);
-      toast.success('Aptitude question updated successfully!');
-      setSelectedQuestion(null);
-      setShowCreateModal(false);
-      fetchQuestions();
+      if (!editingTopic?.id) return;
+      await aptitudeAdminService.updateTopic(editingTopic.id, data);
+      toast.success('Topic updated successfully!');
+      setShowTopicModal(false);
+      setEditingTopic(null);
+      // Clear cache after update
+      CacheManager.clearQuestionCache();
+      fetchTopics();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to update question');
+      toast.error(err.response?.data?.message || 'Failed to update topic');
     }
   };
 
-  const handleDeleteQuestion = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this Aptitude question?')) return;
+  const handleDeleteTopic = async (topicId: string) => {
+    if (!confirm('Are you sure you want to delete this topic? This will also delete all chapters and questions.')) return;
     try {
-      await tcsNqtAdminService.deleteQuestion(id);
-      toast.success('Aptitude question deleted successfully!');
-      fetchQuestions();
+      await aptitudeAdminService.deleteTopic(topicId);
+      toast.success('Topic deleted successfully!');
+      // Clear cache for this topic
+      CacheManager.clearQuestionCache(topicId);
+      fetchTopics();
     } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to delete question');
+      toast.error(err.response?.data?.message || 'Failed to delete topic');
     }
   };
 
-  const handleImport = async (questions: AptitudeQuestion[]) => {
-    try {
-      await tcsNqtAdminService.importQuestions(questions as any);
-      toast.success('Aptitude questions imported successfully!');
-      setShowImportModal(false);
-      fetchQuestions();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to import questions');
-    }
-  };
+  if (selectedTopic) {
+    return (
+      <AptitudeChapterDetail
+        topic={selectedTopic}
+        onBack={() => setSelectedTopic(null)}
+      />
+    );
+  }
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 py-8">
@@ -121,7 +90,7 @@ export default function AptitudeDashboard({ onBack }: AptitudeDashboardProps) {
         <div className="mb-8">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-green-600 hover:text-green-700 dark:text-green-400 mb-4"
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 mb-4"
           >
             <ArrowLeft size={20} />
             Back to Dashboard
@@ -131,57 +100,121 @@ export default function AptitudeDashboard({ onBack }: AptitudeDashboardProps) {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Aptitude Management</h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
-                General Aptitude Questions - Total: {pagination.total}
+                Manage topics, chapters, and questions - Total: {topics.length}
               </p>
             </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => {
-                  setSelectedQuestion(null);
-                  setShowCreateModal(true);
-                }}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
-              >
-                <Plus size={20} />
-                Add Aptitude Question
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                setEditingTopic(null);
+                setShowTopicModal(true);
+              }}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              <Plus size={20} />
+              Add Topic
+            </button>
           </div>
-
-          {/* Filters */}
-          <TcsQuestionFilters filters={filters} onFiltersChange={setFilters} />
         </div>
 
-        {/* Questions Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-          <TcsQuestionTable
-            questions={questions}
-            loading={loading}
-            onEdit={(question) => {
-              setSelectedQuestion(question as any);
-              setShowCreateModal(true);
-            }}
-            onDelete={handleDeleteQuestion}
-          />
-        </div>
+        {/* Topics Grid */}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          </div>
+        ) : topics.length === 0 ? (
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8 text-center">
+            <p className="text-gray-500 dark:text-gray-400 mb-4">No topics created yet</p>
+            <button
+              onClick={() => {
+                setEditingTopic(null);
+                setShowTopicModal(true);
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              <Plus size={20} />
+              Create First Topic
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {topics.map((topic) => (
+              <div
+                key={topic.id}
+                className="bg-white dark:bg-gray-800 rounded-lg shadow hover:shadow-lg transition p-6"
+              >
+                {/* Topic Header */}
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="text-4xl">{topic.icon || '📚'}</div>
+                    <div>
+                      <h3 className="text-lg font-bold text-gray-900 dark:text-white">{topic.name}</h3>
+                      <p className="text-sm text-gray-500">{topic.chapters?.length || 0} chapters</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Topic Description */}
+                {topic.description && (
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                    {topic.description}
+                  </p>
+                )}
+
+                {/* Chapters Preview */}
+                {topic.chapters && topic.chapters.length > 0 && (
+                  <div className="mb-4 space-y-2">
+                    {topic.chapters.slice(0, 3).map((chapter) => (
+                      <div key={chapter.id} className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                        <ChevronRight size={14} />
+                        {chapter.name}
+                      </div>
+                    ))}
+                    {topic.chapters.length > 3 && (
+                      <div className="text-sm text-gray-500 italic">+{topic.chapters.length - 3} more</div>
+                    )}
+                  </div>
+                )}
+
+                {/* Actions */}
+                <div className="flex gap-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <button
+                    onClick={() => setSelectedTopic(topic)}
+                    className="flex-1 px-3 py-2 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800 transition text-sm font-medium flex items-center justify-center gap-2"
+                  >
+                    <Edit size={16} />
+                    Manage
+                  </button>
+                  <button
+                    onClick={() => {
+                      setEditingTopic(topic);
+                      setShowTopicModal(true);
+                    }}
+                    className="px-3 py-2 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 rounded hover:bg-yellow-200 dark:hover:bg-yellow-800 transition text-sm font-medium"
+                  >
+                    <Edit size={16} />
+                  </button>
+                  <button
+                    onClick={() => topic.id && handleDeleteTopic(topic.id)}
+                    className="px-3 py-2 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded hover:bg-red-200 dark:hover:bg-red-800 transition text-sm font-medium"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Modals */}
-      {showCreateModal && (
-        <CreateEditTcsQuestionModal
-          question={selectedQuestion as any}
-          onSave={selectedQuestion ? handleUpdateQuestion : handleCreateQuestion}
+      {/* Topic Modal */}
+      {showTopicModal && (
+        <AptitudeTopicModal
+          topic={editingTopic}
+          onSave={editingTopic ? handleUpdateTopic : handleCreateTopic}
           onClose={() => {
-            setShowCreateModal(false);
-            setSelectedQuestion(null);
+            setShowTopicModal(false);
+            setEditingTopic(null);
           }}
-        />
-      )}
-
-      {showImportModal && (
-        <TcsBulkImportModal
-          onImport={handleImport}
-          onClose={() => setShowImportModal(false)}
         />
       )}
     </div>

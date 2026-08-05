@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { BookOpen, Code2, Brain, ArrowLeft } from 'lucide-react';
 import CodingArenaDashboard from '../../features/admin/pages/CodingArenaDashboard';
 import TcsNqtDashboard from '../../features/admin/pages/TcsNqtDashboard';
-import AptitudeDashboard from '../../features/admin/pages/AptitudeDashboard';
+import AptitudeManagementPage from '../../features/admin/pages/AptitudeManagementPage';
 
 type DashboardType = 'coding-arena' | 'tcs-nqt' | 'aptitude' | null;
 
@@ -205,7 +205,7 @@ export default function AdminProblemsPage() {
       )}
 
       {activeTab === 'aptitude' && (
-        <AptitudeDashboard onBack={() => setActiveTab(null)} />
+        <AptitudeManagementPage onBack={() => setActiveTab(null)} />
       )}
     </div>
   );

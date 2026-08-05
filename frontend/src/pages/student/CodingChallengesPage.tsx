@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, Trophy, Code2, Flame, BrainCircuit, Target, ArrowRight } from 'lucide-react';
 import { api } from '../../core/services/api';
 import Card from '../../shared/components/Card/Card';
+
 interface Question {
   _id: string;
   title: string;
@@ -19,34 +20,47 @@ interface LeaderboardUser {
   totalXP: number;
 }
 
-const TOPIC_GROUPS = [
-  { title: '1. Arrays', key: 'arrays', description: 'Kadane\'s, Two Pointer, Sliding Window, Prefix Sum, and other Array essentials.', totalCount: 7 },
-  { title: '2. Strings', key: 'strings', description: 'Anagrams, Palindromes, Group Anagrams, and other String algorithms.', totalCount: 7 },
-  { title: '3. 2D Arrays', key: '2d-arrays', description: 'Matrix operations, Zigzag traversals, Set zeroes, Spiral and Rotate matrix.', totalCount: 7 },
-  { title: '4. Hashing', key: 'hashing', description: 'Hashing concepts, Two Sum, Top K elements, Majority Element, Consecutive sequences.', totalCount: 7 },
-  { title: '5. Two Pointers', key: 'two-pointers', description: 'Sorted array operations, 3Sum, Container with most water, and Trapping water.', totalCount: 7 },
-  { title: '6. Sliding Window', key: 'sliding-window', description: 'Maximum sum subarray, character replacement, permutation matching.', totalCount: 7 },
-  { title: '7. Binary Search', key: 'binary-search', description: 'Rotated arrays search, insert positions, peak elements, and search bounds.', totalCount: 7 },
-  { title: '8. Searching & Sorting', key: 'searching-sorting', description: 'Counting sort, merge sorted arrays, inversion counts, aggressive cows, and page allocation.', totalCount: 7 },
-  { title: '9. Linked List', key: 'linked-list', description: 'Reversing lists, cycle detection, middle node, LRU Cache.', totalCount: 7 },
-  { title: '10. Stack', key: 'stack', description: 'Valid Parentheses, Min Stack, Next Greater Element, and Histogram problems.', totalCount: 7 },
-  { title: '11. Queue & Deque', key: 'queue-deque', description: 'Queues using stacks, circular queues, sliding window maximums, and rotten oranges.', totalCount: 7 },
-  { title: '12. Recursion & Backtracking', key: 'recursion-backtracking', description: 'Generate Parentheses, subsets, permutations, combination sums, N-Queens.', totalCount: 7 },
-  { title: '13. Trees', key: 'trees', description: 'Binary trees depth, LCA, level order traversals, inversion, serialization.', totalCount: 7 },
-  { title: '14. Binary Search Tree', key: 'binary-search-tree', description: 'BST validation, Lowest Common Ancestor, recovering BST, BST Iterator.', totalCount: 7 },
-  { title: '15. Heap / Priority Queue', key: 'heap-priority-queue', description: 'Kth largest element, top K frequent, merging K sorted lists, median streaming.', totalCount: 7 },
-  { title: '16. Graphs', key: 'graphs', description: 'Number of islands, course scheduling, clone graph, network delay time.', totalCount: 7 },
-  { title: '17. DFS/BFS', key: 'dfs-bfs', description: 'Flood fill, provinces count, surrounded regions, shortest paths in binary matrices.', totalCount: 7 },
-  { title: '18. Dynamic Programming', key: 'dynamic-programming', description: 'Climbing Stairs, House Robber, Coin Change, LIS, LCS, Edit Distance.', totalCount: 7 },
-  { title: '19. Greedy', key: 'greedy', description: 'Jump Game I & II, Gas Station, Cookies assignment, Non-overlapping intervals.', totalCount: 7 },
-  { title: '20. Bit Manipulation', key: 'bit-manipulation', description: 'Single Number, counting bits, missing number, power of two checks.', totalCount: 7 },
-  { title: '21. Trie', key: 'trie', description: 'Implement Trie, replace words, map sum pairs, maximum XOR of two numbers.', totalCount: 7 },
-  { title: '22. Segment Tree / Fenwick Tree', key: 'segment-tree-fenwick', description: 'Range sum queries, mutable range queries, lazy propagation.', totalCount: 7 }
-];
+interface Topic {
+  id: string;
+  name: string;
+  description?: string;
+  order: number;
+}
 
 export default function CodingChallengesPage() {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
+
+  // Convert topic name to key format (e.g., "Binary Search" → "binary-search")
+  const topicNameToKey = (name: string) => {
+    return name.toLowerCase().replace(/\s+/g, '-').replace(/[&/]/g, '').replace('queue-deque', 'queue-deque');
+  };
+
+  // Fetch topics from public API - NO FALLBACK, must be dynamic
+  const { data: topicsData, isLoading: topicsLoading, error: topicsError } = useQuery<Topic[]>({
+    queryKey: ['codingTopics'],
+    queryFn: async () => {
+      const { data } = await api.get('/topics', {
+        params: { system: 'coding-arena' }
+      });
+      return data.data ?? [];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 2,
+  });
+
+  // Transform API topics to display format - NO FALLBACK
+  const topicGroups = (topicsData && topicsData.length > 0)
+    ? topicsData
+        .sort((a, b) => a.order - b.order)
+        .map((topic, idx) => ({
+          title: `${idx + 1}. ${topic.name}`,
+          key: topicNameToKey(topic.name),
+          description: topic.description || `${topic.name} problems for top MNC companies`,
+          id: topic.id,
+          totalCount: 0
+        }))
+    : [];
 
   // Fetch all problems from Problem table (Coding Arena)
   const { data: questions, isLoading } = useQuery<Question[]>({
@@ -164,40 +178,57 @@ export default function CodingChallengesPage() {
         {/* Main Content Split */}
         <div className="grid lg:grid-cols-3 gap-8 items-start">
           <div className="lg:col-span-2 space-y-6">
-            {/* Topic Grid — click to navigate */}
+        {/* Topic Grid — click to navigate */}
             <div className="space-y-3">
-              {TOPIC_GROUPS.filter((g) =>
-                !search || g.title.toLowerCase().includes(search.toLowerCase())
-              ).map((group, idx) => {
-                const topicCount = (questions ?? []).filter((q) =>
-                  q.topics.some((t) => t.toLowerCase() === group.key)
-                ).length;
+              {topicsLoading ? (
+                <div className="text-center py-12">
+                  <div className="text-gray-400">Loading topics...</div>
+                </div>
+              ) : topicsError ? (
+                <div className="text-center py-12">
+                  <div className="text-red-500 text-sm">Error loading topics. Please refresh the page.</div>
+                  <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 text-sm">
+                    Refresh Page
+                  </button>
+                </div>
+              ) : topicGroups.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="text-gray-500">No topics available. Topics will appear here once added by the admin.</div>
+                </div>
+              ) : (
+                topicGroups.filter((g) =>
+                  !search || g.title.toLowerCase().includes(search.toLowerCase())
+                ).map((group, idx) => {
+                  const topicCount = (questions ?? []).filter((q) =>
+                    q.topics.some((t) => t.toLowerCase() === group.key || t.toLowerCase().replace(/\s+/g, '-') === group.key)
+                  ).length;
 
-                return (
-                  <button
-                    key={group.key}
-                    onClick={() => navigate(`/student/challenges/topic/${group.key}`)}
-                    className="w-full text-left border border-gray-100 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 group overflow-hidden"
-                  >
-                    <div className="px-6 py-4 flex items-center justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <h3 className="font-display font-bold text-base text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                          {group.title}
-                        </h3>
-                        <p className="text-xs text-gray-400 mt-1 line-clamp-1">{group.description}</p>
-                      </div>
-                      <div className="flex items-center gap-3 flex-shrink-0">
-                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                          {isLoading ? '...' : topicCount} Problems
-                        </span>
-                        <div className="w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-colors">
-                          <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                  return (
+                    <button
+                      key={group.key}
+                      onClick={() => navigate(`/student/challenges/topic/${group.key}`)}
+                      className="w-full text-left border border-gray-100 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 group overflow-hidden"
+                    >
+                      <div className="px-6 py-4 flex items-center justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-display font-bold text-base text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                            {group.title}
+                          </h3>
+                          <p className="text-xs text-gray-400 mt-1 line-clamp-1">{group.description}</p>
+                        </div>
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                            {isLoading ? '...' : topicCount} Problems
+                          </span>
+                          <div className="w-7 h-7 rounded-full bg-gray-50 dark:bg-gray-800 group-hover:bg-primary-50 dark:group-hover:bg-primary-950/40 flex items-center justify-center transition-colors">
+                            <ArrowRight className="w-3.5 h-3.5 text-gray-400 group-hover:text-primary-500 transition-colors" />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })
+              )}
             </div>
           </div>
 

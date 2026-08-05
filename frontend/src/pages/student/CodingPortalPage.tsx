@@ -170,11 +170,12 @@ interface Question {
   starterCode?: any; // Problem table format (optional) - JSON object with language keys
   testCases?: { input: string; expectedOutput: string; isHidden: boolean; type: string }[]; // Problem table test cases
   xpReward: number;
+  referenceSolution?: string; // Admin-provided reference solution
 }
 
 export default function CodingPortalPage() {
   // Debug log to verify correct component is loading
-  console.log('?? CODING ARENA PAGE LOADED - Purple Theme');
+  console.log('CODING ARENA PAGE LOADED - Purple Theme');
   
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -240,7 +241,7 @@ export default function CodingPortalPage() {
 
   const handleStar = () => {
     setStarred(s => !s);
-    toast.success(starred ? 'Removed from bookmarks' : 'Added to bookmarks ?');
+    toast.success(starred ? 'Removed from bookmarks' : 'Added to bookmarks');
   };
 
   const handleShare = () => {
@@ -296,6 +297,20 @@ export default function CodingPortalPage() {
       
       if (template && template.code) {
         setEditorCode(template.code);
+      } else {
+        // Provide default starter code based on selected language
+        const title = question.title || 'Solution';
+        const funcName = title.replace(/[^a-zA-Z0-9]/g, '').charAt(0).toLowerCase() + title.replace(/[^a-zA-Z0-9]/g, '').slice(1);
+        const safeName = funcName.length > 20 ? 'solve' : funcName || 'solve';
+        
+        const defaultTemplates: Record<string, string> = {
+          javascript: `// ${question.title}\n// Read input from stdin and write output to stdout\n\nconst readline = require('readline');\nconst rl = readline.createInterface({ input: process.stdin });\nconst lines = [];\n\nrl.on('line', (line) => lines.push(line.trim()));\nrl.on('close', () => {\n  // Parse input\n  const n = parseInt(lines[0]);\n  const arr = lines[1].split(' ').map(Number);\n  \n  // Your solution here\n  function ${safeName}(n, arr) {\n    // Write your logic here\n    return 0;\n  }\n  \n  console.log(${safeName}(n, arr));\n});\n`,
+          python: `# ${question.title}\n# Read input from stdin and write output to stdout\n\nimport sys\ninput = sys.stdin.readline\n\ndef ${safeName}():\n    # Read input\n    n = int(input())\n    arr = list(map(int, input().split()))\n    \n    # Your solution here\n    result = 0\n    \n    print(result)\n\n${safeName}()\n`,
+          cpp: `// ${question.title}\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    cin >> n;\n    \n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) {\n        cin >> arr[i];\n    }\n    \n    // Your solution here\n    int result = 0;\n    \n    cout << result << endl;\n    return 0;\n}\n`,
+          java: `// ${question.title}\nimport java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) {\n            arr[i] = sc.nextInt();\n        }\n        \n        // Your solution here\n        int result = 0;\n        \n        System.out.println(result);\n        sc.close();\n    }\n}\n`,
+        };
+        
+        setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
       }
       
       // Set testcase input from the first visible test case, or sampleInput
@@ -424,11 +439,33 @@ export default function CodingPortalPage() {
 
   const handleResetCode = () => {
     if (question) {
-      const template = question.templates.find(t => t.language === selectedLanguage);
-      if (template) {
-        setEditorCode(template.code);
-        toast.success('Code reset to default template!');
+      let template;
+      if (question.templates) {
+        template = question.templates.find(t => t.language === selectedLanguage);
+      } else if (question.starterCode) {
+        const starterCode = typeof question.starterCode === 'string' 
+          ? JSON.parse(question.starterCode) 
+          : question.starterCode;
+        template = { code: starterCode[selectedLanguage] || '' };
       }
+      
+      if (template && template.code) {
+        setEditorCode(template.code);
+      } else {
+        // Reset to default starter template
+        const title = question.title || 'Solution';
+        const funcName = title.replace(/[^a-zA-Z0-9]/g, '').charAt(0).toLowerCase() + title.replace(/[^a-zA-Z0-9]/g, '').slice(1);
+        const safeName = funcName.length > 20 ? 'solve' : funcName || 'solve';
+        
+        const defaultTemplates: Record<string, string> = {
+          javascript: `// ${question.title}\nconst readline = require('readline');\nconst rl = readline.createInterface({ input: process.stdin });\nconst lines = [];\n\nrl.on('line', (line) => lines.push(line.trim()));\nrl.on('close', () => {\n  const n = parseInt(lines[0]);\n  const arr = lines[1].split(' ').map(Number);\n  \n  function ${safeName}(n, arr) {\n    // Write your logic here\n    return 0;\n  }\n  \n  console.log(${safeName}(n, arr));\n});\n`,
+          python: `# ${question.title}\nimport sys\ninput = sys.stdin.readline\n\ndef ${safeName}():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    \n    # Your solution here\n    result = 0\n    \n    print(result)\n\n${safeName}()\n`,
+          cpp: `// ${question.title}\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    cin >> n;\n    \n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) {\n        cin >> arr[i];\n    }\n    \n    // Your solution here\n    int result = 0;\n    \n    cout << result << endl;\n    return 0;\n}\n`,
+          java: `// ${question.title}\nimport java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) {\n            arr[i] = sc.nextInt();\n        }\n        \n        // Your solution here\n        int result = 0;\n        \n        System.out.println(result);\n        sc.close();\n    }\n}\n`,
+        };
+        setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
+      }
+      toast.success('Code reset to default template!');
     }
   };
 
@@ -552,31 +589,31 @@ export default function CodingPortalPage() {
                     let statement = question.statement || '';
                     
                     // If statement doesn't have markdown headers with emojis, auto-format it to match TCS NQT style
-                    if (!statement.includes('## ??')) {
+                    if (!statement.includes('## ')) {
                       // Build formatted statement with exact TCS NQT styling
                       let formatted = '';
                       
-                      // Problem Statement section with document emoji
-                      formatted += `## ?? Problem Statement\n\n${statement}\n\n---\n\n`;
+                      // Problem Statement section
+                      formatted += `## üìÑ Problem Statement\n\n${statement}\n\n---\n\n`;
                       
-                      // Input Format section with inbox emoji
+                      // Input Format section
                       if (question.inputFormat) {
-                        formatted += `## ?? Input Format\n\n${question.inputFormat}\n\n`;
+                        formatted += `## üì• Input Format\n\n${question.inputFormat}\n\n`;
                       }
                       
-                      // Output Format section with outbox emoji
+                      // Output Format section
                       if (question.outputFormat) {
-                        formatted += `## ?? Output Format\n\n${question.outputFormat}\n\n`;
+                        formatted += `## üì§ Output Format\n\n${question.outputFormat}\n\n`;
                       }
                       
-                      // Constraints section with gear emoji
+                      // Constraints section
                       if (question.constraints) {
-                        formatted += `## ?? Constraints\n\n\`\`\`\n${question.constraints}\n\`\`\`\n\n---\n\n`;
+                        formatted += `## ‚öôÔ∏è Constraints\n\n\`\`\`\n${question.constraints}\n\`\`\`\n\n---\n\n`;
                       }
                       
-                      // Sample Test Cases section with lightbulb emoji - USE REAL TEST CASES
+                      // Sample Test Cases section - USE REAL TEST CASES
                       if (question.testCases && question.testCases.length > 0) {
-                        formatted += `## ?? Sample Test Cases\n\n`;
+                        formatted += `## üí° Sample Test Cases\n\n`;
                         
                         // Show all visible (non-hidden) test cases
                         question.testCases.forEach((tc, index) => {
@@ -587,28 +624,34 @@ export default function CodingPortalPage() {
                         });
                       } else if (question.sampleInput && question.sampleOutput) {
                         // Fallback to sampleInput/sampleOutput for Question table
-                        formatted += `## ?? Sample Test Cases\n\n`;
+                        formatted += `## üí° Sample Test Cases\n\n`;
                         formatted += `### Sample Test Case 1\n\n`;
                         formatted += `**Input:**\n\`\`\`\n${question.sampleInput}\n\`\`\`\n\n`;
                         formatted += `**Output:**\n\`\`\`\n${question.sampleOutput}\n\`\`\`\n\n`;
                         formatted += `**Explanation:**\n\nThe sample output matches the expected result of applying the algorithm on the sample input.\n\n`;
                       }
                       
-                      // Add collapsible sections like TCS NQT
-                      formatted += `## ? Complexity Analysis\n\n`;
+                      // Add collapsible sections
+                      formatted += `## üß† Complexity Analysis\n\n`;
                       formatted += `**Time Complexity:** O(n) - where n is the size of the input\n\n`;
                       formatted += `**Space Complexity:** O(1) - constant extra space\n\n`;
                       
-                      formatted += `## ?? Hints\n\n`;
-                      formatted += `ï Try to understand the problem requirements first\n`;
-                      formatted += `ï Think about edge cases\n`;
-                      formatted += `ï Consider the time and space complexity\n\n`;
+                      formatted += `## üí¨ Hints\n\n`;
+                      formatted += `- Try to understand the problem requirements first\n`;
+                      formatted += `- Think about edge cases\n`;
+                      formatted += `- Consider the time and space complexity\n\n`;
                       
-                      formatted += `## ?? AI Mentor Insights\n\n`;
+                      formatted += `## ü§ñ AI Mentor Insights\n\n`;
                       formatted += `This problem tests your understanding of basic algorithms. Focus on:\n\n`;
-                      formatted += `ï Understanding input/output format\n`;
-                      formatted += `ï Handling edge cases properly\n`;
-                      formatted += `ï Writing clean, readable code\n\n`;
+                      formatted += `- Understanding input/output format\n`;
+                      formatted += `- Handling edge cases properly\n`;
+                      formatted += `- Writing clean, readable code\n\n`;
+                      
+                      // Reference Solution (if admin provided one)
+                      if ((question as any).referenceSolution) {
+                        formatted += `## üìù Reference Solution\n\n`;
+                        formatted += `\`\`\`\n${(question as any).referenceSolution}\n\`\`\`\n\n`;
+                      }
                       
                       statement = formatted;
                     }
@@ -630,7 +673,8 @@ export default function CodingPortalPage() {
                                               cleanTitle.includes('editorial') ||
                                               cleanTitle.includes('solutions') ||
                                               cleanTitle.includes('insights') ||
-                                              cleanTitle.includes('mentor');
+                                              cleanTitle.includes('mentor') ||
+                                              cleanTitle.includes('reference solution');
                                               
                         if (isCollapsible) {
                           collapsible.push({ title, content });
@@ -737,7 +781,7 @@ export default function CodingPortalPage() {
                     value={newComment}
                     onChange={e => setNewComment(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) handlePostComment(); }}
-                    placeholder="Share your thoughts or approachÖ (Ctrl+Enter to post)"
+                    placeholder="Share your thoughts or approach... (Ctrl+Enter to post)"
                     rows={3}
                     className="w-full text-xs p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 resize-none"
                   />
@@ -1024,7 +1068,7 @@ export default function CodingPortalPage() {
               <div className="flex flex-col items-center justify-center">
                 <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg relative">
                   {unlockedBadgeData ? (
-                    <span className="text-6xl animate-bounce">{unlockedBadgeData.iconUrl || '??'}</span>
+                    <span className="text-6xl animate-bounce">{unlockedBadgeData.iconUrl || 'üèÜ'}</span>
                   ) : (
                     <Award className="w-14 h-14 text-white animate-pulse" />
                   )}

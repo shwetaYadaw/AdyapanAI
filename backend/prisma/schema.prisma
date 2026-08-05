@@ -251,6 +251,93 @@ model AptitudeAdminQuestion {
   @@index([difficulty])
 }
 
+// ─── Hierarchical Aptitude System (Topic → Chapter → Question with MCQ) ──────
+
+model AptitudeTopic {
+  id          String                @id @default(uuid())
+  name        String                @unique
+  description String?               @db.Text
+  icon        String?
+  order       Int                   @default(0)
+  isActive    Boolean               @default(true)
+  createdBy   String?
+  updatedAt   DateTime              @updatedAt
+  createdAt   DateTime              @default(now())
+
+  chapters    AptitudeChapter[]
+}
+
+model AptitudeChapter {
+  id          String                @id @default(uuid())
+  topicId     String
+  topic       AptitudeTopic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  name        String
+  description String?               @db.Text
+  order       Int                   @default(0)
+  isActive    Boolean               @default(true)
+  createdBy   String?
+  updatedAt   DateTime              @updatedAt
+  createdAt   DateTime              @default(now())
+
+  questions   AptitudeQuestion[]
+
+  @@unique([topicId, name])
+  @@index([topicId])
+}
+
+model AptitudeQuestion {
+  id             String                @id @default(uuid())
+  chapterId      String
+  chapter        AptitudeChapter       @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  statement      String                @db.Text
+  difficulty     String                @default("medium")
+  correctOption  String                // "A" | "B" | "C" | "D"
+  explanation    String?               @db.Text
+  xpReward       Int                   @default(10)
+  companies      String?
+  timeLimit      Int                   @default(30)
+  isActive       Boolean               @default(true)
+  createdBy      String?
+  updatedBy      String?
+  updatedAt      DateTime              @updatedAt
+  createdAt      DateTime              @default(now())
+
+  options        AptitudeOption[]
+  submissions    AptitudeSubmission[]
+
+  @@index([chapterId])
+  @@index([difficulty])
+}
+
+model AptitudeOption {
+  id         String                @id @default(uuid())
+  questionId String
+  question   AptitudeQuestion      @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  optionKey  String                // "A" | "B" | "C" | "D"
+  text       String                @db.Text
+  isCorrect  Boolean               @default(false)
+  order      Int                   @default(0)
+  createdAt  DateTime              @default(now())
+
+  @@unique([questionId, optionKey])
+  @@index([questionId])
+}
+
+model AptitudeSubmission {
+  id           String                @id @default(uuid())
+  userId       String?
+  questionId   String
+  question     AptitudeQuestion      @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOption String?             // "A" | "B" | "C" | "D"
+  isCorrect    Boolean               @default(false)
+  timeSpent    Int?                  // seconds
+  xpEarned     Int                   @default(0)
+  createdAt    DateTime              @default(now())
+
+  @@index([userId])
+  @@index([questionId])
+}
+
 model AptitudeTest {
   id         String   @id @default(uuid())
   title      String

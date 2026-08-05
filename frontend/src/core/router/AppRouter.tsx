@@ -21,7 +21,7 @@ const CodingPortalPage     = lazy(() => import('../../pages/student/CodingPortal
 const ContestsPage         = lazy(() => import('../../pages/student/ContestsPage'));
 const TcsNqtPrepPage       = lazy(() => import('../../pages/student/TcsNqtPrepPage'));
 const TcsNqtCompilerPage   = lazy(() => import('../../pages/student/TcsNqtCompilerPage'));
-const AptitudePage         = lazy(() => import('../../pages/student/AptitudePage'));
+const AptitudeStudentPage  = lazy(() => import('../../pages/student/AptitudeStudentPage'));
 const AptitudeQuizPage     = lazy(() => import('../../pages/student/AptitudeQuizPage'));
 const TestAttemptPage      = lazy(() => import('../../pages/student/TestAttemptPage'));
 const CodingTopicPage      = lazy(() => import('../../pages/student/CodingTopicPage'));
@@ -34,6 +34,7 @@ const AdminAnalyticsPage = lazy(() => import('../../pages/admin/AnalyticsPage'))
 const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
 const DualAdminDashboard = lazy(() => import('../../features/admin/pages/AdminDashboard'));
+const AptitudeManagementPage = lazy(() => import('../../features/admin/pages/AptitudeManagementPage'));
 
 // Public
 const CertVerifyPage     = lazy(() => import('../../pages/public/CertificateVerifyPage'));
@@ -75,17 +76,18 @@ export default function AppRouter() {
             <Route path="tcs-nqt/:slug" element={<TcsNqtCompilerPage />} />
             
             {/* Aptitude Preparation */}
-            <Route path="aptitude" element={<AptitudePage />} />
+            <Route path="aptitude" element={<AptitudeStudentPage />} />
             <Route path="aptitude/:module/:topicSlug" element={<AptitudeQuizPage />} />
             <Route path="tests/:testId" element={<TestAttemptPage />} />
           </Route>
 
           {/* Admin */}
           <Route path="/admin" element={<ProtectedRoute><RoleRoute roles={['admin']} /></ProtectedRoute>}>
-            <Route index element={<DualAdminDashboard />} />
+            <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsersPage />} />
             <Route path="problems" element={<AdminProblemsPage />} />
+            <Route path="aptitude" element={<AptitudeManagementPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="security" element={<AdminSecurityPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
