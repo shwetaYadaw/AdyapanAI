@@ -1,41 +1,172 @@
-// @ts-nocheck
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { prisma } from '../config/prisma';
 import { authenticate } from '../middleware/auth.middleware';
-import { sendSuccess } from '../utils/response.utils';
+import { sendSuccess, sendPaginated, getPaginationParams } from '../utils/response.utils';
 import { AppError } from '../middleware/errorHandler.middleware';
 
 const router = Router();
 
-// GET /aptitude — Get all aptitude questions with optional filtering
-router.get('/', async (req, res, next) => {
+// ============================================================================
+// TOPIC ROUTES (Student View)
+// ============================================================================
+
+// GET /aptitude/topics — Get all aptitude topics
+router.get('/topics', async (req, res, next) => {
   try {
-    const { module, topic, difficulty } = req.query;
-
-    const where: any = {};
-    if (module) where.module = String(module);
-    if (topic) where.topic = String(topic);
-    if (difficulty) where.difficulty = String(difficulty);
-
-    const questions = await prisma.aptitudeQuestion.findMany({
-      where,
-      orderBy: { createdAt: 'desc' },
+    const topics = await prisma.aptitudeTopic.findMany({
+      where: { isActive: true },
+      include: {
+        chapters: {
+          where: { isActive: true },
+          select: { id: true, name: true, description: true, order: true },
+        },
+      },
+      orderBy: { order: 'asc' },
     });
 
-    sendSuccess({ res, data: questions });
+    sendSuccess({ res, data: topics });
   } catch (err) {
     next(err);
   }
 });
 
-// GET /aptitude/:id — Get single aptitude question
-router.get('/:id', async (req, res, next) => {
+// GET /aptitude/topics/:topicId — Get specific topic with chapters
+router.get('/topics/:topicId', async (req, res, next) => {
   try {
-    const question = await prisma.aptitudeQuestion.findUnique({
-      where: { id: req.params.id },
+    const topic = await prisma.aptitudeTopic.findUnique({
+      where: { id: req.params.topicId },
+      include: {
+        chapters: {
+          where: { isActive: true },
+          orderBy: { order: 'asc' },
+          include: {
+            questions: {
+              where: { isActive: true },
+              select: { id: true, statement: true, difficulty: true },
+            },
+          },
+        },
+      },
     });
 
-    if (!question) {
+    if (!topic) {
+      throw new AppError('Topic not found', 404);
+    }
+
+    sendSuccess({ res, data: topic });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ============================================================================
+// CHAPTER ROUTES (Student View)
+// ============================================================================
+
+// GET /aptitude/topics/:topicId/chapters — Get all chapters in a topic
+router.get('/topics/:topicId/chapters', async (req, res, next) => {
+  try {
+    const { page, limit, skip } = getPaginationParams(req.query as Record<string, unknown>);
+
+    const topic = await prisma.aptitudeTopic.findUnique({
+      where: { id: req.params.topicId },
+    });
+
+    if (!topic) {
+      throw new AppError('Topic not found', 404);
+    }
+
+    const [chapters, total] = await Promise.all([
+      prisma.aptitudeChapter.findMany({
+        where: { topicId: req.params.topicId, isActive: true },
+        include: {
+          questions: {
+            where: { isActive: true },
+            select: { id: true },
+          },
+        },
+        orderBy: { order: 'asc' },
+        skip,
+        take: limit,
+      }),
+      prisma.aptitudeChapter.count({ where: { topicId: req.params.topicId, isActive: true } }),
+    ]);
+
+    sendPaginated({ res, data: chapters, total, page, limit });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /aptitude/topics/:topicId/chapters/:chapterId — Get specific chapter with questions
+router.get('/topics/:topicId/chapters/:chapterId', async (req, res, next) => {
+  try {
+    const chapter = await prisma.aptitudeChapter.findUnique({
+      where: { id: req.params.chapterId },
+      include: {
+        questions: {
+          where: { isActive: true },
+          include: { options: { orderBy: { order: 'asc' } } },
+          orderBy: { createdAt: 'asc' },
+        },
+      },
+    });
+
+    if (!chapter || chapter.topicId !== req.params.topicId) {
+      throw new AppError('Chapter not found', 404);
+    }
+
+    sendSuccess({ res, data: chapter });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ============================================================================
+// QUESTION ROUTES (Student View)
+// ============================================================================
+
+// GET /aptitude/topics/:topicId/chapters/:chapterId/questions — Get all questions in chapter
+router.get('/topics/:topicId/chapters/:chapterId/questions', async (req, res, next) => {
+  try {
+    const { page, limit, skip } = getPaginationParams(req.query as Record<string, unknown>);
+
+    const chapter = await prisma.aptitudeChapter.findUnique({
+      where: { id: req.params.chapterId },
+    });
+
+    if (!chapter || chapter.topicId !== req.params.topicId) {
+      throw new AppError('Chapter not found', 404);
+    }
+
+    const [questions, total] = await Promise.all([
+      prisma.aptitudeQuestion.findMany({
+        where: { chapterId: req.params.chapterId, isActive: true },
+        include: { options: { orderBy: { order: 'asc' } } },
+        orderBy: { createdAt: 'asc' },
+        skip,
+        take: limit,
+      }),
+      prisma.aptitudeQuestion.count({ where: { chapterId: req.params.chapterId, isActive: true } }),
+    ]);
+
+    sendPaginated({ res, data: questions, total, page, limit });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /aptitude/topics/:topicId/chapters/:chapterId/questions/:questionId — Get specific question
+router.get('/topics/:topicId/chapters/:chapterId/questions/:questionId', async (req, res, next) => {
+  try {
+    const question = await prisma.aptitudeQuestion.findUnique({
+      where: { id: req.params.questionId },
+      include: {
+        options: { orderBy: { order: 'asc' } },
+      },
+    });
+
+    if (!question || question.chapterId !== req.params.chapterId) {
       throw new AppError('Question not found', 404);
     }
 
@@ -45,145 +176,176 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-// POST /aptitude — Create new aptitude question (admin only)
-router.post('/', authenticate, async (req, res, next) => {
-  try {
-    const {
-      question,
-      options,
-      answer,
-      explanation,
-      module,
-      topic,
-      difficulty,
-      questionImage,
-      optionImages,
-      isImageBased,
-    } = req.body;
+// ============================================================================
+// SUBMISSION ROUTES (Authenticated)
+// ============================================================================
 
-    if (!question || !options || !answer || !explanation || !module || !topic) {
-      throw new AppError('Missing required fields', 400);
+// POST /aptitude/submit — Submit an aptitude question answer
+router.post('/submit', authenticate, async (req, res, next) => {
+  try {
+    const { questionId, selectedOption, timeSpent } = req.body;
+
+    if (!questionId || !selectedOption) {
+      throw new AppError('Question ID and selected option are required', 400);
     }
 
-    const newQuestion = await prisma.aptitudeQuestion.create({
-      data: {
-        question,
-        options,
-        answer,
-        explanation,
-        module,
-        topic,
-        difficulty: difficulty || 'medium',
-        questionImage: questionImage || null,
-        optionImages: optionImages || null,
-        isImageBased: isImageBased || false,
-      },
-    });
-
-    sendSuccess({ res, message: 'Question created successfully', data: newQuestion });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// PUT /aptitude/:id — Update aptitude question (admin only)
-router.put('/:id', authenticate, async (req, res, next) => {
-  try {
-    const {
-      question,
-      options,
-      answer,
-      explanation,
-      module,
-      topic,
-      difficulty,
-      questionImage,
-      optionImages,
-      isImageBased,
-    } = req.body;
-
-    const existingQuestion = await prisma.aptitudeQuestion.findUnique({
-      where: { id: req.params.id },
-    });
-
-    if (!existingQuestion) {
-      throw new AppError('Question not found', 404);
-    }
-
-    const updatedQuestion = await prisma.aptitudeQuestion.update({
-      where: { id: req.params.id },
-      data: {
-        question: question || existingQuestion.question,
-        options: options || existingQuestion.options,
-        answer: answer || existingQuestion.answer,
-        explanation: explanation || existingQuestion.explanation,
-        module: module || existingQuestion.module,
-        topic: topic || existingQuestion.topic,
-        difficulty: difficulty || existingQuestion.difficulty,
-        questionImage: questionImage !== undefined ? questionImage : existingQuestion.questionImage,
-        optionImages: optionImages !== undefined ? optionImages : existingQuestion.optionImages,
-        isImageBased: isImageBased !== undefined ? isImageBased : existingQuestion.isImageBased,
-      },
-    });
-
-    sendSuccess({ res, message: 'Question updated successfully', data: updatedQuestion });
-  } catch (err) {
-    next(err);
-  }
-});
-
-// DELETE /aptitude/:id — Delete aptitude question (admin only)
-router.delete('/:id', authenticate, async (req, res, next) => {
-  try {
     const question = await prisma.aptitudeQuestion.findUnique({
-      where: { id: req.params.id },
+      where: { id: questionId },
+      include: { options: true },
     });
 
     if (!question) {
       throw new AppError('Question not found', 404);
     }
 
-    await prisma.aptitudeQuestion.delete({
-      where: { id: req.params.id },
+    const isCorrect = question.correctOption === selectedOption;
+
+    const submission = await prisma.aptitudeSubmission.create({
+      data: {
+        userId: req.user?.userId,
+        questionId,
+        selectedOption,
+        isCorrect,
+        timeSpent: timeSpent || 0,
+      },
     });
 
-    sendSuccess({ res, message: 'Question deleted successfully' });
+    sendSuccess({
+      res,
+      statusCode: 201,
+      data: { ...submission, isCorrect, correctOption: question.correctOption },
+      message: 'Answer submitted successfully',
+    });
   } catch (err) {
     next(err);
   }
 });
 
-// GET /aptitude/modules/list — Get list of all modules
-router.get('/modules/list', async (req, res, next) => {
+// GET /aptitude/submissions — Get user's aptitude submissions
+router.get('/submissions', authenticate, async (req, res, next) => {
   try {
-    const modules = await prisma.aptitudeQuestion.findMany({
-      select: { module: true },
-      distinct: ['module'],
-    });
+    const { page, limit, skip } = getPaginationParams(req.query as Record<string, unknown>);
 
-    const moduleList = modules.map((m) => m.module);
-    sendSuccess({ res, data: moduleList });
+    const [submissions, total] = await Promise.all([
+      prisma.aptitudeSubmission.findMany({
+        where: { userId: req.user?.userId },
+        include: {
+          question: {
+            include: { chapter: { include: { topic: true } } },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.aptitudeSubmission.count({ where: { userId: req.user?.userId } }),
+    ]);
+
+    sendPaginated({ res, data: submissions, total, page, limit });
   } catch (err) {
     next(err);
   }
 });
 
-// GET /aptitude/topics/list — Get list of all topics
-router.get('/topics/list', async (req, res, next) => {
+// GET /aptitude/submissions/:topicId — Get submissions for a specific topic
+router.get('/submissions/:topicId', authenticate, async (req, res, next) => {
   try {
-    const { module } = req.query;
+    const { page, limit, skip } = getPaginationParams(req.query as Record<string, unknown>);
 
-    const where: any = {};
-    if (module) where.module = String(module);
+    const [submissions, total] = await Promise.all([
+      prisma.aptitudeSubmission.findMany({
+        where: {
+          userId: req.user?.userId,
+          question: {
+            chapter: { topicId: req.params.topicId },
+          },
+        },
+        include: {
+          question: { include: { chapter: true } },
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.aptitudeSubmission.count({
+        where: {
+          userId: req.user?.userId,
+          question: {
+            chapter: { topicId: req.params.topicId },
+          },
+        },
+      }),
+    ]);
 
-    const topics = await prisma.aptitudeQuestion.findMany({
-      where,
-      select: { topic: true },
-      distinct: ['topic'],
+    sendPaginated({ res, data: submissions, total, page, limit });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// ============================================================================
+// STATISTICS ROUTES (Authenticated)
+// ============================================================================
+
+// GET /aptitude/stats — Get user's aptitude statistics
+router.get('/stats', authenticate, async (req, res, next) => {
+  try {
+    const userId = req.user?.userId;
+
+    const totalAttempts = await prisma.aptitudeSubmission.count({ where: { userId } });
+    const correctAnswers = await prisma.aptitudeSubmission.count({
+      where: { userId, isCorrect: true },
+    });
+    const accuracy = totalAttempts > 0 ? ((correctAnswers / totalAttempts) * 100).toFixed(2) : '0';
+
+    const byDifficulty = await prisma.aptitudeSubmission.groupBy({
+      by: ['question'],
+      where: { userId },
+      _count: true,
     });
 
-    const topicList = topics.map((t) => t.topic);
-    sendSuccess({ res, data: topicList });
+    const topicStats = await prisma.aptitudeSubmission.findMany({
+      where: { userId },
+      include: {
+        question: {
+          include: { chapter: { include: { topic: true } } },
+        },
+      },
+    });
+
+    const statsByTopic: any = {};
+    topicStats.forEach((submission) => {
+      const topicId = submission.question.chapter.topic.id;
+      const topicName = submission.question.chapter.topic.name;
+
+      if (!statsByTopic[topicId]) {
+        statsByTopic[topicId] = {
+          topicName,
+          totalAttempts: 0,
+          correctAnswers: 0,
+          accuracy: 0,
+        };
+      }
+
+      statsByTopic[topicId].totalAttempts += 1;
+      if (submission.isCorrect) {
+        statsByTopic[topicId].correctAnswers += 1;
+      }
+      statsByTopic[topicId].accuracy = (
+        (statsByTopic[topicId].correctAnswers / statsByTopic[topicId].totalAttempts) *
+        100
+      ).toFixed(2);
+    });
+
+    sendSuccess({
+      res,
+      data: {
+        totalAttempts,
+        correctAnswers,
+        accuracy,
+        byTopic: statsByTopic,
+      },
+    });
   } catch (err) {
     next(err);
   }

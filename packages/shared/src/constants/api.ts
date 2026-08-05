@@ -138,6 +138,31 @@ export const API_ENDPOINTS = {
     ANALYTICS_REVENUE: `${API_BASE}/admin/analytics/revenue`,
     SUPPORT_TICKETS: `${API_BASE}/admin/support-tickets`,
   },
+  // Aptitude
+  APTITUDE: {
+    TOPICS: `${API_BASE}/aptitude/topics`,
+    TOPIC: (topicId: string) => `${API_BASE}/aptitude/topics/${topicId}`,
+    CHAPTERS: (topicId: string) => `${API_BASE}/aptitude/topics/${topicId}/chapters`,
+    CHAPTER: (topicId: string, chapterId: string) =>
+      `${API_BASE}/aptitude/topics/${topicId}/chapters/${chapterId}`,
+    QUESTIONS: (topicId: string, chapterId: string) =>
+      `${API_BASE}/aptitude/topics/${topicId}/chapters/${chapterId}/questions`,
+    QUESTION: (topicId: string, chapterId: string, questionId: string) =>
+      `${API_BASE}/aptitude/topics/${topicId}/chapters/${chapterId}/questions/${questionId}`,
+  },
+  // Admin Aptitude
+  ADMIN_APTITUDE: {
+    TOPICS: `${API_BASE}/admin/aptitude/topics`,
+    TOPIC: (topicId: string) => `${API_BASE}/admin/aptitude/topics/${topicId}`,
+    CHAPTERS: (topicId: string) => `${API_BASE}/admin/aptitude/topics/${topicId}/chapters`,
+    CHAPTER: (topicId: string, chapterId: string) =>
+      `${API_BASE}/admin/aptitude/topics/${topicId}/chapters/${chapterId}`,
+    QUESTIONS: (topicId: string, chapterId: string) =>
+      `${API_BASE}/admin/aptitude/topics/${topicId}/chapters/${chapterId}/questions`,
+    QUESTION: (topicId: string, chapterId: string, questionId: string) =>
+      `${API_BASE}/admin/aptitude/topics/${topicId}/chapters/${chapterId}/questions/${questionId}`,
+    STATS: `${API_BASE}/admin/aptitude/stats`,
+  },
   // Health
   HEALTH: `${API_BASE}/health`,
 } as const;

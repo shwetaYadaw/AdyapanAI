@@ -41,23 +41,51 @@ export default function AddEditQuestionModal({
   onSave,
   onClose,
 }: AddEditQuestionModalProps) {
-  const [formData, setFormData] = useState<Partial<Question>>({
-    question: question?.question ?? '',
-    difficulty: question?.difficulty ?? 'medium',
-    marks: question?.marks ?? 1,
-    negativeMarks: question?.negativeMarks ?? 0,
-    estimatedTime: question?.estimatedTime ?? 60,
-    options: question?.options ?? [
-      { text: '' },
-      { text: '' },
-      { text: '' },
-      { text: '' },
-    ],
-    correctOptionIndex: question?.correctOptionIndex ?? 0,
-    explanation: question?.explanation ?? '',
-    company: question?.company ?? '',
-    status: question?.status ?? 'active',
-  });
+  // Transform backend format to frontend format when editing
+  const getInitialFormData = () => {
+    if (question) {
+      const correctIndex = question.options?.findIndex((opt: any) => opt.isCorrect) ?? 0;
+      return {
+        question: (question as any).statement || question.question || '',
+        difficulty: question.difficulty ?? 'medium',
+        marks: question.marks ?? 1,
+        negativeMarks: question.negativeMarks ?? 0,
+        estimatedTime: question.estimatedTime ?? 60,
+        options: (question.options || []).map((opt: any) => ({
+          text: opt.text || '',
+          isCorrect: opt.isCorrect || false,
+        })) || [
+          { text: '' },
+          { text: '' },
+          { text: '' },
+          { text: '' },
+        ],
+        correctOptionIndex: correctIndex,
+        explanation: question.explanation ?? '',
+        company: (question as any).companies ?? question.company ?? '',
+        status: question.status ?? 'active',
+      };
+    }
+    return {
+      question: '',
+      difficulty: 'medium',
+      marks: 1,
+      negativeMarks: 0,
+      estimatedTime: 60,
+      options: [
+        { text: '' },
+        { text: '' },
+        { text: '' },
+        { text: '' },
+      ],
+      correctOptionIndex: 0,
+      explanation: '',
+      company: '',
+      status: 'active',
+    };
+  };
+
+  const [formData, setFormData] = useState<Partial<Question>>(getInitialFormData());
 
   const [currentTab, setCurrentTab] = useState('details');
   const [loading, setLoading] = useState(false);
@@ -95,24 +123,51 @@ export default function AddEditQuestionModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validation
     if (!formData.question?.trim()) {
       toast.error('Question is required');
       return;
     }
 
-    if (!formData.options?.some(opt => opt.text.trim())) {
-      toast.error('At least one option is required');
+    if (!formData.options || formData.options.length < 2) {
+      toast.error('At least 2 options are required');
       return;
     }
 
-    if (formData.correctOptionIndex === undefined) {
-      toast.error('Select correct answer');
+    if (formData.options.some(opt => !opt.text?.trim())) {
+      toast.error('All options must have text');
+      return;
+    }
+
+    if (formData.correctOptionIndex === undefined || formData.correctOptionIndex === null) {
+      toast.error('Please mark a correct answer');
       return;
     }
 
     try {
       setLoading(true);
-      await onSave(formData);
+
+      // Transform frontend format to backend format
+      const correctIndex = formData.correctOptionIndex;
+      const backendData = {
+        statement: formData.question, // Map question to statement
+        difficulty: formData.difficulty,
+        options: formData.options.map((opt, index) => ({
+          optionKey: String.fromCharCode(65 + index), // A, B, C, D...
+          text: opt.text,
+          isCorrect: index === correctIndex,
+        })),
+        explanation: formData.explanation,
+        xpReward: formData.marks || 10,
+        companies: formData.company,
+        timeLimit: formData.estimatedTime || 60,
+      };
+
+      await onSave(backendData);
+      toast.success(question ? 'Question updated successfully' : 'Question created successfully');
+      onClose();
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to save question');
     } finally {
       setLoading(false);
     }
