@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import {
   LayoutDashboard, BookOpen, Award, Users, 
-  BarChart2, Settings, Code2, Trophy, X
+  BarChart2, Settings, Code2, Trophy, X, Briefcase
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { setMobileSidebar } from '../../../features/ui/uiSlice';
@@ -18,12 +18,13 @@ export interface NavItem {
 }
 
 const STUDENT_NAV: NavItem[] = [
-  { label: 'Dashboard',    href: '/student/dashboard',  icon: LayoutDashboard },
-  { label: 'Certificates', href: '/student/certificates', icon: Award },
-  { label: 'Coding Arena', href: '/student/challenges',  icon: Code2 },
-  { label: 'Placement Prep', href: '/student/tcs-nqt',    icon: Trophy },
-  { label: 'Aptitude Prep',href: '/student/aptitude',   icon: BookOpen },
-  { label: 'Contests',     href: '/student/contests',   icon: Trophy },
+  { label: 'Dashboard',      href: '/student/dashboard',      icon: LayoutDashboard },
+  { label: 'My Course',      href: '/student/select-course',  icon: Briefcase },
+  { label: 'Certificates',   href: '/student/certificates',   icon: Award },
+  { label: 'Coding Arena',   href: '/student/challenges',     icon: Code2 },
+  { label: 'Placement Prep', href: '/student/tcs-nqt',        icon: Trophy },
+  { label: 'Aptitude Prep',  href: '/student/aptitude',       icon: BookOpen },
+  { label: 'Contests',       href: '/student/contests',       icon: Trophy },
 ];
 
 const ADMIN_NAV: NavItem[] = [
