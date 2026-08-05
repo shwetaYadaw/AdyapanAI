@@ -146,40 +146,8 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     const limitNum = Math.max(1, Math.min(limit, 100)); // Cap at 100
     const skip = (pageNum - 1) * limitNum;
 
-    // Build filter
-    const where: any = {
-      isArchived: false // Only show non-archived problems
-    };
-
-    if (search && search.trim()) {
-      where.OR = [
-        { title: { contains: search, mode: 'insensitive' } },
-        { slug: { contains: search, mode: 'insensitive' } },
-        { statement: { contains: search, mode: 'insensitive' } }
-      ];
-    }
-
-    if (difficulty) {
-      where.difficulty = difficulty;
-    }
-
-    if (topic) {
-      // Will filter in-memory for exact topic match
-    }
-
-    // Get all problems first (without topic filter to handle in-memory filtering)
+    // Get ALL problems first
     let allProblems = await prisma.problem.findMany({
-      where: {
-        isArchived: false,
-        ...(search && {
-          OR: [
-            { title: { contains: search, mode: 'insensitive' } },
-            { slug: { contains: search, mode: 'insensitive' } },
-            { statement: { contains: search, mode: 'insensitive' } }
-          ]
-        }),
-        ...(difficulty && { difficulty })
-      },
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
@@ -206,6 +174,24 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
         updatedBy: true
       }
     });
+
+    // Filter by isArchived status (show non-archived only)
+    allProblems = allProblems.filter(p => p.isArchived !== true);
+
+    // Apply search filter
+    if (search && search.trim()) {
+      const searchLower = search.toLowerCase();
+      allProblems = allProblems.filter(p =>
+        p.title.toLowerCase().includes(searchLower) ||
+        p.slug.toLowerCase().includes(searchLower) ||
+        p.statement.toLowerCase().includes(searchLower)
+      );
+    }
+
+    // Apply difficulty filter
+    if (difficulty) {
+      allProblems = allProblems.filter(p => p.difficulty === difficulty);
+    }
 
     // Filter by exact topic match if topic provided
     if (topic) {

@@ -151,7 +151,10 @@ router.get('/', async (req, res, next) => {
     }
 
     let allProblems = await prisma.problem.findMany({
-      where,
+      where: {
+        ...where,
+        isArchived: { not: true } // Don't show archived problems to students
+      },
       select: {
         id: true,
         title: true,
@@ -195,11 +198,13 @@ router.get('/stats', authenticate, async (req, res, next) => {
   try {
     const userId = req.user?.userId;
     
-    const total = await prisma.problem.count();
+    // Count only non-archived problems
+    const total = await prisma.problem.count({ where: { isArchived: { not: true } } });
 
     const byDifficulty = await prisma.problem.groupBy({
       by: ['difficulty'],
       _count: true,
+      where: { isArchived: { not: true } } // Only count non-archived
     });
 
     let solvedCount = 0;
