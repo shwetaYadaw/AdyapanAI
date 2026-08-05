@@ -382,13 +382,13 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
     if (isUUID) {
       problem = await prisma.problem.findUnique({
         where: { id: paramId },
-        include: { testCases: { where: { isHidden: false } } },
+        include: { testCases: true },
       });
     } else {
       // Try by slug
       problem = await prisma.problem.findUnique({
         where: { slug: paramId },
-        include: { testCases: { where: { isHidden: false } } },
+        include: { testCases: true },
       });
       // Fallback: search by title
       if (!problem) {
@@ -399,7 +399,7 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
         if (problems.length > 0) {
           problem = await prisma.problem.findUnique({
             where: { id: problems[0].id },
-            include: { testCases: { where: { isHidden: false } } },
+            include: { testCases: true },
           });
         }
       }
@@ -407,35 +407,84 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
 
     if (!problem) throw new AppError('Problem not found', 404);
 
-    // Use custom input from request body, or fall back to first sample test case
+    // Use ALL test cases for run (visible ones for comparison)
+    const visibleTestCases = problem.testCases || [];
     const customInput = req.body.input;
-    const sampleTestCase = problem.testCases[0];
-    const inputToUse = customInput || (sampleTestCase ? sampleTestCase.input : '');
-    
-    if (!inputToUse) throw new AppError('No input provided and no sample testcase found', 400);
 
-    const result = await judge.runTestCase(
-      code,
-      language,
-      inputToUse,
-      sampleTestCase?.expectedOutput,
-      problem.timeLimit
-    );
+    if (visibleTestCases.length === 0 && !customInput) {
+      throw new AppError('No test cases or input available', 400);
+    }
 
-    // If no test case exists, just return the output without pass/fail judgment
-    const hasExpected = !!sampleTestCase?.expectedOutput;
+    // If there are test cases, run against all of them
+    if (visibleTestCases.length > 0) {
+      let allPassed = true;
+      let failedAt = -1;
+      let failedInput = '';
+      let failedExpected = '';
+      let failedActual = '';
+      let totalRuntime = 0;
+      let errorMsg = '';
 
-    sendSuccess({
-      res,
-      data: {
-        passed: hasExpected ? result.passed : true,
-        actualOutput: result.actualOutput,
-        expectedOutput: hasExpected ? sampleTestCase.expectedOutput : null,
-        input: inputToUse,
-        runtime: result.runtime,
-        errorMessage: result.errorMessage,
-      },
-    });
+      for (let i = 0; i < visibleTestCases.length; i++) {
+        const tc = visibleTestCases[i];
+        const result = await judge.runTestCase(
+          code,
+          language,
+          tc.input,
+          tc.expectedOutput,
+          problem.timeLimit || 5000
+        );
+        totalRuntime = Math.max(totalRuntime, result.runtime);
+
+        if (result.errorMessage) {
+          allPassed = false;
+          failedAt = i + 1;
+          failedInput = tc.input;
+          failedExpected = tc.expectedOutput;
+          failedActual = result.actualOutput;
+          errorMsg = result.errorMessage;
+          break;
+        }
+
+        if (!result.passed) {
+          allPassed = false;
+          failedAt = i + 1;
+          failedInput = tc.input;
+          failedExpected = tc.expectedOutput;
+          failedActual = result.actualOutput;
+          errorMsg = `Wrong Answer on Test Case ${i + 1}: Expected "${tc.expectedOutput.trim()}" but got "${result.actualOutput.trim()}"`;
+          break;
+        }
+      }
+
+      sendSuccess({
+        res,
+        data: {
+          passed: allPassed,
+          passedCount: allPassed ? visibleTestCases.length : failedAt - 1,
+          totalCount: visibleTestCases.length,
+          actualOutput: allPassed ? visibleTestCases[visibleTestCases.length - 1].expectedOutput : failedActual,
+          expectedOutput: allPassed ? null : failedExpected,
+          input: allPassed ? visibleTestCases[0].input : failedInput,
+          runtime: totalRuntime,
+          errorMessage: allPassed ? null : errorMsg,
+        },
+      });
+    } else {
+      // No test cases — just execute with custom input
+      const result = await judge.runTestCase(code, language, customInput, undefined, problem.timeLimit || 5000);
+      sendSuccess({
+        res,
+        data: {
+          passed: !result.errorMessage,
+          actualOutput: result.actualOutput,
+          expectedOutput: null,
+          input: customInput,
+          runtime: result.runtime,
+          errorMessage: result.errorMessage,
+        },
+      });
+    }
   } catch (err) { next(err); }
 });
 
@@ -612,10 +661,8 @@ router.post('/:id/submit', authenticate, async (req, res, next) => {
         if (!previousAccepted) {
           xpAwarded = problem.xpReward || 10;
           try {
-            await prisma.studentProfile.updateMany({
-              where: { userId: req.user!.userId },
-              data: { xp: { increment: xpAwarded } },
-            });
+            const { awardXP } = require('../utils/xp.utils');
+            await awardXP(req.user!.userId, xpAwarded);
           } catch (e) {
             // StudentProfile might not exist for admin users
           }

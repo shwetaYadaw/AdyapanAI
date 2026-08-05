@@ -245,14 +245,10 @@ class QueueService {
         });
 
         if (!previousAccepted) {
-          // First time solving - award XP
           const xpReward = problem.xpReward || 10;
           try {
-            await prisma.studentProfile.updateMany({
-              where: { userId },
-              data: { xp: { increment: xpReward } },
-            });
-            logger.info(`[XP AWARDED] User: ${userId} | Problem: ${problemId} | +${xpReward} XP`);
+            const { awardXP } = require('../utils/xp.utils');
+            await awardXP(userId, xpReward);
           } catch (e) {
             logger.warn(`[XP] Could not award XP to user ${userId} - profile may not exist`);
           }

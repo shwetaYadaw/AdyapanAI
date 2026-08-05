@@ -13,7 +13,6 @@ import { api } from '../../core/services/api';
 import Card from '../../shared/components/Card/Card';
 
 const GOAL_KEY = 'dashboard_weekly_goal';
-const GOAL_PROGRESS_KEY = 'dashboard_weekly_progress';
 
 const STRENGTH_TOPICS = [
   { key: 'arrays', label: 'Arrays', color: 'bg-blue-500' },
@@ -39,6 +38,8 @@ export default function StudentDashboard() {
 
   const { data: profile } = useQuery({ queryKey: ['studentProfile'], queryFn: async () => { const { data } = await api.get('/students/profile'); return data.data; } });
   const { data: codingStats } = useQuery({ queryKey: ['codingStats'], queryFn: async () => { const { data } = await api.get('/problems/stats'); return data.data; } });
+  const { data: placementStats } = useQuery({ queryKey: ['placementStats'], queryFn: async () => { try { const { data } = await api.get('/tcs-nqt/stats'); return data.data; } catch { return null; } } });
+  const { data: aptitudeStats } = useQuery({ queryKey: ['aptitudeStats'], queryFn: async () => { try { const { data } = await api.get('/aptitude-student/stats'); return data.data; } catch { return null; } } });
   const { data: questions } = useQuery({
     queryKey: ['codingQuestions', ''],
     queryFn: async () => {
@@ -49,21 +50,11 @@ export default function StudentDashboard() {
   const { data: submissions } = useQuery({ queryKey: ['recentSubmissions'], queryFn: async () => { const { data } = await api.get('/problem-submissions?limit=5'); return data.data ?? []; } });
 
   const [weeklyGoal, setWeeklyGoal] = useState(() => Number(localStorage.getItem(GOAL_KEY) || 5));
-  const [weeklyProgress, setWeeklyProgress] = useState(() => Number(localStorage.getItem(GOAL_PROGRESS_KEY) || 0));
   const [editingGoal, setEditingGoal] = useState(false);
   const [goalInput, setGoalInput] = useState(weeklyGoal);
 
   useEffect(() => {
-    const lastReset = localStorage.getItem('goal_last_reset');
-    const now = new Date();
-    const monday = new Date(now);
-    monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-    monday.setHours(0, 0, 0, 0);
-    if (!lastReset || new Date(lastReset) < monday) {
-      setWeeklyProgress(0);
-      localStorage.setItem(GOAL_PROGRESS_KEY, '0');
-      localStorage.setItem('goal_last_reset', now.toISOString());
-    }
+    // Weekly reset is automatic since we use real solved counts now
   }, []);
 
   const saveGoal = () => { setWeeklyGoal(goalInput); localStorage.setItem(GOAL_KEY, String(goalInput)); setEditingGoal(false); };
@@ -81,7 +72,8 @@ export default function StudentDashboard() {
     return { ...t, pct: total ? Math.round((solved / total) * 100) : 0 };
   });
 
-  const goalPct = Math.min(100, Math.round((weeklyProgress / weeklyGoal) * 100));
+  const totalSolved = (codingStats?.solvedCount ?? 0) + (placementStats?.solvedCount ?? 0) + (aptitudeStats?.solvedCount ?? 0);
+  const goalPct = Math.min(100, Math.round((totalSolved / weeklyGoal) * 100));
 
   return (
     <div className="page-wrapper space-y-6">
@@ -97,8 +89,8 @@ export default function StudentDashboard() {
       {/* Stats row */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {[
-          { label: 'XP Points', value: profile?.totalXP ?? 0, icon: Zap, color: 'from-yellow-500 to-amber-400', href: '/student/profile' },
-          { label: 'Problems Solved', value: codingStats?.solvedCount ?? 0, icon: Code2, color: 'from-purple-500 to-violet-400', href: '/student/challenges' },
+          { label: 'XP Points', value: profile?.totalXP ?? profile?.xp ?? 0, icon: Zap, color: 'from-yellow-500 to-amber-400', href: '/student/profile' },
+          { label: 'Problems Solved', value: (codingStats?.solvedCount ?? 0) + (placementStats?.solvedCount ?? 0), icon: Code2, color: 'from-purple-500 to-violet-400', href: '/student/challenges' },
           { label: 'Day Streak', value: profile?.streak ?? 0, icon: Flame, color: 'from-orange-500 to-red-400', href: '/student/profile' },
         ].map((stat, i) => (
           <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
@@ -164,10 +156,8 @@ export default function StudentDashboard() {
                 <div className="absolute inset-0 flex items-center justify-center"><span className="text-xs font-bold text-gray-900 dark:text-white">{goalPct}%</span></div>
               </div>
               <div className="flex-1 space-y-1">
-                <p className="text-xl font-display font-bold text-gray-900 dark:text-white">{weeklyProgress}<span className="text-xs font-normal text-gray-400"> / {weeklyGoal}</span></p>
-                <p className="text-xs text-gray-400">solved this week</p>
-                <button onClick={() => { const n = weeklyProgress + 1; setWeeklyProgress(n); localStorage.setItem(GOAL_PROGRESS_KEY, String(n)); }}
-                  className="text-xs px-2.5 py-1 rounded-lg bg-primary-50 dark:bg-primary-950/40 text-primary-600 dark:text-primary-400 font-semibold hover:bg-primary-100 transition-all">+ Mark Solved</button>
+                <p className="text-xl font-display font-bold text-gray-900 dark:text-white">{totalSolved}<span className="text-xs font-normal text-gray-400"> / {weeklyGoal}</span></p>
+                <p className="text-xs text-gray-400">problems solved</p>
               </div>
             </div>
             {goalPct >= 100 && <p className="mt-2 text-xs text-green-500 font-bold flex items-center gap-1"><CheckCircle2 className="w-3 h-3" /> Goal achieved! 🎉</p>}
@@ -180,10 +170,9 @@ export default function StudentDashboard() {
             <h3 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-3"><TrendingUp className="w-4 h-4 text-primary-500" /> My Progress</h3>
             <div className="space-y-3">
               {[
-                { label: 'Coding Arena', solved: codingStats?.solvedCount ?? 0, total: codingStats?.totalQuestions ?? 154, color: 'bg-purple-500', href: '/student/challenges' },
-                { label: 'Placement Tests', solved: 0, total: 16, color: 'bg-orange-500', href: '/student/placement' },
-                { label: 'Placement Prep', solved: 0, total: 220, color: 'bg-blue-500', href: '/student/tcs-nqt' },
-                { label: 'Aptitude Prep', solved: 0, total: 100, color: 'bg-green-500', href: '/student/aptitude' },
+                { label: 'Coding Arena', solved: codingStats?.solvedCount ?? 0, total: codingStats?.totalQuestions ?? 0, color: 'bg-purple-500', href: '/student/challenges' },
+                { label: 'Placement Prep', solved: placementStats?.solvedCount ?? 0, total: placementStats?.totalQuestions ?? 0, color: 'bg-blue-500', href: '/student/tcs-nqt' },
+                { label: 'Aptitude Prep', solved: aptitudeStats?.solvedCount ?? 0, total: aptitudeStats?.totalQuestions ?? 0, color: 'bg-green-500', href: '/student/aptitude' },
               ].map(item => {
                 const pct = item.total ? Math.round((item.solved / item.total) * 100) : 0;
                 return (
