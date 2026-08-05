@@ -31,6 +31,7 @@ const CourseSelectionPage  = lazy(() => import('../../pages/student/CourseSelect
 const AdminDashboard     = lazy(() => import('../../pages/admin/DashboardPage'));
 const AdminUsersPage     = lazy(() => import('../../pages/admin/UsersPage'));
 const AdminProblemsPage  = lazy(() => import('../../pages/admin/ProblemsPage'));
+const AdminCoursesPage  = lazy(() => import('../../pages/admin/CoursesPage'));
 const AdminAnalyticsPage = lazy(() => import('../../pages/admin/AnalyticsPage'));
 const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
@@ -88,6 +89,7 @@ export default function AppRouter() {
             <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsersPage />} />
+            <Route path="courses" element={<AdminCoursesPage />} />
             <Route path="problems" element={<AdminProblemsPage />} />
             <Route path="aptitude" element={<AptitudeManagementPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
