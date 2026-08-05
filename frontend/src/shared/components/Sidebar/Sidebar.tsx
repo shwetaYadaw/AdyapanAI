@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
@@ -7,7 +7,7 @@ import {
   BarChart2, Settings, Code2, Trophy, X
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
-import { setMobileSidebar } from '../../../features/ui/uiSlice';
+import { setMobileSidebar, setSidebarOpen } from '../../../features/ui/uiSlice';
 import { selectUser } from '../../../features/auth/authSlice';
 
 export interface NavItem {
@@ -46,39 +46,68 @@ export default function Sidebar() {
   const mobileSidebarOpen = useAppSelector((s) => s.ui.mobileSidebarOpen);
   const user = useAppSelector(selectUser);
   const navItems = NAV_MAP[user?.role ?? 'student'] ?? STUDENT_NAV;
+  
+  const desktopSidebarRef = useRef<HTMLElement>(null);
+
   const closeMobileSidebar = useCallback(() => {
     dispatch(setMobileSidebar(false));
   }, [dispatch]);
 
-  // Auto-close mobile drawer when route changes
+  // Auto-close both drawers/sidebars when route changes
   useEffect(() => {
     closeMobileSidebar();
-  }, [location.pathname, closeMobileSidebar]);
+    dispatch(setSidebarOpen(false));
+  }, [location.pathname, closeMobileSidebar, dispatch]);
+
+  // Auto-close desktop sidebar on outside click
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      // Only process outside click on desktop
+      if (window.innerWidth < 768) return;
+
+      const target = e.target as Element;
+      // If clicking outside the desktop sidebar AND not clicking the hamburger menu
+      if (
+        sidebarOpen &&
+        desktopSidebarRef.current &&
+        !desktopSidebarRef.current.contains(target as Node) &&
+        !target.closest('#desktop-hamburger')
+      ) {
+        dispatch(setSidebarOpen(false));
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [sidebarOpen, dispatch]);
 
   return (
     <>
-      {/* Mobile Sidebar Overlay & Drawer */}
+      {/* Mobile Sidebar Overlay */}
       <AnimatePresence>
         {mobileSidebarOpen && (
-          <motion.div 
-            key="mobile-overlay"
+          <motion.div
+            key="mobile-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="md:hidden fixed inset-0 z-50 flex"
-          >
-            {/* Backdrop */}
-            <div
-              onClick={closeMobileSidebar}
-              className="absolute inset-0 bg-black/50"
-            />
-            {/* Drawer */}
-            <motion.aside
+            transition={{ duration: 0.2 }}
+            onClick={closeMobileSidebar}
+            className="md:hidden fixed inset-0 z-40 bg-black/50"
+          />
+        )}
+      </AnimatePresence>
+      
+      {/* Mobile Drawer */}
+      <AnimatePresence>
+        {mobileSidebarOpen && (
+          <motion.aside
+            key="mobile-drawer"
               initial={{ x: '-100%' }}
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-              className="relative w-64 max-w-sm flex flex-col h-full bg-white dark:bg-gray-900 shadow-xl overflow-hidden"
+              className="md:hidden fixed inset-y-0 left-0 z-50 w-64 max-w-sm flex flex-col h-full bg-white dark:bg-gray-900 shadow-xl overflow-hidden"
             >
               {/* Logo/Header for Mobile */}
               <div className="flex items-center justify-between px-4 h-16 border-b border-gray-100 dark:border-gray-800">
@@ -123,27 +152,25 @@ export default function Sidebar() {
                   </NavLink>
                 ))}
               </nav>
-            </motion.aside>
-          </motion.div>
+          </motion.aside>
         )}
       </AnimatePresence>
 
       {/* Desktop Sidebar */}
-      <AnimatePresence initial={false}>
-        <motion.aside
+      <motion.aside
+          ref={desktopSidebarRef}
           initial={false}
           animate={{ width: sidebarOpen ? 240 : 72 }}
           transition={{ type: 'spring', stiffness: 300, damping: 35 }}
           className="hidden md:flex flex-col h-full bg-white dark:bg-gray-900 border-r border-gray-100 dark:border-gray-800 overflow-hidden flex-shrink-0 relative"
         >
-
-
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto py-4 px-2 space-y-0.5 scrollbar-thin">
             {navItems.map((item) => (
               <NavLink
                 key={item.href}
                 to={item.href}
+                onClick={() => dispatch(setSidebarOpen(false))}
                 className={({ isActive }) =>
                   clsx(
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group',
@@ -166,9 +193,7 @@ export default function Sidebar() {
               </NavLink>
             ))}
           </nav>
-
         </motion.aside>
-      </AnimatePresence>
     </>
   );
 }

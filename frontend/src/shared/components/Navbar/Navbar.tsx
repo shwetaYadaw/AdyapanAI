@@ -34,6 +34,7 @@ export default function Navbar() {
   const user = useAppSelector(selectUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const darkMode = useAppSelector((s) => s.ui.darkMode);
+  const mobileSidebarOpen = useAppSelector((s) => s.ui.mobileSidebarOpen);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -108,11 +109,12 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             {/* Hamburger Toggle */}
             <button
+              id="desktop-hamburger"
               onClick={() => {
                 if (window.innerWidth >= 768 && isAuthenticated) {
                   dispatch(toggleSidebar());
                 } else if (isAuthenticated) {
-                  dispatch(setMobileSidebar(true));
+                  dispatch(setMobileSidebar(!mobileSidebarOpen));
                 } else {
                   setMobileOpen(!mobileOpen);
                 }
