@@ -221,7 +221,7 @@ router.get('/analytics/summary', async (_req, res, next) => {
 
     const [
       totalStudents, activeStudents, newStudents,
-      totalProblems, totalQuestions,
+      totalProblems, totalTcsQuestions,
       totalSubs, acceptedSubs, subsThisWeek,
       totalAptitude, totalContests,
     ] = await Promise.all([
@@ -229,11 +229,11 @@ router.get('/analytics/summary', async (_req, res, next) => {
       prisma.user.count({ where: { role: 'student', isActive: true, lastLogin: { gte: sevenAgo } } }),
       prisma.user.count({ where: { role: 'student', createdAt: { gte: thirtyAgo } } }),
       prisma.problem.count(),
-      prisma.question.count(),
-      prisma.submission.count(),
-      prisma.submission.count({ where: { status: 'accepted' } }),
-      prisma.submission.count({ where: { createdAt: { gte: sevenAgo } } }),
-      prisma.aptitudeQuestion.count(),
+      prisma.tcsNqtQuestion.count(),
+      prisma.problemSubmission.count(),
+      prisma.problemSubmission.count({ where: { status: 'accepted' } }),
+      prisma.problemSubmission.count({ where: { createdAt: { gte: sevenAgo } } }),
+      prisma.aptitudeAdminQuestion.count(),
       prisma.contest.count(),
     ]);
 
@@ -241,7 +241,7 @@ router.get('/analytics/summary', async (_req, res, next) => {
       res,
       data: {
         students: { total: totalStudents, active: activeStudents, newThisMonth: newStudents },
-        problems: { total: totalProblems + totalQuestions, codingArena: totalProblems, challenges: totalQuestions },
+        problems: { total: totalProblems + totalTcsQuestions, codingArena: totalProblems, challenges: totalTcsQuestions },
         submissions: {
           total: totalSubs, accepted: acceptedSubs, thisWeek: subsThisWeek,
           acceptanceRate: totalSubs > 0 ? +((acceptedSubs / totalSubs) * 100).toFixed(1) : 0,
@@ -259,7 +259,7 @@ router.get('/analytics/submission-trends', async (req, res, next) => {
     const days = Math.min(90, Math.max(7, parseInt(String(req.query.days ?? '30'), 10)));
     const since = new Date(Date.now() - days * 86400000);
 
-    const subs = await prisma.submission.findMany({
+    const subs = await prisma.problemSubmission.findMany({
       where: { createdAt: { gte: since } },
       select: { createdAt: true, status: true },
     });
@@ -343,14 +343,14 @@ router.get('/analytics/students', async (req, res, next) => {
           id: true, firstName: true, lastName: true, email: true,
           avatar: true, isActive: true, lastLogin: true, createdAt: true,
           studentProfile: { select: { xp: true, level: true, streak: true } },
-          _count: { select: { submissions: true } },
+          _count: { select: { problemSubmissions: true } },
         },
       }),
       prisma.user.count({ where }),
     ]);
 
     const enriched = await Promise.all(users.map(async u => {
-      const accepted = await prisma.submission.count({ where: { userId: u.id, status: 'accepted' } });
+      const accepted = await prisma.problemSubmission.count({ where: { userId: u.id, status: 'accepted' } });
       return {
         id: u.id,
         name: `${u.firstName} ${u.lastName}`,
@@ -359,9 +359,9 @@ router.get('/analytics/students', async (req, res, next) => {
         xp: u.studentProfile?.xp ?? 0,
         level: u.studentProfile?.level ?? 1,
         streak: u.studentProfile?.streak ?? 0,
-        totalSubmissions: u._count.submissions,
+        totalSubmissions: u._count.problemSubmissions,
         acceptedSubmissions: accepted,
-        accuracy: u._count.submissions > 0 ? Math.round((accepted / u._count.submissions) * 100) : 0,
+        accuracy: u._count.problemSubmissions > 0 ? Math.round((accepted / u._count.problemSubmissions) * 100) : 0,
       };
     }));
 
@@ -387,9 +387,9 @@ router.get('/analytics/students/:id', async (req, res, next) => {
 
     const since30 = new Date(Date.now() - 30 * 86400000);
     const [allSubs, acceptedSubs, recent] = await Promise.all([
-      prisma.submission.count({ where: { userId: user.id } }),
-      prisma.submission.count({ where: { userId: user.id, status: 'accepted' } }),
-      prisma.submission.findMany({
+      prisma.problemSubmission.count({ where: { userId: user.id } }),
+      prisma.problemSubmission.count({ where: { userId: user.id, status: 'accepted' } }),
+      prisma.problemSubmission.findMany({
         where: { userId: user.id, createdAt: { gte: since30 } },
         select: { createdAt: true, status: true, language: true, problemId: true },
         orderBy: { createdAt: 'asc' },
@@ -414,7 +414,7 @@ router.get('/analytics/students/:id', async (req, res, next) => {
       .map(([lang, count]) => ({ lang, count })).sort((a, b) => b.count - a.count);
 
     // Topic stats
-    const solvedProblems = await prisma.submission.findMany({
+    const solvedProblems = await prisma.problemSubmission.findMany({
       where: { userId: user.id, status: 'accepted', problemId: { not: null } },
       select: { problemId: true }, distinct: ['problemId'],
     });
@@ -461,8 +461,8 @@ router.get('/analytics/leaderboard', async (req, res, next) => {
 
     const data = await Promise.all(profiles.map(async (p, i) => {
       const [total, accepted] = await Promise.all([
-        prisma.submission.count({ where: { userId: p.userId } }),
-        prisma.submission.count({ where: { userId: p.userId, status: 'accepted' } }),
+        prisma.problemSubmission.count({ where: { userId: p.userId } }),
+        prisma.problemSubmission.count({ where: { userId: p.userId, status: 'accepted' } }),
       ]);
       return {
         rank: i + 1,
@@ -484,7 +484,7 @@ router.get('/analytics/leaderboard', async (req, res, next) => {
 router.get('/analytics/difficulty-distribution', async (_req, res, next) => {
   try {
     const problems = await prisma.problem.findMany({ select: { difficulty: true } });
-    const questions = await prisma.question.findMany({ select: { difficulty: true } });
+    const tcsQuestions = await prisma.tcsNqtQuestion.findMany({ select: { difficulty: true } });
 
     const count = (arr: { difficulty: string }[]) => {
       const m: Record<string, number> = { easy: 0, medium: 0, hard: 0 };
@@ -492,6 +492,6 @@ router.get('/analytics/difficulty-distribution', async (_req, res, next) => {
       return Object.entries(m).map(([difficulty, count]) => ({ difficulty, count }));
     };
 
-    sendSuccess({ res, data: { codingArena: count(problems), challenges: count(questions) } });
+    sendSuccess({ res, data: { codingArena: count(problems), challenges: count(tcsQuestions) } });
   } catch (err) { next(err); }
 });

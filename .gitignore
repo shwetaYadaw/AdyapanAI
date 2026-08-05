@@ -21,8 +21,11 @@ __pycache__/
 .env.development
 .env.production
 .env.test
+backend/.env
 apps/backend/.env
+ai-service/.env
 apps/ai-service/.env
+frontend/.env
 apps/web/.env
 apps/web/.env.local
 
