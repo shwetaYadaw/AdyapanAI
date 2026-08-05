@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </main>
       </div>
       <Toaster
-        position="top-right"
+        position="top-center"
         toastOptions={{
           className: '!bg-white dark:!bg-gray-900 !text-gray-900 dark:!text-white !shadow-card !rounded-xl !border !border-gray-100 dark:!border-gray-800',
           duration: 4000,

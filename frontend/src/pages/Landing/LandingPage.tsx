@@ -27,7 +27,7 @@ export default function LandingPage() {
       backgroundColor: '#0F0F0F',
     }}>
       <Navbar />
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
 
       {/* Hero Section */}
       <section style={{

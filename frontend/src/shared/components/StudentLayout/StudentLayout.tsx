@@ -17,7 +17,7 @@ export default function StudentLayout({ children }: StudentLayoutProps) {
         {children}
       </main>
 
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
     </div>
   );
 }
