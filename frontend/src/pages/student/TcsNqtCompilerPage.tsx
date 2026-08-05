@@ -296,6 +296,15 @@ export default function TcsNqtCompilerPage() {
       
       if (template && template.code) {
         setEditorCode(template.code);
+      } else {
+        // Minimal starter code
+        const defaultTemplates: Record<string, string> = {
+          javascript: `// Write your solution here\n\n`,
+          python: `# Write your solution here\n\n`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}\n`,
+          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Write your solution here\n        \n    }\n}\n`,
+        };
+        setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
       }
       
       // Set testcase input from the first visible test case, or sampleInput
@@ -373,7 +382,7 @@ export default function TcsNqtCompilerPage() {
 
   // Mutation: Submit Code (all tests) - TCS NQT uses QuestionSubmission routes
   const submitCodeMutation = useMutation({
-    mutationFn: async (payload: { code: string; language: string }) => {
+    mutationFn: async (payload: { code: string; language: string; input?: string }) => {
       // TCS NQT questions use /question-submissions/:questionId/submit endpoint
       const questionId = question?.id || question?._id;
       const endpoint = `/question-submissions/${questionId}/submit`;
@@ -385,7 +394,8 @@ export default function TcsNqtCompilerPage() {
       setConsoleOpen(true);
       setConsoleTab('result');
       if (payload.status === 'accepted') {
-        toast.success(`ACCEPTED! Solution passed all test cases. +${question?.xpReward} XP!`);
+        const xp = payload.xpAwarded || question?.xpReward || 0;
+        toast.success(`ACCEPTED! ${xp > 0 ? `+${xp} XP!` : 'Solution passed!'}`);
         queryClient.invalidateQueries({ queryKey: ['tcsNqtStats'] });
         queryClient.invalidateQueries({ queryKey: ['tcsNqtQuestions'] });
         if (payload.unlockedBadge) {
@@ -417,7 +427,7 @@ export default function TcsNqtCompilerPage() {
   const handleSubmitCode = () => {
     setIsSubmitting(true);
     submitCodeMutation.mutate(
-      { code: editorCode, language: selectedLanguage },
+      { code: editorCode, language: selectedLanguage, input: customTestcaseInput },
       { onSettled: () => setIsSubmitting(false) }
     );
   };
