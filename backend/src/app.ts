@@ -37,6 +37,7 @@ import notificationRoutes from './routes/notification.routes';
 import uploadRoutes from './routes/upload.routes';
 import healthRoutes from './routes/health.routes';
 import adminSetupRoutes from './routes/admin-setup.routes';
+import courseRoutes from './routes/course.routes';
 
 export function createApp(): Application {
   const app = express();
@@ -126,6 +127,7 @@ export function createApp(): Application {
   app.use('/api/v1/question-submissions', questionSubmissionRoutes); // TCS NQT
   app.use('/api/v1/tcs-nqt', tcsNqtRoutes); // TCS NQT student-facing routes
   app.use('/api/v1/topics', topicStudentRoutes); // Public topics endpoint for students
+  app.use('/api/v1/courses', courseRoutes); // Course selection for students
   
   // Practice & Tests
   app.use('/api/v1/contests', contestRoutes);

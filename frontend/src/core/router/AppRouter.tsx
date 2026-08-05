@@ -25,6 +25,7 @@ const AptitudeStudentPage  = lazy(() => import('../../pages/student/AptitudeStud
 const AptitudeQuizPage     = lazy(() => import('../../pages/student/AptitudeQuizPage'));
 const TestAttemptPage      = lazy(() => import('../../pages/student/TestAttemptPage'));
 const CodingTopicPage      = lazy(() => import('../../pages/student/CodingTopicPage'));
+const CourseSelectionPage  = lazy(() => import('../../pages/student/CourseSelectionPage'));
 
 // Admin
 const AdminDashboard     = lazy(() => import('../../pages/admin/DashboardPage'));
@@ -62,6 +63,7 @@ export default function AppRouter() {
           <Route path="/student" element={<ProtectedRoute><RoleRoute roles={['student']} /></ProtectedRoute>}>
             <Route index element={<Navigate to="/student/dashboard" replace />} />
             <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="select-course" element={<CourseSelectionPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="certificates" element={<CertificatesPage />} />
             
