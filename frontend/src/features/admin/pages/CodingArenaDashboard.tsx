@@ -234,9 +234,11 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
 
           <div className="flex justify-between items-center mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Coding Arena Management</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                {courseName ? `${courseName} - Coding Arena` : 'Coding Arena Management'}
+              </h1>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
-                DSA & Interview Problems - Total: {pagination.total}
+                {courseName ? `Coding problems for ${courseName}` : 'DSA & Interview Problems'} - Total: {pagination.total}
               </p>
             </div>
             <div className="flex gap-2">

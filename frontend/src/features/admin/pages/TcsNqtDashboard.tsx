@@ -103,7 +103,8 @@ export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqt
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const result = await tcsNqtAdminService.getQuestions(filters);
+      const queryFilters = courseId ? { ...filters, courseId } : filters;
+      const result = await tcsNqtAdminService.getQuestions(queryFilters);
       if (result && result.questions) {
         setQuestions(result.questions as TcsQuestion[]);
         setPagination(result.pagination);
@@ -123,7 +124,8 @@ export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqt
 
   const handleCreateQuestion = async (question: TcsQuestion) => {
     try {
-      await tcsNqtAdminService.createQuestion(question);
+      const questionData = courseId ? { ...question, courseId } : question;
+      await tcsNqtAdminService.createQuestion(questionData);
       toast.success('Placement prep question created successfully!');
       setShowCreateModal(false);
       CacheManager.clearQuestionCache();
@@ -189,9 +191,11 @@ export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqt
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Placement Prep</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              {courseName ? `${courseName} - Placement Prep` : 'Placement Prep'}
+            </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
-              Total Questions: {pagination.total}
+              {courseName ? `Placement questions for ${courseName}` : 'Total Questions'}: {pagination.total}
             </p>
           </div>
           <div className="flex gap-3">

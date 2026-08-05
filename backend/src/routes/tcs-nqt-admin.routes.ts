@@ -27,6 +27,10 @@ router.get('/', async (req, res, next) => {
       where.difficulty = String(req.query.difficulty);
     }
 
+    if (req.query.courseId) {
+      where.courseId = String(req.query.courseId);
+    }
+
     if (req.query.search) {
       where.title = { contains: String(req.query.search), mode: 'insensitive' };
     }
