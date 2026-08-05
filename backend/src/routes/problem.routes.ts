@@ -522,7 +522,7 @@ router.post('/:id/submit', authenticate, async (req, res, next) => {
         },
       });
 
-      // Enqueue for processing
+      // Process submission synchronously (run all test cases and wait for result)
       await queueService.enqueue({
         submissionId: submission.id,
         problemId: problem.id,
@@ -530,11 +530,50 @@ router.post('/:id/submit', authenticate, async (req, res, next) => {
         language,
       });
 
-      sendSuccess({
-        res,
-        message: 'Submission enqueued successfully',
-        data: { submissionId: submission.id, status: 'pending' },
-      });
+      // Wait for processing to complete (poll for result)
+      let finalSubmission = await prisma.problemSubmission.findUnique({ where: { id: submission.id } });
+      const startTime = Date.now();
+      while (finalSubmission?.status === 'pending' && Date.now() - startTime < 60000) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        finalSubmission = await prisma.problemSubmission.findUnique({ where: { id: submission.id } });
+      }
+
+      if (!finalSubmission || finalSubmission.status === 'pending') {
+        sendSuccess({
+          res,
+          data: { submissionId: submission.id, status: 'pending', message: 'Still processing...' },
+        });
+      } else {
+        // Award XP info
+        let xpAwarded = 0;
+        if (finalSubmission.status === 'accepted') {
+          const previousAccepted = await prisma.problemSubmission.findFirst({
+            where: {
+              userId: req.user!.userId,
+              problemId: problem.id,
+              status: 'accepted',
+              id: { not: submission.id },
+              createdAt: { lt: finalSubmission.createdAt },
+            },
+          });
+          if (!previousAccepted) {
+            xpAwarded = problem.xpReward || 10;
+          }
+        }
+
+        sendSuccess({
+          res,
+          data: {
+            submissionId: submission.id,
+            status: finalSubmission.status,
+            passedCount: finalSubmission.passedCount,
+            totalCount: finalSubmission.totalCount,
+            runtime: finalSubmission.runtime,
+            errorMessage: finalSubmission.errorMessage,
+            xpAwarded,
+          },
+        });
+      }
     } else {
       // No test cases: run code directly with custom input and accept if it runs without errors
       const customInput = req.body.input || '';
