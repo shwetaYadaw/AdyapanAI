@@ -976,6 +976,9 @@ export default function CodingPortalPage() {
                           <div className="flex items-center gap-1.5 text-xxs text-gray-400">
                             <Clock className="w-3 h-3" />
                             <span>Execution Time: {executionOutput.runtime} ms</span>
+                            {executionOutput.passedCount !== undefined && executionOutput.totalCount !== undefined && (
+                              <span className="ml-3">Test Cases: {executionOutput.passedCount}/{executionOutput.totalCount} passed</span>
+                            )}
                           </div>
                         )}
 
