@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { DockerService } from './docker.service';
-import { LANGUAGE_CONFIGS } from '../config/languages';
+import { LANGUAGE_CONFIGS, getLanguageConfig } from '../config/languages';
 import { logger } from '../utils/logger';
 
 export class JudgeService {
@@ -24,9 +24,7 @@ export class JudgeService {
     errorMessage?: string;
   }> {
     const lang = language.toLowerCase();
-    const languageConfig = LANGUAGE_CONFIGS.find(
-      (config) => config.id === lang || config.name.toLowerCase() === lang
-    );
+    const languageConfig = getLanguageConfig(lang);
 
     if (!languageConfig) {
       return {
@@ -102,12 +100,22 @@ export class JudgeService {
 
     } catch (err: any) {
       logger.error('Docker execution error:', err.message || err);
+      
+      // Provide friendly error when Docker is not available
+      const msg = err.message || '';
+      let userMessage = 'Internal execution error';
+      if (msg.includes('ENOENT') || msg.includes('docker_engine') || msg.includes('ECONNREFUSED')) {
+        userMessage = 'Code execution service is not available. Please ensure Docker is running.';
+      } else {
+        userMessage = msg;
+      }
+      
       return {
         passed: false,
         actualOutput: '',
         runtime: 0,
         errorType: 'runtime_error',
-        errorMessage: err.message || 'Internal execution error',
+        errorMessage: userMessage,
       };
     }
   }
