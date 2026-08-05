@@ -612,10 +612,8 @@ router.post('/:id/submit', authenticate, async (req, res, next) => {
         if (!previousAccepted) {
           xpAwarded = problem.xpReward || 10;
           try {
-            await prisma.studentProfile.updateMany({
-              where: { userId: req.user!.userId },
-              data: { xp: { increment: xpAwarded } },
-            });
+            const { awardXP } = require('../utils/xp.utils');
+            await awardXP(req.user!.userId, xpAwarded);
           } catch (e) {
             // StudentProfile might not exist for admin users
           }

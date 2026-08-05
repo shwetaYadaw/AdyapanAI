@@ -1,4 +1,4 @@
-// @ts-nocheck
+﻿// @ts-nocheck
 import { Router } from 'express';
 import { prisma } from '../config/prisma';
 import { authenticate } from '../middleware/auth.middleware';
@@ -27,7 +27,7 @@ function detectHardcoding(code: string, expectedOutputs: string[]): boolean {
   return false;
 }
 
-// POST /question-submissions/:questionId/run — Run code with custom input
+// POST /question-submissions/:questionId/run â€” Run code with custom input
 router.post('/:questionId/run', authenticate, async (req, res, next) => {
   try {
     const { code, language, input } = req.body;
@@ -73,7 +73,7 @@ router.post('/:questionId/run', authenticate, async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// POST /question-submissions/:questionId/submit — Submit and judge solution
+// POST /question-submissions/:questionId/submit â€” Submit and judge solution
 router.post('/:questionId/submit', authenticate, async (req, res, next) => {
   try {
     const { code, language, input } = req.body;
@@ -145,7 +145,7 @@ router.post('/:questionId/submit', authenticate, async (req, res, next) => {
         if (!previousAccepted) {
           xpAwarded = question.xpReward || 10;
           try {
-            await prisma.studentProfile.updateMany({ where: { userId: req.user!.userId }, data: { xp: { increment: xpAwarded } } });
+            { const { awardXP } = require('../utils/xp.utils'); await awardXP(req.user!.userId, xpAwarded); }
           } catch (e) { /* profile may not exist for admin */ }
         }
       }
@@ -190,7 +190,7 @@ router.post('/:questionId/submit', authenticate, async (req, res, next) => {
         if (!prev) {
           xpAwarded = question.xpReward || 10;
           try {
-            await prisma.studentProfile.updateMany({ where: { userId: req.user!.userId }, data: { xp: { increment: xpAwarded } } });
+            { const { awardXP } = require('../utils/xp.utils'); await awardXP(req.user!.userId, xpAwarded); }
           } catch (e) { /* ignore */ }
         }
       }
@@ -213,3 +213,4 @@ router.post('/:questionId/submit', authenticate, async (req, res, next) => {
 });
 
 export default router;
+
