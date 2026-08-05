@@ -35,6 +35,7 @@
     "verify:data": "npx ts-node --transpile-only src/scripts/verifyDataIntegrity.ts",
     "seed:coding-arena": "npx ts-node --transpile-only scripts/seed-coding-arena-problems.ts",
     "seed:topics": "npx ts-node --transpile-only scripts/seed-topics.ts",
+    "seed:coding-topics": "npx ts-node --transpile-only scripts/seed-coding-topics.ts",
     "check:problems": "npx ts-node --transpile-only scripts/check-problems-status.ts",
     "fix:schema": "npx ts-node --transpile-only scripts/fix-problem-schema.ts",
     "build:docker-runners": "node scripts/build-docker-images.js"
