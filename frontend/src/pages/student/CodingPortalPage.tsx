@@ -298,16 +298,12 @@ export default function CodingPortalPage() {
       if (template && template.code) {
         setEditorCode(template.code);
       } else {
-        // Provide default starter code based on selected language
-        const title = question.title || 'Solution';
-        const funcName = title.replace(/[^a-zA-Z0-9]/g, '').charAt(0).toLowerCase() + title.replace(/[^a-zA-Z0-9]/g, '').slice(1);
-        const safeName = funcName.length > 20 ? 'solve' : funcName || 'solve';
-        
+        // Minimal starter code - just the bare essentials
         const defaultTemplates: Record<string, string> = {
-          javascript: `// ${question.title}\n// Read input from stdin and write output to stdout\n\nconst readline = require('readline');\nconst rl = readline.createInterface({ input: process.stdin });\nconst lines = [];\n\nrl.on('line', (line) => lines.push(line.trim()));\nrl.on('close', () => {\n  // Parse input\n  const n = parseInt(lines[0]);\n  const arr = lines[1].split(' ').map(Number);\n  \n  // Your solution here\n  function ${safeName}(n, arr) {\n    // Write your logic here\n    return 0;\n  }\n  \n  console.log(${safeName}(n, arr));\n});\n`,
-          python: `# ${question.title}\n# Read input from stdin and write output to stdout\n\nimport sys\ninput = sys.stdin.readline\n\ndef ${safeName}():\n    # Read input\n    n = int(input())\n    arr = list(map(int, input().split()))\n    \n    # Your solution here\n    result = 0\n    \n    print(result)\n\n${safeName}()\n`,
-          cpp: `// ${question.title}\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    cin >> n;\n    \n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) {\n        cin >> arr[i];\n    }\n    \n    // Your solution here\n    int result = 0;\n    \n    cout << result << endl;\n    return 0;\n}\n`,
-          java: `// ${question.title}\nimport java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        \n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) {\n            arr[i] = sc.nextInt();\n        }\n        \n        // Your solution here\n        int result = 0;\n        \n        System.out.println(result);\n        sc.close();\n    }\n}\n`,
+          javascript: `// Write your solution here\n\n`,
+          python: `# Write your solution here\n\n`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}\n`,
+          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Write your solution here\n        \n    }\n}\n`,
         };
         
         setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
@@ -388,9 +384,7 @@ export default function CodingPortalPage() {
 
   // Mutation: Submit Code (all tests) - Detects if Problem or Question table
   const submitCodeMutation = useMutation({
-    mutationFn: async (payload: { code: string; language: string }) => {
-      // If question has 'id' field, it's from Problem table, otherwise use slug
-      // Coding Arena uses /problems endpoint (Problem table)
+    mutationFn: async (payload: { code: string; language: string; input?: string }) => {
       const endpoint = `/problems/${slug}/submit`;
       return api.post(endpoint, payload);
     },
@@ -400,7 +394,8 @@ export default function CodingPortalPage() {
       setConsoleOpen(true);
       setConsoleTab('result');
       if (payload.status === 'accepted') {
-        toast.success(`ACCEPTED! Solution passed all test cases. +${question?.xpReward} XP!`);
+        const xp = payload.xpAwarded || question?.xpReward || 0;
+        toast.success(`ACCEPTED! ${xp > 0 ? `+${xp} XP!` : 'Solution passed!'}`);
         queryClient.invalidateQueries({ queryKey: ['codingStats'] });
         queryClient.invalidateQueries({ queryKey: ['codingQuestions'] });
         if (payload.unlockedBadge) {
@@ -432,7 +427,7 @@ export default function CodingPortalPage() {
   const handleSubmitCode = () => {
     setIsSubmitting(true);
     submitCodeMutation.mutate(
-      { code: editorCode, language: selectedLanguage },
+      { code: editorCode, language: selectedLanguage, input: customTestcaseInput },
       { onSettled: () => setIsSubmitting(false) }
     );
   };
@@ -452,16 +447,11 @@ export default function CodingPortalPage() {
       if (template && template.code) {
         setEditorCode(template.code);
       } else {
-        // Reset to default starter template
-        const title = question.title || 'Solution';
-        const funcName = title.replace(/[^a-zA-Z0-9]/g, '').charAt(0).toLowerCase() + title.replace(/[^a-zA-Z0-9]/g, '').slice(1);
-        const safeName = funcName.length > 20 ? 'solve' : funcName || 'solve';
-        
         const defaultTemplates: Record<string, string> = {
-          javascript: `// ${question.title}\nconst readline = require('readline');\nconst rl = readline.createInterface({ input: process.stdin });\nconst lines = [];\n\nrl.on('line', (line) => lines.push(line.trim()));\nrl.on('close', () => {\n  const n = parseInt(lines[0]);\n  const arr = lines[1].split(' ').map(Number);\n  \n  function ${safeName}(n, arr) {\n    // Write your logic here\n    return 0;\n  }\n  \n  console.log(${safeName}(n, arr));\n});\n`,
-          python: `# ${question.title}\nimport sys\ninput = sys.stdin.readline\n\ndef ${safeName}():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    \n    # Your solution here\n    result = 0\n    \n    print(result)\n\n${safeName}()\n`,
-          cpp: `// ${question.title}\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    cin >> n;\n    \n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) {\n        cin >> arr[i];\n    }\n    \n    // Your solution here\n    int result = 0;\n    \n    cout << result << endl;\n    return 0;\n}\n`,
-          java: `// ${question.title}\nimport java.util.*;\nimport java.io.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) {\n            arr[i] = sc.nextInt();\n        }\n        \n        // Your solution here\n        int result = 0;\n        \n        System.out.println(result);\n        sc.close();\n    }\n}\n`,
+          javascript: `// Write your solution here\n\n`,
+          python: `# Write your solution here\n\n`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}\n`,
+          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Write your solution here\n        \n    }\n}\n`,
         };
         setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
       }
@@ -647,10 +637,10 @@ export default function CodingPortalPage() {
                       formatted += `- Handling edge cases properly\n`;
                       formatted += `- Writing clean, readable code\n\n`;
                       
-                      // Reference Solution (if admin provided one)
+                      // Reference Solution hint (if admin provided one - show only as a hint, not full code)
                       if ((question as any).referenceSolution) {
                         formatted += `## 📝 Reference Solution\n\n`;
-                        formatted += `\`\`\`\n${(question as any).referenceSolution}\n\`\`\`\n\n`;
+                        formatted += `A reference solution is available. Try solving it yourself first!\n\n`;
                       }
                       
                       statement = formatted;
