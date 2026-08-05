@@ -46,6 +46,7 @@ model StudentProfile {
   level          Int       @default(1)
   streak         Int       @default(0)
   lastActiveDate DateTime?
+  course         String?   // Job role / course selection (e.g., "data-science", "full-stack-developer")
   skills         Json?
   resumeUrl      String?
   createdAt      DateTime  @default(now())
