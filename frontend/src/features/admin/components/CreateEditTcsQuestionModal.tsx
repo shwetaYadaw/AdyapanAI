@@ -63,8 +63,8 @@ export default function CreateEditTcsQuestionModal({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.title || !formData.statement || !formData.topic || !formData.difficulty) {
-      toast.error('Title, statement, difficulty, and topic are required');
+    if (!formData.title || !formData.statement || !formData.difficulty) {
+      toast.error('Title, statement, and difficulty are required');
       return;
     }
 
@@ -203,11 +203,11 @@ export default function CreateEditTcsQuestionModal({
             />
           </div>
 
-          {/* Topics & Companies */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Topics, Companies & Experience Level */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Topic *
+                Topic (optional)
               </label>
               {topicsLoading ? (
                 <div className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400">
@@ -220,7 +220,7 @@ export default function CreateEditTcsQuestionModal({
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >
-                  <option value="">-- Select a Topic --</option>
+                  <option value="">-- No Topic --</option>
                   {topics.map(topic => (
                     <option key={topic.id} value={topic.name}>
                       {topic.name}
@@ -228,6 +228,20 @@ export default function CreateEditTcsQuestionModal({
                   ))}
                 </select>
               )}
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Experience Level *
+              </label>
+              <select
+                name="experienceLevel"
+                value={(formData as any).experienceLevel || 'freshers'}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option value="freshers">Freshers</option>
+                <option value="experienced">Experienced</option>
+              </select>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">

@@ -78,5 +78,10 @@ export function globalErrorHandler(
   }
 
   // Default: unknown server error
-  sendError({ res, statusCode: 500, message: 'Internal server error' });
+  const isDev = process.env.NODE_ENV !== 'production';
+  sendError({
+    res,
+    statusCode: 500,
+    message: isDev ? `Server error: ${err.message}` : 'Something went wrong. Please try again.',
+  });
 }
