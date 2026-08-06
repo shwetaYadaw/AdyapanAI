@@ -16,7 +16,6 @@ export default function TopicManagementModal({ system, onClose }: TopicManagemen
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState('');
   const [editDescription, setEditDescription] = useState('');
-  const [seeding, setSeeding] = useState(false);
 
   // Fetch topics on mount
   useEffect(() => {
@@ -135,21 +134,6 @@ export default function TopicManagementModal({ system, onClose }: TopicManagemen
     }
   };
 
-  const handleSeedTopics = async () => {
-    if (!confirm('This will add predefined topics for all systems. Continue?')) return;
-
-    try {
-      setSeeding(true);
-      const result = await topicAdminService.seedTopics();
-      toast.success(`Seeded ${result?.created || 0} topics successfully!`);
-      fetchTopics(); // Refresh the list
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to seed topics');
-    } finally {
-      setSeeding(false);
-    }
-  };
-
   const systemLabel = system === 'coding-arena' ? 'Coding Arena' : system === 'tcs-nqt' ? 'Placement Prep' : 'Aptitude';
   const systemColor = system === 'coding-arena' ? 'blue' : system === 'tcs-nqt' ? 'orange' : 'green';
 
@@ -210,18 +194,6 @@ export default function TopicManagementModal({ system, onClose }: TopicManagemen
               <h3 className="font-semibold text-gray-900 dark:text-white">
                 Topics ({topics.length})
               </h3>
-              
-              {/* Seed Topics Button */}
-              {topics.length === 0 && (
-                <button
-                  onClick={handleSeedTopics}
-                  disabled={seeding}
-                  className="flex items-center gap-2 px-3 py-1.5 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition disabled:opacity-50"
-                >
-                  <Plus size={16} />
-                  {seeding ? 'Seeding...' : 'Seed Initial Topics'}
-                </button>
-              )}
             </div>
 
             {loading ? (

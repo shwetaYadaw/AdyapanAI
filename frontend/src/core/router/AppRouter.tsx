@@ -22,6 +22,8 @@ const ContestsPage         = lazy(() => import('../../pages/student/ContestsPage
 const TcsNqtPrepPage       = lazy(() => import('../../pages/student/TcsNqtPrepPage'));
 const TcsNqtCompilerPage   = lazy(() => import('../../pages/student/TcsNqtCompilerPage'));
 const AptitudeStudentPage  = lazy(() => import('../../pages/student/AptitudeStudentPage'));
+const AptitudePrepPage     = lazy(() => import('../../pages/student/AptitudePrepPage'));
+const AptitudePracticePage = lazy(() => import('../../pages/student/AptitudePracticePage'));
 const AptitudeQuizPage     = lazy(() => import('../../pages/student/AptitudeQuizPage'));
 const TestAttemptPage      = lazy(() => import('../../pages/student/TestAttemptPage'));
 const CodingTopicPage      = lazy(() => import('../../pages/student/CodingTopicPage'));
@@ -38,6 +40,8 @@ const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
 const DualAdminDashboard = lazy(() => import('../../features/admin/pages/AdminDashboard'));
 const AptitudeManagementPage = lazy(() => import('../../features/admin/pages/AptitudeManagementPage'));
+const AptitudeQuestionsPage  = lazy(() => import('../../pages/admin/AptitudeQuestionsPage'));
+const AptitudeTopicPracticePage = lazy(() => import('../../pages/admin/AptitudeTopicPracticePage'));
 
 // Public
 const CertVerifyPage     = lazy(() => import('../../pages/public/CertificateVerifyPage'));
@@ -80,7 +84,9 @@ export default function AppRouter() {
             <Route path="tcs-nqt/:slug" element={<TcsNqtCompilerPage />} />
             
             {/* Aptitude Preparation */}
-            <Route path="aptitude" element={<AptitudeStudentPage />} />
+            <Route path="aptitude" element={<AptitudePrepPage />} />
+            <Route path="aptitude/topic/:topicId/practice" element={<AptitudePracticePage />} />
+            <Route path="aptitude/practice/:module/:topicSlug" element={<AptitudePracticePage />} />
             <Route path="aptitude/:module/:topicSlug" element={<AptitudeQuizPage />} />
             <Route path="tests/:testId" element={<TestAttemptPage />} />
           </Route>
@@ -94,6 +100,8 @@ export default function AppRouter() {
             <Route path="contests" element={<AdminContestsPage />} />
             <Route path="problems" element={<AdminProblemsPage />} />
             <Route path="aptitude" element={<AptitudeManagementPage />} />
+            <Route path="aptitude/topics/:topicId/practice" element={<AptitudeTopicPracticePage />} />
+            <Route path="aptitude/topics/:topicId/questions" element={<AptitudeQuestionsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="security" element={<AdminSecurityPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />

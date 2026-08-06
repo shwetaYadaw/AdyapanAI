@@ -6,334 +6,169 @@ import { sendSuccess } from '../utils/response.utils';
 import { AppError } from '../middleware/errorHandler.middleware';
 
 const router = Router();
-
-// Apply auth and admin authorization
 router.use(authenticate, authorize('admin'));
 
-/**
- * POST /admin/aptitude/seed
- * Seeds sample aptitude data with topics, chapters, and questions
- */
+// ─── Complete topic catalogue ─────────────────────────────────────────────────
+
+const DEFAULT_TOPICS: Array<{ section: string; name: string; icon: string; order: number }> = [
+  // ── Verbal Ability (20 topics) ──────────────────────────────────────────────
+  { section: 'Verbal Ability', name: 'Verbal Analogies',           icon: '🔤', order: 1 },
+  { section: 'Verbal Ability', name: 'Synonyms',                   icon: '📖', order: 2 },
+  { section: 'Verbal Ability', name: 'Antonyms',                   icon: '📝', order: 3 },
+  { section: 'Verbal Ability', name: 'Sentence Completion',        icon: '✍️', order: 4 },
+  { section: 'Verbal Ability', name: 'Sentence Correction',        icon: '✏️', order: 5 },
+  { section: 'Verbal Ability', name: 'Spotting Errors',            icon: '🔍', order: 6 },
+  { section: 'Verbal Ability', name: 'Selecting Words',            icon: '🎯', order: 7 },
+  { section: 'Verbal Ability', name: 'Ordering of Words',          icon: '🗂️', order: 8 },
+  { section: 'Verbal Ability', name: 'Ordering of Sentences',      icon: '📋', order: 9 },
+  { section: 'Verbal Ability', name: 'Paragraph Formation',        icon: '📄', order: 10 },
+  { section: 'Verbal Ability', name: 'Logical Sequence of Words',  icon: '🔗', order: 11 },
+  { section: 'Verbal Ability', name: 'Idioms and Phrases',         icon: '💬', order: 12 },
+  { section: 'Verbal Ability', name: 'One Word Substitution',      icon: '📚', order: 13 },
+  { section: 'Verbal Ability', name: 'Change of Voice',            icon: '🎙️', order: 14 },
+  { section: 'Verbal Ability', name: 'Direct and Indirect Speech', icon: '💭', order: 15 },
+  { section: 'Verbal Ability', name: 'Verbal Classification',      icon: '🏷️', order: 16 },
+  { section: 'Verbal Ability', name: 'Essential Part',             icon: '🔑', order: 17 },
+  { section: 'Verbal Ability', name: 'Letter and Symbol Series',   icon: '🔡', order: 18 },
+  { section: 'Verbal Ability', name: 'Verbal Reasoning',           icon: '🧩', order: 19 },
+  { section: 'Verbal Ability', name: 'Reading Comprehension',      icon: '📰', order: 20 },
+
+  // ── Numerical Ability (33 topics) ───────────────────────────────────────────
+  { section: 'Numerical Ability', name: 'Numbers',                 icon: '🔢', order: 1 },
+  { section: 'Numerical Ability', name: 'HCF and LCM',            icon: '📐', order: 2 },
+  { section: 'Numerical Ability', name: 'Decimal Fractions',       icon: '➗', order: 3 },
+  { section: 'Numerical Ability', name: 'Simplification',          icon: '🔣', order: 4 },
+  { section: 'Numerical Ability', name: 'Square Roots',            icon: '√',  order: 5 },
+  { section: 'Numerical Ability', name: 'Cube Roots',              icon: '∛',  order: 6 },
+  { section: 'Numerical Ability', name: 'Average',                 icon: '📊', order: 7 },
+  { section: 'Numerical Ability', name: 'Problems on Numbers',     icon: '🔢', order: 8 },
+  { section: 'Numerical Ability', name: 'Problems on Ages',        icon: '👥', order: 9 },
+  { section: 'Numerical Ability', name: 'Surds and Indices',       icon: '📈', order: 10 },
+  { section: 'Numerical Ability', name: 'Percentage',              icon: '💯', order: 11 },
+  { section: 'Numerical Ability', name: 'Profit and Loss',         icon: '💰', order: 12 },
+  { section: 'Numerical Ability', name: 'Ratio and Proportion',    icon: '⚖️', order: 13 },
+  { section: 'Numerical Ability', name: 'Partnership',             icon: '🤝', order: 14 },
+  { section: 'Numerical Ability', name: 'Chain Rule',              icon: '⛓️', order: 15 },
+  { section: 'Numerical Ability', name: 'Time and Work',           icon: '⏱️', order: 16 },
+  { section: 'Numerical Ability', name: 'Pipes and Cisterns',      icon: '🚰', order: 17 },
+  { section: 'Numerical Ability', name: 'Time and Distance',       icon: '🚗', order: 18 },
+  { section: 'Numerical Ability', name: 'Boats and Streams',       icon: '🚣', order: 19 },
+  { section: 'Numerical Ability', name: 'Problems on Trains',      icon: '🚂', order: 20 },
+  { section: 'Numerical Ability', name: 'Alligation and Mixture',  icon: '🧪', order: 21 },
+  { section: 'Numerical Ability', name: 'Simple Interest',         icon: '🏦', order: 22 },
+  { section: 'Numerical Ability', name: 'Compound Interest',       icon: '📈', order: 23 },
+  { section: 'Numerical Ability', name: 'Logarithms',              icon: '🔬', order: 24 },
+  { section: 'Numerical Ability', name: 'Area',                    icon: '📏', order: 25 },
+  { section: 'Numerical Ability', name: 'Volume and Surface Area', icon: '📦', order: 26 },
+  { section: 'Numerical Ability', name: 'Races and Games',         icon: '🏁', order: 27 },
+  { section: 'Numerical Ability', name: 'Calendar',                icon: '📅', order: 28 },
+  { section: 'Numerical Ability', name: 'Clock',                   icon: '🕐', order: 29 },
+  { section: 'Numerical Ability', name: 'Stocks and Shares',       icon: '📉', order: 30 },
+  { section: 'Numerical Ability', name: 'True Discount',           icon: '💸', order: 31 },
+  { section: 'Numerical Ability', name: "Banker's Discount",       icon: '🏧', order: 32 },
+  { section: 'Numerical Ability', name: 'Data Interpretation',     icon: '📊', order: 33 },
+
+  // ── Logical Reasoning (30 topics) ───────────────────────────────────────────
+  { section: 'Logical Reasoning', name: 'Statement and Conclusion', icon: '💡', order: 1 },
+  { section: 'Logical Reasoning', name: 'Statement and Assumption', icon: '🤔', order: 2 },
+  { section: 'Logical Reasoning', name: 'Statement and Argument',   icon: '⚔️', order: 3 },
+  { section: 'Logical Reasoning', name: 'Course of Action',         icon: '🎬', order: 4 },
+  { section: 'Logical Reasoning', name: 'Cause and Effect',         icon: '🔄', order: 5 },
+  { section: 'Logical Reasoning', name: 'Assertion and Reason',     icon: '📌', order: 6 },
+  { section: 'Logical Reasoning', name: 'Syllogism',                icon: '🧩', order: 7 },
+  { section: 'Logical Reasoning', name: 'Blood Relations',          icon: '👨‍👩‍👧', order: 8 },
+  { section: 'Logical Reasoning', name: 'Direction Sense Test',     icon: '🧭', order: 9 },
+  { section: 'Logical Reasoning', name: 'Coding-Decoding',          icon: '🔐', order: 10 },
+  { section: 'Logical Reasoning', name: 'Number Series',            icon: '🔢', order: 11 },
+  { section: 'Logical Reasoning', name: 'Alphabet Series',          icon: '🔡', order: 12 },
+  { section: 'Logical Reasoning', name: 'Letter Series',            icon: '✉️', order: 13 },
+  { section: 'Logical Reasoning', name: 'Analogy',                  icon: '🔗', order: 14 },
+  { section: 'Logical Reasoning', name: 'Classification',           icon: '📋', order: 15 },
+  { section: 'Logical Reasoning', name: 'Ranking Test',             icon: '🏅', order: 16 },
+  { section: 'Logical Reasoning', name: 'Seating Arrangement',      icon: '🪑', order: 17 },
+  { section: 'Logical Reasoning', name: 'Puzzle Test',              icon: '🧠', order: 18 },
+  { section: 'Logical Reasoning', name: 'Data Sufficiency',         icon: '📊', order: 19 },
+  { section: 'Logical Reasoning', name: 'Decision Making',          icon: '⚖️', order: 20 },
+  { section: 'Logical Reasoning', name: 'Mirror Images',            icon: '🪞', order: 21 },
+  { section: 'Logical Reasoning', name: 'Water Images',             icon: '💧', order: 22 },
+  { section: 'Logical Reasoning', name: 'Embedded Figures',         icon: '🔲', order: 23 },
+  { section: 'Logical Reasoning', name: 'Figure Classification',    icon: '🖼️', order: 24 },
+  { section: 'Logical Reasoning', name: 'Figure Series',            icon: '📐', order: 25 },
+  { section: 'Logical Reasoning', name: 'Paper Folding',            icon: '📃', order: 26 },
+  { section: 'Logical Reasoning', name: 'Paper Cutting',            icon: '✂️', order: 27 },
+  { section: 'Logical Reasoning', name: 'Cube and Dice',            icon: '🎲', order: 28 },
+  { section: 'Logical Reasoning', name: 'Completion of Figures',    icon: '🖌️', order: 29 },
+  { section: 'Logical Reasoning', name: 'Pattern Recognition',      icon: '👁️', order: 30 },
+];
+
+// ─── POST /admin/aptitude/seed — Seed all default topics (DB must be empty) ──
+
 router.post('/seed', async (req, res, next) => {
   try {
-    // Check if data already exists
-    const existingTopics = await prisma.aptitudeTopic.count();
-    if (existingTopics > 0) {
-      throw new AppError('Aptitude data already exists. Please delete existing data first.', 409);
+    const existingCount = await prisma.aptitudeTopic.count();
+    if (existingCount > 0) {
+      throw new AppError(`Aptitude data already exists (${existingCount} topics). Use /seed/safe to add missing ones.`, 409);
     }
 
-    // Create Topics
-    const topics = await Promise.all([
-      prisma.aptitudeTopic.create({
-        data: {
-          name: 'Quantitative Aptitude',
-          description: 'Mathematical and numerical reasoning questions',
-          icon: '🔢',
-          order: 1,
-        },
-      }),
-      prisma.aptitudeTopic.create({
-        data: {
-          name: 'Logical Reasoning',
-          description: 'Analytical and logical thinking questions',
-          icon: '🧠',
-          order: 2,
-        },
-      }),
-      prisma.aptitudeTopic.create({
-        data: {
-          name: 'Verbal Reasoning',
-          description: 'Language and comprehension based questions',
-          icon: '📚',
-          order: 3,
-        },
-      }),
-    ]);
-
-    // Create Chapters for Quantitative Aptitude
-    const quantChapters = await Promise.all([
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[0].id,
-          name: 'Train Problems',
-          description: 'Problems related to trains, speed, and distance',
-          order: 1,
-        },
-      }),
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[0].id,
-          name: 'Speed & Distance',
-          description: 'Speed, distance, and time problems',
-          order: 2,
-        },
-      }),
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[0].id,
-          name: 'Time & Work',
-          description: 'Time and work related problems',
-          order: 3,
-        },
-      }),
-    ]);
-
-    // Create Chapters for Logical Reasoning
-    const logicChapters = await Promise.all([
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[1].id,
-          name: 'Series',
-          description: 'Number and letter series problems',
-          order: 1,
-        },
-      }),
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[1].id,
-          name: 'Analogy',
-          description: 'Analogy based problems',
-          order: 2,
-        },
-      }),
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[1].id,
-          name: 'Puzzles',
-          description: 'Logic puzzles and problem solving',
-          order: 3,
-        },
-      }),
-    ]);
-
-    // Create Chapters for Verbal Reasoning
-    const verbalChapters = await Promise.all([
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[2].id,
-          name: 'Reading Comprehension',
-          description: 'Passage comprehension and understanding',
-          order: 1,
-        },
-      }),
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[2].id,
-          name: 'Vocabulary',
-          description: 'Word meanings and usage',
-          order: 2,
-        },
-      }),
-      prisma.aptitudeChapter.create({
-        data: {
-          topicId: topics[2].id,
-          name: 'Grammar',
-          description: 'Grammar rules and sentence structure',
-          order: 3,
-        },
-      }),
-    ]);
-
-    // Sample Question 1: Train Problem
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: quantChapters[0].id,
-        statement: 'A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?',
-        difficulty: 'easy',
-        correctOption: 'A',
-        explanation:
-          'Speed = 60 km/hr = 60 × (5/18) = 16.67 m/s. Time = 9 seconds. Distance = Speed × Time = 16.67 × 9 = 150 metres',
-        xpReward: 10,
-        companies: 'TCS,Infosys,Wipro',
-        timeLimit: 60,
-        options: {
-          create: [
-            { optionKey: 'A', text: '150 metres', isCorrect: true, order: 0 },
-            { optionKey: 'B', text: '120 metres', isCorrect: false, order: 1 },
-            { optionKey: 'C', text: '180 metres', isCorrect: false, order: 2 },
-            { optionKey: 'D', text: '324 metres', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
-    });
-
-    // Sample Question 2: Train Problem
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: quantChapters[0].id,
-        statement: 'Two trains are running in opposite directions at speeds of 50 km/hr and 70 km/hr. If they are 200 km apart, how long will it take for them to meet?',
-        difficulty: 'medium',
-        correctOption: 'B',
-        explanation:
-          'When two trains move in opposite directions, relative speed = 50 + 70 = 120 km/hr. Time = Distance / Speed = 200 / 120 = 1.67 hours = 100 minutes',
-        xpReward: 15,
-        companies: 'TCS,Infosys',
-        timeLimit: 90,
-        options: {
-          create: [
-            { optionKey: 'A', text: '1 hour', isCorrect: false, order: 0 },
-            { optionKey: 'B', text: '1 hour 40 minutes', isCorrect: true, order: 1 },
-            { optionKey: 'C', text: '2 hours', isCorrect: false, order: 2 },
-            { optionKey: 'D', text: '2 hours 30 minutes', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
-    });
-
-    // Sample Question 3: Series Problem
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: logicChapters[0].id,
-        statement: 'What is the next number in the series? 2, 6, 12, 20, 30, ?',
-        difficulty: 'easy',
-        correctOption: 'C',
-        explanation: 'The pattern is: 1×2, 2×3, 3×4, 4×5, 5×6, 6×7. So the answer is 6×7 = 42',
-        xpReward: 10,
-        companies: 'TCS,Infosys,Wipro,HCL',
-        timeLimit: 45,
-        options: {
-          create: [
-            { optionKey: 'A', text: '36', isCorrect: false, order: 0 },
-            { optionKey: 'B', text: '40', isCorrect: false, order: 1 },
-            { optionKey: 'C', text: '42', isCorrect: true, order: 2 },
-            { optionKey: 'D', text: '48', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
-    });
-
-    // Sample Question 4: Analogy Problem
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: logicChapters[1].id,
-        statement: 'Flower : Vase :: _____ : Pot',
-        difficulty: 'easy',
-        correctOption: 'A',
-        explanation: 'A flower is kept in a vase, similarly, a plant is kept in a pot.',
-        xpReward: 10,
-        companies: 'TCS,Infosys',
-        timeLimit: 40,
-        options: {
-          create: [
-            { optionKey: 'A', text: 'Plant', isCorrect: true, order: 0 },
-            { optionKey: 'B', text: 'Seed', isCorrect: false, order: 1 },
-            { optionKey: 'C', text: 'Soil', isCorrect: false, order: 2 },
-            { optionKey: 'D', text: 'Water', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
-    });
-
-    // Sample Question 5: Reading Comprehension
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: verbalChapters[0].id,
-        statement:
-          'Passage: "The Internet has revolutionized the way we communicate. It has made the world smaller and connected billions of people." What has the Internet made according to the passage?',
-        difficulty: 'easy',
-        correctOption: 'B',
-        explanation: 'The passage clearly states: "It has made the world smaller and connected billions of people."',
-        xpReward: 10,
-        companies: 'TCS,Infosys,Wipro',
-        timeLimit: 50,
-        options: {
-          create: [
-            { optionKey: 'A', text: 'Better communication', isCorrect: false, order: 0 },
-            { optionKey: 'B', text: 'The world smaller and connected billions', isCorrect: true, order: 1 },
-            { optionKey: 'C', text: 'Technology advanced', isCorrect: false, order: 2 },
-            { optionKey: 'D', text: 'Schools more efficient', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
-    });
-
-    // Sample Question 6: Vocabulary
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: verbalChapters[1].id,
-        statement: 'What does "Pragmatic" mean?',
-        difficulty: 'medium',
-        correctOption: 'C',
-        explanation: 'Pragmatic means dealing with things in a practical, realistic way based on actual circumstances rather than theory.',
-        xpReward: 15,
-        companies: 'TCS,Infosys,Wipro,HCL',
-        timeLimit: 40,
-        options: {
-          create: [
-            { optionKey: 'A', text: 'Theoretical and abstract', isCorrect: false, order: 0 },
-            { optionKey: 'B', text: 'Emotional and sentimental', isCorrect: false, order: 1 },
-            { optionKey: 'C', text: 'Practical and realistic', isCorrect: true, order: 2 },
-            { optionKey: 'D', text: 'Loud and aggressive', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
-    });
-
-    // Sample Question 7: Speed & Distance
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: quantChapters[1].id,
-        statement: 'A car travels 120 km in 2 hours and 30 minutes. What is its speed?',
-        difficulty: 'easy',
-        correctOption: 'A',
-        explanation: 'Speed = Distance / Time = 120 km / 2.5 hours = 48 km/hr',
-        xpReward: 10,
-        companies: 'TCS,Infosys',
-        timeLimit: 45,
-        options: {
-          create: [
-            { optionKey: 'A', text: '48 km/hr', isCorrect: true, order: 0 },
-            { optionKey: 'B', text: '50 km/hr', isCorrect: false, order: 1 },
-            { optionKey: 'C', text: '52 km/hr', isCorrect: false, order: 2 },
-            { optionKey: 'D', text: '60 km/hr', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
-    });
-
-    // Sample Question 8: Grammar
-    await prisma.aptitudeQuestion.create({
-      data: {
-        chapterId: verbalChapters[2].id,
-        statement: 'Choose the grammatically correct sentence:',
-        difficulty: 'medium',
-        correctOption: 'B',
-        explanation: 'The correct tense and structure is "He has been working here for five years."',
-        xpReward: 15,
-        companies: 'TCS,Infosys,Wipro',
-        timeLimit: 40,
-        options: {
-          create: [
-            { optionKey: 'A', text: 'He is working here for five years', isCorrect: false, order: 0 },
-            { optionKey: 'B', text: 'He has been working here for five years', isCorrect: true, order: 1 },
-            { optionKey: 'C', text: 'He works here for five years', isCorrect: false, order: 2 },
-            { optionKey: 'D', text: 'He was working here for five years', isCorrect: false, order: 3 },
-          ],
-        },
-      },
-      include: { options: true },
+    const created = await prisma.aptitudeTopic.createMany({
+      data: DEFAULT_TOPICS.map((t) => ({
+        name: t.name,
+        section: t.section,
+        icon: t.icon,
+        order: t.order,
+        createdBy: req.user?.userId,
+      })),
+      skipDuplicates: true,
     });
 
     sendSuccess({
       res,
       statusCode: 201,
-      data: {
-        topics: topics.length,
-        chapters: (await prisma.aptitudeChapter.count()),
-        questions: (await prisma.aptitudeQuestion.count()),
-      },
-      message: `Aptitude seed data created successfully! ${topics.length} topics, ${await prisma.aptitudeChapter.count()} chapters, and ${await prisma.aptitudeQuestion.count()} questions.`,
+      data: { created: created.count, total: DEFAULT_TOPICS.length },
+      message: `Seeded ${created.count} topics (${DEFAULT_TOPICS.filter(t => t.section === 'Verbal Ability').length} Verbal, ${DEFAULT_TOPICS.filter(t => t.section === 'Numerical Ability').length} Numerical, ${DEFAULT_TOPICS.filter(t => t.section === 'Logical Reasoning').length} Logical)`,
     });
-  } catch (err) {
-    next(err);
-  }
+  } catch (err) { next(err); }
+});
+
+// ─── POST /admin/aptitude/seed/safe — Add only missing topics ────────────────
+
+router.post('/seed/safe', async (req, res, next) => {
+  try {
+    const existing = await prisma.aptitudeTopic.findMany({ select: { name: true } });
+    const existingNames = new Set(existing.map((t) => t.name));
+    const missing = DEFAULT_TOPICS.filter((t) => !existingNames.has(t.name));
+
+    if (missing.length === 0) {
+      return sendSuccess({ res, data: { created: 0, skipped: existing.length }, message: 'All topics already exist' });
+    }
+
+    const created = await prisma.aptitudeTopic.createMany({
+      data: missing.map((t) => ({
+        name: t.name,
+        section: t.section,
+        icon: t.icon,
+        order: t.order,
+        createdBy: req.user?.userId,
+      })),
+      skipDuplicates: true,
+    });
+
+    sendSuccess({
+      res,
+      statusCode: 201,
+      data: { created: created.count, skipped: existing.length, total: DEFAULT_TOPICS.length },
+      message: `Added ${created.count} missing topics`,
+    });
+  } catch (err) { next(err); }
+});
+
+// ─── DELETE /admin/aptitude/seed — Wipe all aptitude data ────────────────────
+
+router.delete('/seed', async (req, res, next) => {
+  try {
+    const deleted = await prisma.aptitudeTopic.deleteMany({});
+    sendSuccess({ res, data: { deleted: deleted.count }, message: `Deleted ${deleted.count} topics and all cascaded data` });
+  } catch (err) { next(err); }
 });
 
 export default router;

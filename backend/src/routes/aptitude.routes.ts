@@ -299,7 +299,7 @@ router.get('/stats', authenticate, async (req, res, next) => {
     const accuracy = totalAttempts > 0 ? ((correctAnswers / totalAttempts) * 100).toFixed(2) : '0';
 
     const byDifficulty = await prisma.aptitudeSubmission.groupBy({
-      by: ['question'],
+      by: ['questionId'],
       where: { userId },
       _count: true,
     });

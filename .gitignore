@@ -28,7 +28,6 @@ apps/ai-service/.env
 frontend/.env
 apps/web/.env
 apps/web/.env.local
-
 # Logs
 logs/
 *.log
