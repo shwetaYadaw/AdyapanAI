@@ -201,22 +201,47 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
             {problems.length === 0 && <button onClick={() => setShowAddForm(true)} className="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm">+ Add First Problem</button>}
           </div>
         ) : (
-          <div className="space-y-3">
-            {paginated.map((p: any) => (
-              <div key={p.id} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 flex items-center justify-between hover:shadow-sm transition">
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{p.title}</h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${p.difficulty === 'hard' ? 'bg-red-100 text-red-600' : p.difficulty === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>{p.difficulty}</span>
-                    {(p.topics || p.topic) && <span className="text-[10px] text-gray-400">{p.topics || p.topic}</span>}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => startEdit(p)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={15} /></button>
-                  <button onClick={() => handleDeleteProblem(p.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={15} /></button>
-                </div>
-              </div>
-            ))}
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-4 py-3 font-semibold text-gray-600 dark:text-gray-400">Title</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Difficulty</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Topic</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Success Rate</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Attempts</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Status</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {paginated.map((p: any) => (
+                  <tr key={p.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition">
+                    <td className="px-4 py-3">
+                      <div>
+                        <p className="font-semibold text-gray-900 dark:text-white">{p.title}</p>
+                        <p className="text-[10px] text-gray-400">{p.slug}</p>
+                      </div>
+                    </td>
+                    <td className="text-center px-3 py-3">
+                      <span className={`text-xs px-2.5 py-1 rounded-full font-bold ${p.difficulty === 'hard' ? 'bg-red-100 text-red-600' : p.difficulty === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>{p.difficulty}</span>
+                    </td>
+                    <td className="text-center px-3 py-3 text-xs text-gray-600 dark:text-gray-400">{p.topics || p.topic || '-'}</td>
+                    <td className="text-center px-3 py-3 text-xs text-gray-600">{p.successRate || '0.0'}%</td>
+                    <td className="text-center px-3 py-3 text-xs text-gray-600">{p.totalAttempts || 0}</td>
+                    <td className="text-center px-3 py-3">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">{p.isArchived ? 'Archived' : 'Active'}</span>
+                    </td>
+                    <td className="text-center px-3 py-3">
+                      <div className="flex items-center justify-center gap-1">
+                        <button onClick={() => startEdit(p)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"><Edit2 size={14} /></button>
+                        <button onClick={() => handleDeleteProblem(p.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded"><Trash2 size={14} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
 
