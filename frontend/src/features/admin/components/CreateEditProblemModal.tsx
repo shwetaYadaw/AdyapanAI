@@ -105,8 +105,6 @@ export default function CreateEditProblemModal({
     }));
   };
 
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
