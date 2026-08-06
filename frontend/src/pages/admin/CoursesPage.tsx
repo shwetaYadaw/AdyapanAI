@@ -94,15 +94,14 @@ export default function AdminCoursesPage() {
                 <Code2 size={24} className="text-blue-600" />
               </div>
               <div>
-                <h2 className="font-bold text-gray-900 dark:text-white">Coding Arena</h2>
-                <p className="text-xs text-gray-500">Add & manage coding problems</p>
+                <h2 className="font-bold text-gray-900 dark:text-white">{selectedCourse.name} - Coding Arena</h2>
+                <p className="text-xs text-gray-500">Add & manage coding problems for {selectedCourse.name}</p>
               </div>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Add coding problems for <strong>{selectedCourse.name}</strong> students.
-              {selectedCourse.languages.length > 0 && <> Languages: <strong>{selectedCourse.languages.join(', ')}</strong></>}
+              {selectedCourse.languages.length > 0 ? <>Coding problems in: <strong>{selectedCourse.languages.join(', ')}</strong></> : 'Add coding problems for this course'}
             </p>
-            <div className="flex items-center gap-2 text-blue-600 font-semibold text-sm"><Plus size={16} /> Manage Coding Problems</div>
+            <div className="flex items-center gap-2 text-blue-600 font-semibold text-sm"><Plus size={16} /> Manage {selectedCourse.name} Coding Problems</div>
           </div>
 
           <div onClick={() => goToSection('placement-prep')} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6 cursor-pointer hover:shadow-lg hover:border-orange-400 transition-all group">
@@ -111,15 +110,14 @@ export default function AdminCoursesPage() {
                 <Trophy size={24} className="text-orange-600" />
               </div>
               <div>
-                <h2 className="font-bold text-gray-900 dark:text-white">Placement Prep</h2>
-                <p className="text-xs text-gray-500">Add placement questions</p>
+                <h2 className="font-bold text-gray-900 dark:text-white">{selectedCourse.name} - Placement Prep</h2>
+                <p className="text-xs text-gray-500">Add placement questions for {selectedCourse.name}</p>
               </div>
             </div>
             <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-              Add placement questions for <strong>{selectedCourse.name}</strong> roles.
-              {selectedCourse.technologies.length > 0 && <> Focus: <strong>{selectedCourse.technologies.join(', ')}</strong></>}
+              {selectedCourse.technologies.length > 0 ? <>Focus on: <strong>{selectedCourse.technologies.join(', ')}</strong></> : 'Add placement prep questions for this course'}
             </p>
-            <div className="flex items-center gap-2 text-orange-600 font-semibold text-sm"><Plus size={16} /> Manage Placement Questions</div>
+            <div className="flex items-center gap-2 text-orange-600 font-semibold text-sm"><Plus size={16} /> Manage {selectedCourse.name} Placement Questions</div>
           </div>
         </div>
       </div>

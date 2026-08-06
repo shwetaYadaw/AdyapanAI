@@ -202,10 +202,13 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     if (topic) {
       const topicLower = topic.toLowerCase();
       allProblems = allProblems.filter(p => {
-        const problemTopics = p.topics
-          .split(',')
-          .map(t => t.trim().toLowerCase());
-        // Exact match or partial match (topic name contains or is contained in problem topic)
+        // Don't split by comma if the topics field matches directly
+        const topicsRaw = p.topics.toLowerCase().trim();
+        if (topicsRaw === topicLower) return true;
+        if (topicsRaw.includes(topicLower)) return true;
+        if (topicLower.includes(topicsRaw)) return true;
+        // Also try splitting (for multi-topic problems) but avoid splitting inside brackets
+        const problemTopics = p.topics.split(/,(?![^[]*\])/).map(t => t.trim().toLowerCase());
         return problemTopics.some(pt => pt === topicLower || pt.includes(topicLower) || topicLower.includes(pt));
       });
     }
