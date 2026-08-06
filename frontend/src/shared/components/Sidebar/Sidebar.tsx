@@ -18,34 +18,20 @@ export interface NavItem {
 }
 
 const STUDENT_NAV: NavItem[] = [
-<<<<<<< HEAD
-  { label: 'Dashboard',    href: '/student/dashboard',  icon: LayoutDashboard },
-  { label: 'DSA',          href: '/student/challenges', icon: Code2 },
-  { label: 'Placement Prep', href: '/student/tcs-nqt',  icon: Trophy },
-  { label: 'Aptitude',     href: '/student/aptitude',   icon: BookOpen },
-  { label: 'Contests',     href: '/student/contests',   icon: Trophy },
-  { label: 'Certificates', href: '/student/certificates', icon: Award },
-=======
   { label: 'Dashboard',      href: '/student/dashboard',      icon: LayoutDashboard },
   { label: 'Certificates',   href: '/student/certificates',   icon: Award },
   { label: 'Coding Arena',   href: '/student/challenges',     icon: Code2 },
   { label: 'Placement Prep', href: '/student/tcs-nqt',        icon: Trophy },
   { label: 'Aptitude Prep',  href: '/student/aptitude',       icon: BookOpen },
   { label: 'Contests',       href: '/student/contests',       icon: Trophy },
->>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
 ];
 
 const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Users', href: '/admin/users', icon: Users },
-<<<<<<< HEAD
-  { label: 'DSA', href: '/admin/problems', icon: Code2 },
-  { label: 'Aptitude', href: '/admin/aptitude', icon: BookOpen },
-=======
   { label: 'Courses', href: '/admin/courses', icon: Briefcase },
   { label: 'Problems', href: '/admin/problems', icon: Code2 },
   { label: 'Contests', href: '/admin/contests', icon: Trophy },
->>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];

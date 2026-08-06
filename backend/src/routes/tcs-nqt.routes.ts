@@ -42,7 +42,6 @@ router.get('/', async (req, res, next) => {
           difficulty: true,
           topic: true,
           companies: true,
-          experienceLevel: true, // <--- IMPORTANT: Include this field
           xpReward: true,
           createdAt: true,
         },

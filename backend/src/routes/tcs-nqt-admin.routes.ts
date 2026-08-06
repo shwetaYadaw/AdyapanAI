@@ -115,12 +115,7 @@ router.post('/', async (req, res, next) => {
         slug,
         statement,
         difficulty,
-<<<<<<< HEAD
         topic,
-=======
-        courseId: courseId || null,
-        topic,  // Store the selected topic (e.g., "Arrays")
->>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
         companies: companies || 'TCS',
         inputFormat: inputFormat || '',
         outputFormat: outputFormat || '',
@@ -128,7 +123,7 @@ router.post('/', async (req, res, next) => {
         referenceSolution: referenceSolution || '',
         testCases: testCases || [],
         xpReward: 10,
-        experienceLevel: experienceLevel || 'freshers',
+        // experienceLevel: experienceLevel || 'freshers',
         createdBy: req.user?.userId,
       },
     });
@@ -218,7 +213,7 @@ router.put('/:id', async (req, res, next) => {
         testCases: req.body.testCases !== undefined ? req.body.testCases : question.testCases,
         topic: req.body.topic || question.topic,
         companies: req.body.companies || question.companies,
-        experienceLevel: req.body.experienceLevel || question.experienceLevel || 'freshers',
+        // experienceLevel: req.body.experienceLevel || question.experienceLevel || 'freshers',
         updatedBy: req.user?.userId,
       },
     });
