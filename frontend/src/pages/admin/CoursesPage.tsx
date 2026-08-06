@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { Search, BookOpen, Code2, ChevronDown, ArrowLeft, Plus, Trophy } from 'lucide-react';
 import { api } from '../../core/services/api';
-import CodingArenaDashboard from '../../features/admin/pages/CodingArenaDashboard';
-import TcsNqtDashboard from '../../features/admin/pages/TcsNqtDashboard';
+import CourseCodingArena from '../../features/admin/pages/CourseCodingArena';
+import CoursePlacementPrep from '../../features/admin/pages/CoursePlacementPrep';
 
 interface Course {
   id: string;
@@ -58,10 +58,10 @@ export default function AdminCoursesPage() {
 
   // === SECTION VIEW: Coding Arena or Placement Prep ===
   if (selectedCourse && section === 'coding-arena') {
-    return <CodingArenaDashboard onBack={goBack} courseId={selectedCourse.id} courseName={selectedCourse.name} />;
+    return <CourseCodingArena onBack={goBack} courseId={selectedCourse.id} courseName={selectedCourse.name} />;
   }
   if (selectedCourse && section === 'placement-prep') {
-    return <TcsNqtDashboard onBack={goBack} courseId={selectedCourse.id} courseName={selectedCourse.name} />;
+    return <CoursePlacementPrep onBack={goBack} courseId={selectedCourse.id} courseName={selectedCourse.name} />;
   }
 
   // === COURSE DETAIL VIEW ===
