@@ -134,8 +134,8 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
               <p className="text-cyan-100 text-sm mt-1">Manage coding problems for {courseName} students</p>
             </div>
             <div className="flex gap-3">
-              <button onClick={() => setShowTopicModal(true)} className="flex items-center gap-2 px-4 py-2 bg-white/20 border border-white/30 text-white rounded-xl hover:bg-white/30 transition font-medium text-sm">
-                <Tag size={16} /> Topics ({topics.length})
+              <button onClick={() => setShowTopicModal(true)} className="flex items-center gap-2 px-5 py-2.5 bg-white/20 border-2 border-white/40 text-white rounded-xl hover:bg-white/30 transition font-semibold text-sm">
+                <Tag size={18} /> Add / Manage Topics ({topics.length})
               </button>
               <button onClick={() => { resetForm(); setShowAddForm(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-700 rounded-xl hover:bg-blue-50 transition font-semibold text-sm shadow-lg">
                 <Plus size={18} /> Add Problem
