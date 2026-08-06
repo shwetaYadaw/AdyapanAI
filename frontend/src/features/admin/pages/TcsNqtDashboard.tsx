@@ -193,47 +193,40 @@ export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqt
   const experiencedCount = questions.filter(q => ((q as any).experienceLevel || 'freshers') === 'experienced').length;
 
   return (
-    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen py-8">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Back Button */}
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 text-orange-600 hover:text-orange-700 dark:text-orange-400 mb-6 font-medium"
-        >
-          <ArrowLeft size={20} />
-          Back to Dashboard
-        </button>
-
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              {courseName ? `${courseName} - Placement Prep` : 'Placement Prep'}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-1">
-              {courseName ? `Placement questions for ${courseName}` : 'Total Questions'}: {pagination.total}
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowTopicModal(true)}
-              className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-orange-400 hover:text-orange-600 transition font-semibold"
-            >
-              <Tag size={18} />
-              Manage Topics
-            </button>
-            <button
-              onClick={() => {
-                setSelectedQuestion(null);
-                setShowCreateModal(true);
-              }}
-              className="flex items-center gap-2 px-5 py-3 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition shadow-lg shadow-orange-200 dark:shadow-none font-semibold"
-            >
-              <Plus size={20} />
-              Add Question
-            </button>
+    <div className="min-h-screen">
+      {/* Header with gradient - matching Coding Arena style */}
+      <div className="bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 px-6 py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Back Button */}
+          <button onClick={onBack} className="flex items-center gap-2 text-white/80 hover:text-white mb-4 text-sm font-medium transition">
+            <ArrowLeft size={18} /> Back to Course
+          </button>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                {courseName ? `${courseName} - Placement Prep` : 'Placement Prep'}
+              </h1>
+              <p className="text-white/80 text-sm mt-1">
+                {courseName ? `Placement questions for ${courseName}` : 'Placement Preparation Questions'} - Total: {pagination.total}
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-medium">
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                {pagination.total} Questions
+              </div>
+              <button onClick={() => setShowTopicModal(true)} className="flex items-center gap-2 px-4 py-2 bg-white/20 border border-white/30 text-white rounded-xl hover:bg-white/30 transition font-medium text-sm">
+                <Tag size={16} /> Manage Topics
+              </button>
+              <button onClick={() => { setSelectedQuestion(null); setShowCreateModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-white text-orange-700 rounded-xl hover:bg-orange-50 transition font-semibold text-sm shadow-lg">
+                <Plus size={18} /> Add Question
+              </button>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-6">
 
         {/* Experience Level Tabs */}
         <div className="flex gap-3 mb-8">
