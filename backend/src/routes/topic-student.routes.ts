@@ -13,16 +13,23 @@ const router = Router();
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const system = req.query.system as string | undefined; // 'coding-arena', 'tcs-nqt', 'aptitude'
+    const courseId = req.query.courseId as string | undefined;
 
     if (!system) {
       throw new AppError('system query parameter is required', 400);
     }
 
+    const where: any = {
+      system,
+      isActive: true,
+    };
+
+    if (courseId) {
+      where.courseId = courseId;
+    }
+
     const topics = await prisma.topic.findMany({
-      where: {
-        system,
-        isActive: true // Only return active topics to students
-      },
+      where,
       orderBy: [{ order: 'asc' }, { name: 'asc' }],
       select: {
         id: true,

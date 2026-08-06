@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Clock, CheckCircle2, AlertCircle, X } from 'lucide-react';
-import Button from '../common/Button/Button';
-import Card from '../common/Card/Card';
-import Badge from '../common/Badge/Badge';
+import Button from '../../shared/components/Button/Button';
+import Card from '../../shared/components/Card/Card';
+import Badge from '../../shared/components/Badge/Badge';
 
 interface Question {
   text: string;

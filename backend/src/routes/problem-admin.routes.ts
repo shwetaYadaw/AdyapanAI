@@ -150,7 +150,11 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
 
     // Build where clause
     const whereClause: any = {};
-    if (courseId) whereClause.courseId = courseId;
+    if (courseId === 'none') {
+      whereClause.courseId = null; // Only global DSA problems (not assigned to any course)
+    } else if (courseId) {
+      whereClause.courseId = courseId;
+    }
 
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({

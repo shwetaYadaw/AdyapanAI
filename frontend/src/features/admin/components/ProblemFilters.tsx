@@ -7,28 +7,27 @@ interface ProblemFiltersProps {
   filters: AdminProblemFilters;
   onFiltersChange: (filters: AdminProblemFilters) => void;
   system?: 'coding-arena' | 'tcs-nqt';
+  courseId?: string;
 }
 
-export default function ProblemFilters({ filters, onFiltersChange, system = 'coding-arena' }: ProblemFiltersProps) {
+export default function ProblemFilters({ filters, onFiltersChange, system = 'coding-arena', courseId }: ProblemFiltersProps) {
   const [topics, setTopics] = useState<any[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(false);
 
-  // Fetch topics from database on mount and when system changes
+  // Fetch topics from database on mount and when system/courseId changes
   useEffect(() => {
     fetchTopics();
-  }, [system]);
+  }, [system, courseId]);
 
   const fetchTopics = async () => {
     try {
       setTopicsLoading(true);
       const token = localStorage.getItem('accessToken');
       if (!token) {
-        console.warn('No access token found in localStorage');
         setTopics([]);
         return;
       }
-      const data = await topicAdminService.getTopics(system, true);
-      console.log(`Fetched ${data?.length || 0} topics for system: ${system}`, data);
+      const data = await topicAdminService.getTopics(system, true, courseId || 'none');
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);
