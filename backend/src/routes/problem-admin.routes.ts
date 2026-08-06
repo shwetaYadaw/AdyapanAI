@@ -165,7 +165,7 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({
       where: whereClause,
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ topics: 'asc' }, { difficulty: 'asc' }],
       select: {
         id: true,
         title: true,
@@ -212,7 +212,7 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
 
     // Filter by topic match if topic provided
     if (topic) {
-      const topicLower = topic.toLowerCase();
+      const topicLower = topic.toLowerCase().trim();
       allProblems = allProblems.filter(p => {
         // Don't split by comma if the topics field matches directly
         const topicsRaw = p.topics.toLowerCase().trim();
@@ -224,6 +224,16 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
         return problemTopics.some(pt => pt === topicLower || pt.includes(topicLower) || topicLower.includes(pt));
       });
     }
+
+    // Sort: by topic alphabetically, then by difficulty (easy → medium → hard)
+    const difficultyOrder: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
+    allProblems.sort((a, b) => {
+      // First sort by topic
+      const topicCompare = a.topics.toLowerCase().localeCompare(b.topics.toLowerCase());
+      if (topicCompare !== 0) return topicCompare;
+      // Then by difficulty (easy first, hard last)
+      return (difficultyOrder[a.difficulty] || 99) - (difficultyOrder[b.difficulty] || 99);
+    });
 
     const total = allProblems.length;
     const problems = allProblems.slice(skip, skip + limitNum);

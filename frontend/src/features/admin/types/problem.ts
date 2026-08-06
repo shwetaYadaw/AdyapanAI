@@ -65,6 +65,8 @@ export interface AdminProblemFilters {
   search?: string;
   difficulty?: string;
   category?: string;
+  topic?: string;
+  courseId?: string;
   tags?: string;
 }
 

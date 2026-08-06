@@ -41,7 +41,7 @@ export default function ProblemTable({
           <tr>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Title</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Difficulty</th>
-            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Category</th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Topic</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Success Rate</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Attempts</th>
             <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
@@ -58,7 +58,6 @@ export default function ProblemTable({
                 <div className="flex items-center gap-3">
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">{problem.title}</p>
-                    <p className="text-xs text-gray-600 dark:text-gray-400">{problem.slug}</p>
                   </div>
                 </div>
               </td>
@@ -76,7 +75,7 @@ export default function ProblemTable({
                 </span>
               </td>
               <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
-                {problem.category || '-'}
+                {problem.topics || problem.category || '-'}
               </td>
               <td className="px-6 py-4 text-sm text-gray-700 dark:text-gray-300">
                 {problem.successRate?.toFixed(1) || 0}%

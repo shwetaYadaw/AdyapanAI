@@ -7,6 +7,8 @@ import { topicAdminService, Topic } from '../services/topicAdminService';
 interface CreateEditProblemModalProps {
   problem?: Problem | null;
   type?: 'coding-arena' | 'tcs-nqt';
+  defaultTopic?: string;
+  courseId?: string;
   onSave: (problem: Problem, changeReason?: string) => Promise<void>;
   onClose: () => void;
 }
@@ -14,6 +16,8 @@ interface CreateEditProblemModalProps {
 export default function CreateEditProblemModal({
   problem,
   type = 'coding-arena',
+  defaultTopic = '',
+  courseId,
   onSave,
   onClose
 }: CreateEditProblemModalProps) {
@@ -25,7 +29,7 @@ export default function CreateEditProblemModal({
     inputFormat: '',
     outputFormat: '',
     referenceSolution: '',
-    topics: '',
+    topics: defaultTopic || '',
     companies: '',
     tags: '',
     category: 'general',
@@ -41,6 +45,7 @@ export default function CreateEditProblemModal({
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
   const [seeding, setSeeding] = useState(false);
+  const [newTopicName, setNewTopicName] = useState('');
   const [newTestCase, setNewTestCase] = useState<ProblemTestCase>({
     input: '',
     expectedOutput: '',
@@ -57,7 +62,7 @@ export default function CreateEditProblemModal({
     try {
       setTopicsLoading(true);
       const system = type === 'coding-arena' ? 'coding-arena' : 'tcs-nqt';
-      const data = await topicAdminService.getTopics(system, true);
+      const data = await topicAdminService.getTopics(system, true, courseId || 'none');
       console.log(`Fetched ${data?.length || 0} topics for ${system}`, data);
       setTopics(data);
     } catch (err: any) {
@@ -128,9 +133,40 @@ export default function CreateEditProblemModal({
       return;
     }
 
+    // Use new topic name if provided, otherwise use dropdown selection
+    const finalTopicName = newTopicName.trim() || formData.topics;
+    if (!finalTopicName) {
+      toast.error('Please select or enter a topic');
+      return;
+    }
+
     try {
       setLoading(true);
-      await onSave(formData, problem ? changeReason : undefined);
+
+      // If a new topic was typed, auto-create it in the database
+      if (newTopicName.trim()) {
+        const existingTopic = topics.find(t => t.name.toLowerCase() === newTopicName.trim().toLowerCase());
+        if (!existingTopic) {
+          try {
+            await topicAdminService.createTopic({
+              name: newTopicName.trim(),
+              system: type === 'coding-arena' ? 'coding-arena' : 'tcs-nqt',
+              courseId: courseId || undefined,
+            });
+          } catch (err: any) {
+            // Ignore if topic already exists (409), continue with problem creation
+            if (err.response?.status !== 409) {
+              toast.error('Failed to create topic: ' + (err.response?.data?.message || err.message));
+              setLoading(false);
+              return;
+            }
+          }
+        }
+      }
+
+      // Save problem with the final topic name
+      const problemData = { ...formData, topics: finalTopicName };
+      await onSave(problemData, problem ? changeReason : undefined);
     } catch (err) {
       console.error(err);
     } finally {
@@ -278,7 +314,7 @@ export default function CreateEditProblemModal({
 
           {/* Topic & Companies */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Topic Dropdown - Now fetched from database */}
+            {/* Topic Dropdown + New Topic Input */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Topic *
@@ -287,42 +323,57 @@ export default function CreateEditProblemModal({
                 <div className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400">
                   Loading topics...
                 </div>
-              ) : topics.length === 0 ? (
-                <div className="space-y-2">
-                  <div className="w-full px-4 py-3 border border-red-300 dark:border-red-600 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-sm">
-                    ⚠️ No topics found for {type === 'coding-arena' ? 'Coding Arena' : 'Placement Prep'}!
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleSeedTopics}
-                    disabled={seeding}
-                    className="w-full px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {seeding ? '🌱 Seeding Topics...' : '🌱 Seed Initial Topics (One-time Setup)'}
-                  </button>
-                  <input
-                    type="text"
-                    name="topics"
-                    value={formData.topics}
-                    onChange={handleInputChange}
-                    placeholder="Or enter topic name manually"
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
               ) : (
-                <select
-                  name="topics"
-                  value={formData.topics}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">-- Select a Topic --</option>
-                  {topics.map(topic => (
-                    <option key={topic.id} value={topic.name}>
-                      {topic.name}
-                    </option>
-                  ))}
-                </select>
+                <div className="space-y-2">
+                  {topics.length > 0 && (
+                    <select
+                      name="topics"
+                      value={newTopicName ? '' : formData.topics}
+                      onChange={(e) => {
+                        setNewTopicName('');
+                        handleInputChange(e);
+                      }}
+                      disabled={!!newTopicName}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                    >
+                      <option value="">-- Select a Topic --</option>
+                      {topics.map(topic => (
+                        <option key={topic.id} value={topic.name}>
+                          {topic.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={newTopicName}
+                      onChange={(e) => {
+                        setNewTopicName(e.target.value);
+                        if (e.target.value.trim()) {
+                          setFormData(prev => ({ ...prev, topics: '' }));
+                        }
+                      }}
+                      placeholder="Or type a new topic name..."
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {newTopicName && (
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-green-600 dark:text-green-400 font-medium">
+                        New topic
+                      </span>
+                    )}
+                  </div>
+                  {topics.length === 0 && !newTopicName && (
+                    <button
+                      type="button"
+                      onClick={handleSeedTopics}
+                      disabled={seeding}
+                      className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {seeding ? 'Seeding Topics...' : 'Seed Initial Topics'}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
 

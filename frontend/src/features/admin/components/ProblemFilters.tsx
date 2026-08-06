@@ -1,46 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Search } from 'lucide-react';
 import { AdminProblemFilters } from '../types/problem';
-import { topicAdminService } from '../services/topicAdminService';
+import { Topic } from '../services/topicAdminService';
 
 interface ProblemFiltersProps {
   filters: AdminProblemFilters;
   onFiltersChange: (filters: AdminProblemFilters) => void;
+  topics?: Topic[];
   system?: 'coding-arena' | 'tcs-nqt';
   courseId?: string;
 }
 
-export default function ProblemFilters({ filters, onFiltersChange, system = 'coding-arena', courseId }: ProblemFiltersProps) {
-  const [topics, setTopics] = useState<any[]>([]);
-  const [topicsLoading, setTopicsLoading] = useState(false);
-
-  // Fetch topics from database on mount and when system/courseId changes
-  useEffect(() => {
-    fetchTopics();
-  }, [system, courseId]);
-
-  const fetchTopics = async () => {
-    try {
-      setTopicsLoading(true);
-      const token = localStorage.getItem('accessToken');
-      if (!token) {
-        setTopics([]);
-        return;
-      }
-      const data = await topicAdminService.getTopics(system, true, courseId || 'none');
-      setTopics(data || []);
-    } catch (err: any) {
-      console.error('Failed to fetch topics:', err);
-      console.error('Error details:', {
-        message: err.message,
-        status: err.response?.status,
-        data: err.response?.data
-      });
-      setTopics([]);
-    } finally {
-      setTopicsLoading(false);
-    }
-  };
+export default function ProblemFilters({ filters, onFiltersChange, topics = [], system = 'coding-arena', courseId }: ProblemFiltersProps) {
 
   const handleSearchChange = (search: string) => {
     onFiltersChange({
@@ -58,10 +29,10 @@ export default function ProblemFilters({ filters, onFiltersChange, system = 'cod
     });
   };
 
-  const handleCategoryChange = (category: string) => {
+  const handleTopicChange = (topic: string) => {
     onFiltersChange({
       ...filters,
-      category: category || undefined,
+      topic: topic || undefined,
       page: 1
     });
   };
@@ -74,7 +45,7 @@ export default function ProblemFilters({ filters, onFiltersChange, system = 'cod
         <input
           type="text"
           placeholder="Search problems..."
-          defaultValue={filters.search || ''}
+          value={filters.search || ''}
           onChange={(e) => handleSearchChange(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -92,14 +63,13 @@ export default function ProblemFilters({ filters, onFiltersChange, system = 'cod
         <option value="hard">Hard</option>
       </select>
 
-      {/* Category Filter - Now Dynamic from Database */}
+      {/* Topic Filter - Uses topics passed from parent */}
       <select
-        value={filters.category || ''}
-        onChange={(e) => handleCategoryChange(e.target.value)}
-        disabled={topicsLoading}
-        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        value={filters.topic || ''}
+        onChange={(e) => handleTopicChange(e.target.value)}
+        className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
-        <option value="">All Categories {topicsLoading ? '(Loading...)' : `(${topics.length})`}</option>
+        <option value="">All Categories ({topics.length})</option>
         {topics.map(topic => (
           <option key={topic.id} value={topic.name}>
             {topic.name}
