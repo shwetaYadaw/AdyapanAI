@@ -18,34 +18,21 @@ export interface NavItem {
 }
 
 const STUDENT_NAV: NavItem[] = [
-<<<<<<< HEAD
-  { label: 'Dashboard',    href: '/student/dashboard',  icon: LayoutDashboard },
-  { label: 'DSA',          href: '/student/challenges', icon: Code2 },
-  { label: 'Placement Prep', href: '/student/tcs-nqt',  icon: Trophy },
-  { label: 'Aptitude',     href: '/student/aptitude',   icon: BookOpen },
-  { label: 'Contests',     href: '/student/contests',   icon: Trophy },
-  { label: 'Certificates', href: '/student/certificates', icon: Award },
-=======
   { label: 'Dashboard',      href: '/student/dashboard',      icon: LayoutDashboard },
-  { label: 'Certificates',   href: '/student/certificates',   icon: Award },
-  { label: 'Coding Arena',   href: '/student/challenges',     icon: Code2 },
+  { label: 'DSA',            href: '/student/challenges',     icon: Code2 },
   { label: 'Placement Prep', href: '/student/tcs-nqt',        icon: Trophy },
-  { label: 'Aptitude Prep',  href: '/student/aptitude',       icon: BookOpen },
+  { label: 'Aptitude',       href: '/student/aptitude',       icon: BookOpen },
   { label: 'Contests',       href: '/student/contests',       icon: Trophy },
->>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
+  { label: 'Certificates',   href: '/student/certificates',   icon: Award },
 ];
 
 const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Users', href: '/admin/users', icon: Users },
-<<<<<<< HEAD
+  { label: 'Courses', href: '/admin/courses', icon: Briefcase },
   { label: 'DSA', href: '/admin/problems', icon: Code2 },
   { label: 'Aptitude', href: '/admin/aptitude', icon: BookOpen },
-=======
-  { label: 'Courses', href: '/admin/courses', icon: Briefcase },
-  { label: 'Problems', href: '/admin/problems', icon: Code2 },
   { label: 'Contests', href: '/admin/contests', icon: Trophy },
->>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
@@ -69,33 +56,13 @@ export default function Sidebar() {
     dispatch(setMobileSidebar(false));
   }, [dispatch]);
 
-  // Auto-close both drawers/sidebars when route changes
+  // Auto-close mobile sidebar when route changes (desktop stays as-is)
   useEffect(() => {
     closeMobileSidebar();
-    dispatch(setSidebarOpen(false));
-  }, [location.pathname, closeMobileSidebar, dispatch]);
+  }, [location.pathname, closeMobileSidebar]);
 
-  // Auto-close desktop sidebar on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      // Only process outside click on desktop
-      if (window.innerWidth < 768) return;
-
-      const target = e.target as Element;
-      // If clicking outside the desktop sidebar AND not clicking the hamburger menu
-      if (
-        sidebarOpen &&
-        desktopSidebarRef.current &&
-        !desktopSidebarRef.current.contains(target as Node) &&
-        !target.closest('#desktop-hamburger')
-      ) {
-        dispatch(setSidebarOpen(false));
-      }
-    };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [sidebarOpen, dispatch]);
+  // Auto-close desktop sidebar on outside click (only when manually expanded via hamburger)
+  // Removed: was causing labels to disappear unexpectedly
 
   return (
     <>
@@ -186,7 +153,6 @@ export default function Sidebar() {
               <NavLink
                 key={item.href}
                 to={item.href}
-                onClick={() => dispatch(setSidebarOpen(false))}
                 className={({ isActive }) =>
                   clsx(
                     'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group',

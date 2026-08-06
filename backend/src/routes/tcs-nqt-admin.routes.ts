@@ -115,12 +115,8 @@ router.post('/', async (req, res, next) => {
         slug,
         statement,
         difficulty,
-<<<<<<< HEAD
-        topic,
-=======
         courseId: courseId || null,
-        topic,  // Store the selected topic (e.g., "Arrays")
->>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
+        topic,
         companies: companies || 'TCS',
         inputFormat: inputFormat || '',
         outputFormat: outputFormat || '',
