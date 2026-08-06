@@ -146,6 +146,20 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-6">
+        {/* Topics Display */}
+        {topics.length > 0 && (
+          <div className="mb-6 flex flex-wrap items-center gap-2">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Topics:</span>
+            {topics.map(t => (
+              <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium border border-blue-200 dark:border-blue-800">
+                {t}
+                <button onClick={() => handleDeleteTopic(t)} className="text-blue-400 hover:text-red-500 transition" title="Delete topic">×</button>
+              </span>
+            ))}
+            <button onClick={() => setShowTopicModal(true)} className="px-3 py-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-full border border-dashed border-blue-300 font-medium">+ Add More</button>
+          </div>
+        )}
+
         {/* Problems List */}
         {loading ? <p className="text-center text-gray-400 py-8">Loading...</p> :
         problems.length === 0 && !showAddForm ? (
