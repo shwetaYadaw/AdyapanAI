@@ -127,19 +127,17 @@ router.post('/', authenticate, async (req, res, next) => {
 // GET /problems — Get list of all problems (supports search, difficulty, topic filter, pagination)
 router.get('/', async (req, res, next) => {
   try {
-    const { search, difficulty, topic, page = '1', limit = '50' } = req.query;
+    const { search, difficulty, topic, courseId, page = '1', limit = '50' } = req.query;
     const pageNum  = Math.max(1, parseInt(String(page), 10));
     const limitNum = Math.min(500, Math.max(1, parseInt(String(limit), 10)));
     const skip     = (pageNum - 1) * limitNum;
 
     const where: any = {};
     if (difficulty) where.difficulty = String(difficulty);
+    if (courseId) where.courseId = String(courseId);
     
     if (topic) {
-      // Get all problems and filter in-memory for exact topic match
-      // Since topics are stored as CSV string, we need to split and match
       const topicStr = String(topic).toLowerCase();
-      // This will be filtered in the JS after fetching
     }
     
     if (search) {
@@ -177,7 +175,11 @@ router.get('/', async (req, res, next) => {
         const problemTopics = p.topics
           .split(',')
           .map(t => t.trim().toLowerCase());
-        return problemTopics.includes(topicStr);
+        // Match both "problems on arrays" and "problems-on-arrays" (hyphenated URL key)
+        return problemTopics.some(t => {
+          const tKey = t.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+          return t === topicStr || tKey === topicStr;
+        });
       });
     }
 
@@ -382,13 +384,13 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
     if (isUUID) {
       problem = await prisma.problem.findUnique({
         where: { id: paramId },
-        include: { testCases: { where: { isHidden: false } } },
+        include: { testCases: true },
       });
     } else {
       // Try by slug
       problem = await prisma.problem.findUnique({
         where: { slug: paramId },
-        include: { testCases: { where: { isHidden: false } } },
+        include: { testCases: true },
       });
       // Fallback: search by title
       if (!problem) {
@@ -399,7 +401,7 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
         if (problems.length > 0) {
           problem = await prisma.problem.findUnique({
             where: { id: problems[0].id },
-            include: { testCases: { where: { isHidden: false } } },
+            include: { testCases: true },
           });
         }
       }
@@ -407,32 +409,84 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
 
     if (!problem) throw new AppError('Problem not found', 404);
 
-    // Use custom input from request body, or fall back to first sample test case
+    // Use ALL test cases for run (visible ones for comparison)
+    const visibleTestCases = problem.testCases || [];
     const customInput = req.body.input;
-    const sampleTestCase = problem.testCases[0];
-    const inputToUse = customInput || (sampleTestCase ? sampleTestCase.input : '');
-    
-    if (!inputToUse) throw new AppError('No input provided and no sample testcase found', 400);
 
-    const result = await judge.runTestCase(
-      code,
-      language,
-      inputToUse,
-      sampleTestCase?.expectedOutput,
-      problem.timeLimit
-    );
+    if (visibleTestCases.length === 0 && !customInput) {
+      throw new AppError('No test cases or input available', 400);
+    }
 
-    sendSuccess({
-      res,
-      data: {
-        passed: sampleTestCase ? result.passed : undefined,
-        actualOutput: result.actualOutput,
-        expectedOutput: sampleTestCase?.expectedOutput || 'N/A (no test case)',
-        input: inputToUse,
-        runtime: result.runtime,
-        errorMessage: result.errorMessage,
-      },
-    });
+    // If there are test cases, run against all of them
+    if (visibleTestCases.length > 0) {
+      let allPassed = true;
+      let failedAt = -1;
+      let failedInput = '';
+      let failedExpected = '';
+      let failedActual = '';
+      let totalRuntime = 0;
+      let errorMsg = '';
+
+      for (let i = 0; i < visibleTestCases.length; i++) {
+        const tc = visibleTestCases[i];
+        const result = await judge.runTestCase(
+          code,
+          language,
+          tc.input,
+          tc.expectedOutput,
+          problem.timeLimit || 5000
+        );
+        totalRuntime = Math.max(totalRuntime, result.runtime);
+
+        if (result.errorMessage) {
+          allPassed = false;
+          failedAt = i + 1;
+          failedInput = tc.input;
+          failedExpected = tc.expectedOutput;
+          failedActual = result.actualOutput;
+          errorMsg = result.errorMessage;
+          break;
+        }
+
+        if (!result.passed) {
+          allPassed = false;
+          failedAt = i + 1;
+          failedInput = tc.input;
+          failedExpected = tc.expectedOutput;
+          failedActual = result.actualOutput;
+          errorMsg = `Wrong Answer on Test Case ${i + 1}: Expected "${tc.expectedOutput.trim()}" but got "${result.actualOutput.trim()}"`;
+          break;
+        }
+      }
+
+      sendSuccess({
+        res,
+        data: {
+          passed: allPassed,
+          passedCount: allPassed ? visibleTestCases.length : failedAt - 1,
+          totalCount: visibleTestCases.length,
+          actualOutput: allPassed ? visibleTestCases[visibleTestCases.length - 1].expectedOutput : failedActual,
+          expectedOutput: allPassed ? null : failedExpected,
+          input: allPassed ? visibleTestCases[0].input : failedInput,
+          runtime: totalRuntime,
+          errorMessage: allPassed ? null : errorMsg,
+        },
+      });
+    } else {
+      // No test cases — just execute with custom input
+      const result = await judge.runTestCase(code, language, customInput, undefined, problem.timeLimit || 5000);
+      sendSuccess({
+        res,
+        data: {
+          passed: !result.errorMessage,
+          actualOutput: result.actualOutput,
+          expectedOutput: null,
+          input: customInput,
+          runtime: result.runtime,
+          errorMessage: result.errorMessage,
+        },
+      });
+    }
   } catch (err) { next(err); }
 });
 
@@ -470,64 +524,179 @@ router.post('/:id/submit', authenticate, async (req, res, next) => {
 
     if (!problem) throw new AppError('Problem not found', 404);
 
-    // Anti-cheat check: detect static hardcoding of outputs
-    const visibleOutputs = problem.testCases.filter(t => !t.isHidden).map(t => t.expectedOutput);
-    const expectedOutputs = Array.from(new Set(visibleOutputs));
-    const isCheating = detectHardcoding(code, expectedOutputs);
+    const testCases = problem.testCases || [];
 
-    if (isCheating) {
-      const submission = await prisma.submission.create({
+    // If problem has test cases, use the queue system for proper validation
+    if (testCases.length > 0) {
+      // Anti-cheat check: detect static hardcoding of outputs
+      const visibleOutputs = testCases.filter(t => !t.isHidden).map(t => t.expectedOutput);
+      const expectedOutputs = Array.from(new Set(visibleOutputs));
+      const isCheating = detectHardcoding(code, expectedOutputs);
+
+      if (isCheating) {
+        const submission = await prisma.problemSubmission.create({
+          data: {
+            userId: req.user!.userId,
+            problemId: problem.id,
+            code,
+            language,
+            status: 'wrong_answer',
+            errorMessage: 'Cheat Detected: Hardcoded output values found.',
+          },
+        });
+
+        await prisma.problemSubmissionResult.create({
+          data: {
+            problemSubmissionId: submission.id,
+            status: 'wrong_answer',
+            errorMessage: 'Cheat Detected: Hardcoded output values found.',
+            totalCount: testCases.length,
+            passedCount: 0,
+          },
+        });
+
+        return sendSuccess({
+          res,
+          message: 'Cheat detected, submission rejected.',
+          data: { submissionId: submission.id, status: 'wrong_answer' },
+        });
+      }
+
+      // Create pending submission record
+      const submission = await prisma.problemSubmission.create({
         data: {
           userId: req.user!.userId,
           problemId: problem.id,
           code,
           language,
-          status: 'wrong_answer',
-          errorMessage: 'Cheat Detected: Hardcoded output values found.',
+          status: 'pending',
         },
       });
 
-      await prisma.submissionResult.create({
-        data: {
-          submissionId: submission.id,
-          status: 'wrong_answer',
-          errorMessage: 'Cheat Detected: Hardcoded output values found.',
-          totalCount: problem.testCases.length,
-          passedCount: 0,
-        },
-      });
-
-      return sendSuccess({
-        res,
-        message: 'Cheat detected, submission rejected.',
-        data: submission,
-      });
-    }
-
-    // Create pending submission record
-    const submission = await prisma.submission.create({
-      data: {
-        userId: req.user!.userId,
+      // Process submission synchronously (run all test cases and wait for result)
+      await queueService.enqueue({
+        submissionId: submission.id,
         problemId: problem.id,
         code,
         language,
-        status: 'pending',
-      },
-    });
+      });
 
-    // Enqueue for background worker processing
-    await queueService.enqueue({
-      submissionId: submission.id,
-      problemId: problem.id,
-      code,
-      language,
-    });
+      // Wait for processing to complete (poll for result)
+      let finalSubmission = await prisma.problemSubmission.findUnique({ where: { id: submission.id } });
+      const startTime = Date.now();
+      while (finalSubmission?.status === 'pending' && Date.now() - startTime < 60000) {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        finalSubmission = await prisma.problemSubmission.findUnique({ where: { id: submission.id } });
+      }
 
-    sendSuccess({
-      res,
-      message: 'Submission enqueued successfully',
-      data: { submissionId: submission.id, status: 'pending' },
-    });
+      if (!finalSubmission || finalSubmission.status === 'pending') {
+        sendSuccess({
+          res,
+          data: { submissionId: submission.id, status: 'pending', message: 'Still processing...' },
+        });
+      } else {
+        // Award XP info
+        let xpAwarded = 0;
+        if (finalSubmission.status === 'accepted') {
+          const previousAccepted = await prisma.problemSubmission.findFirst({
+            where: {
+              userId: req.user!.userId,
+              problemId: problem.id,
+              status: 'accepted',
+              id: { not: submission.id },
+              createdAt: { lt: finalSubmission.createdAt },
+            },
+          });
+          if (!previousAccepted) {
+            xpAwarded = problem.xpReward || 10;
+          }
+        }
+
+        sendSuccess({
+          res,
+          data: {
+            submissionId: submission.id,
+            status: finalSubmission.status,
+            passedCount: finalSubmission.passedCount,
+            totalCount: finalSubmission.totalCount,
+            runtime: finalSubmission.runtime,
+            errorMessage: finalSubmission.errorMessage,
+            xpAwarded,
+          },
+        });
+      }
+    } else {
+      // No test cases: run code directly with custom input and accept if it runs without errors
+      const customInput = req.body.input || '';
+      
+      const result = await judge.runTestCase(code, language, customInput, undefined, problem.timeLimit || 5000);
+      
+      const status = result.errorMessage ? 'runtime_error' : 'accepted';
+      
+      // Save submission
+      const submission = await prisma.problemSubmission.create({
+        data: {
+          userId: req.user!.userId,
+          problemId: problem.id,
+          code,
+          language,
+          status,
+          runtime: result.runtime,
+          passedCount: status === 'accepted' ? 1 : 0,
+          totalCount: 1,
+          errorMessage: result.errorMessage || null,
+        },
+      });
+
+      // Award XP on successful submission (first time only)
+      if (status === 'accepted') {
+        const previousAccepted = await prisma.problemSubmission.findFirst({
+          where: {
+            userId: req.user!.userId,
+            problemId: problem.id,
+            status: 'accepted',
+            id: { not: submission.id },
+          },
+        });
+
+        let xpAwarded = 0;
+        if (!previousAccepted) {
+          xpAwarded = problem.xpReward || 10;
+          try {
+            const { awardXP } = require('../utils/xp.utils');
+            await awardXP(req.user!.userId, xpAwarded);
+          } catch (e) {
+            // StudentProfile might not exist for admin users
+          }
+        }
+
+        sendSuccess({
+          res,
+          data: {
+            submissionId: submission.id,
+            status: 'accepted',
+            actualOutput: result.actualOutput,
+            runtime: result.runtime,
+            passedCount: 1,
+            totalCount: 1,
+            xpAwarded,
+          },
+        });
+      } else {
+        sendSuccess({
+          res,
+          data: {
+            submissionId: submission.id,
+            status,
+            actualOutput: result.actualOutput,
+            runtime: result.runtime,
+            errorMessage: result.errorMessage,
+            passedCount: 0,
+            totalCount: 1,
+          },
+        });
+      }
+    }
   } catch (err) { next(err); }
 });
 

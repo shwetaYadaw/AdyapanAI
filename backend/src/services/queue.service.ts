@@ -205,9 +205,9 @@ class QueueService {
     });
 
     // Save result details
-    await prisma.submissionResult.create({
+    await prisma.problemSubmissionResult.create({
       data: {
-        submissionId,
+        problemSubmissionId: submissionId,
         status: finalStatus,
         errorMessage: firstErrorMessage || null,
         runtime: maxRuntime,
@@ -219,7 +219,7 @@ class QueueService {
     });
 
     // Update main submission record
-    await prisma.submission.update({
+    await prisma.problemSubmission.update({
       where: { id: submissionId },
       data: {
         status: finalStatus,
@@ -229,6 +229,32 @@ class QueueService {
         errorMessage: firstErrorMessage || null,
       },
     });
+
+    // Award XP if accepted and not already solved by this user
+    if (finalStatus === 'accepted') {
+      const userId = (await prisma.problemSubmission.findUnique({ where: { id: submissionId }, select: { userId: true } }))?.userId;
+      if (userId) {
+        // Check if user already has an accepted submission for this problem (avoid double XP)
+        const previousAccepted = await prisma.problemSubmission.findFirst({
+          where: {
+            userId,
+            problemId,
+            status: 'accepted',
+            id: { not: submissionId },
+          },
+        });
+
+        if (!previousAccepted) {
+          const xpReward = problem.xpReward || 10;
+          try {
+            const { awardXP } = require('../utils/xp.utils');
+            await awardXP(userId, xpReward);
+          } catch (e) {
+            logger.warn(`[XP] Could not award XP to user ${userId} - profile may not exist`);
+          }
+        }
+      }
+    }
 
     // Update queue status
     await prisma.executionQueue.updateMany({

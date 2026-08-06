@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon, Bell, ChevronDown, LogOut, User, LayoutDashboard, CheckCheck } from 'lucide-react';
+import { Menu, X, Sun, Moon, Bell, LogOut, User, LayoutDashboard, CheckCheck, Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { selectUser, selectIsAuthenticated, logoutThunk } from '../../../features/auth/authSlice';
-import { toggleDarkMode } from '../../../features/ui/uiSlice';
+import { toggleDarkMode, toggleSidebar, setMobileSidebar } from '../../../features/ui/uiSlice';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../../core/services/api';
 import Avatar from '../Avatar/Avatar';
@@ -34,6 +34,7 @@ export default function Navbar() {
   const user = useAppSelector(selectUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const darkMode = useAppSelector((s) => s.ui.darkMode);
+  const mobileSidebarOpen = useAppSelector((s) => s.ui.mobileSidebarOpen);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -104,17 +105,38 @@ export default function Navbar() {
       <div className="px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between h-16">
 
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <img
-              src="/logo.svg"
-              alt="ADYAPAN"
-              className="w-9 h-9 rounded-full shadow-sm object-cover"
-            />
-            <span className="font-display font-bold text-lg text-gray-900 dark:text-white hidden sm:block">
-              ADYAPAN
-            </span>
-          </Link>
+          {/* Left Side: Menu + Logo */}
+          <div className="flex items-center gap-3">
+            {/* Hamburger Toggle */}
+            <button
+              id="desktop-hamburger"
+              onClick={() => {
+                if (window.innerWidth >= 768 && isAuthenticated) {
+                  dispatch(toggleSidebar());
+                } else if (isAuthenticated) {
+                  dispatch(setMobileSidebar(!mobileSidebarOpen));
+                } else {
+                  setMobileOpen(!mobileOpen);
+                }
+              }}
+              className="p-2 -ml-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Toggle menu"
+            >
+              {(!isAuthenticated && mobileOpen) ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+              <img
+                src="/logo.svg"
+                alt="ADYAPAN"
+                className="w-9 h-9 rounded-full shadow-sm object-cover"
+              />
+              <span className="font-display font-bold text-lg text-gray-900 dark:text-white hidden sm:block">
+                ADYAPAN
+              </span>
+            </Link>
+          </div>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-1">
@@ -131,17 +153,28 @@ export default function Navbar() {
 
           {/* Right Controls */}
           <div className="flex items-center gap-2">
+            {isAuthenticated && (
+              <button
+                className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Search"
+              >
+                <Search className="w-5 h-5" />
+              </button>
+            )}
+
             {/* Dark Mode */}
             <button
               onClick={() => dispatch(toggleDarkMode())}
               className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Toggle dark mode"
             >
-              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
             {isAuthenticated && user ? (
               <>
+                <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
+
                 {/* Notifications */}
                 <div className="relative" ref={notifRef}>
                   <button
@@ -149,9 +182,9 @@ export default function Navbar() {
                     className="relative p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                     aria-label="Notifications"
                   >
-                    <Bell className="w-4 h-4" />
+                    <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
-                      <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                      <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse border-2 border-white dark:border-gray-950" />
                     )}
                   </button>
 
@@ -231,17 +264,21 @@ export default function Navbar() {
                   </AnimatePresence>
                 </div>
 
+                <div className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
+
                 {/* Profile Dropdown */}
                 <div className="relative" ref={profileRef}>
                   <button
                     onClick={() => setProfileOpen(!profileOpen)}
-                    className="flex items-center gap-2 p-1 pr-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="flex items-center p-1 rounded-2xl hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all focus:outline-none"
                   >
-                    <Avatar src={user.avatar} firstName={user.firstName} lastName={user.lastName} size="sm" />
-                    <span className="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {user.firstName}
-                    </span>
-                    <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
+                    <Avatar 
+                      src={user.avatar} 
+                      firstName={user.firstName} 
+                      lastName={user.lastName} 
+                      size="sm" 
+                      className="!rounded-xl" 
+                    />
                   </button>
 
                   <AnimatePresence>
@@ -304,21 +341,13 @@ export default function Navbar() {
               </div>
             )}
 
-            {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Toggle mobile menu"
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu (Public Only) */}
       <AnimatePresence>
-        {mobileOpen && (
+        {mobileOpen && !isAuthenticated && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
@@ -326,7 +355,7 @@ export default function Navbar() {
             className="lg:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-950 overflow-hidden"
           >
             <div className="px-4 py-4 space-y-1">
-              {(isAuthenticated ? AUTH_NAV_LINKS : PUBLIC_NAV_LINKS).map((link) => (
+              {PUBLIC_NAV_LINKS.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
@@ -336,16 +365,14 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              {!isAuthenticated && (
-                <div className="pt-2 flex flex-col gap-2">
-                  <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full text-center">
-                    Log in
-                  </Link>
-                  <Link to="/get-started" onClick={() => setMobileOpen(false)} className="btn-primary w-full text-center">
-                    Get Started Free
-                  </Link>
-                </div>
-              )}
+              <div className="pt-2 flex flex-col gap-2">
+                <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-secondary w-full text-center">
+                  Log in
+                </Link>
+                <Link to="/get-started" onClick={() => setMobileOpen(false)} className="btn-primary w-full text-center">
+                  Get Started Free
+                </Link>
+              </div>
             </div>
           </motion.div>
         )}

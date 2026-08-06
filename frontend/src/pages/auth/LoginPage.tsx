@@ -39,13 +39,13 @@ export default function LoginPage() {
   const handleGoogleResponse = async (response: any) => {
     const result = await dispatch(googleLoginThunk(response.credential));
     if (googleLoginThunk.fulfilled.match(result)) {
-      toast.success('Welcome back!');
+      const name = result.payload.user?.firstName || 'User';
+      toast.success(`Welcome back, ${name}!`, { position: 'top-center' });
       const role = result.payload.user?.role;
-      // Only two roles: student and admin
       const redirectPath = role === 'admin' ? '/admin' : '/student/dashboard';
       navigate(redirectPath, { replace: true });
     } else {
-      toast.error('Google sign in failed');
+      toast.error('Google sign in failed', { position: 'top-center' });
     }
   };
 
@@ -85,11 +85,14 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     const result = await dispatch(loginThunk(data));
     if (loginThunk.fulfilled.match(result)) {
-      toast.success('Welcome back!');
+      const name = result.payload.user?.firstName || 'User';
+      toast.success(`Welcome back, ${name}!`, { position: 'top-center' });
       const role = result.payload.user?.role;
-      // Only two roles: student and admin
       const redirectPath = role === 'admin' ? '/admin' : '/student/dashboard';
       navigate(redirectPath, { replace: true });
+    } else {
+      const errorMsg = (result.payload as string) || 'Invalid email or password';
+      toast.error(errorMsg, { position: 'top-center' });
     }
   };
 

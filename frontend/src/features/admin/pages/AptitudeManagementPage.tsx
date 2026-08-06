@@ -182,66 +182,69 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
   const currentTopic = topics.find(t => t.id === selectedTopic);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="mb-8 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* Hero Header */}
+      <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 px-6 py-8">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Aptitude Management</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">Add Topics → Chapters → Questions</p>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">Aptitude Management</h1>
+            <p className="text-emerald-100 text-sm mt-1">Topics → Chapters → MCQ Questions</p>
           </div>
-          {selectedTopic && (
-            <button
-              onClick={() => {
-                setSelectedTopic(null);
-                setSelectedChapter(null);
-              }}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600"
-            >
-              <ArrowLeft size={18} />
-              Back to Topics
-            </button>
-          )}
+          <div className="flex items-center gap-3">
+            {selectedTopic && (
+              <button
+                onClick={() => { setSelectedTopic(null); setSelectedChapter(null); }}
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 text-white rounded-xl hover:bg-white/20 transition text-sm font-medium"
+              >
+                <ArrowLeft size={16} /> All Topics
+              </button>
+            )}
+            <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-medium">
+              <span className="w-2 h-2 rounded-full bg-green-300 animate-pulse" />
+              {topics.length} Topics
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
 
         {!selectedTopic ? (
           // Topics View
-          <div className="space-y-4">
+          <div className="space-y-5">
             <button
               onClick={() => setShowTopicModal(true)}
-              className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 flex items-center gap-2"
+              className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 transition font-semibold text-sm shadow-lg"
             >
-              <Plus size={20} />
+              <Plus size={18} />
               Add Topic
             </button>
 
             {loadingTopics ? (
-              <div>Loading...</div>
+              <div className="text-center py-12 text-gray-400">Loading topics...</div>
             ) : topics.length === 0 ? (
-              <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg">
-                <p className="text-gray-500">No topics yet. Create one to get started!</p>
+              <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+                <p className="text-gray-400 text-sm">No topics yet. Create one to get started!</p>
               </div>
             ) : (
-              <div className="space-y-3">
-                {topics.map(topic => (
-                  <div key={topic.id} className="bg-white dark:bg-gray-800 rounded-lg p-4 flex items-center justify-between">
-                    <button
-                      onClick={() => setSelectedTopic(topic.id)}
-                      className="flex-1 text-left hover:text-blue-600"
-                    >
-                      <h3 className="font-bold text-gray-900 dark:text-white">{topic.name}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">{topic.chapters?.length || 0} chapters</p>
-                    </button>
-                    <button
-                      onClick={() => {
-                        if (confirm('Delete this topic and all its data?')) {
-                          deleteTopicMutation.mutate(topic.id);
-                        }
-                      }}
-                      className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
-                    >
-                      <Trash2 size={18} />
-                    </button>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {topics.map((topic: any) => (
+                  <div key={topic.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-5 hover:shadow-lg hover:border-emerald-300 dark:hover:border-emerald-700 transition-all group cursor-pointer" onClick={() => setSelectedTopic(topic.id)}>
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="font-bold text-gray-900 dark:text-white group-hover:text-emerald-600 transition">{topic.name}</h3>
+                        {topic.description && <p className="text-xs text-gray-400 mt-1 line-clamp-2">{topic.description}</p>}
+                        <div className="flex items-center gap-3 mt-3 text-xs text-gray-500">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 font-semibold">{topic.chapters?.length || 0} chapters</span>
+                        </div>
+                      </div>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); if (confirm('Delete this topic and all its data?')) deleteTopicMutation.mutate(topic.id); }}
+                        className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition opacity-0 group-hover:opacity-100"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -249,95 +252,62 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
           </div>
         ) : (
           // Topic Detail View
-          <div className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">{currentTopic?.name}</h2>
-
-            <button
-              onClick={() => setShowChapterModal(true)}
-              className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center gap-2"
-            >
-              <Plus size={20} />
-              Add Chapter
-            </button>
+          <div className="space-y-5">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{currentTopic?.name}</h2>
+              <button
+                onClick={() => setShowChapterModal(true)}
+                className="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition font-semibold text-sm shadow-lg"
+              >
+                <Plus size={18} />
+                Add Chapter
+              </button>
+            </div>
 
             {/* Chapters */}
             <div className="space-y-3">
-              {currentTopic?.chapters?.map(chapter => (
-                <div key={chapter.id} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
+              {currentTopic?.chapters?.map((chapter: any) => (
+                <div key={chapter.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                   {/* Chapter Header */}
                   <button
-                    onClick={() => {
-                      toggleChapter(chapter.id);
-                      setSelectedChapter(expandedChapters.has(chapter.id) ? null : chapter.id);
-                    }}
-                    className="w-full p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700/50"
+                    onClick={() => { toggleChapter(chapter.id); setSelectedChapter(expandedChapters.has(chapter.id) ? null : chapter.id); }}
+                    className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800/50 transition"
                   >
-                    <h3 className="font-bold text-gray-900 dark:text-white">{chapter.name}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{chapter.name}</h3>
                     <span className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        {chapter.questions?.length || 0} questions
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-medium">
+                        {chapter.questions?.length || 0} Q
                       </span>
-                      {expandedChapters.has(chapter.id) ? <ChevronDown /> : <ChevronRight />}
+                      {expandedChapters.has(chapter.id) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                     </span>
                   </button>
 
                   {/* Questions */}
                   {expandedChapters.has(chapter.id) && (
-                    <div className="border-t border-gray-200 dark:border-gray-700 p-4 space-y-3 bg-gray-50 dark:bg-gray-900">
+                    <div className="border-t border-gray-100 dark:border-gray-800 p-4 space-y-3 bg-gray-50 dark:bg-gray-950">
                       <button
-                        onClick={() => {
-                          setSelectedChapter(chapter.id);
-                          setEditingQuestion(null);
-                          setShowQuestionModal(true);
-                        }}
-                        className="w-full px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 flex items-center justify-center gap-2"
+                        onClick={() => { setSelectedChapter(chapter.id); setEditingQuestion(null); setShowQuestionModal(true); }}
+                        className="w-full px-4 py-2.5 bg-emerald-600 text-white rounded-xl hover:bg-emerald-700 flex items-center justify-center gap-2 font-medium text-sm transition"
                       >
-                        <Plus size={18} />
-                        Add Question
+                        <Plus size={16} /> Add Question
                       </button>
 
-                      {chapter.questions?.map(question => (
-                        <div key={question.id} className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
-                          <div className="flex items-start justify-between gap-4">
+                      {chapter.questions?.map((question: any) => (
+                        <div key={question.id} className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
+                          <div className="flex items-start justify-between gap-3">
                             <div className="flex-1">
-                              <p className="text-sm text-gray-900 dark:text-white font-medium">{question.statement}</p>
+                              <p className="text-sm text-gray-900 dark:text-white font-medium leading-relaxed">{question.statement}</p>
                               <div className="mt-2 flex gap-2 flex-wrap">
-                                {question.options?.map(opt => (
-                                  <span
-                                    key={opt.optionKey}
-                                    className={`text-xs px-2 py-1 rounded ${
-                                      question.correctOption === opt.optionKey
-                                        ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 font-bold'
-                                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                                    }`}
-                                  >
-                                    {opt.optionKey}: {opt.text}
+                                {question.options?.map((opt: any) => (
+                                  <span key={opt.optionKey} className={`text-[11px] px-2.5 py-1 rounded-lg font-medium ${question.correctOption === opt.optionKey ? 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 ring-1 ring-green-300 dark:ring-green-700' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
+                                    {opt.optionKey}. {opt.text}
                                   </span>
                                 ))}
                               </div>
                             </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => {
-                                  setSelectedChapter(chapter.id);
-                                  setEditingQuestion(question);
-                                  setShowQuestionModal(true);
-                                }}
-                                className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => {
-                                  if (confirm('Delete this question?')) {
-                                    setSelectedChapter(chapter.id);
-                                    deleteQuestionMutation.mutate(question.id);
-                                  }
-                                }}
-                                className="p-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded"
-                              >
-                                <Trash2 size={16} />
-                              </button>
+                            <div className="flex gap-1.5 flex-shrink-0">
+                              <button onClick={() => { setSelectedChapter(chapter.id); setEditingQuestion(question); setShowQuestionModal(true); }} className="px-2.5 py-1 bg-blue-50 dark:bg-blue-950/40 text-blue-600 text-xs rounded-lg hover:bg-blue-100 font-medium transition">Edit</button>
+                              <button onClick={() => { if (confirm('Delete?')) { setSelectedChapter(chapter.id); deleteQuestionMutation.mutate(question.id); } }} className="p-1.5 text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition"><Trash2 size={13} /></button>
                             </div>
                           </div>
                         </div>

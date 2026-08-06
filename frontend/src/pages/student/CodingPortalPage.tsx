@@ -298,12 +298,12 @@ export default function CodingPortalPage() {
       if (template && template.code) {
         setEditorCode(template.code);
       } else {
-        // Provide minimal starter code based on selected language (just function stubs)
+        // Minimal starter code - just the bare essentials
         const defaultTemplates: Record<string, string> = {
-          javascript: `// Solution\nfunction solve(input) {\n  const lines = input.trim().split('\\n');\n  const n = parseInt(lines[0]);\n  const arr = lines[1].split(' ').map(Number);\n  \n  // Write your logic here\n  \n  return result;\n}\n\n// Read input\nconst readline = require('readline');\nconst rl = readline.createInterface({ input: process.stdin });\nlet data = '';\nrl.on('line', (line) => data += line + '\\n');\nrl.on('close', () => console.log(solve(data)));\n`,
-          python: `def solve():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    \n    # Write your logic here\n    \n    print(result)\n\nsolve()\n`,
-          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    cin >> n;\n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) cin >> arr[i];\n    \n    // Write your logic here\n    \n    cout << result << endl;\n    return 0;\n}\n`,
-          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();\n        \n        // Write your logic here\n        \n        System.out.println(result);\n    }\n}\n`,
+          javascript: `// Write your solution here\n\n`,
+          python: `# Write your solution here\n\n`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}\n`,
+          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Write your solution here\n        \n    }\n}\n`,
         };
         
         setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
@@ -384,9 +384,7 @@ export default function CodingPortalPage() {
 
   // Mutation: Submit Code (all tests) - Detects if Problem or Question table
   const submitCodeMutation = useMutation({
-    mutationFn: async (payload: { code: string; language: string }) => {
-      // If question has 'id' field, it's from Problem table, otherwise use slug
-      // Coding Arena uses /problems endpoint (Problem table)
+    mutationFn: async (payload: { code: string; language: string; input?: string }) => {
       const endpoint = `/problems/${slug}/submit`;
       return api.post(endpoint, payload);
     },
@@ -396,7 +394,8 @@ export default function CodingPortalPage() {
       setConsoleOpen(true);
       setConsoleTab('result');
       if (payload.status === 'accepted') {
-        toast.success(`ACCEPTED! Solution passed all test cases. +${question?.xpReward} XP!`);
+        const xp = payload.xpAwarded || question?.xpReward || 0;
+        toast.success(`ACCEPTED! ${xp > 0 ? `+${xp} XP!` : 'Solution passed!'}`);
         queryClient.invalidateQueries({ queryKey: ['codingStats'] });
         queryClient.invalidateQueries({ queryKey: ['codingQuestions'] });
         if (payload.unlockedBadge) {
@@ -428,7 +427,7 @@ export default function CodingPortalPage() {
   const handleSubmitCode = () => {
     setIsSubmitting(true);
     submitCodeMutation.mutate(
-      { code: editorCode, language: selectedLanguage },
+      { code: editorCode, language: selectedLanguage, input: customTestcaseInput },
       { onSettled: () => setIsSubmitting(false) }
     );
   };
@@ -448,12 +447,11 @@ export default function CodingPortalPage() {
       if (template && template.code) {
         setEditorCode(template.code);
       } else {
-        // Reset to minimal starter template
         const defaultTemplates: Record<string, string> = {
-          javascript: `// Solution\nfunction solve(input) {\n  const lines = input.trim().split('\\n');\n  const n = parseInt(lines[0]);\n  const arr = lines[1].split(' ').map(Number);\n  \n  // Write your logic here\n  \n  return result;\n}\n\nconst readline = require('readline');\nconst rl = readline.createInterface({ input: process.stdin });\nlet data = '';\nrl.on('line', (line) => data += line + '\\n');\nrl.on('close', () => console.log(solve(data)));\n`,
-          python: `def solve():\n    n = int(input())\n    arr = list(map(int, input().split()))\n    \n    # Write your logic here\n    \n    print(result)\n\nsolve()\n`,
-          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    ios_base::sync_with_stdio(false);\n    cin.tie(NULL);\n    \n    int n;\n    cin >> n;\n    vector<int> arr(n);\n    for (int i = 0; i < n; i++) cin >> arr[i];\n    \n    // Write your logic here\n    \n    cout << result << endl;\n    return 0;\n}\n`,
-          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        int n = sc.nextInt();\n        int[] arr = new int[n];\n        for (int i = 0; i < n; i++) arr[i] = sc.nextInt();\n        \n        // Write your logic here\n        \n        System.out.println(result);\n    }\n}\n`,
+          javascript: `// Write your solution here\n\n`,
+          python: `# Write your solution here\n\n`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}\n`,
+          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Write your solution here\n        \n    }\n}\n`,
         };
         setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
       }
@@ -978,6 +976,9 @@ export default function CodingPortalPage() {
                           <div className="flex items-center gap-1.5 text-xxs text-gray-400">
                             <Clock className="w-3 h-3" />
                             <span>Execution Time: {executionOutput.runtime} ms</span>
+                            {executionOutput.passedCount !== undefined && executionOutput.totalCount !== undefined && (
+                              <span className="ml-3">Test Cases: {executionOutput.passedCount}/{executionOutput.totalCount} passed</span>
+                            )}
                           </div>
                         )}
 

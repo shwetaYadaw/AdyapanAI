@@ -1,11 +1,18 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Plus, Calendar, Clock, Trash2, Edit2, Save, X } from 'lucide-react';
+import { Plus, Trash2, Edit2, Trophy, Clock, X, Save, Code2, ChevronDown, ChevronUp } from 'lucide-react';
 import { api } from '../../core/services/api';
-import Button from '../../shared/components/Button/Button';
-import Card from '../../shared/components/Card/Card';
-import Modal from '../../shared/components/Modal/Modal';
 import toast from 'react-hot-toast';
+
+interface ContestQuestion {
+  title: string;
+  difficulty: string;
+  statement: string;
+  inputFormat: string;
+  outputFormat: string;
+  constraints: string;
+  testCases: { input: string; expectedOutput: string }[];
+}
 
 interface Contest {
   id: string;
@@ -13,389 +20,235 @@ interface Contest {
   description: string;
   startTime: string;
   endTime: string;
-  questions: string[];
-  createdAt: string;
+  questions: ContestQuestion[];
 }
 
-interface ContestForm {
-  title: string;
-  description: string;
-  startTime: string;
-  endTime: string;
-  questions: string;
-}
+const EMPTY_QUESTION: ContestQuestion = {
+  title: '', difficulty: 'easy', statement: '', inputFormat: '', outputFormat: '', constraints: '',
+  testCases: [{ input: '', expectedOutput: '' }],
+};
 
 export default function AdminContestsPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingContest, setEditingContest] = useState<Contest | null>(null);
-  const [form, setForm] = useState<ContestForm>({
-    title: '',
-    description: '',
-    startTime: '',
-    endTime: '',
-    questions: '',
-  });
-
   const queryClient = useQueryClient();
+  const [showModal, setShowModal] = useState(false);
+  const [editingContest, setEditingContest] = useState<Contest | null>(null);
+  const [form, setForm] = useState({ title: '', description: '', startDate: '', startTime: '10:00', duration: '2' });
+  const [questions, setQuestions] = useState<ContestQuestion[]>([{ ...EMPTY_QUESTION }]);
+  const [expandedQ, setExpandedQ] = useState<number>(0);
 
-  // Fetch all contests
-  const { data: contests, isLoading, error } = useQuery<Contest[]>({
-    queryKey: ['adminContests'],
-    queryFn: async () => {
-      try {
-        const { data } = await api.get('/contests');
-        return data.data || [];
-      } catch (err) {
-        console.error('Failed to fetch contests:', err);
-        return [];
-      }
-    },
+  const { data: contests = [], isLoading } = useQuery<Contest[]>({
+    queryKey: ['admin-contests'],
+    queryFn: async () => { const { data } = await api.get('/contests'); return data.data ?? []; },
   });
 
-  // Create/Update contest
-  const saveMutation = useMutation({
-    mutationFn: async (contestData: ContestForm) => {
-      const payload = {
-        ...contestData,
-        questions: contestData.questions.split(',').map(q => q.trim()).filter(Boolean),
-      };
-
-      if (editingContest) {
-        const response = await api.put(`/contests/${editingContest.id}`, payload);
-        return response.data;
-      } else {
-        const response = await api.post('/contests', payload);
-        return response.data;
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['adminContests'] });
-      toast.success(editingContest ? 'Contest updated!' : 'Contest created!');
-      closeModal();
-    },
-    onError: (error: any) => {
-      console.error('Save error:', error);
-      toast.error('Failed to save contest');
-    },
+  const createMutation = useMutation({
+    mutationFn: async (payload: any) => api.post('/contests', payload),
+    onSuccess: () => { toast.success('Contest created!', { position: 'top-center' }); queryClient.invalidateQueries({ queryKey: ['admin-contests'] }); resetForm(); },
+    onError: (err: any) => toast.error(err.response?.data?.message || 'Failed', { position: 'top-center' }),
   });
 
-  // Delete contest
+  const updateMutation = useMutation({
+    mutationFn: async ({ id, payload }: { id: string; payload: any }) => api.put(`/contests/${id}`, payload),
+    onSuccess: () => { toast.success('Contest updated!', { position: 'top-center' }); queryClient.invalidateQueries({ queryKey: ['admin-contests'] }); resetForm(); },
+    onError: (err: any) => toast.error(err.response?.data?.message || 'Failed', { position: 'top-center' }),
+  });
+
   const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await api.delete(`/contests/${id}`);
-      return response.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['adminContests'] });
-      toast.success('Contest deleted!');
-    },
-    onError: (error: any) => {
-      console.error('Delete error:', error);
-      toast.error('Failed to delete contest');
-    },
+    mutationFn: async (id: string) => api.delete(`/contests/${id}`),
+    onSuccess: () => { toast.success('Deleted!', { position: 'top-center' }); queryClient.invalidateQueries({ queryKey: ['admin-contests'] }); },
   });
 
-  const openCreateModal = () => {
+  const resetForm = () => {
+    setForm({ title: '', description: '', startDate: '', startTime: '10:00', duration: '2' });
+    setQuestions([{ ...EMPTY_QUESTION }]);
     setEditingContest(null);
-    setForm({
-      title: '',
-      description: '',
-      startTime: '',
-      endTime: '',
-      questions: '',
-    });
-    setIsModalOpen(true);
+    setShowModal(false);
+    setExpandedQ(0);
   };
 
-  const openEditModal = (contest: Contest) => {
+  const handleSubmit = () => {
+    if (!form.title || !form.startDate) { toast.error('Title and date required'); return; }
+    const validQs = questions.filter(q => q.title && q.statement);
+    if (validQs.length === 0) { toast.error('Add at least 1 question with title and statement'); return; }
+
+    const startTime = new Date(`${form.startDate}T${form.startTime}:00`);
+    const endTime = new Date(startTime.getTime() + parseFloat(form.duration) * 3600000);
+
+    const payload = { title: form.title, description: form.description, startTime: startTime.toISOString(), endTime: endTime.toISOString(), questions: validQs };
+
+    if (editingContest) { updateMutation.mutate({ id: editingContest.id, payload }); }
+    else { createMutation.mutate(payload); }
+  };
+
+  const handleEdit = (contest: Contest) => {
+    const start = new Date(contest.startTime);
+    const end = new Date(contest.endTime);
+    setForm({ title: contest.title, description: contest.description, startDate: start.toISOString().split('T')[0], startTime: start.toTimeString().slice(0, 5), duration: String(((end.getTime() - start.getTime()) / 3600000).toFixed(1)) });
+    setQuestions(Array.isArray(contest.questions) && contest.questions.length > 0 ? contest.questions : [{ ...EMPTY_QUESTION }]);
     setEditingContest(contest);
-    setForm({
-      title: contest.title,
-      description: contest.description,
-      startTime: new Date(contest.startTime).toISOString().slice(0, 16),
-      endTime: new Date(contest.endTime).toISOString().slice(0, 16),
-      questions: Array.isArray(contest.questions) ? contest.questions.join(', ') : '',
-    });
-    setIsModalOpen(true);
+    setShowModal(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setEditingContest(null);
+  const updateQuestion = (idx: number, field: string, value: any) => {
+    setQuestions(prev => prev.map((q, i) => i === idx ? { ...q, [field]: value } : q));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!form.title || !form.startTime || !form.endTime) {
-      toast.error('Please fill all required fields');
-      return;
-    }
-
-    if (new Date(form.startTime) >= new Date(form.endTime)) {
-      toast.error('End time must be after start time');
-      return;
-    }
-
-    saveMutation.mutate(form);
+  const updateTestCase = (qIdx: number, tcIdx: number, field: string, value: string) => {
+    setQuestions(prev => prev.map((q, i) => i === qIdx ? { ...q, testCases: q.testCases.map((tc, j) => j === tcIdx ? { ...tc, [field]: value } : tc) } : q));
   };
 
-  const handleDelete = (id: string, title: string) => {
-    if (window.confirm(`Are you sure you want to delete "${title}"?`)) {
-      deleteMutation.mutate(id);
-    }
-  };
-
-  const formatDateTime = (dateString: string) => {
-    return new Date(dateString).toLocaleString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  };
-
-  const getContestStatus = (startTime: string, endTime: string) => {
-    const now = new Date().getTime();
-    const start = new Date(startTime).getTime();
-    const end = new Date(endTime).getTime();
-
-    if (now < start) return { label: 'Upcoming', color: 'text-blue-600 bg-blue-50 dark:bg-blue-950 dark:text-blue-400' };
-    if (now >= start && now <= end) return { label: 'Live', color: 'text-green-600 bg-green-50 dark:bg-green-950 dark:text-green-400' };
-    return { label: 'Ended', color: 'text-gray-600 bg-gray-50 dark:bg-gray-800 dark:text-gray-400' };
+  const addTestCase = (qIdx: number) => {
+    setQuestions(prev => prev.map((q, i) => i === qIdx ? { ...q, testCases: [...q.testCases, { input: '', expectedOutput: '' }] } : q));
   };
 
   return (
-    <div className="page-wrapper space-y-5">
-      {/* Header */}
+    <div className="page-wrapper space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">
-            Manage Contests
+          <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white flex items-center gap-2">
+            <Trophy size={24} className="text-orange-500" /> Contest Management
           </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            Create and manage coding contests for students
-          </p>
+          <p className="text-sm text-gray-500 mt-1">Create contests with full coding questions for students to solve.</p>
         </div>
-        <Button variant="primary" size="md" onClick={openCreateModal}>
-          <Plus className="w-4 h-4" />
-          Create Contest
-        </Button>
+        <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-orange-600 text-white rounded-xl hover:bg-orange-700 font-semibold text-sm">
+          <Plus size={18} /> Create Contest
+        </button>
       </div>
 
       {/* Contests List */}
-      {isLoading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl p-6 border border-gray-100 dark:border-gray-800 animate-pulse">
-              <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-3"></div>
-              <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-2/3"></div>
-            </div>
-          ))}
-        </div>
-      ) : contests && contests.length > 0 ? (
-        <div className="space-y-4">
-          {contests.map((contest) => {
-            const status = getContestStatus(contest.startTime, contest.endTime);
-            const duration = Math.round(
-              (new Date(contest.endTime).getTime() - new Date(contest.startTime).getTime()) / (1000 * 60 * 60)
-            );
-
-            return (
-              <Card key={contest.id} padding="md" className="border border-gray-100 dark:border-gray-800 hover:shadow-md transition-shadow">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 space-y-3">
-                    {/* Title and Status */}
-                    <div className="flex items-start gap-3">
-                      <div className="flex-1">
-                        <h3 className="font-display font-bold text-lg text-gray-900 dark:text-white">
-                          {contest.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                          {contest.description}
-                        </p>
-                      </div>
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>
-                        {status.label}
-                      </span>
-                    </div>
-
-                    {/* Details */}
-                    <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-gray-400">
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="w-4 h-4" />
-                        <span>{formatDateTime(contest.startTime)}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4" />
-                        <span>{duration} hours</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-semibold">Problems:</span>
-                        <span>{Array.isArray(contest.questions) ? contest.questions.length : 0}</span>
-                      </div>
-                    </div>
-
-                    {/* Problem Slugs */}
-                    {Array.isArray(contest.questions) && contest.questions.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {contest.questions.map((slug, idx) => (
-                          <span
-                            key={idx}
-                            className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded text-xs font-mono text-gray-700 dark:text-gray-300"
-                          >
-                            {slug}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+      <div className="space-y-4">
+        {isLoading ? <p className="text-center text-gray-400 py-8">Loading...</p> :
+        contests.length === 0 ? <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800"><Trophy size={48} className="text-gray-300 mx-auto mb-4" /><p className="text-gray-500">No contests yet.</p></div> :
+        contests.map(contest => {
+          const start = new Date(contest.startTime);
+          const end = new Date(contest.endTime);
+          const isLive = Date.now() >= start.getTime() && Date.now() <= end.getTime();
+          const isUpcoming = start.getTime() > Date.now();
+          const qCount = Array.isArray(contest.questions) ? contest.questions.length : 0;
+          return (
+            <div key={contest.id} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5 hover:shadow-md transition">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-gray-900 dark:text-white">{contest.title}</h3>
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isLive ? 'bg-green-100 text-green-700' : isUpcoming ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}`}>
+                      {isLive ? 'LIVE' : isUpcoming ? 'UPCOMING' : 'ENDED'}
+                    </span>
                   </div>
-
-                  {/* Actions */}
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => openEditModal(contest)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 rounded-lg transition-colors"
-                      title="Edit contest"
-                    >
-                      <Edit2 className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(contest.id, contest.title)}
-                      className="p-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition-colors"
-                      title="Delete contest"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                  <p className="text-xs text-gray-500 mb-2">{contest.description}</p>
+                  <div className="flex items-center gap-4 text-xs text-gray-400">
+                    <span className="flex items-center gap-1"><Clock size={12} />{start.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} at {start.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
+                    <span>{Math.round((end.getTime() - start.getTime()) / 3600000)}h</span>
+                    <span className="flex items-center gap-1"><Code2 size={12} />{qCount} questions</span>
                   </div>
                 </div>
-              </Card>
-            );
-          })}
+                <div className="flex gap-2">
+                  <button onClick={() => handleEdit(contest)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={16} /></button>
+                  <button onClick={() => { if (confirm('Delete?')) deleteMutation.mutate(contest.id); }} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={16} /></button>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Modal */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-3xl shadow-2xl border border-gray-200 dark:border-gray-800 my-8 max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700 shrink-0">
+              <h2 className="font-bold text-lg">{editingContest ? 'Edit Contest' : 'Create Contest'}</h2>
+              <button onClick={resetForm}><X size={20} className="text-gray-400" /></button>
+            </div>
+
+            <div className="p-5 space-y-4 overflow-y-auto flex-1">
+              {/* Basic Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-semibold text-gray-600 mb-1 block">Title *</label>
+                  <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Weekly Speedrun #14" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" />
+                </div>
+                <div>
+                  <label className="text-xs font-semibold text-gray-600 mb-1 block">Description</label>
+                  <input value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="5 problems in 2 hours" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" />
+                </div>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div><label className="text-xs font-semibold text-gray-600 mb-1 block">Date *</label><input type="date" value={form.startDate} onChange={e => setForm({ ...form, startDate: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" /></div>
+                <div><label className="text-xs font-semibold text-gray-600 mb-1 block">Time</label><input type="time" value={form.startTime} onChange={e => setForm({ ...form, startTime: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500" /></div>
+                <div><label className="text-xs font-semibold text-gray-600 mb-1 block">Duration</label><select value={form.duration} onChange={e => setForm({ ...form, duration: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"><option value="1">1h</option><option value="1.5">1.5h</option><option value="2">2h</option><option value="3">3h</option></select></div>
+              </div>
+
+              {/* Questions Section */}
+              <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-bold text-sm text-gray-900 dark:text-white flex items-center gap-2"><Code2 size={16} className="text-blue-500" /> Questions ({questions.length})</h3>
+                  <button onClick={() => { setQuestions([...questions, { ...EMPTY_QUESTION }]); setExpandedQ(questions.length); }} className="text-xs px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium flex items-center gap-1"><Plus size={14} /> Add Question</button>
+                </div>
+
+                <div className="space-y-3">
+                  {questions.map((q, idx) => (
+                    <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                      <button onClick={() => setExpandedQ(expandedQ === idx ? -1 : idx)} className="w-full flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition text-left">
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                          Q{idx + 1}. {q.title || <span className="text-gray-400 italic">Untitled</span>}
+                          <span className={`ml-2 text-[10px] px-1.5 py-0.5 rounded ${q.difficulty === 'hard' ? 'bg-red-100 text-red-600' : q.difficulty === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>{q.difficulty}</span>
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button onClick={(e) => { e.stopPropagation(); setQuestions(questions.filter((_, i) => i !== idx)); }} className="text-red-500 hover:text-red-700"><Trash2 size={14} /></button>
+                          {expandedQ === idx ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+                        </div>
+                      </button>
+
+                      {expandedQ === idx && (
+                        <div className="p-4 space-y-3">
+                          <div className="grid grid-cols-2 gap-3">
+                            <div><label className="text-[10px] font-semibold text-gray-500 mb-1 block">TITLE *</label><input value={q.title} onChange={e => updateQuestion(idx, 'title', e.target.value)} placeholder="Two Sum" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+                            <div><label className="text-[10px] font-semibold text-gray-500 mb-1 block">DIFFICULTY</label><select value={q.difficulty} onChange={e => updateQuestion(idx, 'difficulty', e.target.value)} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div>
+                          </div>
+                          <div><label className="text-[10px] font-semibold text-gray-500 mb-1 block">PROBLEM STATEMENT *</label><textarea value={q.statement} onChange={e => updateQuestion(idx, 'statement', e.target.value)} rows={3} placeholder="Given an array..." className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div><label className="text-[10px] font-semibold text-gray-500 mb-1 block">INPUT FORMAT</label><textarea value={q.inputFormat} onChange={e => updateQuestion(idx, 'inputFormat', e.target.value)} rows={2} placeholder="First line: N..." className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+                            <div><label className="text-[10px] font-semibold text-gray-500 mb-1 block">OUTPUT FORMAT</label><textarea value={q.outputFormat} onChange={e => updateQuestion(idx, 'outputFormat', e.target.value)} rows={2} placeholder="Print the result..." className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+                          </div>
+                          <div><label className="text-[10px] font-semibold text-gray-500 mb-1 block">CONSTRAINTS</label><textarea value={q.constraints} onChange={e => updateQuestion(idx, 'constraints', e.target.value)} rows={2} placeholder="1 <= N <= 10^5" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" /></div>
+
+                          {/* Test Cases */}
+                          <div>
+                            <div className="flex items-center justify-between mb-2">
+                              <label className="text-[10px] font-semibold text-gray-500">TEST CASES ({q.testCases.length})</label>
+                              <button onClick={() => addTestCase(idx)} className="text-[10px] px-2 py-1 bg-green-600 text-white rounded font-medium">+ Add</button>
+                            </div>
+                            {q.testCases.map((tc, tcIdx) => (
+                              <div key={tcIdx} className="grid grid-cols-2 gap-2 mb-2">
+                                <div>
+                                  <label className="text-[9px] text-gray-400">Input</label>
+                                  <textarea value={tc.input} onChange={e => updateTestCase(idx, tcIdx, 'input', e.target.value)} rows={2} className="w-full px-2 py-1.5 rounded border border-gray-200 dark:border-gray-700 text-xs font-mono bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="5\n1 2 3 4 5" />
+                                </div>
+                                <div>
+                                  <label className="text-[9px] text-gray-400">Expected Output</label>
+                                  <textarea value={tc.expectedOutput} onChange={e => updateTestCase(idx, tcIdx, 'expectedOutput', e.target.value)} rows={2} className="w-full px-2 py-1.5 rounded border border-gray-200 dark:border-gray-700 text-xs font-mono bg-white dark:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="15" />
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 p-5 border-t border-gray-200 dark:border-gray-700 shrink-0">
+              <button onClick={resetForm} className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">Cancel</button>
+              <button onClick={handleSubmit} disabled={createMutation.isPending || updateMutation.isPending} className="flex items-center gap-2 px-5 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 text-sm font-semibold disabled:opacity-50">
+                <Save size={16} /> {editingContest ? 'Update' : 'Create'} Contest
+              </button>
+            </div>
+          </div>
         </div>
-      ) : (
-        <Card padding="lg" className="text-center">
-          <div className="text-6xl mb-4">🏆</div>
-          <h3 className="font-semibold text-lg text-gray-900 dark:text-white mb-2">
-            No contests yet
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            Create your first contest to get started
-          </p>
-          <Button variant="primary" size="sm" onClick={openCreateModal}>
-            <Plus className="w-4 h-4" />
-            Create Contest
-          </Button>
-        </Card>
       )}
-
-      {/* Create/Edit Modal */}
-      <Modal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        title={editingContest ? 'Edit Contest' : 'Create New Contest'}
-      >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Contest Title *
-            </label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              className="input-field"
-              placeholder="Weekly Coding Challenge"
-              required
-            />
-          </div>
-
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Description
-            </label>
-            <textarea
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="input-field resize-none"
-              rows={3}
-              placeholder="Solve DSA problems and compete with peers..."
-            />
-          </div>
-
-          {/* Start Time */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Start Time *
-            </label>
-            <input
-              type="datetime-local"
-              value={form.startTime}
-              onChange={(e) => setForm({ ...form, startTime: e.target.value })}
-              className="input-field"
-              required
-            />
-          </div>
-
-          {/* End Time */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              End Time *
-            </label>
-            <input
-              type="datetime-local"
-              value={form.endTime}
-              onChange={(e) => setForm({ ...form, endTime: e.target.value })}
-              className="input-field"
-              required
-            />
-          </div>
-
-          {/* Problem Slugs */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Problem Slugs (comma-separated)
-            </label>
-            <input
-              type="text"
-              value={form.questions}
-              onChange={(e) => setForm({ ...form, questions: e.target.value })}
-              className="input-field font-mono text-sm"
-              placeholder="two-sum, reverse-linked-list, binary-search"
-            />
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Enter problem slugs separated by commas
-            </p>
-          </div>
-
-          {/* Actions */}
-          <div className="flex items-center gap-3 pt-2">
-            <Button
-              type="submit"
-              variant="primary"
-              size="md"
-              disabled={saveMutation.isPending}
-              className="flex-1"
-            >
-              <Save className="w-4 h-4" />
-              {saveMutation.isPending ? 'Saving...' : editingContest ? 'Update Contest' : 'Create Contest'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="md"
-              onClick={closeModal}
-              disabled={saveMutation.isPending}
-            >
-              <X className="w-4 h-4" />
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 }

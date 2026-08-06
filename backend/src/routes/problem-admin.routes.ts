@@ -46,7 +46,8 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
       tags,
       category,
       testCases,
-      starterCode
+      starterCode,
+      courseId
     } = req.body;
 
     // Validate required fields
@@ -73,6 +74,7 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
         slug,
         statement,
         difficulty,
+        courseId: courseId || null,
         topics,  // Store the selected topic (e.g., "Arrays")
         companies: companies || 'MNC',
         inputFormat: inputFormat || '',
@@ -141,13 +143,19 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     const search = req.query.search as string | undefined;
     const difficulty = req.query.difficulty as string | undefined;
     const topic = req.query.topic as string | undefined;
+    const courseId = req.query.courseId as string | undefined;
 
     const pageNum = Math.max(1, page);
     const limitNum = Math.max(1, Math.min(limit, 100)); // Cap at 100
     const skip = (pageNum - 1) * limitNum;
 
+    // Build where clause
+    const whereClause: any = {};
+    if (courseId) whereClause.courseId = courseId;
+
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({
+      where: whereClause,
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,

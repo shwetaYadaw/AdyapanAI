@@ -5,6 +5,10 @@ import { authorize } from '../middleware/rbac.middleware';
 import { prisma } from '../config/prisma';
 import { sendSuccess, getPaginationParams, sendPaginated } from '../utils/response.utils';
 import { AppError } from '../middleware/errorHandler.middleware';
+import bcrypt from 'bcryptjs';
+import { EmailService } from '../services/email.service';
+
+const emailService = new EmailService();
 
 const router = Router();
 router.use(authenticate, authorize('admin'));
@@ -99,6 +103,73 @@ router.put('/users/:id/status', async (req, res, next) => {
     });
     sendSuccess({ res, data: { ...user, _id: user.id }, message: `User ${req.body.isActive ? 'activated' : 'deactivated'}` });
   } catch (err) { next(err); }
+});
+
+// DELETE /admin/users/:id
+router.delete('/users/:id', async (req, res, next) => {
+  try {
+    await prisma.user.delete({ where: { id: req.params.id } });
+    sendSuccess({ res, message: 'User deleted successfully' });
+  } catch (err) { next(err); }
+});
+
+// POST /admin/users - Manually create a user (student)
+router.post('/users', async (req, res, next) => {
+  try {
+    const { firstName, lastName, email, password, courses, status } = req.body;
+    
+    if (!firstName || !lastName || !email || !password) {
+      throw new AppError('First name, last name, email, and password are required', 400);
+    }
+    
+    const existing = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+    if (existing) {
+      throw new AppError('User with this email already exists', 409);
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Create the user and their student profile in a transaction
+    const user = await prisma.$transaction(async (tx) => {
+      const newUser = await tx.user.create({
+        data: {
+          firstName,
+          lastName,
+          email: email.toLowerCase(),
+          password: hashedPassword,
+          role: 'student',
+          isActive: status === 'active',
+          isEmailVerified: true, // Auto-verified since admin created
+          preferences: courses && Array.isArray(courses) ? { enrolledCourses: courses } : undefined,
+        },
+      });
+
+      await tx.studentProfile.create({
+        data: {
+          userId: newUser.id,
+          xp: 0,
+          level: 1,
+        },
+      });
+
+      // Save courses to preferences or handle dynamically
+      // if needed, mapping to topics or another table
+
+      return newUser;
+    });
+
+    // Send email with credentials
+    await emailService.sendWelcomeEmailWithCredentials(
+      user.email,
+      user.firstName,
+      user.email,
+      password
+    );
+
+    sendSuccess({ res, statusCode: 201, data: { id: user.id, email: user.email }, message: 'Student created successfully' });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // GET /admin/courses/pending

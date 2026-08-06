@@ -174,7 +174,7 @@ interface Question {
 
 export default function TcsNqtCompilerPage() {
   // Debug log to verify correct component is loading
-  console.log('?? TCS NQT COMPILER PAGE LOADED - Orange Theme');
+  console.log('TCS NQT COMPILER PAGE LOADED - Orange Theme');
   
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -240,7 +240,7 @@ export default function TcsNqtCompilerPage() {
 
   const handleStar = () => {
     setStarred(s => !s);
-    toast.success(starred ? 'Removed from bookmarks' : 'Added to bookmarks ?');
+    toast.success(starred ? 'Removed from bookmarks' : 'Added to bookmarks 🔖');
   };
 
   const handleShare = () => {
@@ -296,6 +296,15 @@ export default function TcsNqtCompilerPage() {
       
       if (template && template.code) {
         setEditorCode(template.code);
+      } else {
+        // Minimal starter code
+        const defaultTemplates: Record<string, string> = {
+          javascript: `// Write your solution here\n\n`,
+          python: `# Write your solution here\n\n`,
+          cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}\n`,
+          java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Write your solution here\n        \n    }\n}\n`,
+        };
+        setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
       }
       
       // Set testcase input from the first visible test case, or sampleInput
@@ -373,7 +382,7 @@ export default function TcsNqtCompilerPage() {
 
   // Mutation: Submit Code (all tests) - TCS NQT uses QuestionSubmission routes
   const submitCodeMutation = useMutation({
-    mutationFn: async (payload: { code: string; language: string }) => {
+    mutationFn: async (payload: { code: string; language: string; input?: string }) => {
       // TCS NQT questions use /question-submissions/:questionId/submit endpoint
       const questionId = question?.id || question?._id;
       const endpoint = `/question-submissions/${questionId}/submit`;
@@ -385,7 +394,8 @@ export default function TcsNqtCompilerPage() {
       setConsoleOpen(true);
       setConsoleTab('result');
       if (payload.status === 'accepted') {
-        toast.success(`ACCEPTED! Solution passed all test cases. +${question?.xpReward} XP!`);
+        const xp = payload.xpAwarded || question?.xpReward || 0;
+        toast.success(`ACCEPTED! ${xp > 0 ? `+${xp} XP!` : 'Solution passed!'}`);
         queryClient.invalidateQueries({ queryKey: ['tcsNqtStats'] });
         queryClient.invalidateQueries({ queryKey: ['tcsNqtQuestions'] });
         if (payload.unlockedBadge) {
@@ -417,7 +427,7 @@ export default function TcsNqtCompilerPage() {
   const handleSubmitCode = () => {
     setIsSubmitting(true);
     submitCodeMutation.mutate(
-      { code: editorCode, language: selectedLanguage },
+      { code: editorCode, language: selectedLanguage, input: customTestcaseInput },
       { onSettled: () => setIsSubmitting(false) }
     );
   };
@@ -564,31 +574,31 @@ export default function TcsNqtCompilerPage() {
                     let statement = question.statement || '';
                     
                     // If statement doesn't have markdown headers with emojis, auto-format it to match TCS NQT style
-                    if (!statement.includes('## ??')) {
+                    if (!statement.includes('📝 Problem Statement')) {
                       // Build formatted statement with exact TCS NQT styling
                       let formatted = '';
                       
                       // Problem Statement section with document emoji
-                      formatted += `## ?? Problem Statement\n\n${statement}\n\n---\n\n`;
+                      formatted += `## 📝 Problem Statement\n\n${statement}\n\n---\n\n`;
                       
                       // Input Format section with inbox emoji
                       if (question.inputFormat) {
-                        formatted += `## ?? Input Format\n\n${question.inputFormat}\n\n`;
+                        formatted += `## 📥 Input Format\n\n${question.inputFormat}\n\n`;
                       }
                       
                       // Output Format section with outbox emoji
                       if (question.outputFormat) {
-                        formatted += `## ?? Output Format\n\n${question.outputFormat}\n\n`;
+                        formatted += `## 📤 Output Format\n\n${question.outputFormat}\n\n`;
                       }
                       
                       // Constraints section with gear emoji
                       if (question.constraints) {
-                        formatted += `## ?? Constraints\n\n\`\`\`\n${question.constraints}\n\`\`\`\n\n---\n\n`;
+                        formatted += `## ⚙️ Constraints\n\n\`\`\`\n${question.constraints}\n\`\`\`\n\n---\n\n`;
                       }
                       
                       // Sample Test Cases section with lightbulb emoji - USE REAL TEST CASES
                       if (question.testCases && question.testCases.length > 0) {
-                        formatted += `## ?? Sample Test Cases\n\n`;
+                        formatted += `## 💡 Sample Test Cases\n\n`;
                         
                         // Show all visible (non-hidden) test cases
                         question.testCases.forEach((tc, index) => {
@@ -599,7 +609,7 @@ export default function TcsNqtCompilerPage() {
                         });
                       } else if (question.sampleInput && question.sampleOutput) {
                         // Fallback to sampleInput/sampleOutput for Question table
-                        formatted += `## ?? Sample Test Cases\n\n`;
+                        formatted += `## 💡 Sample Test Cases\n\n`;
                         formatted += `### Sample Test Case 1\n\n`;
                         formatted += `**Input:**\n\`\`\`\n${question.sampleInput}\n\`\`\`\n\n`;
                         formatted += `**Output:**\n\`\`\`\n${question.sampleOutput}\n\`\`\`\n\n`;
@@ -607,20 +617,20 @@ export default function TcsNqtCompilerPage() {
                       }
                       
                       // Add collapsible sections like TCS NQT
-                      formatted += `## ? Complexity Analysis\n\n`;
+                      formatted += `## ⏱️ Complexity Analysis\n\n`;
                       formatted += `**Time Complexity:** O(n) - where n is the size of the input\n\n`;
                       formatted += `**Space Complexity:** O(1) - constant extra space\n\n`;
                       
-                      formatted += `## ?? Hints\n\n`;
-                      formatted += `� Try to understand the problem requirements first\n`;
-                      formatted += `� Think about edge cases\n`;
-                      formatted += `� Consider the time and space complexity\n\n`;
+                      formatted += `## 💡 Hints\n\n`;
+                      formatted += `• Try to understand the problem requirements first\n`;
+                      formatted += `• Think about edge cases\n`;
+                      formatted += `• Consider the time and space complexity\n\n`;
                       
-                      formatted += `## ?? AI Mentor Insights\n\n`;
+                      formatted += `## 🤖 AI Mentor Insights\n\n`;
                       formatted += `This problem tests your understanding of basic algorithms. Focus on:\n\n`;
-                      formatted += `� Understanding input/output format\n`;
-                      formatted += `� Handling edge cases properly\n`;
-                      formatted += `� Writing clean, readable code\n\n`;
+                      formatted += `• Understanding input/output format\n`;
+                      formatted += `• Handling edge cases properly\n`;
+                      formatted += `• Writing clean, readable code\n\n`;
                       
                       statement = formatted;
                     }
@@ -749,7 +759,7 @@ export default function TcsNqtCompilerPage() {
                     value={newComment}
                     onChange={e => setNewComment(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) handlePostComment(); }}
-                    placeholder="Share your thoughts or approach� (Ctrl+Enter to post)"
+                    placeholder="Share your thoughts or approach ✍️ (Ctrl+Enter to post)"
                     rows={3}
                     className="w-full text-xs p-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-400 resize-none"
                   />
@@ -954,6 +964,9 @@ export default function TcsNqtCompilerPage() {
                           <div className="flex items-center gap-1.5 text-xxs text-gray-400">
                             <Clock className="w-3 h-3" />
                             <span>Execution Time: {executionOutput.runtime} ms</span>
+                            {executionOutput.passedCount !== undefined && executionOutput.totalCount !== undefined && (
+                              <span className="ml-3">Test Cases: {executionOutput.passedCount}/{executionOutput.totalCount} passed</span>
+                            )}
                           </div>
                         )}
 
@@ -1036,7 +1049,7 @@ export default function TcsNqtCompilerPage() {
               <div className="flex flex-col items-center justify-center">
                 <div className="w-28 h-28 mx-auto rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg relative">
                   {unlockedBadgeData ? (
-                    <span className="text-6xl animate-bounce">{unlockedBadgeData.iconUrl || '??'}</span>
+                    <span className="text-6xl animate-bounce">{unlockedBadgeData.iconUrl || '🏆'}</span>
                   ) : (
                     <Award className="w-14 h-14 text-white animate-pulse" />
                   )}
@@ -1106,5 +1119,3 @@ export default function TcsNqtCompilerPage() {
     </div>
   );
 }
-
-

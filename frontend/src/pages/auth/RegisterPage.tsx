@@ -20,6 +20,7 @@ const schema = z.object({
     .regex(/[a-z]/, 'Need a lowercase letter')
     .regex(/\d/,   'Need a number'),
   role:  z.enum(['student','teacher','recruiter']).default('student'),
+  course: z.string().optional(),
   terms: z.boolean().refine(v => v, 'Please accept the terms'),
 });
 type FormData = z.infer<typeof schema>;
@@ -60,8 +61,23 @@ export default function RegisterPage() {
       firstName: data.firstName, lastName: data.lastName, role: data.role,
     }));
     if (registerThunk.fulfilled.match(result)) {
+      // If student selected a course, save it
+      if (data.course && data.role === 'student') {
+        try {
+          const { api } = await import('../../core/services/api');
+          // Login first to get token, then select course
+          const loginRes = await api.post('/auth/login', { email: data.email, password: data.password });
+          const token = loginRes.data.data.accessToken;
+          await api.put('/courses/select', { courseId: data.course }, { headers: { Authorization: `Bearer ${token}` } });
+        } catch (e) {
+          // Course selection failed, not critical
+        }
+      }
       setRegistered(true);
-      toast.success(import.meta.env.DEV ? 'Account created! You can now sign in.' : 'Account created! Check your email.');
+      toast.success('Account created! You can now sign in.', { position: 'top-center' });
+    } else {
+      const errorMsg = (result.payload as string) || 'Registration failed';
+      toast.error(errorMsg, { position: 'top-center' });
     }
   };
 
@@ -195,6 +211,103 @@ export default function RegisterPage() {
                 </div>
               )}
               {errors.password && <p style={{color:ORANGE,fontSize:11,marginTop:3}}>{errors.password.message}</p>}
+            </div>
+
+            {/* Course Selection - for students */}
+            <div>
+              <label style={{ display:'block', fontSize:12, fontWeight:600, color:'#7C4A1E', marginBottom:6 }}>
+                CAREER PATH / COURSE *
+              </label>
+              <select
+                {...register('course')}
+                style={{
+                  width:'100%', padding:'12px 14px', borderRadius:12, border:'1.5px solid #F0DFC8',
+                  fontSize:14, background:'#FFFAF5', color:'#4A2C0A', outline:'none',
+                }}
+              >
+                <option value="">-- Select your course / domain --</option>
+                <optgroup label="CSE / IT Domains">
+                  <option value="dsa-system-design">DSA & System Design</option>
+                  <option value="full-stack">Full Stack Development</option>
+                  <option value="java-full-stack">Java Full Stack</option>
+                  <option value="python-full-stack">Python Full Stack Development</option>
+                  <option value="data-science">Data Science</option>
+                  <option value="ai-ml">AI/ML</option>
+                  <option value="gen-ai-llm">Generative AI & LLM</option>
+                  <option value="agentic-ai">Agentic AI</option>
+                  <option value="machine-learning">Machine Learning (ML)</option>
+                  <option value="data-analytics">Data Analytics</option>
+                  <option value="data-engineering">Data Engineering</option>
+                  <option value="devops">DevOps</option>
+                  <option value="aws">AWS</option>
+                  <option value="azure">Azure</option>
+                  <option value="cyber-security">Cyber Security</option>
+                  <option value="blockchain">Blockchain</option>
+                  <option value="app-development">App Development</option>
+                  <option value="web3">Web3</option>
+                  <option value="python">Python</option>
+                  <option value="java">Java</option>
+                  <option value="dotnet">.NET</option>
+                  <option value="docker">Docker</option>
+                  <option value="selenium-testing">Selenium Testing</option>
+                  <option value="manual-testing">Manual Testing</option>
+                  <option value="ui-ux-design">UI/UX Design</option>
+                  <option value="ar-vr">AR/VR</option>
+                  <option value="metaverse">Metaverse</option>
+                  <option value="quantum-computing">Quantum Computing</option>
+                  <option value="ccna">CCNA 200-301</option>
+                  <option value="servicenow">ServiceNow</option>
+                  <option value="graphic-design">Graphic Design</option>
+                </optgroup>
+                <optgroup label="ECE / EEE Domains">
+                  <option value="embedded-systems">Embedded Systems</option>
+                  <option value="iot">Internet of Things (IoT)</option>
+                  <option value="vlsi">VLSI</option>
+                  <option value="robotics">Robotics</option>
+                  <option value="industrial-robotics">Industrial Robotics</option>
+                  <option value="drone-engineering">Drone Engineering</option>
+                  <option value="hybrid-electric-vehicles">Hybrid & Electric Vehicles</option>
+                  <option value="electrical-cad">Electrical CAD</option>
+                </optgroup>
+                <optgroup label="Mechanical Domains">
+                  <option value="autocad">AutoCAD</option>
+                  <option value="catia">CATIA</option>
+                  <option value="car-design">Car Design</option>
+                  <option value="machine-design">Machine Design</option>
+                  <option value="ic-engine-design">IC Engine Design</option>
+                </optgroup>
+                <optgroup label="Chemical Domains">
+                  <option value="aspen-plus">Aspen Plus</option>
+                  <option value="aspen-hysys">Aspen HYSYS</option>
+                </optgroup>
+                <optgroup label="Civil Domains">
+                  <option value="construction-planning">Construction Planning</option>
+                </optgroup>
+                <optgroup label="Management Domains">
+                  <option value="business-analytics">Business Analytics</option>
+                  <option value="digital-marketing">Digital Marketing</option>
+                  <option value="finance">Finance</option>
+                  <option value="investment-banking">Investment Banking</option>
+                  <option value="human-resource">Human Resource</option>
+                  <option value="placement-preparation">Placement Preparation</option>
+                  <option value="power-bi">Power BI</option>
+                  <option value="salesforce">Salesforce</option>
+                  <option value="sap">SAP</option>
+                  <option value="stock-market">Stock Marketing</option>
+                  <option value="supply-chain">Supply Chain Management</option>
+                  <option value="microsoft-excel">Microsoft Excel</option>
+                  <option value="entrepreneurship">Entrepreneurship</option>
+                </optgroup>
+                <optgroup label="Medical, Pharma & Bio Domains">
+                  <option value="bioinformatics">Bioinformatics</option>
+                  <option value="biostatistics">Biostatistics</option>
+                  <option value="clinical-sas">Clinical SAS</option>
+                  <option value="genetic-engineering">Genetic Engineering</option>
+                  <option value="microbiology">Microbiology</option>
+                  <option value="molecular-biology">Molecular Biology</option>
+                  <option value="nano-science">Nano Science & Technology</option>
+                </optgroup>
+              </select>
             </div>
 
             {/* Terms */}

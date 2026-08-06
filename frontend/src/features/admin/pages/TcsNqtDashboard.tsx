@@ -12,11 +12,13 @@ import CacheManager from '../../../utils/cacheManager';
 
 interface TcsNqtDashboardProps {
   onBack: () => void;
+  courseId?: string;
+  courseName?: string;
 }
 
 type ExperienceLevel = 'freshers' | 'experienced';
 
-export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
+export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqtDashboardProps) {
   const [questions, setQuestions] = useState<TcsQuestion[]>([]);
   const [pagination, setPagination] = useState({
     total: 0,
@@ -25,10 +27,12 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
     pages: 0
   });
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState<any>({
     page: 1,
-    limit: 20
+    limit: 500 // Fetch all, paginate client-side by level
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 20;
   const [selectedQuestion, setSelectedQuestion] = useState<TcsQuestion | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -101,7 +105,8 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const result = await tcsNqtAdminService.getQuestions(filters);
+      const queryFilters = courseId ? { ...filters, courseId } : filters;
+      const result = await tcsNqtAdminService.getQuestions(queryFilters);
       if (result && result.questions) {
         setQuestions(result.questions as TcsQuestion[]);
         setPagination(result.pagination);
@@ -119,9 +124,24 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
     return level === activeLevel;
   });
 
+  // Client-side pagination for filtered questions
+  const totalFiltered = filteredQuestions.length;
+  const totalPages = Math.ceil(totalFiltered / ITEMS_PER_PAGE);
+  const paginatedQuestions = filteredQuestions.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
+  // Reset page when level changes
+  const handleLevelChange = (level: ExperienceLevel) => {
+    setActiveLevel(level);
+    setCurrentPage(1);
+  };
+
   const handleCreateQuestion = async (question: TcsQuestion) => {
     try {
-      await tcsNqtAdminService.createQuestion(question);
+      const questionData = courseId ? { ...question, courseId } : question;
+      await tcsNqtAdminService.createQuestion(questionData);
       toast.success('Placement prep question created successfully!');
       setShowCreateModal(false);
       CacheManager.clearQuestionCache();
@@ -187,9 +207,11 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Placement Prep</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              {courseName ? `${courseName} - Placement Prep` : 'Placement Prep'}
+            </h1>
             <p className="text-gray-600 dark:text-gray-400 mt-1">
-              Total Questions: {pagination.total}
+              {courseName ? `Placement questions for ${courseName}` : 'Total Questions'}: {pagination.total}
             </p>
           </div>
           <div className="flex gap-3">
@@ -216,7 +238,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
         {/* Experience Level Tabs */}
         <div className="flex gap-3 mb-8">
           <button
-            onClick={() => setActiveLevel('freshers')}
+            onClick={() => handleLevelChange('freshers')}
             className={`flex items-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all border-2 ${
               activeLevel === 'freshers'
                 ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 text-blue-700 dark:text-blue-300 shadow-md'
@@ -233,7 +255,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
           </button>
 
           <button
-            onClick={() => setActiveLevel('experienced')}
+            onClick={() => handleLevelChange('experienced')}
             className={`flex items-center gap-3 px-6 py-4 rounded-xl font-semibold transition-all border-2 ${
               activeLevel === 'experienced'
                 ? 'bg-purple-50 dark:bg-purple-950/40 border-purple-500 text-purple-700 dark:text-purple-300 shadow-md'
@@ -256,7 +278,7 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
         {/* Questions Table */}
         <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
           <TcsQuestionTable
-            questions={filteredQuestions}
+            questions={paginatedQuestions}
             loading={loading}
             onEdit={(question) => {
               setSelectedQuestion(question);
@@ -265,6 +287,62 @@ export default function TcsNqtDashboard({ onBack }: TcsNqtDashboardProps) {
             onDelete={handleDeleteQuestion}
           />
         </div>
+
+        {/* Pagination — Previous / Page Numbers / Next */}
+        {totalPages > 1 && (
+          <div className="mt-6 flex items-center justify-center gap-3">
+            <button
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage <= 1}
+              className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            >
+              ← Previous
+            </button>
+
+            <div className="flex items-center gap-1.5">
+              {Array.from({ length: Math.min(totalPages, 7) }, (_, i) => {
+                let pageNum: number;
+                if (totalPages <= 7) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 4) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 3) {
+                  pageNum = totalPages - 6 + i;
+                } else {
+                  pageNum = currentPage - 3 + i;
+                }
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={`w-9 h-9 rounded-lg text-sm font-semibold transition ${
+                      currentPage === pageNum
+                        ? 'bg-orange-600 text-white shadow-md'
+                        : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-orange-50 dark:hover:bg-orange-950/30'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage >= totalPages}
+              className="px-5 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
+            >
+              Next →
+            </button>
+          </div>
+        )}
+
+        {/* Page info text */}
+        {totalFiltered > 0 && (
+          <p className="text-center text-xs text-gray-400 mt-3 mb-6">
+            Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1}–{Math.min(currentPage * ITEMS_PER_PAGE, totalFiltered)} of {totalFiltered} questions
+          </p>
+        )}
       </div>
 
       {/* Modals */}
