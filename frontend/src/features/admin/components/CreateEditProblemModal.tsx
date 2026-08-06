@@ -9,6 +9,7 @@ interface CreateEditProblemModalProps {
   type?: 'coding-arena' | 'tcs-nqt';
   defaultTopic?: string;
   courseId?: string;
+  topics?: Topic[]; // Accept topics as prop
   onSave: (problem: Problem, changeReason?: string) => Promise<void>;
   onClose: () => void;
 }
@@ -18,6 +19,7 @@ export default function CreateEditProblemModal({
   type = 'coding-arena',
   defaultTopic = '',
   courseId,
+  topics: propsTopics,
   onSave,
   onClose
 }: CreateEditProblemModalProps) {
@@ -52,16 +54,23 @@ export default function CreateEditProblemModal({
     explanation: ''
   });
 
-  // Fetch topics on mount
+  // Fetch topics on mount and when modal is opened
   useEffect(() => {
-    fetchTopics();
-  }, [type]);
+    // If topics are passed as props, use them directly
+    if (propsTopics && propsTopics.length > 0) {
+      setTopics(propsTopics);
+    } else {
+      // Otherwise fetch them
+      fetchTopics();
+    }
+  }, [type, courseId, propsTopics]);
 
   const fetchTopics = async () => {
     try {
       setTopicsLoading(true);
       const system = type === 'coding-arena' ? 'coding-arena' : 'tcs-nqt';
-      const data = await topicAdminService.getTopics(system, true, courseId || 'none');
+      // Pass courseId directly - topicAdminService will handle the 'global' signal
+      const data = await topicAdminService.getTopics(system, false, courseId);
       console.log(`Fetched ${data?.length || 0} topics for ${system}`, data);
       setTopics(data);
     } catch (err: any) {

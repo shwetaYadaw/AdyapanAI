@@ -381,10 +381,12 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
           type="coding-arena"
           defaultTopic={selectedTopic?.name || ''}
           courseId={courseId}
+          topics={topics}
           onSave={selectedProblem ? handleUpdateProblem : handleCreateProblem}
           onClose={() => {
             setShowCreateModal(false);
             setSelectedProblem(null);
+            fetchTopics(); // Refresh topics when modal closes
           }}
         />
       )}
