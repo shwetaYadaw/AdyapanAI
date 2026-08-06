@@ -218,10 +218,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
                 {paginated.map((p: any) => (
                   <tr key={p.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition">
                     <td className="px-4 py-3">
-                      <div>
-                        <p className="font-semibold text-gray-900 dark:text-white">{p.title}</p>
-                        <p className="text-[10px] text-gray-400">{p.slug}</p>
-                      </div>
+                      <p className="font-semibold text-gray-900 dark:text-white">{p.title}</p>
                     </td>
                     <td className="text-center px-3 py-3">
                       <span className={`text-xs px-2.5 py-1 rounded-full font-bold ${p.difficulty === 'hard' ? 'bg-red-100 text-red-600' : p.difficulty === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>{p.difficulty}</span>
