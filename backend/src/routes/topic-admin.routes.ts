@@ -229,51 +229,43 @@ router.delete('/:id', authenticate, isAdmin, async (req: Request, res: Response,
   }
 });
 
-// POST /api/admin/topics/bulk/seed - Seed initial topics for all systems
+// POST /api/admin/topics/bulk/seed - Seed initial topics for the current context
+// If courseId is provided in body, seed only for that course
+// If courseId is not provided, seed for global (DSA) only
 router.post('/bulk/seed', authenticate, isAdmin, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const initialTopics = [
-      // Coding Arena Topics
-      ...['Arrays', 'Strings', 'Linked List', 'Trees', 'Graphs', 'Dynamic Programming', 'Hashing', 'Stack', 'Queue', 'Recursion', 'Backtracking', 'Greedy', 'Binary Search', 'Bit Manipulation', 'Segment Tree', 'Fenwick Tree', 'Trie', 'Two Pointers', 'Sliding Window', 'Heap/Priority Queue', 'DFS/BFS', 'Sorting'].map((name, idx) => ({
-        name,
-        system: 'coding-arena',
-        description: `${name} problems for top MNC companies`,
-        order: idx,
-        isActive: true,
-        createdBy: req.user?.userId
-      })),
-      // TCS NQT Topics - NEW TOPICS (replacing old ones)
-      ...['Arrays', 'Numbers System', 'Bit Manipulation', 'Sorting', 'String'].map((name, idx) => ({
-        name,
-        system: 'tcs-nqt',
-        description: `${name} questions for TCS NQT preparation`,
-        order: idx,
-        isActive: true,
-        createdBy: req.user?.userId
-      })),
-      // Aptitude Topics
-      ...['Quantitative Aptitude', 'Verbal Reasoning', 'Logical Reasoning', 'Data Interpretation', 'Puzzles', 'Numbers', 'Percentages', 'Time & Distance', 'Time & Work', 'Profit & Loss', 'Ratios & Proportions', 'Averages', 'Permutation & Combination', 'Probability', 'Geometry', 'Algebra'].map((name, idx) => ({
-        name,
-        system: 'aptitude',
-        description: `${name} for all companies`,
-        order: idx,
-        isActive: true,
-        createdBy: req.user?.userId
-      }))
-    ];
+    const { courseId } = req.body; // Optional - if provided, seed for this course only
+
+    // Seed only Coding Arena topics for the specified context (global or course)
+    const codingArenaTopics = ['Arrays', 'Strings', 'Linked List', 'Trees', 'Graphs', 'Dynamic Programming', 'Hashing', 'Stack', 'Queue', 'Recursion', 'Backtracking', 'Greedy', 'Binary Search', 'Bit Manipulation', 'Segment Tree', 'Fenwick Tree', 'Trie', 'Two Pointers', 'Sliding Window', 'Heap/Priority Queue', 'DFS/BFS', 'Sorting'].map((name, idx) => ({
+      name,
+      system: 'coding-arena',
+      description: `${name} problems for top MNC companies`,
+      order: idx,
+      isActive: true,
+      courseId: courseId || undefined, // Set courseId if provided, otherwise undefined (global)
+      createdBy: req.user?.userId
+    }));
 
     const created: any[] = [];
     const skipped: any[] = [];
 
-    for (const topicData of initialTopics) {
+    for (const topicData of codingArenaTopics) {
       try {
-        // Check if already exists using findMany for safer null handling
+        // Check if already exists for this specific context
+        const whereClause: any = {
+          name: topicData.name,
+          system: topicData.system
+        };
+        
+        if (courseId) {
+          whereClause.courseId = courseId; // Course-specific
+        } else {
+          whereClause.courseId = null; // Global/DSA only
+        }
+
         const existing = await prisma.topic.findMany({
-          where: {
-            name: topicData.name,
-            system: topicData.system,
-            courseId: null // Global topics don't have courseId
-          }
+          where: whereClause
         });
 
         if (existing.length > 0) {
@@ -292,7 +284,8 @@ router.post('/bulk/seed', authenticate, isAdmin, async (req: Request, res: Respo
         created.push({
           name: topic.name,
           system: topic.system,
-          id: topic.id
+          id: topic.id,
+          courseId: topic.courseId
         });
       } catch (err: any) {
         skipped.push({
@@ -305,7 +298,7 @@ router.post('/bulk/seed', authenticate, isAdmin, async (req: Request, res: Respo
 
     sendSuccess({
       res,
-      message: `Seeded ${created.length} topics, skipped ${skipped.length}`,
+      message: `Seeded ${created.length} topics for ${courseId ? 'course ' + courseId : 'global DSA'}, skipped ${skipped.length}`,
       data: {
         created: created.length,
         skipped: skipped.length,

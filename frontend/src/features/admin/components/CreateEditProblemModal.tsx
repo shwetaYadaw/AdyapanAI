@@ -107,14 +107,19 @@ export default function CreateEditProblemModal({
   };
 
   const handleSeedTopics = async () => {
-    if (!confirm('This will create initial topics for all systems (Coding Arena, Placement Prep, Aptitude). Continue?')) {
+    // Seed topics for the specific context only (global DSA or course-specific)
+    // This is controlled by the courseId prop passed from parent component
+    if (!confirm(`This will create initial topics for ${props.courseId ? 'this course' : 'the Coding Arena'}. Continue?`)) {
       return;
     }
 
     try {
       setSeeding(true);
-      const result = await topicAdminService.seedTopics();
-      toast.success(`Successfully seeded ${result?.created || 0} topics!`);
+      // Call backend endpoint with courseId context
+      const response = await api.post('/admin/topics/bulk/seed', { 
+        courseId: props.courseId || undefined // Pass courseId if exists, undefined for global
+      });
+      toast.success(`Successfully seeded ${response.data?.data?.created || 0} topics!`);
       // Refresh topics
       await fetchTopics();
     } catch (err: any) {
