@@ -31,6 +31,7 @@ const ADMIN_NAV: NavItem[] = [
   { label: 'Users', href: '/admin/users', icon: Users },
   { label: 'Courses', href: '/admin/courses', icon: Briefcase },
   { label: 'Problems', href: '/admin/problems', icon: Code2 },
+  { label: 'Contests', href: '/admin/contests', icon: Trophy },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];
