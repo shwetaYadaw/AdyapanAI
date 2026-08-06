@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Plus, Trash2, Edit } from 'lucide-react';
+import { Plus, Trash2, Edit, ArrowLeft } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Problem, AdminProblemFilters } from '../types/problem';
 import { problemAdminService } from '../services/problemAdminService';
@@ -223,10 +223,18 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
       {/* Hero Header */}
       <div className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 px-6 py-8">
         <div className="max-w-7xl mx-auto">
+          {/* Back Button */}
+          <button onClick={onBack} className="flex items-center gap-2 text-white/80 hover:text-white mb-4 text-sm font-medium transition">
+            <ArrowLeft size={18} /> Back to Course
+          </button>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">DSA Problems</h1>
-              <p className="text-cyan-100 text-sm mt-1">Manage coding problems for the student portal</p>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                {courseName ? `${courseName} - Coding Arena` : 'Coding Arena'}
+              </h1>
+              <p className="text-cyan-100 text-sm mt-1">
+                {courseName ? `Coding problems for ${courseName}` : 'Manage coding problems for the student portal'}
+              </p>
             </div>
             <div className="flex items-center gap-3">
               <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-medium">
