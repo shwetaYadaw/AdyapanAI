@@ -204,14 +204,15 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
       allProblems = allProblems.filter(p => p.difficulty === difficulty);
     }
 
-    // Filter by exact topic match if topic provided
+    // Filter by topic match if topic provided
     if (topic) {
       const topicLower = topic.toLowerCase();
       allProblems = allProblems.filter(p => {
         const problemTopics = p.topics
           .split(',')
           .map(t => t.trim().toLowerCase());
-        return problemTopics.includes(topicLower);
+        // Exact match or partial match (topic name contains or is contained in problem topic)
+        return problemTopics.some(pt => pt === topicLower || pt.includes(topicLower) || topicLower.includes(pt));
       });
     }
 

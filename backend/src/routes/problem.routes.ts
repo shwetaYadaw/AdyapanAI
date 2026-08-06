@@ -172,17 +172,17 @@ router.get('/', async (req, res, next) => {
       orderBy: [{ topics: 'asc' }, { difficulty: 'asc' }, { title: 'asc' }],
     });
 
-    // Filter by exact topic match if topic parameter provided
+    // Filter by topic match if topic parameter provided
     if (topic) {
       const topicStr = String(topic).toLowerCase();
       allProblems = allProblems.filter(p => {
         const problemTopics = p.topics
           .split(',')
           .map(t => t.trim().toLowerCase());
-        // Match both "problems on arrays" and "problems-on-arrays" (hyphenated URL key)
+        // Match exact, partial, or hyphenated URL key
         return problemTopics.some(t => {
           const tKey = t.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-          return t === topicStr || tKey === topicStr;
+          return t === topicStr || tKey === topicStr || t.includes(topicStr) || topicStr.includes(t);
         });
       });
     }
