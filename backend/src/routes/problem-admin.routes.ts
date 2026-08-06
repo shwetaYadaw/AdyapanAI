@@ -142,7 +142,6 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     const search = req.query.search as string | undefined;
     const difficulty = req.query.difficulty as string | undefined;
     const topic = req.query.topic as string | undefined;
-    const courseId = req.query.courseId as string | undefined;
 
     const pageNum = Math.max(1, page);
     const limitNum = Math.max(1, Math.min(limit, 100)); // Cap at 100
@@ -150,11 +149,6 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
 
     // Build where clause
     const whereClause: any = {};
-    if (courseId === 'none') {
-      whereClause.courseId = null; // Only global DSA problems (not assigned to any course)
-    } else if (courseId) {
-      whereClause.courseId = courseId;
-    }
 
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({

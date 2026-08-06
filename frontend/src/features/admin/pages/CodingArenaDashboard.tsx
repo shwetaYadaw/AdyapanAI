@@ -147,8 +147,8 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchTopics = async () => {
     try {
       setTopicsLoading(true);
-      // If no courseId (DSA page), fetch only global topics (courseId=none)
-      const data = await topicAdminService.getTopics('coding-arena', false, courseId || 'none');
+      // Fetch topics for coding-arena system
+      const data = await topicAdminService.getTopics('coding-arena', false);
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);
@@ -170,7 +170,6 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         name: newTopicName,
         system: 'coding-arena',
         description: newTopicDescription || undefined,
-        courseId: courseId || undefined,
       });
       toast.success('Topic added successfully!');
       setNewTopicName('');

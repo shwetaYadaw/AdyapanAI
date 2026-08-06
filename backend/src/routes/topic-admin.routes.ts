@@ -90,12 +90,11 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
       throw new AppError('Invalid system. Must be one of: coding-arena, tcs-nqt, aptitude', 400);
     }
 
-    // Check if topic already exists for this system + course combination
+    // Check if topic already exists for this system
     const existingTopics = await prisma.topic.findMany({
       where: {
         name,
         system,
-        courseId: courseId || null,
       }
     });
 
@@ -105,17 +104,16 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
 
     // Get the highest order and add 1
     const maxOrder = await prisma.topic.aggregate({
-      where: { system, courseId: courseId || null },
+      where: { system },
       _max: { order: true }
     });
 
-    const newOrder = (maxOrder._max.order || 0) + 1;
+    const newOrder = ((maxOrder._max?.order) || 0) + 1;
 
     const topic = await prisma.topic.create({
       data: {
         name,
         system,
-        courseId: courseId || null,
         description,
         order: order || newOrder,
         isActive: true,
