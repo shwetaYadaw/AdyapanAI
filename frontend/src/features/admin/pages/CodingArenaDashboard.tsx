@@ -63,7 +63,8 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      const queryFilters = courseId ? { ...filters, courseId } : filters;
+      // If courseId is set, filter by it. If not (DSA page), only show global problems (no courseId)
+      const queryFilters = courseId ? { ...filters, courseId } : { ...filters, courseId: 'none' };
       const result = await problemAdminService.getProblems(queryFilters);
       setProblems(result.problems);
       setPagination(result.pagination);
@@ -146,7 +147,8 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchTopics = async () => {
     try {
       setTopicsLoading(true);
-      const data = await topicAdminService.getTopics('coding-arena', false, courseId);
+      // If no courseId (DSA page), fetch only global topics (courseId=none)
+      const data = await topicAdminService.getTopics('coding-arena', false, courseId || 'none');
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);

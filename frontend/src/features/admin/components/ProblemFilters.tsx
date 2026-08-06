@@ -27,7 +27,7 @@ export default function ProblemFilters({ filters, onFiltersChange, system = 'cod
         setTopics([]);
         return;
       }
-      const data = await topicAdminService.getTopics(system, true, courseId);
+      const data = await topicAdminService.getTopics(system, true, courseId || 'none');
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);

@@ -134,7 +134,11 @@ router.get('/', async (req, res, next) => {
 
     const where: any = {};
     if (difficulty) where.difficulty = String(difficulty);
-    if (courseId) where.courseId = String(courseId);
+    if (courseId === 'none') {
+      where.courseId = null;
+    } else if (courseId) {
+      where.courseId = String(courseId);
+    }
     
     if (topic) {
       const topicStr = String(topic).toLowerCase();

@@ -44,11 +44,10 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     };
 
     // Filter by courseId if provided
-    if (req.query.courseId) {
+    if (req.query.courseId === 'none') {
+      where.courseId = null; // Only global topics
+    } else if (req.query.courseId) {
       where.courseId = String(req.query.courseId);
-    } else if (req.query.courseId === '') {
-      // If courseId is explicitly empty, show only global topics (null courseId)
-      where.courseId = null;
     }    if (activeOnly) {
       where.isActive = true;
     }
