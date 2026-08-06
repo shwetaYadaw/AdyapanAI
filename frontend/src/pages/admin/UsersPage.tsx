@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 import { Search, UserCheck, UserX, UserPlus, Home, GraduationCap, Plus, Eye, Edit2, Award, Trash2 } from 'lucide-react';
 import { api } from '../../core/services/api';
 import { formatDate, formatRelativeTime } from '@adyapan/shared';
@@ -117,50 +118,56 @@ export default function AdminUsersPage() {
   return (
     <div className="page-wrapper space-y-6">
 
-      <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-4 mb-2">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-            <GraduationCap className="w-7 h-7 text-[#FFB800]" />
+      {/* Colorful Header */}
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+        className="bg-gradient-to-r from-primary-600 via-primary-500 to-brand-amber rounded-2xl p-6 shadow-brand -mx-2 sm:-mx-0"
+      >
+        <div className="flex items-start sm:items-center justify-between flex-col sm:flex-row gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+              <GraduationCap className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="font-bold text-xl text-white">Student Management</h1>
+              <p className="text-sm text-white/70 mt-0.5">Add new learners, edit enrollment statuses, and review progress.</p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Student Management</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Add new learners, edit enrollment statuses, and review active progress report metrics.</p>
-          </div>
+          <button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center gap-2 px-5 py-2.5 bg-white text-primary-600 rounded-xl hover:bg-primary-50 font-semibold text-sm shadow-lg transition-all hover:-translate-y-0.5 hover:shadow-xl shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            Add Student
+          </button>
         </div>
-        <button 
-          onClick={() => setIsAddModalOpen(true)}
-          className="bg-[#FFB800] hover:bg-[#F0AD00] text-gray-900 font-bold flex items-center gap-2 !py-2.5 !px-5 text-sm rounded-xl transition-colors shrink-0 shadow-sm"
-        >
-          <Plus className="w-4 h-4 font-bold" />
-          Add Student Profile
-        </button>
-      </div>
+      </motion.div>
 
-      <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm">
+      {/* Table Card */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+        className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden shadow-lg shadow-gray-200/50 dark:shadow-none">
         {/* Filters Bar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 p-4 border-b border-gray-100 dark:border-gray-800">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-900">
           <div className="relative w-full sm:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary-400" />
             <input 
               value={search} 
               onChange={(e) => { setSearch(e.target.value); setPage(1); }} 
               placeholder="Search by name, email..." 
-              className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-white" 
+              className="w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400 dark:text-white shadow-sm transition-all" 
             />
           </div>
-
         </div>
 
         {/* Table inside the card */}
         <Table columns={columns} data={data?.data ?? []} keyExtractor={(r: UserRow) => r._id} loading={isLoading} emptyMessage="No users found" />
         
         {/* Pagination */}
-        <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="p-4 border-t border-gray-100 dark:border-gray-800 bg-gray-50/80 dark:bg-gray-900">
           {data?.pagination && (
             <Pagination page={page} pages={data.pagination.pages} total={data.pagination.total} limit={20} onPageChange={setPage} />
           )}
         </div>
-      </div>
+      </motion.div>
 
       <AddStudentModal
         isOpen={isAddModalOpen}

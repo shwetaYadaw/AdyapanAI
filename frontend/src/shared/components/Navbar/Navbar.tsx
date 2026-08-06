@@ -101,7 +101,7 @@ export default function Navbar() {
   const dashboardPath = user ? (DASHBOARD_LINKS[user.role] ?? '/') : '/';
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800">
+    <header className="sticky top-0 z-40 w-full bg-brand-cream dark:bg-gray-900 shadow-sm border-b border-primary-100/50 dark:border-gray-800">
       <div className="px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between h-16">
 
@@ -119,7 +119,7 @@ export default function Navbar() {
                   setMobileOpen(!mobileOpen);
                 }
               }}
-              className="p-2 -ml-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 -ml-2 rounded-xl text-gray-600 dark:text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-gray-800 transition-colors"
               aria-label="Toggle menu"
             >
               {(!isAuthenticated && mobileOpen) ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -132,7 +132,7 @@ export default function Navbar() {
                 alt="ADYAPAN"
                 className="w-9 h-9 rounded-full shadow-sm object-cover"
               />
-              <span className="font-display font-bold text-lg text-gray-900 dark:text-white hidden sm:block">
+              <span className="font-display font-bold text-lg text-gray-900 dark:text-primary-400 hidden sm:block">
                 ADYAPAN
               </span>
             </Link>
@@ -155,7 +155,7 @@ export default function Navbar() {
           <div className="flex items-center gap-2">
             {isAuthenticated && (
               <button
-                className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                className="p-2 rounded-xl text-gray-600 dark:text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Search"
               >
                 <Search className="w-5 h-5" />
@@ -165,7 +165,7 @@ export default function Navbar() {
             {/* Dark Mode */}
             <button
               onClick={() => dispatch(toggleDarkMode())}
-              className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="p-2 rounded-xl text-gray-600 dark:text-gray-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-gray-800 transition-colors"
               aria-label="Toggle dark mode"
             >
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -179,12 +179,12 @@ export default function Navbar() {
                 <div className="relative" ref={notifRef}>
                   <button
                     onClick={() => setNotifOpen(o => !o)}
-                    className="relative p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="relative p-2 rounded-xl text-gray-600 dark:text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors"
                     aria-label="Notifications"
                   >
                     <Bell className="w-5 h-5" />
                     {unreadCount > 0 && (
-                      <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse border-2 border-white dark:border-gray-950" />
+                      <span className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse border-2 border-white dark:border-gray-900" />
                     )}
                   </button>
 
@@ -270,7 +270,7 @@ export default function Navbar() {
                 <div className="relative" ref={profileRef}>
                   <button
                     onClick={() => setProfileOpen(!profileOpen)}
-                    className="flex items-center p-1 rounded-2xl hover:ring-2 hover:ring-gray-200 dark:hover:ring-gray-700 transition-all focus:outline-none"
+                    className="flex items-center p-1 rounded-2xl hover:ring-2 hover:ring-primary-200 dark:hover:ring-primary-700 transition-all focus:outline-none"
                   >
                     <Avatar 
                       src={user.avatar} 

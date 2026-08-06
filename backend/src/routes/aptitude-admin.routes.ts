@@ -23,7 +23,21 @@ router.get('/topics', async (req, res, next) => {
     const [topics, total] = await Promise.all([
       prisma.aptitudeTopic.findMany({
         where,
-        include: { chapters: { where: { isActive: true } } },
+        include: {
+          chapters: {
+            where: { isActive: true },
+            orderBy: { order: 'asc' },
+            include: {
+              questions: {
+                where: { isActive: true },
+                orderBy: { createdAt: 'desc' },
+                include: {
+                  options: { orderBy: { order: 'asc' } },
+                },
+              },
+            },
+          },
+        },
         orderBy: { order: 'asc' },
         skip,
         take: limit,

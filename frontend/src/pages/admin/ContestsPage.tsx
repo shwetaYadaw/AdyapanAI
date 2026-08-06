@@ -102,23 +102,28 @@ export default function AdminContestsPage() {
   };
 
   return (
-    <div className="page-wrapper space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white flex items-center gap-2">
-            <Trophy size={24} className="text-orange-500" /> Contest Management
-          </h1>
-          <p className="text-sm text-gray-500 mt-1">Create contests with full coding questions for students to solve.</p>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* Header */}
+      <div className="mx-4 sm:mx-6 mt-4 bg-gradient-to-r from-primary-600 via-primary-500 to-brand-amber px-6 sm:px-8 py-8 rounded-xl shadow-brand">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-3">
+              <Trophy size={28} /> Contest Management
+            </h1>
+            <p className="text-white/70 text-sm mt-1">Create contests with full coding questions for students.</p>
+          </div>
+          <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-white text-primary-600 rounded-lg hover:bg-primary-50 font-semibold text-sm shadow-lg transition hover:-translate-y-0.5">
+            <Plus size={18} /> Create Contest
+          </button>
         </div>
-        <button onClick={() => { resetForm(); setShowModal(true); }} className="flex items-center gap-2 px-5 py-2.5 bg-orange-600 text-white rounded-xl hover:bg-orange-700 font-semibold text-sm">
-          <Plus size={18} /> Create Contest
-        </button>
       </div>
 
-      {/* Contests List */}
-      <div className="space-y-4">
-        {isLoading ? <p className="text-center text-gray-400 py-8">Loading...</p> :
-        contests.length === 0 ? <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800"><Trophy size={48} className="text-gray-300 mx-auto mb-4" /><p className="text-gray-500">No contests yet.</p></div> :
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-4">
+
+      {/* Contests Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {isLoading ? <p className="text-center text-gray-400 py-8 col-span-full">Loading...</p> :
+        contests.length === 0 ? <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 col-span-full"><Trophy size={48} className="text-gray-300 mx-auto mb-4" /><p className="text-gray-500">No contests yet.</p></div> :
         contests.map(contest => {
           const start = new Date(contest.startTime);
           const end = new Date(contest.endTime);
@@ -126,25 +131,32 @@ export default function AdminContestsPage() {
           const isUpcoming = start.getTime() > Date.now();
           const qCount = Array.isArray(contest.questions) ? contest.questions.length : 0;
           return (
-            <div key={contest.id} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5 hover:shadow-md transition">
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h3 className="font-bold text-gray-900 dark:text-white">{contest.title}</h3>
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${isLive ? 'bg-green-100 text-green-700' : isUpcoming ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'}`}>
-                      {isLive ? 'LIVE' : isUpcoming ? 'UPCOMING' : 'ENDED'}
-                    </span>
-                  </div>
-                  <p className="text-xs text-gray-500 mb-2">{contest.description}</p>
-                  <div className="flex items-center gap-4 text-xs text-gray-400">
-                    <span className="flex items-center gap-1"><Clock size={12} />{start.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} at {start.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</span>
-                    <span>{Math.round((end.getTime() - start.getTime()) / 3600000)}h</span>
-                    <span className="flex items-center gap-1"><Code2 size={12} />{qCount} questions</span>
-                  </div>
+            <div key={contest.id} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-card hover:shadow-card-hover transition-all group hover:-translate-y-1 duration-300">
+              {/* Card Header — gradient */}
+              <div className="h-24 bg-gradient-to-br from-primary-500 via-primary-400 to-brand-amber relative p-4">
+                <span className={`absolute top-3 right-3 text-[10px] px-2.5 py-1 rounded-full font-bold ${isLive ? 'bg-green-500 text-white' : isUpcoming ? 'bg-blue-500 text-white' : 'bg-gray-500 text-white'}`}>
+                  {isLive ? 'LIVE' : isUpcoming ? 'UPCOMING' : 'ENDED'}
+                </span>
+                <div className="absolute top-3 left-3 w-9 h-9 rounded-lg bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                  <Trophy size={18} className="text-white" />
                 </div>
-                <div className="flex gap-2">
-                  <button onClick={() => handleEdit(contest)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={16} /></button>
-                  <button onClick={() => { if (confirm('Delete?')) deleteMutation.mutate(contest.id); }} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={16} /></button>
+              </div>
+              {/* Card Body */}
+              <div className="p-4">
+                <h3 className="font-bold text-sm text-gray-900 dark:text-white mb-1 group-hover:text-orange-600 transition-colors">{contest.title}</h3>
+                <p className="text-[11px] text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{contest.description}</p>
+                <div className="flex items-center gap-3 text-[10px] text-gray-400 mb-3">
+                  <span className="flex items-center gap-1"><Clock size={10} />{start.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}</span>
+                  <span>{Math.round((end.getTime() - start.getTime()) / 3600000)}h</span>
+                  <span className="flex items-center gap-1"><Code2 size={10} />{qCount} Q</span>
+                </div>
+                {/* Footer */}
+                <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-800">
+                  <span className="text-[10px] text-orange-600 font-medium flex items-center gap-1"><Code2 size={10} /> Coding Contest</span>
+                  <div className="flex gap-1.5 opacity-0 group-hover:opacity-100 transition">
+                    <button onClick={() => handleEdit(contest)} className="p-1.5 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg"><Edit2 size={13} /></button>
+                    <button onClick={() => { if (confirm('Delete?')) deleteMutation.mutate(contest.id); }} className="p-1.5 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"><Trash2 size={13} /></button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -249,6 +261,7 @@ export default function AdminContestsPage() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

@@ -244,8 +244,8 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Hero Header */}
-      <div className="bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 px-6 py-8">
+      {/* Hero Header — ADYAPAN Orange */}
+      <div className="mx-4 sm:mx-6 mt-4 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 px-6 sm:px-8 py-8 sm:py-10 rounded-xl">
         <div className="max-w-7xl mx-auto">
           {/* Back Button */}
           <button onClick={onBack} className="flex items-center gap-2 text-white/80 hover:text-white mb-4 text-sm font-medium transition">
@@ -261,13 +261,13 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-medium">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+              <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-white text-sm font-medium">
+                <span className="w-2 h-2 rounded-full bg-yellow-300 animate-pulse" />
                 {pagination.total} Problems
               </div>
               <button
                 onClick={() => { setSelectedProblem(null); setShowCreateModal(true); }}
-                className="flex items-center gap-2 px-5 py-2.5 bg-white text-blue-700 rounded-xl hover:bg-blue-50 transition font-semibold text-sm shadow-lg"
+                className="flex items-center gap-2 px-5 py-2.5 bg-white text-orange-600 rounded-lg hover:bg-orange-50 transition font-semibold text-sm shadow-lg"
               >
                 <Plus size={18} />
                 Add Problem
@@ -283,10 +283,10 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         <div className="flex flex-wrap items-center gap-2">
           <button
             onClick={() => { setSelectedTopic(null); setFilters(prev => ({ ...prev, topic: undefined, page: 1 })); }}
-            className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
               !selectedTopic
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-blue-300'
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-orange-300'
             }`}
           >
             All Topics
@@ -295,10 +295,10 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
             <button
               key={topic.id}
               onClick={() => handleSelectTopic(topic)}
-              className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+              className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 selectedTopic?.id === topic.id
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-blue-300'
+                  ? 'bg-orange-500 text-white shadow-md'
+                  : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:border-orange-300'
               }`}
             >
               {topic.name}
@@ -306,7 +306,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
           ))}
           <button
             onClick={() => setShowTopicManagement(!showTopicManagement)}
-            className="px-3 py-2 rounded-full text-xs font-medium text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition"
+            className="px-3 py-2 rounded-lg text-xs font-medium text-gray-400 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-orange-950/30 transition"
           >
             {showTopicManagement ? '✕ Close' : '+ Manage'}
           </button>
@@ -347,7 +347,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         <ProblemFilters filters={filters} onFiltersChange={setFilters} topics={topics} system="coding-arena" courseId={courseId} />
 
         {/* Problems Table */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
           <ProblemTable
             problems={problems}
             loading={loading}
@@ -367,7 +367,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
               else if (pagination.page <= 4) p = i+1;
               else if (pagination.page >= pagination.pages - 3) p = pagination.pages - 6 + i;
               else p = pagination.page - 3 + i;
-              return (<button key={p} onClick={() => setFilters(prev => ({...prev, page: p}))} className={`w-9 h-9 rounded-lg text-sm font-semibold transition ${pagination.page === p ? 'bg-blue-600 text-white' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-blue-50'}`}>{p}</button>);
+              return (<button key={p} onClick={() => setFilters(prev => ({...prev, page: p}))} className={`w-9 h-9 rounded-lg text-sm font-semibold transition ${pagination.page === p ? 'bg-orange-500 text-white' : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-orange-50'}`}>{p}</button>);
             })}
             <button onClick={() => setFilters(prev => ({...prev, page: Math.min(pagination.pages, (prev.page||1) + 1)}))} disabled={(filters.page||1) >= pagination.pages} className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 disabled:opacity-40 transition">Next →</button>
           </div>

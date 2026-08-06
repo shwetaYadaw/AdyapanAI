@@ -51,8 +51,8 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
     } = req.body;
 
     // Validate required fields
-    if (!title || !statement || !difficulty || !topics) {
-      throw new AppError('Title, statement, difficulty, and topic are required', 400);
+    if (!title || !statement || !difficulty) {
+      throw new AppError('Title, statement, and difficulty are required', 400);
     }
 
     const slug = slugify(title, {
@@ -74,7 +74,7 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
         slug,
         statement,
         difficulty,
-        topics,  // Store the selected topic (e.g., "Arrays")
+        topics: topics || 'General',
         companies: companies || 'MNC',
         inputFormat: inputFormat || '',
         outputFormat: outputFormat || '',

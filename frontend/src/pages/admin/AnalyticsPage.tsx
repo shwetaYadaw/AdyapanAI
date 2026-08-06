@@ -55,9 +55,10 @@ function StatCard({
   sub?: string; color?: string; trend?: number;
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 flex flex-col gap-3 hover:-translate-y-0.5 transition-all duration-300"
+      style={{ boxShadow: `0 4px 20px ${color}25, 0 1px 3px rgba(0,0,0,0.05)` }}>
       <div className="flex items-center justify-between">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color}20` }}>
+        <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${color}20`, boxShadow: `0 4px 12px ${color}30` }}>
           <span style={{ color }}>{icon}</span>
         </div>
         {trend !== undefined && (
@@ -174,7 +175,7 @@ function OverallSection() {
 
       {/* Trend Chart + Difficulty Pie */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+        <div className="lg:col-span-2 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white">Submission Trends</h3>
@@ -220,7 +221,7 @@ function OverallSection() {
           )}
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
           <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Difficulty Split</h3>
           <p className="text-xs text-gray-400 mb-4">All problems (Arena + Challenges)</p>
           <ResponsiveContainer width="100%" height={160}>
@@ -246,7 +247,7 @@ function OverallSection() {
       </div>
 
       {/* Topic Breakdown */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
         <div className="mb-4">
           <h3 className="font-semibold text-gray-900 dark:text-white">Topic Coverage</h3>
           <p className="text-xs text-gray-400">Problems per topic with difficulty breakdown</p>
@@ -272,7 +273,7 @@ function OverallSection() {
           { label: 'Active Student Rate', value: pct(summary?.students?.active ?? 0, summary?.students?.total ?? 1), color: C.blue, sub: `${fmt(summary?.students?.active)} active in last 7 days` },
           { label: 'Problems Solved Rate', value: topics.length > 0 ? pct(topics.reduce((s: number, t: any) => s + t.solved, 0), topics.reduce((s: number, t: any) => s + t.total, 0)) : 0, color: C.purple, sub: 'Across all topics' },
         ].map(m => (
-          <div key={m.label} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+          <div key={m.label} className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
             <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">{m.label}</p>
             <p className="text-3xl font-bold mb-1" style={{ color: m.color }}>{m.value}%</p>
             <ProgressBar value={m.value} color={m.color} className="mb-2" />
@@ -342,7 +343,7 @@ function IndividualSection() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
       {/* ── Left: Student List ── */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg overflow-hidden flex flex-col">
         {/* Search */}
         <div className="p-4 border-b border-gray-100 dark:border-gray-800 shrink-0">
           <div className="relative">
@@ -365,7 +366,7 @@ function IndividualSection() {
               onClick={() => setSelectedId(s.id)}
               className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all ${
                 selectedId === s.id
-                  ? 'bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 shadow-sm'
+                  ? 'bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 shadow-lg'
                   : 'hover:bg-gray-50 dark:hover:bg-gray-800/60 border border-transparent'
               }`}
             >
@@ -397,7 +398,7 @@ function IndividualSection() {
       <div className="lg:col-span-2 space-y-4">
 
         {/* ── Profile Header ── */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
           <div className="flex items-start gap-4 flex-wrap">
             <div className="relative shrink-0">
               <img src={sd.avatar} alt={sd.name} className="w-16 h-16 rounded-2xl object-cover bg-gray-100" />
@@ -442,7 +443,7 @@ function IndividualSection() {
         </div>
 
         {/* ── 2. Topic-wise Progress Bars ── */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
           <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">Topic-wise Progress</p>
           <div className="space-y-3">
             {sd.topicStats.map((t,i)=>{
@@ -482,7 +483,7 @@ function IndividualSection() {
         {/* ── 3. Strengths & Needs Improvement ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Strengths */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-emerald-100 dark:border-emerald-900/40 shadow-sm p-5">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-emerald-100 dark:border-emerald-900/40 shadow-lg p-5">
             <div className="flex items-center gap-2 mb-4">
               <span className="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-base">💪</span>
               <div>
@@ -506,7 +507,7 @@ function IndividualSection() {
           </div>
 
           {/* Needs Improvement */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-red-100 dark:border-red-900/40 shadow-sm p-5">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-red-100 dark:border-red-900/40 shadow-lg p-5">
             <div className="flex items-center gap-2 mb-4">
               <span className="w-8 h-8 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center text-base">📈</span>
               <div>
@@ -533,7 +534,7 @@ function IndividualSection() {
         {/* ── 4. 30-Day Activity + Language Usage ── */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Activity chart */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">30-Day Activity</p>
             <p className="text-xs text-gray-400 mb-3">Daily submissions vs accepted</p>
             <ResponsiveContainer width="100%" height={120}>
@@ -548,7 +549,7 @@ function IndividualSection() {
           </div>
 
           {/* Language usage */}
-          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-4">Language Usage</p>
             <div className="space-y-3">
               {sd.langDist.map((l,i)=>{
@@ -667,7 +668,7 @@ function ComparativeSection() {
           ] as const).map(({k,label})=>(
             <button key={k} onClick={()=>setFilter(k as any)}
               className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-all whitespace-nowrap
-                ${filter===k?'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm':'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'}`}>
+                ${filter===k?'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-lg':'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'}`}>
               {label}
             </button>
           ))}
@@ -697,7 +698,7 @@ function ComparativeSection() {
           {emoji:'📚',label:'Most Solved',   val:`${Math.max(...visible.map(s=>s.solved))} probs`,sub:visible.reduce((a,b)=>a.solved>b.solved?a:b,visible[0])?.name,     bg:'bg-blue-50   dark:bg-blue-900/20',   txt:'text-blue-700   dark:text-blue-300'  },
           {emoji:'🚀',label:'Top Streak',    val:`${Math.max(...visible.map(s=>s.streak))} days`,sub:visible.reduce((a,b)=>a.streak>b.streak?a:b,visible[0])?.name,     bg:'bg-orange-50 dark:bg-orange-900/20', txt:'text-orange-700 dark:text-orange-300'},
         ].map(c=>(
-          <div key={c.label} className={`rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-4 ${c.bg}`}>
+          <div key={c.label} className={`rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-4 ${c.bg}`}>
             <p className="text-2xl mb-1">{c.emoji}</p>
             <p className={`text-xl font-bold ${c.txt}`}>{c.val}</p>
             <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">{c.label}</p>
@@ -707,7 +708,7 @@ function ComparativeSection() {
       </div>
 
       {/* ── PERFORMANCE COMPARISON TABLE ─────────────────────────────── */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
           <h4 className="font-bold text-gray-900 dark:text-white">Performance Comparison Table</h4>
           <p className="text-xs text-gray-400 mt-0.5">All students · XP · Accuracy · Problems Solved · Aptitude · Study Hours · Streak</p>
@@ -760,7 +761,7 @@ function ComparativeSection() {
       </div>
 
       {/* ── TOPIC PERFORMANCE (progress bars) ────────────────────────── */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
         <h4 className="font-bold text-gray-900 dark:text-white mb-1">Topic Performance</h4>
         <p className="text-xs text-gray-400 mb-5">Platform-wide average problems solved per topic</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3">
@@ -784,7 +785,7 @@ function ComparativeSection() {
       {/* ── RANK GROWTH + XP GROWTH charts ───────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Rank Growth */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
           <h4 className="font-bold text-gray-900 dark:text-white mb-1">Rank Growth</h4>
           <p className="text-xs text-gray-400 mb-4">Top 5 students — weekly rank (lower = better)</p>
           <ResponsiveContainer width="100%" height={200}>
@@ -802,7 +803,7 @@ function ComparativeSection() {
         </div>
 
         {/* XP Growth */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg p-5">
           <h4 className="font-bold text-gray-900 dark:text-white mb-1">XP Growth</h4>
           <p className="text-xs text-gray-400 mb-4">Top 5 students — cumulative XP week by week</p>
           <ResponsiveContainer width="100%" height={200}>
@@ -822,7 +823,7 @@ function ComparativeSection() {
 
       {/* ── STRENGTHS | NEEDS IMPROVEMENT ────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-emerald-100 dark:border-emerald-900/40 shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-emerald-100 dark:border-emerald-900/40 shadow-lg p-5">
           <div className="flex items-center gap-2 mb-4">
             <span className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-lg">💪</span>
             <div>
@@ -843,7 +844,7 @@ function ComparativeSection() {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-red-100 dark:border-red-900/40 shadow-sm p-5">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-red-100 dark:border-red-900/40 shadow-lg p-5">
           <div className="flex items-center gap-2 mb-4">
             <span className="w-9 h-9 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center text-lg">📈</span>
             <div>
@@ -866,7 +867,7 @@ function ComparativeSection() {
       </div>
 
       {/* ── AI INSIGHTS ──────────────────────────────────────────────── */}
-      <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/30 dark:to-blue-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-900/40 shadow-sm p-5">
+      <div className="bg-gradient-to-br from-indigo-50 to-blue-50 dark:from-indigo-950/30 dark:to-blue-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-900/40 shadow-lg p-5">
         <div className="flex items-center gap-2 mb-4">
           <span className="text-2xl">🤖</span>
           <div>
@@ -884,7 +885,7 @@ function ComparativeSection() {
       </div>
 
       {/* ── LEADERBOARD ──────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-lg overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
           <div>
             <h4 className="font-bold text-gray-900 dark:text-white">Leaderboard</h4>
@@ -976,28 +977,28 @@ const TABS = [
 type TabKey = typeof TABS[number]['key'];
 
 const TAB_STYLES: Record<string, { active: string; inactive: string }> = {
-  blue:   { active: 'bg-blue-600 text-white shadow-sm shadow-blue-200 dark:shadow-blue-900',   inactive: 'text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30' },
-  purple: { active: 'bg-purple-600 text-white shadow-sm shadow-purple-200 dark:shadow-purple-900', inactive: 'text-gray-500 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/30' },
-  amber:  { active: 'bg-amber-500 text-white shadow-sm shadow-amber-200 dark:shadow-amber-900',  inactive: 'text-gray-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30' },
+  blue:   { active: 'bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-blue-900',   inactive: 'text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-950/30' },
+  purple: { active: 'bg-purple-600 text-white shadow-lg shadow-purple-200 dark:shadow-purple-900', inactive: 'text-gray-500 hover:text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/30' },
+  amber:  { active: 'bg-amber-500 text-white shadow-lg shadow-amber-200 dark:shadow-amber-900',  inactive: 'text-gray-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30' },
 };
 
 export default function AdminAnalyticsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('overall');
 
   return (
-    <div className="page-wrapper pb-12 space-y-5">
-      {/* Header + Tab row in one line */}
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-        {/* Title */}
-        <div className="flex items-center gap-3 shrink-0">
-          <div className="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center">
-            <BarChart2 size={18} className="text-white" />
+    <div className="page-wrapper pb-12 space-y-5 bg-brand-cream min-h-screen">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-brand-amber px-6 sm:px-8 py-6 rounded-2xl shadow-brand">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <BarChart2 size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white leading-tight">Analytics</h1>
-            <p className="text-xs text-gray-400">Enterprise insights</p>
+            <h1 className="font-display font-bold text-xl text-white leading-tight">Analytics</h1>
+            <p className="text-sm text-white/70">Enterprise Insights</p>
           </div>
         </div>
+      </div>
 
         {/* Tab row */}
         <div className="flex items-center gap-1.5 p-1.5 bg-gray-100 dark:bg-gray-800 rounded-2xl flex-1 sm:flex-initial overflow-x-auto scrollbar-hide">
@@ -1016,7 +1017,6 @@ export default function AdminAnalyticsPage() {
             );
           })}
         </div>
-      </div>
 
       {/* Active section content */}
       <div>

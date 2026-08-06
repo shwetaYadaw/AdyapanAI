@@ -17,9 +17,14 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="page-wrapper space-y-6">
-      <div>
-        <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Platform Settings</h1>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">Configure general platform preferences and system features.</p>
+      <div className="flex items-center gap-3">
+        <div className="p-2.5 bg-gradient-to-br from-gray-700 to-slate-800 rounded-xl shadow-lg shadow-gray-500/20">
+          <Settings className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h1 className="font-display font-bold text-2xl text-gray-900 dark:text-white">Platform Settings</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-0.5">Configure general platform preferences.</p>
+        </div>
       </div>
 
       <div className="max-w-3xl">

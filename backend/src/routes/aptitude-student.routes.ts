@@ -140,7 +140,7 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
 
     // Determine if answer is correct
     const isCorrect = selectedOption === question.correctOption;
-    const xpEarned = isCorrect ? question.xpReward : 0;
+    const xpGained = isCorrect ? question.xpReward : 0;
 
     // Create submission record
     const submission = await prisma.aptitudeSubmission.create({
@@ -150,7 +150,7 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
         selectedOption,
         isCorrect,
         timeSpent: timeSpent || 0,
-        xpEarned: xpEarned,
+        xpEarned: xpGained,
       },
     });
 
@@ -160,10 +160,10 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
         where: { userId: req.user!.userId },
         data: {
           xp: {
-            increment: xpEarned,
+            increment: xpGained,
           },
           totalXP: {
-            increment: xpEarned,
+            increment: xpGained,
           },
         },
       });
@@ -175,7 +175,7 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
       data: {
         submission,
         isCorrect,
-        xpEarned,
+        xpGained,
         correctOption: question.correctOption,
         explanation: isCorrect ? null : question.explanation, // Show explanation only if wrong
       },
@@ -242,7 +242,7 @@ router.get('/progress', authenticate, async (req, res, next) => {
         topic: s.question.chapter.topic.name,
         chapter: s.question.chapter.name,
         isCorrect: s.isCorrect,
-        xpEarned: s.xpEarned,
+        xpGained: s.xpEarned,
         attemptedAt: s.createdAt,
       })),
     };
@@ -347,7 +347,7 @@ router.get('/submissions', authenticate, async (req, res, next) => {
         selectedOption: s.selectedOption,
         correctOption: s.question.correctOption,
         isCorrect: s.isCorrect,
-        xpEarned: s.xpEarned,
+        xpGained: s.xpEarned,
         timeSpent: s.timeSpent,
         attemptedAt: s.createdAt,
       })),

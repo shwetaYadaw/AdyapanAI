@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Users, Code2, FileText, TrendingUp, BarChart3, BookOpen, Brain, Shield, Settings, ChevronRight, Activity, Clock } from 'lucide-react';
+import { Users, Code2, FileText, TrendingUp, BarChart3, BookOpen, Brain, Shield, Settings, ChevronRight, Activity, Clock, Zap, Trophy } from 'lucide-react';
 import { api } from '../../core/services/api';
 
 export default function AdminDashboardPage() {
@@ -33,83 +33,112 @@ export default function AdminDashboardPage() {
   const greeting = new Date().getHours() < 12 ? 'Good Morning' : new Date().getHours() < 18 ? 'Good Afternoon' : 'Good Evening';
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6 lg:p-8">
-      {/* Welcome Header */}
+    <div className="min-h-screen bg-gradient-to-br from-orange-50/40 via-white to-amber-50/30 dark:bg-gray-950 p-5 lg:p-8">
+      {/* Welcome Header with Gradient */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-              {greeting}, {user.firstName || 'Admin'} 👋
-            </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
-              Here's what's happening with your platform today.
-            </p>
-          </div>
-          <div className="hidden md:flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-900 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-800">
-            <Clock size={14} />
-            {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+        <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 via-primary-500 to-brand-amber rounded-2xl p-6 lg:p-8 shadow-brand-lg">
+          <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full -translate-y-32 translate-x-32" />
+          <div className="absolute left-1/2 bottom-0 w-48 h-48 bg-white/5 rounded-full translate-y-24" />
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold text-white">
+                {greeting}, {user.firstName || 'Admin'} 👋
+              </h1>
+              <p className="text-orange-100 mt-1 text-sm lg:text-base">
+                Here's what's happening with your platform today.
+              </p>
+            </div>
+            <div className="hidden md:flex items-center gap-2 text-sm text-white/80 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-xl border border-white/20">
+              <Clock size={14} />
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
+            </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - Colorful with gradients */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
         {[
-          { icon: <Users size={22} />, label: 'Total Students', value: stats?.totalStudents || 0, trend: '+12% this month', color: 'blue' },
-          { icon: <Code2 size={22} />, label: 'Coding Problems', value: stats?.totalProblems || 0, trend: 'Active in arena', color: 'cyan' },
-          { icon: <FileText size={22} />, label: 'Total Submissions', value: stats?.totalSubmissions || 0, trend: 'All time', color: 'emerald' },
-          { icon: <TrendingUp size={22} />, label: "Today's Submissions", value: stats?.submissionsToday || 0, trend: 'Last 24 hours', color: 'purple' },
+          { icon: <Users size={22} />, label: 'Total Students', value: stats?.totalStudents || 0, trend: '+12% this month', gradient: 'from-primary-500 to-primary-600', shadow: 'shadow-brand', bg: '' },
+          { icon: <Code2 size={22} />, label: 'Coding Problems', value: stats?.totalProblems || 0, trend: 'Active in arena', gradient: 'from-blue-500 to-indigo-500', shadow: 'shadow-blue-500/20', bg: '' },
+          { icon: <FileText size={22} />, label: 'Total Submissions', value: stats?.totalSubmissions || 0, trend: 'All time', gradient: 'from-emerald-500 to-teal-500', shadow: 'shadow-emerald-500/20', bg: '' },
+          { icon: <TrendingUp size={22} />, label: "Today's Submissions", value: stats?.submissionsToday || 0, trend: 'Last 24 hours', gradient: 'from-violet-500 to-purple-500', shadow: 'shadow-violet-500/20', bg: '' },
         ].map((stat, i) => (
-          <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 + i * 0.08 }}>
-            <StatsCard {...stat} loading={loading} />
+          <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.08 }}>
+            <div className={`bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-lg hover:shadow-xl ${stat.shadow} transition-all duration-300 hover:-translate-y-1`}>
+              {loading ? (
+                <div className="animate-pulse space-y-3">
+                  <div className="w-12 h-12 rounded-xl bg-gray-200 dark:bg-gray-700" />
+                  <div className="h-7 w-16 bg-gray-200 dark:bg-gray-700 rounded" />
+                  <div className="h-3 w-24 bg-gray-100 dark:bg-gray-800 rounded" />
+                </div>
+              ) : (
+                <>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center mb-3 shadow-lg ${stat.shadow}`}>
+                    <span className="text-white">{stat.icon}</span>
+                  </div>
+                  <p className="text-3xl font-bold text-gray-900 dark:text-white">{stat.value.toLocaleString()}</p>
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mt-0.5">{stat.label}</p>
+                  <p className="text-xs text-gray-400 mt-1">{stat.trend}</p>
+                </>
+              )}
+            </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Quick Actions Grid */}
+      {/* Quick Actions - Colorful cards */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-8">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <Zap size={18} className="text-orange-500" /> Quick Actions
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <QuickActionCard
-            icon={<Code2 size={24} />}
+            icon={<Code2 size={22} />}
             title="Manage Problems"
-            description="Add and manage coding problems, placement prep & aptitude"
-            color="indigo"
+            description="Add and manage coding problems, DSA questions"
+            gradient="from-primary-500 to-primary-600"
+            shadow="shadow-brand"
             onClick={() => navigate('/admin/problems')}
           />
           <QuickActionCard
-            icon={<Users size={24} />}
+            icon={<Users size={22} />}
             title="Manage Users"
             description="View student accounts, roles, and activity"
-            color="blue"
+            gradient="from-blue-500 to-indigo-500"
+            shadow="shadow-blue-500/20"
             onClick={() => navigate('/admin/users')}
           />
           <QuickActionCard
-            icon={<BarChart3 size={24} />}
+            icon={<BarChart3 size={22} />}
             title="Analytics"
-            description="View submission stats, progress reports & insights"
-            color="emerald"
+            description="Submission stats, progress reports & insights"
+            gradient="from-emerald-500 to-teal-500"
+            shadow="shadow-emerald-500/20"
             onClick={() => navigate('/admin/analytics')}
           />
           <QuickActionCard
-            icon={<BookOpen size={24} />}
-            title="Placement Prep"
-            description="Manage placement preparation questions"
-            color="amber"
-            onClick={() => navigate('/admin/problems')}
+            icon={<Brain size={22} />}
+            title="Aptitude"
+            description="Manage aptitude topics, chapters & questions"
+            gradient="from-primary-500 to-brand-amber"
+            shadow="shadow-brand"
+            onClick={() => navigate('/admin/aptitude')}
           />
           <QuickActionCard
-            icon={<Shield size={24} />}
-            title="Security"
-            description="Manage security settings and access control"
-            color="red"
-            onClick={() => navigate('/admin/security')}
+            icon={<Trophy size={22} />}
+            title="Contests"
+            description="Create and manage coding contests"
+            gradient="from-violet-500 to-purple-500"
+            shadow="shadow-violet-500/20"
+            onClick={() => navigate('/admin/contests')}
           />
           <QuickActionCard
-            icon={<Settings size={24} />}
+            icon={<Settings size={22} />}
             title="Settings"
             description="Platform configuration and preferences"
-            color="gray"
+            gradient="from-gray-600 to-gray-700"
+            shadow="shadow-gray-500/20"
             onClick={() => navigate('/admin/settings')}
           />
         </div>
@@ -118,42 +147,65 @@ export default function AdminDashboardPage() {
       {/* Activity & Overview Row */}
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-lg shadow-gray-200/50 dark:shadow-none hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <Activity size={18} className="text-blue-500" />
+            <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center shadow-brand">
+                <Activity size={14} className="text-white" />
+              </div>
               Recent Activity
             </h3>
           </div>
           <div className="space-y-4">
             {[
-              { text: 'New student registered', time: '2 min ago', dot: 'bg-green-500' },
-              { text: 'Problem submission accepted', time: '15 min ago', dot: 'bg-blue-500' },
-              { text: 'New coding problem added', time: '1 hr ago', dot: 'bg-purple-500' },
-              { text: 'Contest scheduled', time: '3 hrs ago', dot: 'bg-amber-500' },
+              { text: 'New student registered', time: '2 min ago', gradient: 'from-green-400 to-emerald-500' },
+              { text: 'Problem submission accepted', time: '15 min ago', gradient: 'from-blue-400 to-indigo-500' },
+              { text: 'New coding problem added', time: '1 hr ago', gradient: 'from-purple-400 to-violet-500' },
+              { text: 'Contest scheduled', time: '3 hrs ago', gradient: 'from-amber-400 to-orange-500' },
+              { text: 'Aptitude questions seeded', time: '5 hrs ago', gradient: 'from-pink-400 to-rose-500' },
             ].map((item, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <span className={`w-2 h-2 rounded-full ${item.dot} shrink-0`} />
+              <motion.div key={i} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.05 }}
+                className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <span className={`w-3 h-3 rounded-full bg-gradient-to-r ${item.gradient} shrink-0 shadow-sm`} />
                 <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">{item.text}</span>
-                <span className="text-xs text-gray-400">{item.time}</span>
-              </div>
+                <span className="text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">{item.time}</span>
+              </motion.div>
             ))}
           </div>
         </div>
 
         {/* Platform Overview */}
-        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
+        <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 p-6 shadow-lg shadow-gray-200/50 dark:shadow-none hover:shadow-xl transition-shadow">
           <div className="flex items-center justify-between mb-5">
-            <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <Brain size={18} className="text-purple-500" />
+            <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-brand-amber flex items-center justify-center shadow-brand">
+                <Brain size={14} className="text-white" />
+              </div>
               Platform Overview
             </h3>
           </div>
           <div className="space-y-4">
-            <OverviewItem label="Coding Arena Problems" value={stats?.totalProblems || 0} color="blue" />
-            <OverviewItem label="Placement Prep Qs" value={stats?.placementQuestions || 0} color="amber" />
-            <OverviewItem label="Aptitude Questions" value={stats?.aptitudeQuestions || 0} color="emerald" />
-            <OverviewItem label="Active Contests" value={stats?.activeContests || 0} color="purple" />
+            {[
+              { label: 'Coding Arena Problems', value: stats?.totalProblems || 0, gradient: 'from-primary-500 to-primary-600', percent: 85 },
+              { label: 'Placement Prep Questions', value: stats?.placementQuestions || 0, gradient: 'from-blue-500 to-indigo-500', percent: 60 },
+              { label: 'Aptitude Questions', value: stats?.aptitudeQuestions || 0, gradient: 'from-emerald-500 to-teal-500', percent: 70 },
+              { label: 'Active Contests', value: stats?.activeContests || 0, gradient: 'from-violet-500 to-purple-500', percent: 30 },
+            ].map((item, i) => (
+              <motion.div key={i} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 + i * 0.05 }}>
+                <div className="flex items-center justify-between mb-1.5">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{item.label}</span>
+                  <span className="text-sm font-bold text-gray-900 dark:text-white">{item.value}</span>
+                </div>
+                <div className="w-full h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${item.percent}%` }}
+                    transition={{ delay: 0.7 + i * 0.1, duration: 0.8, ease: 'easeOut' }}
+                    className={`h-full rounded-full bg-gradient-to-r ${item.gradient}`}
+                  />
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </motion.div>
@@ -161,84 +213,25 @@ export default function AdminDashboardPage() {
   );
 }
 
-// Stats Card Component
-function StatsCard({ icon, label, value, trend, color, loading }: {
-  icon: React.ReactNode; label: string; value: number; trend: string; color: string; loading: boolean;
+// Quick Action Card - Colorful with gradient icon
+function QuickActionCard({ icon, title, description, gradient, shadow, onClick }: {
+  icon: React.ReactNode; title: string; description: string; gradient: string; shadow: string; onClick: () => void;
 }) {
-  const colors: Record<string, { bg: string; icon: string; border: string }> = {
-    blue:    { bg: 'bg-blue-50 dark:bg-blue-950/30', icon: 'text-blue-600 dark:text-blue-400', border: 'border-blue-100 dark:border-blue-900' },
-    cyan:    { bg: 'bg-cyan-50 dark:bg-cyan-950/30', icon: 'text-cyan-600 dark:text-cyan-400', border: 'border-cyan-100 dark:border-cyan-900' },
-    emerald: { bg: 'bg-emerald-50 dark:bg-emerald-950/30', icon: 'text-emerald-600 dark:text-emerald-400', border: 'border-emerald-100 dark:border-emerald-900' },
-    purple:  { bg: 'bg-purple-50 dark:bg-purple-950/30', icon: 'text-purple-600 dark:text-purple-400', border: 'border-purple-100 dark:border-purple-900' },
-  };
-  const c = colors[color] || colors.blue;
-
-  return (
-    <div className={`bg-white dark:bg-gray-900 rounded-2xl p-5 border ${c.border} hover:shadow-md transition-shadow`}>
-      {loading ? (
-        <div className="animate-pulse space-y-3">
-          <div className="w-10 h-10 rounded-xl bg-gray-200 dark:bg-gray-700" />
-          <div className="h-7 w-16 bg-gray-200 dark:bg-gray-700 rounded" />
-          <div className="h-3 w-24 bg-gray-100 dark:bg-gray-800 rounded" />
-        </div>
-      ) : (
-        <>
-          <div className={`w-11 h-11 rounded-xl ${c.bg} flex items-center justify-center mb-3`}>
-            <span className={c.icon}>{icon}</span>
-          </div>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white">{value.toLocaleString()}</p>
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-0.5">{label}</p>
-          <p className="text-xs text-gray-400 mt-1">{trend}</p>
-        </>
-      )}
-    </div>
-  );
-}
-
-// Quick Action Card
-function QuickActionCard({ icon, title, description, color, onClick }: {
-  icon: React.ReactNode; title: string; description: string; color: string; onClick: () => void;
-}) {
-  const colors: Record<string, string> = {
-    indigo: 'group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400',
-    blue:   'group-hover:bg-blue-50 dark:group-hover:bg-blue-950/30 text-blue-600 dark:text-blue-400',
-    emerald:'group-hover:bg-emerald-50 dark:group-hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400',
-    amber:  'group-hover:bg-amber-50 dark:group-hover:bg-amber-950/30 text-amber-600 dark:text-amber-400',
-    red:    'group-hover:bg-red-50 dark:group-hover:bg-red-950/30 text-red-600 dark:text-red-400',
-    gray:   'group-hover:bg-gray-100 dark:group-hover:bg-gray-800 text-gray-600 dark:text-gray-400',
-  };
-
   return (
     <motion.button
-      whileHover={{ scale: 1.02, y: -2 }}
+      whileHover={{ scale: 1.02, y: -3 }}
       whileTap={{ scale: 0.98 }}
       onClick={onClick}
-      className="group flex items-center gap-4 bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-md transition-all text-left w-full"
+      className={`group flex items-center gap-4 bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-100 dark:border-gray-800 shadow-md hover:shadow-xl ${shadow} transition-all duration-300 text-left w-full`}
     >
-      <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors bg-gray-50 dark:bg-gray-800 ${colors[color]}`}>
-        {icon}
+      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg ${shadow} group-hover:scale-110 transition-transform duration-300`}>
+        <span className="text-white">{icon}</span>
       </div>
       <div className="flex-1 min-w-0">
         <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{title}</h3>
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">{description}</p>
       </div>
-      <ChevronRight size={16} className="text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors shrink-0" />
+      <ChevronRight size={16} className="text-gray-300 group-hover:text-gray-500 dark:group-hover:text-gray-300 group-hover:translate-x-1 transition-all shrink-0" />
     </motion.button>
-  );
-}
-
-// Overview Item
-function OverviewItem({ label, value, color }: { label: string; value: number; color: string }) {
-  const dotColors: Record<string, string> = {
-    blue: 'bg-blue-500', amber: 'bg-amber-500', emerald: 'bg-emerald-500', purple: 'bg-purple-500',
-  };
-  return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <span className={`w-2.5 h-2.5 rounded-full ${dotColors[color]}`} />
-        <span className="text-sm text-gray-600 dark:text-gray-400">{label}</span>
-      </div>
-      <span className="text-sm font-bold text-gray-900 dark:text-white">{value}</span>
-    </div>
   );
 }

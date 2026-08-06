@@ -104,6 +104,23 @@ export function getCourseById(courseId: string): CourseConfig | undefined {
   return COURSES.find(c => c.id === courseId);
 }
 
+// Load custom courses from JSON file on startup
+try {
+  const fs = require('fs');
+  const path = require('path');
+  const dataFile = path.resolve(__dirname, '../data/courses-custom.json');
+  if (fs.existsSync(dataFile)) {
+    const customCourses = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
+    customCourses.forEach((c: CourseConfig) => {
+      if (!COURSES.find(existing => existing.id === c.id)) {
+        COURSES.push(c);
+      }
+    });
+  }
+} catch (e) {
+  // Silently ignore if file doesn't exist yet
+}
+
 export function getLanguagesForCourse(courseId: string): string[] {
   const course = getCourseById(courseId);
   return course?.languages ?? [];

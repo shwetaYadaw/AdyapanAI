@@ -1,52 +1,57 @@
-import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Brain, BookOpen, ChevronDown, ChevronUp, Search } from 'lucide-react';
+import { useState, useMemo } from 'react';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Brain, BookOpen, Search, ChevronRight, Zap, Target, ArrowLeft,
+  CheckCircle2, XCircle, Trophy, BarChart3, Lightbulb, RotateCcw
+} from 'lucide-react';
 import { api } from '../../core/services/api';
-import Card from '../../shared/components/Card/Card';
-import Badge from '../../shared/components/Badge/Badge';
-import Button from '../../shared/components/Button/Button';
+import toast from 'react-hot-toast';
 
 interface Topic {
   id: string;
   name: string;
   description?: string;
   order: number;
-  isActive: boolean;
-  chapters: Chapter[];
+  chapters: { id: string; name: string; order: number }[];
 }
 
-interface Chapter {
+interface QuestionOption {
   id: string;
-  name: string;
-  description?: string;
+  optionKey: string;
+  text: string;
   order: number;
-  topicId: string;
-  isActive: boolean;
-  questions?: Question[];
 }
 
 interface Question {
   id: string;
-  question: string;
+  statement: string;
   difficulty: string;
-  marks: number;
-  options: Option[];
-  correctOptionIndex: number;
-  explanation: string;
+  options: QuestionOption[];
+  explanation?: string;
+  xpReward: number;
 }
 
-interface Option {
-  id: string;
-  text: string;
-  questionId: string;
+interface SubmissionResult {
+  isCorrect: boolean;
+  xpGained: number;
+  correctOption: string;
+  explanation: string | null;
 }
+
+type AnswerState = Record<string, {
+  selectedOption: string;
+  result: SubmissionResult | null;
+  loading: boolean;
+}>;
 
 export default function AptitudeStudentPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [expandedTopic, setExpandedTopic] = useState<string | null>(null);
-  const [expandedChapter, setExpandedChapter] = useState<string | null>(null);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<AnswerState>({});
 
-  // Fetch topics
+  // ─── Data Fetching ───────────────────────────────────────────────
   const { data: topics = [], isLoading: topicsLoading } = useQuery<Topic[]>({
     queryKey: ['aptitude-student-topics'],
     queryFn: async () => {
@@ -55,245 +60,390 @@ export default function AptitudeStudentPage() {
     },
   });
 
-  // Fetch chapters for expanded topic
-  const { data: chapters = {} } = useQuery<Record<string, Chapter[]>>({
-    queryKey: ['aptitude-student-chapters', expandedTopic],
+  const { data: chapterData, isLoading: chapterLoading } = useQuery<any>({
+    queryKey: ['aptitude-chapter-detail', selectedTopic, selectedChapter],
     queryFn: async () => {
-      if (!expandedTopic) return {};
-      try {
-        const { data } = await api.get(`/aptitude/topics/${expandedTopic}`);
-        return { [expandedTopic]: data.data?.chapters ?? [] };
-      } catch {
-        return {};
-      }
+      if (!selectedTopic || !selectedChapter) return null;
+      const { data } = await api.get(`/aptitude/topics/${selectedTopic}/chapters/${selectedChapter}`);
+      return data.data;
     },
-    enabled: !!expandedTopic,
+    enabled: !!selectedTopic && !!selectedChapter,
   });
 
-  // Fetch questions for expanded chapter
-  const { data: questions = {} } = useQuery<Record<string, Question[]>>({
-    queryKey: ['aptitude-student-questions', expandedChapter],
+  const { data: progress } = useQuery({
+    queryKey: ['aptitude-student-progress'],
     queryFn: async () => {
-      if (!expandedChapter || !expandedTopic) return {};
-      try {
-        const { data } = await api.get(
-          `/aptitude/topics/${expandedTopic}/chapters/${expandedChapter}`
-        );
-        return { [expandedChapter]: data.data?.questions ?? [] };
-      } catch {
-        return {};
-      }
+      const { data } = await api.get('/aptitude/progress');
+      return data.data;
     },
-    enabled: !!expandedChapter && !!expandedTopic,
   });
 
+  // ─── Computed ────────────────────────────────────────────────────
   const filteredTopics = useMemo(
     () => topics.filter(t => t.name.toLowerCase().includes(searchQuery.toLowerCase())),
     [topics, searchQuery]
   );
+  const currentTopic = topics.find(t => t.id === selectedTopic);
+  const chapterQuestions: Question[] = chapterData?.questions ?? [];
+  const totalChapters = topics.reduce((s, t) => s + (t.chapters?.length ?? 0), 0);
 
-  const topicChapters = expandedTopic ? chapters[expandedTopic] ?? [] : [];
-  const chapterQuestions = expandedChapter ? questions[expandedChapter] ?? [] : [];
+  const quizStats = useMemo(() => {
+    const answered = Object.values(answers).filter(a => a.result);
+    const correct = answered.filter(a => a.result?.isCorrect);
+    return { answered: answered.length, correct: correct.length, total: chapterQuestions.length };
+  }, [answers, chapterQuestions.length]);
 
-  const handleTopicClick = (topicId: string) => {
-    if (expandedTopic === topicId) {
-      setExpandedTopic(null);
-      setExpandedChapter(null);
-    } else {
-      setExpandedTopic(topicId);
-      setExpandedChapter(null);
-    }
+  // ─── Select Option Handler (INSTANT - optimistic, no loading) ─────
+  const handleOptionClick = (questionId: string, optionKey: string) => {
+    // Already answered this question
+    if (answers[questionId]?.result) return;
+
+    // Find the question to check answer locally
+    const question = chapterQuestions.find(q => q.id === questionId);
+    if (!question) return;
+
+    // We don't know correctOption from frontend data (API doesn't send it before submit)
+    // So we show loading briefly but make it near-instant
+    setAnswers(prev => ({
+      ...prev,
+      [questionId]: { selectedOption: optionKey, result: null, loading: true },
+    }));
+
+    // Fire API call
+    api.post(`/aptitude/questions/${questionId}/submit`, {
+      selectedOption: optionKey,
+      timeSpent: 0,
+    }).then(({ data }) => {
+      const result = data.data as SubmissionResult;
+      setAnswers(prev => ({
+        ...prev,
+        [questionId]: { selectedOption: optionKey, result, loading: false },
+      }));
+    }).catch((err: any) => {
+      // On error, still show a local result (assume wrong since we can't verify)
+      setAnswers(prev => {
+        const copy = { ...prev };
+        delete copy[questionId];
+        return copy;
+      });
+      toast.error(err?.response?.data?.message || 'Network error');
+    });
   };
 
-  const handleChapterClick = (chapterId: string) => {
-    if (expandedChapter === chapterId) {
-      setExpandedChapter(null);
-    } else {
-      setExpandedChapter(chapterId);
-    }
-  };
+  const resetQuiz = () => setAnswers({});
 
-  return (
-    <div className="page-wrapper space-y-6">
-      {/* Hero Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 p-8 text-white shadow-lg">
-        <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
-          <Brain className="w-96 h-96 text-white" />
+  // ═══════════════════════════════════════════════════════════════════
+  // QUIZ VIEW - All questions at once, compact
+  // ═══════════════════════════════════════════════════════════════════
+  if (selectedChapter && selectedTopic) {
+    if (chapterLoading) {
+      return (
+        <div className="page-wrapper flex items-center justify-center py-20">
+          <div className="w-8 h-8 border-3 border-orange-500 border-t-transparent rounded-full animate-spin" />
         </div>
-        <div className="relative z-10 max-w-2xl space-y-4">
-          <h1 className="font-display font-black text-3xl sm:text-4xl tracking-tight leading-tight">
-            Aptitude Preparation
-          </h1>
-          <p className="text-white/90 text-sm sm:text-base leading-relaxed">
-            Master quantitative ability, logical reasoning, and verbal skills to ace top MNC placement assessments.
-          </p>
-          <div className="flex flex-wrap gap-4 text-xs text-white/70 pt-2 border-t border-white/20">
-            <span className="flex items-center gap-1.5">📚 {topics.length} Topics</span>
-            <span className="flex items-center gap-1.5">📖 {topics.reduce((sum, t) => sum + (t.chapters?.length ?? 0), 0)} Chapters</span>
-            <span className="flex items-center gap-1.5">❓ {topics.reduce((sum, t) => sum + ((t.chapters?.reduce((cs, c) => cs + (c.questions?.length ?? 0), 0)) ?? 0), 0)} Questions</span>
+      );
+    }
+
+    if (chapterQuestions.length === 0) {
+      return (
+        <div className="page-wrapper space-y-4">
+          <button onClick={() => { setSelectedChapter(null); resetQuiz(); }}
+            className="flex items-center gap-2 text-gray-500 hover:text-orange-600 text-xs font-medium transition">
+            <ArrowLeft size={14} /> Back
+          </button>
+          <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+            <Brain size={32} className="mx-auto mb-2 text-gray-300" />
+            <p className="text-gray-500 text-sm">No questions available yet</p>
           </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="page-wrapper space-y-4">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <button onClick={() => { setSelectedChapter(null); resetQuiz(); }}
+            className="flex items-center gap-2 text-gray-500 hover:text-orange-600 text-sm font-medium transition">
+            <ArrowLeft size={16} /> Back
+          </button>
+          <div className="flex items-center gap-2">
+            {quizStats.answered > 0 && (
+              <>
+                <span className="text-xs font-semibold text-green-600 bg-green-50 dark:bg-green-900/30 px-2.5 py-1 rounded-full">
+                  {quizStats.correct}/{quizStats.answered} correct
+                </span>
+                <button onClick={resetQuiz} className="text-gray-400 hover:text-orange-500 transition">
+                  <RotateCcw size={14} />
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Chapter Title */}
+        <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl px-5 py-4 text-white">
+          <h2 className="text-lg font-bold">{chapterData?.name}</h2>
+          <p className="text-sm text-orange-100 mt-0.5">{chapterQuestions.length} Questions</p>
+        </div>
+
+        {/* All Questions */}
+        <div className="space-y-3">
+          {chapterQuestions.map((q, qIdx) => {
+            const answer = answers[q.id];
+            const isAnswered = !!answer?.result;
+            const isCorrect = answer?.result?.isCorrect;
+            const isLoading = answer?.loading;
+
+            return (
+              <motion.div
+                key={q.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: qIdx * 0.03 }}
+                className={`bg-white dark:bg-gray-900 rounded-xl border p-4 transition-all ${
+                  isAnswered
+                    ? isCorrect
+                      ? 'border-green-200 dark:border-green-800'
+                      : 'border-red-200 dark:border-red-800'
+                    : 'border-gray-200 dark:border-gray-800'
+                }`}
+              >
+                {/* Question */}
+                <div className="flex gap-3 mb-3">
+                  <span className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5 ${
+                    isAnswered
+                      ? isCorrect ? 'bg-green-100 dark:bg-green-900/40 text-green-600' : 'bg-red-100 dark:bg-red-900/40 text-red-600'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-500'
+                  }`}>{qIdx + 1}</span>
+                  <p className="text-[15px] text-gray-800 dark:text-gray-200 font-medium leading-relaxed">{q.statement}</p>
+                </div>
+
+                {/* Options - 2 column grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 ml-10">
+                  {q.options.map((opt) => {
+                    const isSelected = answer?.selectedOption === opt.optionKey;
+                    const isCorrectOpt = isAnswered && answer?.result?.correctOption === opt.optionKey;
+                    const isWrong = isAnswered && isSelected && !isCorrect;
+
+                    let cls = 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-orange-300 dark:hover:border-orange-700 hover:bg-orange-50 dark:hover:bg-orange-950/10 cursor-pointer';
+
+                    if (isLoading && isSelected) {
+                      cls = 'border-orange-400 bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-300 cursor-wait';
+                    } else if (isCorrectOpt) {
+                      cls = 'border-green-400 dark:border-green-700 bg-green-50 dark:bg-green-950/20 text-green-700 dark:text-green-300';
+                    } else if (isWrong) {
+                      cls = 'border-red-400 dark:border-red-700 bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 line-through';
+                    } else if (isAnswered) {
+                      cls = 'border-gray-100 dark:border-gray-800 text-gray-400 dark:text-gray-600 opacity-50 cursor-default';
+                    }
+
+                    return (
+                      <button
+                        key={opt.optionKey}
+                        onClick={() => handleOptionClick(q.id, opt.optionKey)}
+                        disabled={isAnswered || isLoading}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg border text-sm font-medium transition-all ${cls}`}
+                      >
+                        <span className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                          isCorrectOpt ? 'bg-green-500 text-white' :
+                          isWrong ? 'bg-red-500 text-white' :
+                          isLoading && isSelected ? 'bg-orange-400 text-white' :
+                          'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                        }`}>
+                          {isCorrectOpt ? <CheckCircle2 size={13} /> : isWrong ? <XCircle size={13} /> : opt.optionKey}
+                        </span>
+                        <span>{opt.text}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Explanation - slides open with transition */}
+                <AnimatePresence>
+                  {isAnswered && !isCorrect && answer?.result?.explanation && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden ml-10 mt-2.5"
+                    >
+                      <div className="flex items-start gap-2.5 px-4 py-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                        <Lightbulb size={16} className="text-amber-500 mt-0.5 flex-shrink-0" />
+                        <p className="text-sm text-amber-700 dark:text-amber-300 leading-relaxed">{answer.result.explanation}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                  {isAnswered && isCorrect && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: 'auto', opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden ml-10 mt-2.5"
+                    >
+                      <div className="flex items-center gap-2 px-4 py-2.5 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
+                        <CheckCircle2 size={15} className="text-green-500" />
+                        <p className="text-sm text-green-700 dark:text-green-300 font-medium">Correct! +{answer.result?.xpGained} XP</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Bottom Stats (when all answered) */}
+        {quizStats.answered === quizStats.total && quizStats.total > 0 && (
+          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+            className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 flex items-center justify-between"
+          >
+            <div className="flex items-center gap-4">
+              <Trophy size={18} className="text-amber-500" />
+              <div>
+                <p className="text-xs font-bold text-gray-900 dark:text-white">All Done!</p>
+                <p className="text-[10px] text-gray-500">{quizStats.correct}/{quizStats.total} correct ({Math.round((quizStats.correct/quizStats.total)*100)}%)</p>
+              </div>
+            </div>
+            <button onClick={resetQuiz} className="text-xs px-3 py-1.5 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition">
+              Retry
+            </button>
+          </motion.div>
+        )}
+      </div>
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // CHAPTERS VIEW
+  // ═══════════════════════════════════════════════════════════════════
+  if (selectedTopic && currentTopic) {
+    return (
+      <div className="page-wrapper space-y-4">
+        <button onClick={() => setSelectedTopic(null)}
+          className="flex items-center gap-2 text-gray-500 hover:text-orange-600 text-sm font-medium transition">
+          <ArrowLeft size={16} /> All Topics
+        </button>
+
+        <div className="bg-gradient-to-r from-orange-500 to-amber-500 rounded-xl px-5 py-4 text-white">
+          <h2 className="text-lg font-bold">{currentTopic.name}</h2>
+          <p className="text-xs text-orange-100 mt-0.5">{currentTopic.chapters?.length ?? 0} Chapters</p>
+        </div>
+
+        {currentTopic.chapters?.length === 0 ? (
+          <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+            <BookOpen size={28} className="mx-auto mb-2 text-gray-300" />
+            <p className="text-gray-500 text-sm">No chapters available yet</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {currentTopic.chapters.map((chapter: any, idx: number) => (
+              <motion.div key={chapter.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: idx * 0.04 }}
+                onClick={() => { setSelectedChapter(chapter.id); resetQuiz(); }}
+                className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 px-4 py-3.5 hover:border-orange-400 hover:shadow-sm transition-all cursor-pointer group flex items-center gap-3"
+              >
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white font-bold text-sm">{idx + 1}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-orange-600 transition-colors truncate">{chapter.name}</h4>
+                </div>
+                <ChevronRight size={16} className="text-gray-300 group-hover:text-orange-500 transition flex-shrink-0" />
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════
+  // MAIN TOPICS VIEW
+  // ═══════════════════════════════════════════════════════════════════
+  return (
+    <div className="page-wrapper space-y-5">
+      {/* Hero */}
+      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 p-6 text-white shadow-md">
+        <div className="absolute right-0 top-0 opacity-10 pointer-events-none translate-x-8 -translate-y-8">
+          <Brain className="w-48 h-48" />
+        </div>
+        <div className="relative z-10">
+          <h1 className="font-bold text-xl">Aptitude Practice</h1>
+          <p className="text-white/75 text-sm mt-1">Select a topic and start solving</p>
         </div>
       </div>
 
-      {/* Search Bar */}
+      {/* Stats */}
+      <div className="grid grid-cols-4 gap-2">
+        {[
+          { icon: BookOpen, label: 'Topics', value: topics.length, color: 'from-orange-500 to-amber-400' },
+          { icon: Target, label: 'Chapters', value: totalChapters, color: 'from-blue-500 to-cyan-400' },
+          { icon: Trophy, label: 'Solved', value: progress?.overall?.totalAttempted || 0, color: 'from-green-500 to-emerald-400' },
+          { icon: BarChart3, label: 'Accuracy', value: `${progress?.overall?.accuracy || 0}%`, color: 'from-purple-500 to-pink-400' },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-3 text-center">
+            <div className={`w-8 h-8 rounded-md bg-gradient-to-br ${stat.color} flex items-center justify-center mx-auto mb-1.5`}>
+              <stat.icon size={14} className="text-white" />
+            </div>
+            <p className="text-base font-bold text-gray-900 dark:text-white">{stat.value}</p>
+            <p className="text-[10px] text-gray-400 uppercase">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Search */}
       <div className="relative">
-        <Search size={18} className="absolute left-3 top-3 text-gray-400" />
+        <Search size={16} className="absolute left-3.5 top-3 text-gray-400" />
         <input
-          type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search topics..."
-          className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 focus:border-transparent outline-none transition"
         />
       </div>
 
-      {/* Topics List */}
-      <div className="space-y-4">
-        {topicsLoading ? (
-          <div className="text-center py-8 text-gray-500">Loading topics...</div>
-        ) : filteredTopics.length === 0 ? (
-          <div className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg">
-            <BookOpen className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 dark:text-gray-400">No topics available</p>
-          </div>
-        ) : (
-          filteredTopics.map((topic) => (
-            <div key={topic.id}>
-              {/* Topic Card */}
-              <button
-                onClick={() => handleTopicClick(topic.id)}
-                className="w-full text-left bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-600 transition-all hover:shadow-md group"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">
-                      {topic.name}
-                    </h3>
-                    {topic.description && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{topic.description}</p>
-                    )}
-                    <div className="flex gap-4 mt-3 text-xs text-gray-500 dark:text-gray-400">
-                      <span>📖 {topic.chapters?.length ?? 0} Chapters</span>
-                      <span>❓ {(topic.chapters?.reduce((sum, c) => sum + (c.questions?.length ?? 0), 0)) ?? 0} Questions</span>
-                    </div>
-                  </div>
-                  <div className="ml-4 flex-shrink-0">
-                    {expandedTopic === topic.id ? (
-                      <ChevronUp size={24} className="text-green-600" />
-                    ) : (
-                      <ChevronDown size={24} className="text-gray-400" />
-                    )}
-                  </div>
-                </div>
-              </button>
-
-              {/* Expanded Chapters */}
-              {expandedTopic === topic.id && (
-                <div className="mt-2 ml-4 space-y-2 border-l-2 border-green-300 dark:border-green-700 pl-4">
-                  {topicChapters.length === 0 ? (
-                    <div className="py-4 text-gray-500 dark:text-gray-400">No chapters available</div>
-                  ) : (
-                    topicChapters.map((chapter, idx) => (
-                      <div key={chapter.id}>
-                        {/* Chapter Card */}
-                        <button
-                          onClick={() => handleChapterClick(chapter.id)}
-                          className="w-full text-left bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg p-4 border border-blue-200 dark:border-blue-700 hover:border-blue-400 transition-all hover:shadow-md group"
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-3 flex-1">
-                              <div className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
-                                {idx + 1}
-                              </div>
-                              <div>
-                                <h4 className="font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
-                                  {chapter.name}
-                                </h4>
-                                {chapter.description && (
-                                  <p className="text-xs text-gray-600 dark:text-gray-400">{chapter.description}</p>
-                                )}
-                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                  ❓ {chapter.questions?.length ?? 0} Questions
-                                </p>
-                              </div>
-                            </div>
-                            <div className="ml-4 flex-shrink-0">
-                              {expandedChapter === chapter.id ? (
-                                <ChevronUp size={20} className="text-blue-600" />
-                              ) : (
-                                <ChevronDown size={20} className="text-gray-400" />
-                              )}
-                            </div>
-                          </div>
-                        </button>
-
-                        {/* Expanded Questions */}
-                        {expandedChapter === chapter.id && (
-                          <div className="mt-2 ml-4 space-y-3 border-l-2 border-blue-300 dark:border-blue-700 pl-4">
-                            {chapterQuestions.length === 0 ? (
-                              <div className="py-4 text-gray-500 dark:text-gray-400">No questions available</div>
-                            ) : (
-                              chapterQuestions.map((question, qIdx) => (
-                                <Card
-                                  key={question.id}
-                                  padding="md"
-                                  className="border border-gray-200 dark:border-gray-700 hover:border-purple-300 dark:hover:border-purple-600 transition-all"
-                                >
-                                  <div className="space-y-3">
-                                    <div className="flex items-start justify-between gap-3">
-                                      <span className="font-mono text-sm font-bold text-gray-500 dark:text-gray-400 flex-shrink-0">
-                                        Q{qIdx + 1}.
-                                      </span>
-                                      <div className="flex-1">
-                                        <p className="text-gray-900 dark:text-white font-medium">
-                                          {question.question.substring(0, 150)}
-                                          {question.question.length > 150 ? '...' : ''}
-                                        </p>
-                                      </div>
-                                    </div>
-                                    <div className="flex gap-2 flex-wrap">
-                                      <Badge
-                                        variant={
-                                          question.difficulty === 'easy'
-                                            ? 'success'
-                                            : question.difficulty === 'medium'
-                                            ? 'warning'
-                                            : 'danger'
-                                        }
-                                      >
-                                        {question.difficulty}
-                                      </Badge>
-                                      <Badge variant="primary">
-                                        {question.marks} marks
-                                      </Badge>
-                                    </div>
-                                    <div className="flex justify-end pt-2">
-                                      <Button
-                                        size="sm"
-                                        variant="primary"
-                                        onClick={() => {
-                                          // Navigate to question attempt page
-                                          // This can be implemented with router navigation
-                                        }}
-                                      >
-                                        Attempt Question
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </Card>
-                              ))
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))
-                  )}
-                </div>
-              )}
+      {/* Topics */}
+      {topicsLoading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-4 animate-pulse">
+              <div className="w-9 h-9 rounded-lg bg-gray-200 dark:bg-gray-700 mb-2" />
+              <div className="h-3 w-3/4 bg-gray-200 dark:bg-gray-700 rounded mb-1.5" />
+              <div className="h-2.5 w-1/2 bg-gray-100 dark:bg-gray-800 rounded" />
             </div>
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      ) : filteredTopics.length === 0 ? (
+        <div className="text-center py-12 bg-white dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800">
+          <Brain size={32} className="mx-auto text-gray-300 mb-2" />
+          <p className="text-gray-500 text-xs">{searchQuery ? `No topics matching "${searchQuery}"` : 'No topics available'}</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {filteredTopics.map((topic, idx) => (
+            <motion.div
+              key={topic.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: idx * 0.02 }}
+              onClick={() => setSelectedTopic(topic.id)}
+              className="bg-white dark:bg-gray-900 rounded-lg border border-gray-100 dark:border-gray-800 p-4 cursor-pointer group hover:border-orange-300 dark:hover:border-orange-700 hover:shadow-md transition-all"
+            >
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center mb-2 group-hover:shadow transition">
+                <BookOpen size={14} className="text-white" />
+              </div>
+              <h3 className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors leading-tight line-clamp-2 mb-1">
+                {topic.name}
+              </h3>
+              <span className="text-[10px] text-gray-400 font-medium">
+                {topic.chapters?.length ?? 0} chapters
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
