@@ -63,8 +63,10 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      // If courseId is set, filter by it. If not (DSA page), only show global problems (no courseId)
-      const queryFilters = courseId ? { ...filters, courseId } : { ...filters, courseId: 'none' };
+      // If courseId is set, filter by it. If not (DSA page), fetch only global problems (courseId=null)
+      const queryFilters = courseId 
+        ? { ...filters, courseId } 
+        : { ...filters, courseId: null }; // null = global/DSA only
       const result = await problemAdminService.getProblems(queryFilters);
       setProblems(result.problems);
       setPagination(result.pagination);
@@ -148,7 +150,8 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
     try {
       setTopicsLoading(true);
       // Fetch topics for coding-arena system
-      const data = await topicAdminService.getTopics('coding-arena', false);
+      // If courseId is set, fetch course-specific topics. If not (DSA), fetch only global topics (courseId=null)
+      const data = await topicAdminService.getTopics('coding-arena', false, courseId || undefined);
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);
@@ -170,6 +173,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         name: newTopicName,
         system: 'coding-arena',
         description: newTopicDescription || undefined,
+        courseId: courseId || undefined, // Include courseId if this is a course-specific arena
       });
       toast.success('Topic added successfully!');
       setNewTopicName('');

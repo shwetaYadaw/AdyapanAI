@@ -90,6 +90,7 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
         category: category || 'general',
         timeLimit: timeLimit || 2000,
         memoryLimit: memoryLimit || 256,
+        courseId: courseId || undefined, // Save courseId if provided (undefined = global)
         createdBy: req.user?.userId,
         isArchived: false
       },
@@ -142,6 +143,7 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     const search = req.query.search as string | undefined;
     const difficulty = req.query.difficulty as string | undefined;
     const topic = req.query.topic as string | undefined;
+    const courseId = req.query.courseId as string | undefined | null;
 
     const pageNum = Math.max(1, page);
     const limitNum = Math.max(1, Math.min(limit, 100)); // Cap at 100
@@ -149,6 +151,16 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
 
     // Build where clause
     const whereClause: any = {};
+
+    // Filter by courseId if provided
+    if (courseId === null || courseId === 'null') {
+      // Global/DSA problems only (no courseId)
+      whereClause.courseId = null;
+    } else if (courseId) {
+      // Course-specific problems
+      whereClause.courseId = String(courseId);
+    }
+    // If courseId is undefined, fetch all problems (both global and course-specific)
 
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({

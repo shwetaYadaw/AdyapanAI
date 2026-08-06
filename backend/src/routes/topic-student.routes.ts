@@ -82,16 +82,15 @@ router.post('/bulk/seed', async (req: Request, res: Response, next: NextFunction
 
     for (const topicData of initialTopics) {
       try {
-        const existing = await prisma.topic.findUnique({
+        const existing = await prisma.topic.findMany({
           where: {
-            name_system: {
-              name: topicData.name,
-              system: topicData.system
-            }
+            name: topicData.name,
+            system: topicData.system,
+            courseId: null // Global topics
           }
         });
 
-        if (existing) {
+        if (existing.length > 0) {
           skipped.push({
             name: topicData.name,
             system: topicData.system,

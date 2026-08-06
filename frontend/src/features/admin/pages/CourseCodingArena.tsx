@@ -61,7 +61,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
 
   const fetchTopics = async () => {
     try {
-      const { data } = await api.get(`/admin/topics?system=coding-arena`);
+      const { data } = await api.get(`/admin/topics?system=coding-arena&courseId=${courseId}`);
       setTopics((data.data || []).map((t: any) => t.name));
     } catch { setTopics([]); }
   };
@@ -69,7 +69,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const handleAddTopic = async () => {
     if (!newTopic.trim()) return;
     try {
-      await api.post('/admin/topics', { name: newTopic, system: 'coding-arena' });
+      await api.post('/admin/topics', { name: newTopic, system: 'coding-arena', courseId });
       toast.success('Topic added!', { position: 'top-center' });
       setNewTopic('');
       fetchTopics();
@@ -94,7 +94,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const handleSubmitProblem = async () => {
     if (!form.title || !form.statement) { toast.error('Title and statement required'); return; }
     try {
-      const payload = { ...form, topics: form.topic, companies: '', tags: '', starterCode: { javascript: '', python: '', cpp: '', java: '' } };
+      const payload = { ...form, courseId, topics: form.topic, companies: '', tags: '', starterCode: { javascript: '', python: '', cpp: '', java: '' } };
       if (editingProblem?.id) {
         await api.put(`/admin/problems/${editingProblem.id}`, payload);
         toast.success('Updated!', { position: 'top-center' });

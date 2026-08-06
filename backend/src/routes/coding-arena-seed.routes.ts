@@ -258,12 +258,11 @@ router.post('/seed', async (req: Request, res: Response, next: NextFunction) => 
       const topicResults = { topic: topicName, created: 0, errors: 0 };
 
       // Get topic
-      const topic = await prisma.topic.findUnique({
+      const topic = await prisma.topic.findFirst({
         where: {
-          name_system: {
-            name: topicName,
-            system: 'coding-arena'
-          }
+          name: topicName,
+          system: 'coding-arena',
+          courseId: null // Global/DSA topics
         }
       });
 
