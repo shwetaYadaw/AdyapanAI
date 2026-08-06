@@ -58,6 +58,7 @@ export default function CreateEditProblemModal({
     // If topics are passed as props, use them directly
     if (propsTopics && propsTopics.length > 0) {
       setTopics(propsTopics);
+      setTopicsLoading(false);
     } else {
       // Otherwise fetch them
       fetchTopics();
@@ -284,7 +285,7 @@ export default function CreateEditProblemModal({
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Topic *
               </label>
-              {topicsLoading ? (
+              {topics.length === 0 && topicsLoading ? (
                 <div className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-500 dark:text-gray-400">
                   Loading topics...
                 </div>
