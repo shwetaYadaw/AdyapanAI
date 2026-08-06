@@ -33,6 +33,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const [selectedProblem, setSelectedProblem] = useState<Problem | null>(null);
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null); // Track selected topic
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [showTopicManagement, setShowTopicManagement] = useState(false);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(false);
@@ -50,14 +51,30 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
     fetchTopics();
   }, []);
 
+  // Keep selectedTopic in sync with filters.topic (when dropdown changes topic)
+  useEffect(() => {
+    if (filters.topic) {
+      const matchingTopic = topics.find(t => t.name === filters.topic);
+      if (matchingTopic && selectedTopic?.id !== matchingTopic.id) {
+        setSelectedTopic(matchingTopic);
+      }
+    } else if (selectedTopic && !filters.topic) {
+      setSelectedTopic(null);
+    }
+  }, [filters.topic, topics]);
+
   // Handle topic selection - filter problems by topic
   const handleSelectTopic = (topic: Topic) => {
-    setSelectedTopic(selectedTopic?.id === topic.id ? null : topic);
-    setFilters(prev => ({
-      ...prev,
-      page: 1,
-      topic: selectedTopic?.id === topic.id ? undefined : topic.name
-    }));
+    setSelectedTopic(prev => {
+      const isDeselecting = prev?.id === topic.id;
+      // Also update filters in sync
+      setFilters(prevFilters => ({
+        ...prevFilters,
+        page: 1,
+        topic: isDeselecting ? undefined : topic.name
+      }));
+      return isDeselecting ? null : topic;
+    });
   };
 
   const fetchProblems = async () => {
@@ -83,6 +100,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
       setShowCreateModal(false);
       CacheManager.clearProblemCache();
       fetchProblems();
+      fetchTopics(); // Refresh topics in case a new one was created
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Failed to create problem');
     }
@@ -149,7 +167,9 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
       setTopicsLoading(true);
       // If no courseId (DSA page), fetch only global topics (courseId=none)
       const data = await topicAdminService.getTopics('coding-arena', false, courseId || 'none');
-      setTopics(data || []);
+      // Sort topics alphabetically by name
+      const sorted = (data || []).sort((a: Topic, b: Topic) => a.name.localeCompare(b.name));
+      setTopics(sorted);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);
       toast.error('Failed to fetch topics');
@@ -304,7 +324,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
                 <div key={topic.id} className="flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg text-xs">
                   {editingTopic?.id === topic.id ? (
                     <>
-                      <input value={editingTopic.name} onChange={(e) => setEditingTopic({...editingTopic, name: e.target.value})} className="w-24 px-1 py-0.5 border rounded text-xs" />
+                      <input value={editingTopic!.name} onChange={(e) => setEditingTopic({...editingTopic!, name: e.target.value} as Topic)} className="w-24 px-1 py-0.5 border rounded text-xs" />
                       <button onClick={handleUpdateTopic} className="text-blue-600 font-bold">✓</button>
                       <button onClick={() => setEditingTopic(null)} className="text-gray-400">✕</button>
                     </>
@@ -322,7 +342,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         )}
 
         {/* Filters */}
-        <ProblemFilters filters={filters} onFiltersChange={setFilters} system="coding-arena" courseId={courseId} />
+        <ProblemFilters filters={filters} onFiltersChange={setFilters} topics={topics} system="coding-arena" courseId={courseId} />
 
         {/* Problems Table */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
@@ -357,6 +377,8 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         <CreateEditProblemModal
           problem={selectedProblem}
           type="coding-arena"
+          defaultTopic={selectedTopic?.name || ''}
+          courseId={courseId}
           onSave={selectedProblem ? handleUpdateProblem : handleCreateProblem}
           onClose={() => {
             setShowCreateModal(false);

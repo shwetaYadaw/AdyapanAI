@@ -160,7 +160,7 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({
       where: whereClause,
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ topics: 'asc' }, { difficulty: 'asc' }],
       select: {
         id: true,
         title: true,
@@ -205,16 +205,33 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
       allProblems = allProblems.filter(p => p.difficulty === difficulty);
     }
 
-    // Filter by exact topic match if topic provided
+    // Filter by topic if provided
+    // Matches if: the full topic field equals the filter, OR any comma-separated part equals it,
+    // OR the topic field starts with the filter name (handles "Binary Search [1D, 2D Arrays]" matching "Binary Search")
     if (topic) {
-      const topicLower = topic.toLowerCase();
+      const topicLower = topic.toLowerCase().trim();
       allProblems = allProblems.filter(p => {
-        const problemTopics = p.topics
-          .split(',')
-          .map(t => t.trim().toLowerCase());
-        return problemTopics.includes(topicLower);
+        const pTopics = p.topics.toLowerCase().trim();
+        // Exact match on full field
+        if (pTopics === topicLower) return true;
+        // Check each comma-separated part for exact match
+        const parts = pTopics.split(',').map(t => t.trim());
+        if (parts.some(part => part === topicLower)) return true;
+        // Check if any part starts with the topic name (e.g., "binary search [1d, 2d arrays]" starts with "binary search")
+        if (parts.some(part => part.startsWith(topicLower + ' [') || part.startsWith(topicLower + '['))) return true;
+        return false;
       });
     }
+
+    // Sort: by topic alphabetically, then by difficulty (easy → medium → hard)
+    const difficultyOrder: Record<string, number> = { easy: 1, medium: 2, hard: 3 };
+    allProblems.sort((a, b) => {
+      // First sort by topic
+      const topicCompare = a.topics.toLowerCase().localeCompare(b.topics.toLowerCase());
+      if (topicCompare !== 0) return topicCompare;
+      // Then by difficulty (easy first, hard last)
+      return (difficultyOrder[a.difficulty] || 99) - (difficultyOrder[b.difficulty] || 99);
+    });
 
     const total = allProblems.length;
     const problems = allProblems.slice(skip, skip + limitNum);
