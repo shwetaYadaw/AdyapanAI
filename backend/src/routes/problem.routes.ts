@@ -176,10 +176,11 @@ router.get('/', async (req, res, next) => {
     if (topic) {
       const topicStr = String(topic).toLowerCase();
       allProblems = allProblems.filter(p => {
-        const problemTopics = p.topics
-          .split(',')
-          .map(t => t.trim().toLowerCase());
-        // Match exact, partial, or hyphenated URL key
+        const topicsRaw = p.topics.toLowerCase().trim();
+        if (topicsRaw === topicStr) return true;
+        if (topicsRaw.includes(topicStr)) return true;
+        if (topicStr.includes(topicsRaw)) return true;
+        const problemTopics = p.topics.split(/,(?![^[]*\])/).map(t => t.trim().toLowerCase());
         return problemTopics.some(t => {
           const tKey = t.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
           return t === topicStr || tKey === topicStr || t.includes(topicStr) || topicStr.includes(t);
