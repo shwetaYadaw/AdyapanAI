@@ -37,6 +37,14 @@ export default function CodingChallengesPage() {
     return name.toLowerCase().replace(/\s+/g, '-').replace(/[&/]/g, '').replace('queue-deque', 'queue-deque');
   };
 
+  // Get student's course to filter problems
+  const { data: profileData } = useQuery({
+    queryKey: ['studentProfile'],
+    queryFn: async () => { const { data } = await api.get('/students/profile'); return data.data; },
+    staleTime: 5 * 60 * 1000,
+  });
+  const studentCourseId = profileData?.course;
+
   // Fetch topics from public API - NO FALLBACK, must be dynamic
   const { data: topicsData, isLoading: topicsLoading, error: topicsError } = useQuery<Topic[]>({
     queryKey: ['codingTopics'],
@@ -63,13 +71,12 @@ export default function CodingChallengesPage() {
         }))
     : [];
 
-  // Fetch all problems from Problem table (Coding Arena)
+  // Fetch all problems from Problem table (Coding Arena) - filtered by student's course
   const { data: questions, isLoading } = useQuery<Question[]>({
-    queryKey: ['codingArenaProblems', ''],
+    queryKey: ['codingArenaProblems', studentCourseId || ''],
     queryFn: async () => {
-      // Use /problems endpoint for Coding Arena (Problem table)
-      // Removed onlyUpdated filter to show all problems
-      const { data } = await api.get('/problems?limit=500');
+      const params = studentCourseId ? `?limit=500&courseId=${studentCourseId}` : '?limit=500';
+      const { data } = await api.get(`/problems${params}`);
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,

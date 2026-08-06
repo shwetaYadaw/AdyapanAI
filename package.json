@@ -8,13 +8,13 @@
     "frontend"
   ],
   "scripts": {
-    "dev:frontend": "yarn workspace @adyapan/frontend dev",
-    "dev:backend": "yarn workspace @adyapan/backend dev",
-    "dev:all": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
-    "build:frontend": "yarn workspace @adyapan/frontend build",
-    "build:backend": "yarn workspace @adyapan/backend build",
-    "lint": "yarn workspaces run lint",
-    "test": "yarn workspaces run test",
+    "dev:frontend": "npm run dev -w @adyapan/frontend",
+    "dev:backend": "npm run dev -w @adyapan/backend",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:frontend": "npm run build -w @adyapan/frontend",
+    "build:backend": "npm run build -w @adyapan/backend",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspaces",
     "setup-hooks": "cp scripts/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit && echo '✅ Git hooks installed'",
     "check:mysql-only": "node scripts/check-mysql-only.js"
   },

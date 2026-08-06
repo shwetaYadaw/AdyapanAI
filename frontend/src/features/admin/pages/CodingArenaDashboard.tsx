@@ -12,9 +12,11 @@ import CacheManager from '../../../utils/cacheManager';
 
 interface CodingArenaDashboardProps {
   onBack: () => void;
+  courseId?: string;
+  courseName?: string;
 }
 
-export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardProps) {
+export default function CodingArenaDashboard({ onBack, courseId, courseName }: CodingArenaDashboardProps) {
   const queryClient = useQueryClient();
   const [problems, setProblems] = useState<Problem[]>([]);
   const [pagination, setPagination] = useState({
@@ -61,7 +63,8 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      const result = await problemAdminService.getProblems(filters);
+      const queryFilters = courseId ? { ...filters, courseId } : filters;
+      const result = await problemAdminService.getProblems(queryFilters);
       setProblems(result.problems);
       setPagination(result.pagination);
     } catch (err: any) {
@@ -73,10 +76,10 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
 
   const handleCreateProblem = async (problem: Problem) => {
     try {
-      await problemAdminService.createProblem(problem);
+      const problemData = courseId ? { ...problem, courseId } : problem;
+      await problemAdminService.createProblem(problemData);
       toast.success('Coding Arena problem created successfully!');
       setShowCreateModal(false);
-      // Clear cache after creation
       CacheManager.clearProblemCache();
       fetchProblems();
     } catch (err: any) {
@@ -221,8 +224,17 @@ export default function CodingArenaDashboard({ onBack }: CodingArenaDashboardPro
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
+<<<<<<< HEAD
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">DSA Problems</h1>
               <p className="text-cyan-100 text-sm mt-1">Manage coding problems for the student portal</p>
+=======
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                {courseName ? `${courseName} - Coding Arena` : 'Coding Arena Management'}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 mt-1">
+                {courseName ? `Coding problems for ${courseName}` : 'DSA & Interview Problems'} - Total: {pagination.total}
+              </p>
+>>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
             </div>
             <div className="flex items-center gap-3">
               <div className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 border border-white/20 text-white text-sm font-medium">

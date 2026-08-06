@@ -32,6 +32,14 @@ export default function PlacementPrepPage() {
   const [search, setSearch]           = useState('');
   const [difficulty, setDifficulty]   = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
 
+  // Get student's course
+  const { data: profileData } = useQuery({
+    queryKey: ['studentProfile'],
+    queryFn: async () => { const { data } = await api.get('/students/profile'); return data.data; },
+    staleTime: 5 * 60 * 1000,
+  });
+  const studentCourseId = profileData?.course;
+
   // Fetch topics dynamically
   const { data: topics = [] } = useQuery<Topic[]>({
     queryKey: ['tcsNqtTopics', 'v2'],
@@ -43,10 +51,11 @@ export default function PlacementPrepPage() {
   });
 
   const { data: storedQuestions = [], isLoading, isError } = useQuery<TCSQuestion[]>({
-    queryKey: ['placementPrepQuestions', 'v2'],
-    staleTime: 0, // Always fetch fresh data so new questions show immediately
+    queryKey: ['placementPrepQuestions', studentCourseId || 'all'],
+    staleTime: 0,
     queryFn: async () => {
-      const { data } = await api.get('/tcs-nqt?limit=500');
+      const params = studentCourseId ? `?limit=500&courseId=${studentCourseId}` : '?limit=500';
+      const { data } = await api.get(`/tcs-nqt${params}`);
       return (data.data ?? []).map((q: any) => ({
         ...q,
         id: q.id ?? q._id,

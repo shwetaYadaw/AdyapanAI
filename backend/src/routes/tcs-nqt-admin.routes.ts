@@ -27,6 +27,10 @@ router.get('/', async (req, res, next) => {
       where.difficulty = String(req.query.difficulty);
     }
 
+    if (req.query.courseId) {
+      where.courseId = String(req.query.courseId);
+    }
+
     if (req.query.search) {
       where.title = { contains: String(req.query.search), mode: 'insensitive' };
     }
@@ -83,6 +87,7 @@ router.post('/', async (req, res, next) => {
       topic,  // Topic name (e.g., "Arrays")
       companies,
       experienceLevel,  // "freshers" | "experienced"
+      courseId,
     } = req.body;
 
     // Validate required fields
@@ -110,7 +115,12 @@ router.post('/', async (req, res, next) => {
         slug,
         statement,
         difficulty,
+<<<<<<< HEAD
         topic,
+=======
+        courseId: courseId || null,
+        topic,  // Store the selected topic (e.g., "Arrays")
+>>>>>>> cfba57b2bdad57251408989f6a0916e37258bf89
         companies: companies || 'TCS',
         inputFormat: inputFormat || '',
         outputFormat: outputFormat || '',

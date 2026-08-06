@@ -65,6 +65,27 @@ export class EmailService {
     await this.send(to, 'Reset Your Password — ADYAPAN', html);
   }
 
+  async sendWelcomeEmailWithCredentials(
+    to: string,
+    firstName: string,
+    emailStr: string,
+    passwordStr: string
+  ): Promise<void> {
+    const loginUrl = `${env.FRONTEND_URL}/login`;
+    const html = this.buildEmailTemplate({
+      title: 'Welcome to ADYAPAN!',
+      greeting: `Hi ${firstName},`,
+      body: `Your ADYAPAN student account has been created by an administrator. Here are your login credentials:<br><br>
+      <strong>Email:</strong> ${emailStr}<br>
+      <strong>Password:</strong> ${passwordStr}<br><br>
+      Please log in and change your password as soon as possible.`,
+      ctaLabel: 'Log In Now',
+      ctaUrl: loginUrl,
+      footer: 'If you did not request this account, please contact support.',
+    });
+    await this.send(to, 'Your ADYAPAN Account Credentials', html);
+  }
+
   async sendCertificateEmail(
     to: string,
     firstName: string,

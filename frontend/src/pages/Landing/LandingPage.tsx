@@ -1,1064 +1,334 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ArrowRight, Code2, BookOpen, Video, Trophy } from 'lucide-react';
+import { ArrowRight, Code2, BookOpen, Video, Trophy, Sparkles, Zap, ChevronDown, CheckCircle2, MessageSquare, Mail, Phone } from 'lucide-react';
 import Navbar from '../../shared/components/Navbar/Navbar';
 import Footer from '../../shared/components/Footer/Footer';
 import { Toaster } from 'react-hot-toast';
 
-const ORANGE = '#E85D04';
+// Reusable Animation Variants
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 }
+  }
+};
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
+
+const scaleUp = {
+  hidden: { opacity: 0, scale: 0.8 },
+  show: { opacity: 1, scale: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function LandingPage() {
-  const features = [
-    { icon: Code2, label: 'DSA', color: '#2E7D32' },
-    { icon: Code2, label: 'C++', color: '#1976D2' },
-    { icon: Code2, label: 'Java', color: '#F57C00' },
-    { icon: Code2, label: 'Python', color: '#455A64' },
-    { icon: Code2, label: 'Web Dev', color: '#D32F2F' },
-    { icon: Code2, label: 'Full Stack', color: '#7B1FA2' },
-  ];
-
   return (
-    <div style={{
-      fontFamily: 'Inter, sans-serif',
-      display: 'flex',
-      flexDirection: 'column',
-      minHeight: '100vh',
-      backgroundColor: '#0F0F0F',
-    }}>
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 font-sans selection:bg-brand-orange selection:text-white overflow-x-hidden">
       <Navbar />
-      <Toaster position="top-right" />
+      <Toaster position="top-center" />
 
-      {/* Hero Section */}
-      <section style={{
-        flex: 1,
-        backgroundImage: 'url(/mainpage-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        position: 'relative',
-        overflow: 'hidden',
-        padding: '60px 80px',
-      }}>
-        {/* Overlay */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'rgba(15, 15, 15, 0.3)',
-          zIndex: 0,
-        }} />
+      {/* ── HERO SECTION ──────────────────────────────────────────────────────── */}
+      <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
+        {/* Background Image with Parallax & Heavy Overlay for Contrast */}
+        <div 
+          className="absolute inset-0 z-0 bg-[url('/mainpage-bg.png')] bg-cover bg-center bg-fixed"
+        />
+        {/* Premium gradient overlay */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-gray-950/90 via-gray-950/80 to-gray-950/95 dark:from-black/90 dark:via-black/80 dark:to-black/95 backdrop-blur-[2px]" />
+        
+        {/* Animated Glow Orbs */}
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }} 
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/4 -left-32 w-96 h-96 bg-brand-orange/30 rounded-full blur-[100px] z-0 pointer-events-none" 
+        />
+        <motion.div 
+          animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.4, 0.2] }} 
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          className="absolute bottom-1/4 -right-32 w-[30rem] h-[30rem] bg-brand-amber/20 rounded-full blur-[120px] z-0 pointer-events-none" 
+        />
 
-        {/* Content Container */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          style={{
-            position: 'relative',
-            zIndex: 1,
-            maxWidth: '600px',
-          }}
-        >
-          {/* Badge */}
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 8,
-            background: 'rgba(232, 93, 4, 0.15)',
-            border: '1px solid rgba(232, 93, 4, 0.3)',
-            borderRadius: 999,
-            padding: '8px 16px',
-            marginBottom: 32,
-            fontSize: 13,
-            fontWeight: 600,
-            color: ORANGE,
-          }}>
-            <span style={{ fontSize: 16 }}>●</span> Learn. Code. Succeed.
-          </div>
-
-          {/* Main Headline */}
-          <h1 style={{
-            fontFamily: 'Poppins, sans-serif',
-            fontWeight: 900,
-            fontSize: 72,
-            lineHeight: 1.1,
-            marginBottom: 24,
-            color: '#000',
-            margin: '0 0 24px 0',
-          }}>
-            Master <span style={{ color: ORANGE }}>Coding.</span>
-            <br />
-            Build Your Future.
-          </h1>
-
-          {/* Description */}
-          <p style={{
-            fontSize: 16,
-            color: '#333',
-            lineHeight: 1.7,
-            marginBottom: 40,
-            maxWidth: 500,
-            margin: '0 0 40px 0',
-          }}>
-            From DSA to Full Stack Development – everything you need to become a top developer.
-          </p>
-
-          {/* CTA Button */}
-          <Link
-            to="/get-started"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '14px 32px',
-              background: `linear-gradient(135deg, ${ORANGE}, #F48C06)`,
-              color: '#fff',
-              textDecoration: 'none',
-              borderRadius: 50,
-              fontWeight: 700,
-              fontSize: 15,
-              border: 'none',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              boxShadow: '0 4px 15px rgba(232, 93, 4, 0.3)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-3px)';
-              e.currentTarget.style.boxShadow = '0 8px 25px rgba(232, 93, 4, 0.4)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 15px rgba(232, 93, 4, 0.3)';
-            }}
+        <div className="container mx-auto px-6 lg:px-12 relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left: Copy */}
+          <motion.div 
+            initial="hidden"
+            animate="show"
+            variants={staggerContainer}
+            className="max-w-2xl text-center lg:text-left"
           >
-            Start Learning Now <ArrowRight size={18} />
-          </Link>
-
-          {/* Feature Icons */}
-          <div style={{
-            display: 'flex',
-            gap: 24,
-            marginTop: 48,
-            alignItems: 'center',
-          }}>
-            {[
-              { icon: '🎓', label: 'Students Learning' },
-              { icon: '</>', label: 'Coding Problems' },
-              { icon: '🎥', label: 'Detailed Video Courses' },
-              { icon: '🏆', label: 'Placement Success' },
-            ].map((item, i) => (
-              <div
-                key={i}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 8,
-                }}
+            <motion.div variants={fadeUp} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-orange/10 border border-brand-orange/20 text-brand-orange mb-8 backdrop-blur-md">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-sm font-semibold tracking-wide uppercase">The New Standard in Tech Ed</span>
+            </motion.div>
+            
+            <motion.h1 variants={fadeUp} className="text-5xl lg:text-7xl font-black text-white leading-[1.1] mb-6 font-display tracking-tight">
+              Master <span className="text-transparent bg-clip-text bg-gradient-brand">Coding.</span><br />
+              Build Your Future.
+            </motion.h1>
+            
+            <motion.p variants={fadeUp} className="text-lg lg:text-xl text-gray-300 mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              From foundational Data Structures to advanced Full Stack Development. Equip yourself with the skills that top tech companies are actively hiring for.
+            </motion.p>
+            
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              <Link 
+                to="/get-started" 
+                className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-gradient-brand hover:bg-gradient-brand-r text-white rounded-2xl font-bold text-lg transition-all duration-300 hover:scale-105 shadow-brand hover:shadow-brand-glow active:scale-95"
               >
-                <div style={{
-                  fontSize: 28,
-                  marginBottom: 4,
-                }}>
-                  {item.icon}
+                Start Learning Now
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link 
+                to="#courses" 
+                className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-2xl font-bold text-lg transition-all duration-300 backdrop-blur-md hover:border-white/20"
+              >
+                View Curriculum
+              </Link>
+            </motion.div>
+
+            {/* Stats */}
+            <motion.div variants={fadeUp} className="grid grid-cols-3 gap-6 mt-16 pt-8 border-t border-white/10">
+              {[
+                { label: 'Active Students', value: '10k+' },
+                { label: 'Coding Problems', value: '500+' },
+                { label: 'Placement Rate', value: '94%' },
+              ].map((stat, i) => (
+                <div key={i} className="flex flex-col items-center lg:items-start">
+                  <span className="text-3xl font-black text-white">{stat.value}</span>
+                  <span className="text-sm font-medium text-gray-400 mt-1">{stat.label}</span>
                 </div>
-                <p style={{
-                  fontSize: 12,
-                  color: '#666',
-                  textAlign: 'center',
-                  margin: 0,
-                  fontWeight: 500,
-                }}>
-                  {item.label}
+              ))}
+            </motion.div>
+          </motion.div>
+
+          {/* Right: Floating Interface Mockup */}
+          <motion.div 
+            initial={{ opacity: 0, x: 50, rotateY: -10 }}
+            animate={{ opacity: 1, x: 0, rotateY: 0 }}
+            transition={{ duration: 1, delay: 0.2, type: "spring", damping: 20 }}
+            className="hidden lg:block relative perspective-1000"
+          >
+            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-gray-900/50 backdrop-blur-xl transform rotate-y-[-10deg] rotate-x-[5deg] hover:rotate-y-0 hover:rotate-x-0 transition-transform duration-700 ease-out">
+              {/* Mockup Header */}
+              <div className="h-12 bg-gray-800/80 border-b border-gray-700/50 flex items-center px-4 gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+              </div>
+              {/* Code Snippet */}
+              <div className="p-6 font-mono text-sm leading-relaxed text-gray-300">
+                <div className="text-blue-400">export default function</div> <span className="text-yellow-300">Developer</span>() {'{'}
+                <div className="pl-4 mt-2">
+                  <span className="text-purple-400">const</span> skills = <span className="text-blue-300">useAdyapan</span>();
+                </div>
+                <div className="pl-4 mt-4">
+                  <span className="text-purple-400">if</span> (skills.isMastered) {'{'}
+                  <div className="pl-4 text-green-400">return {'<DreamJob />'};</div>
+                  {'}'}
+                </div>
+                <div className="pl-4 mt-4">
+                  <span className="text-gray-500">// Start your journey today</span><br/>
+                  <span className="text-blue-400">return</span> {'<KeepCoding />'};
+                </div>
+                {'}'}
+              </div>
+            </div>
+            
+            {/* Floating badges */}
+            <motion.div 
+              animate={{ y: [-10, 10, -10] }} 
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -right-8 top-1/4 bg-white/10 backdrop-blur-xl border border-white/20 p-4 rounded-2xl shadow-xl flex items-center gap-4"
+            >
+              <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                <CheckCircle2 className="w-6 h-6 text-green-400" />
+              </div>
+              <div>
+                <p className="text-white font-bold">Code Passed!</p>
+                <p className="text-gray-300 text-sm">All test cases successful</p>
+              </div>
+            </motion.div>
+          </motion.div>
+
+        </div>
+      </section>
+
+      {/* ── FEATURES GRID ─────────────────────────────────────────────────────── */}
+      <section id="courses" className="py-24 bg-white dark:bg-gray-950 relative">
+        <div className="container mx-auto px-6 lg:px-12">
+          <motion.div 
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+            className="text-center max-w-3xl mx-auto mb-20"
+          >
+            <motion.h2 variants={fadeUp} className="text-4xl lg:text-5xl font-black text-gray-900 dark:text-white mb-6 font-display">
+              Everything you need to <span className="text-brand-orange">succeed</span>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-xl text-gray-600 dark:text-gray-400">
+              We've crafted a comprehensive ecosystem designed specifically to take you from a beginner to an industry-ready professional.
+            </motion.p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { icon: Code2, title: 'Interactive Coding', desc: 'Write, run, and test code directly in your browser with our integrated development environment.', color: 'from-blue-500 to-cyan-400' },
+              { icon: BookOpen, title: 'Structured Curriculum', desc: 'Step-by-step learning paths covering DSA, web development, and system design.', color: 'from-brand-orange to-brand-amber' },
+              { icon: Video, title: 'Video Lectures', desc: 'In-depth video tutorials explaining complex concepts with clear, visual examples.', color: 'from-purple-500 to-pink-500' },
+              { icon: Trophy, title: 'Weekly Contests', desc: 'Compete with peers globally to improve your problem-solving speed and logic.', color: 'from-yellow-400 to-orange-500' },
+              { icon: Zap, title: 'Instant Feedback', desc: 'Get immediate, detailed feedback on your code submissions to fix errors fast.', color: 'from-green-400 to-emerald-600' },
+              { icon: CheckCircle2, title: 'Placement Prep', desc: 'Specialized modules for TCS NQT, aptitude tests, and top MNC interview preparation.', color: 'from-rose-400 to-red-500' },
+            ].map((feature, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group relative p-8 rounded-3xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              >
+                {/* Glow behind icon */}
+                <div className={`absolute top-8 left-8 w-12 h-12 rounded-full bg-gradient-to-tr ${feature.color} opacity-20 group-hover:opacity-100 blur-xl transition-opacity duration-500`} />
+                
+                <div className={`relative w-14 h-14 rounded-2xl bg-gradient-to-tr ${feature.color} flex items-center justify-center text-white mb-6 shadow-lg transform group-hover:scale-110 transition-transform duration-300`}>
+                  <feature.icon className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-brand-orange transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {feature.desc}
                 </p>
-              </div>
+              </motion.div>
             ))}
-          </div>
-
-          {/* Quote Section */}
-          <div style={{
-            marginTop: 48,
-            display: 'flex',
-            gap: 16,
-            alignItems: 'center',
-          }}>
-            <div style={{
-              width: 64,
-              height: 64,
-              borderRadius: '50%',
-              background: `linear-gradient(135deg, ${ORANGE}, #F48C06)`,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 24,
-              color: '#fff',
-            }}>
-              "
-            </div>
-            <div>
-              <p style={{
-                fontSize: 15,
-                color: '#333',
-                fontStyle: 'italic',
-                margin: '0 0 8px 0',
-              }}>
-                Code today, conquer tomorrow.
-              </p>
-              <div style={{
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
-                background: ORANGE,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-              }}>
-                <ArrowRight size={20} color="#fff" />
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* Additional Hero Section with Full Image */}
-      <section style={{
-        backgroundImage: 'url(/hero-section.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        width: '100%',
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-      </section>
-
-      {/* Feature Section with New Image */}
-      <section style={{
-        width: '100%',
-        backgroundImage: 'url(/feature-section.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-        padding: '40px 20px',
-      }}>
-        {/* Background Overlay */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'rgba(0, 0, 0, 0.4)',
-          zIndex: 1,
-        }} />
-
-        {/* Main Content Container */}
-        <div style={{
-          position: 'relative',
-          zIndex: 2,
-          maxWidth: '1200px',
-          width: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '40px',
-        }}>
-          {/* Main Title */}
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: false }}
-            style={{
-              textAlign: 'center',
-            }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(28px, 6vw, 48px)',
-              fontWeight: 'bold',
-              color: '#ffffff',
-              margin: '0 0 16px',
-              letterSpacing: '-1px',
-            }}>
-              FROM IDEA TO SHIP IT! LEARNING MADE REAL.
-            </h2>
-          </motion.div>
-
-          {/* Central Course Card */}
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: false }}
-            style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: '20px',
-              padding: 'clamp(24px, 4vw, 40px)',
-              textAlign: 'center',
-              boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.2)',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              maxWidth: '500px',
-              width: '100%',
-            }}
-          >
-            <h3 style={{
-              fontSize: 'clamp(20px, 4vw, 28px)',
-              fontWeight: 'bold',
-              color: '#ffffff',
-              margin: '0 0 20px',
-            }}>
-              VIBE CODING: MASTER THE STACK
-            </h3>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                background: `linear-gradient(135deg, #7C3AED, #A855F7)`,
-                color: '#fff',
-                padding: '14px 32px',
-                borderRadius: '10px',
-                border: 'none',
-                fontSize: '16px',
-                fontWeight: '700',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-              }}
-            >
-              Enroll in Course →
-            </motion.button>
-          </motion.div>
-
-          {/* Features Grid */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: '20px',
-            width: '100%',
-          }}>
-            {/* VS Code & Plugins */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              viewport={{ once: false }}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                padding: '20px',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-              }}
-            >
-              <h4 style={{
-                fontSize: '14px',
-                fontWeight: '700',
-                color: '#ffffff',
-                marginBottom: '16px',
-                textAlign: 'center',
-              }}>
-                VS Code & Plugins
-              </h4>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-              }}>
-                {[
-                  { label: 'Python Debugger', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
-                  { label: 'Bash Shell', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg' },
-                  { label: 'Terminal', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg' },
-                  { label: 'Git Lens', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
-                  { label: 'Live Share', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg' },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.4 + i * 0.1 }}
-                    viewport={{ once: false }}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <img src={item.img} alt={item.label} style={{ width: 14, height: 14 }} />
-                    {item.label}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* React & State Management */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              viewport={{ once: false }}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                padding: '20px',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-              }}
-            >
-              <h4 style={{
-                fontSize: '14px',
-                fontWeight: '700',
-                color: '#ffffff',
-                marginBottom: '16px',
-                textAlign: 'center',
-              }}>
-                React & State Management
-              </h4>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-              }}>
-                {[
-                  { label: 'GraphQL Client', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/graphql/graphql-plain.svg' },
-                  { label: 'SSR & Next.js', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg' },
-                  { label: 'React Hooks', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
-                  { label: 'Redux', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redux/redux-original.svg' },
-                  { label: 'Components', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.5 + i * 0.1 }}
-                    viewport={{ once: false }}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <img src={item.img} alt={item.label} style={{ width: 14, height: 14 }} />
-                    {item.label}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Planning & Workflow */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              viewport={{ once: false }}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                padding: '20px',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-              }}
-            >
-              <h4 style={{
-                fontSize: '14px',
-                fontWeight: '700',
-                color: '#ffffff',
-                marginBottom: '16px',
-                textAlign: 'center',
-              }}>
-                Planning & Workflow
-              </h4>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-              }}>
-                {[
-                  { label: 'Jira Boards', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg' },
-                  { label: 'Kanban Flow', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/trello/trello-plain.svg' },
-                  { label: 'PR Checklists', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg' },
-                  { label: 'Workspace Docs', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/notion/notion-original.svg' },
-                  { label: 'Team Communication', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/slack/slack-original.svg' },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.6 + i * 0.1 }}
-                    viewport={{ once: false }}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <img src={item.img} alt={item.label} style={{ width: 14, height: 14 }} />
-                    {item.label}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Primary Languages & Frameworks */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              viewport={{ once: false }}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                padding: '20px',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-              }}
-            >
-              <h4 style={{
-                fontSize: '14px',
-                fontWeight: '700',
-                color: '#ffffff',
-                marginBottom: '16px',
-                textAlign: 'center',
-              }}>
-                Primary Languages & Frameworks
-              </h4>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-              }}>
-                {[
-                  { label: 'Python', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
-                  { label: 'JavaScript', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
-                  { label: 'TypeScript', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
-                  { label: 'Kotlin', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg' },
-                  { label: 'Android Dev', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg' },
-                  { label: 'C++', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg' },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.7 + i * 0.1 }}
-                    viewport={{ once: false }}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <img src={item.img} alt={item.label} style={{ width: 14, height: 14 }} />
-                    {item.label}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Dev Tools & Architecture */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.7 }}
-              viewport={{ once: false }}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                padding: '20px',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-              }}
-            >
-              <h4 style={{
-                fontSize: '14px',
-                fontWeight: '700',
-                color: '#ffffff',
-                marginBottom: '16px',
-                textAlign: 'center',
-              }}>
-                Dev Tools & Architecture
-              </h4>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-              }}>
-                {[
-                  { label: 'Chrome DevTools', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/chrome/chrome-original.svg' },
-                  { label: 'Postman', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg' },
-                  { label: 'Architecture', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg' },
-                  { label: 'Cloud', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/amazonaws/amazonaws-original.svg' },
-                  { label: 'Docker', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.8 + i * 0.1 }}
-                    viewport={{ once: false }}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <img src={item.img} alt={item.label} style={{ width: 14, height: 14 }} />
-                    {item.label}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Error Handling */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              viewport={{ once: false }}
-              style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '16px',
-                padding: '20px',
-                boxShadow: 'inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-              }}
-            >
-              <h4 style={{
-                fontSize: '14px',
-                fontWeight: '700',
-                color: '#ffffff',
-                marginBottom: '16px',
-                textAlign: 'center',
-              }}>
-                Error Handling Modules
-              </h4>
-              <div style={{
-                display: 'flex',
-                gap: '12px',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-              }}>
-                {[
-                  { label: 'Error Handling', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
-                  { label: 'Sentry', img: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sentry/sentry-original.svg' },
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.4, delay: 0.9 + i * 0.1 }}
-                    viewport={{ once: false }}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      padding: '8px 12px',
-                      borderRadius: '8px',
-                      fontSize: '11px',
-                      fontWeight: '600',
-                      color: '#ffffff',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                    }}
-                  >
-                    <img src={item.img} alt={item.label} style={{ width: 14, height: 14 }} />
-                    {item.label}
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Contact & FAQ Section */}
-      <section style={{
-        width: '100%',
-        padding: '60px 20px',
-        backgroundImage: 'url(/contact-bg.png)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-        overflow: 'hidden',
-      }}>
-        {/* Background Overlay */}
-        <div style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'rgba(250, 250, 250, 0.85)',
-          zIndex: 0,
-        }} />
-        <div style={{
-          maxWidth: '1200px',
-          width: '100%',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '40px',
-          position: 'relative',
-          zIndex: 1,
-        }}>
-          {/* Left: Contact Form */}
+      {/* ── PARALLAX BANNER ───────────────────────────────────────────────────── */}
+      <section className="relative py-32 overflow-hidden bg-brand-950">
+        <div className="absolute inset-0 bg-[url('/feature-section.png')] bg-cover bg-center bg-fixed opacity-30 mix-blend-luminosity" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-orange/90 to-purple-900/90 mix-blend-multiply" />
+        
+        <div className="container mx-auto px-6 lg:px-12 relative z-10 text-center">
           <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="max-w-4xl mx-auto backdrop-blur-md bg-white/5 border border-white/20 p-12 lg:p-16 rounded-3xl shadow-2xl"
+          >
+            <h2 className="text-4xl lg:text-5xl font-black text-white mb-6 font-display">
+              FROM IDEA TO SHIP IT!
+            </h2>
+            <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+              Stop watching tutorials passively. Start vibing with code. Build real-world projects that actually look good on your resume.
+            </p>
+            <Link 
+              to="/get-started" 
+              className="inline-flex items-center justify-center gap-2 px-10 py-5 bg-white text-brand-orange hover:bg-gray-50 rounded-2xl font-black text-lg transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-brand-glow"
+            >
+              Enroll in Premium Course
+              <ArrowRight className="w-6 h-6" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── FAQ & CONTACT SECTION ─────────────────────────────────────────────── */}
+      <section className="py-24 bg-gray-50 dark:bg-gray-900">
+        <div className="container mx-auto px-6 lg:px-12 grid lg:grid-cols-2 gap-16">
+          
+          {/* Left: Contact Form */}
+          <motion.div 
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: false }}
+            viewport={{ once: true }}
+            className="bg-white dark:bg-gray-800 p-8 lg:p-12 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700"
           >
-            <h2 style={{
-              fontSize: 'clamp(24px, 5vw, 32px)',
-              fontWeight: 900,
-              color: '#1a1a1a',
-              margin: '0 0 12px',
-            }}>
-              Send Us a Message
-            </h2>
-            <p style={{
-              fontSize: 14,
-              fontWeight: 700,
-              color: '#666',
-              marginBottom: '32px',
-              margin: '0 0 32px',
-            }}>
-              Fill out the form and we'll get back to you shortly.
-            </p>
+            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-2 font-display">Send Us a Message</h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">Have a question? We're here to help you out.</p>
 
-            <form style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '20px',
-            }}>
-              {/* Name and Email Row */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '16px',
-              }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    color: '#4a4a4a',
-                    marginBottom: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                  }}>
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Your name"
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      fontSize: '13px',
-                      fontFamily: 'Inter, sans-serif',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                    }}
-                  />
+            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Full Name</label>
+                  <input type="text" placeholder="John Doe" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-orange focus:border-brand-orange outline-none transition-all dark:text-white" />
                 </div>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    color: '#4a4a4a',
-                    marginBottom: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                  }}>
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="you@email.com"
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      fontSize: '13px',
-                      fontFamily: 'Inter, sans-serif',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                    }}
-                  />
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email Address</label>
+                  <input type="email" placeholder="john@example.com" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-orange focus:border-brand-orange outline-none transition-all dark:text-white" />
                 </div>
               </div>
-
-              {/* Phone and Subject Row */}
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                gap: '16px',
-              }}>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    color: '#4a4a4a',
-                    marginBottom: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                  }}>
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    placeholder="+91 XXXXX XXXXX"
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      fontSize: '13px',
-                      fontFamily: 'Inter, sans-serif',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{
-                    display: 'block',
-                    fontSize: '12px',
-                    fontWeight: '700',
-                    color: '#4a4a4a',
-                    marginBottom: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px',
-                  }}>
-                    Subject *
-                  </label>
-                  <select
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      fontSize: '13px',
-                      fontFamily: 'Inter, sans-serif',
-                      backgroundColor: '#ffffff',
-                      color: '#1a1a1a',
-                    }}
-                  >
-                    <option>Select a topic</option>
-                    <option>Enrollment</option>
-                    <option>Technical Support</option>
-                    <option>General Inquiry</option>
-                    <option>Other</option>
-                  </select>
-                </div>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Subject</label>
+                <select className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-orange focus:border-brand-orange outline-none transition-all dark:text-white appearance-none">
+                  <option>Select a topic...</option>
+                  <option>Enrollment Query</option>
+                  <option>Technical Support</option>
+                  <option>Feedback</option>
+                </select>
               </div>
-
-              {/* Message */}
-              <div>
-                <label style={{
-                  display: 'block',
-                  fontSize: '12px',
-                  fontWeight: '700',
-                  color: '#4a4a4a',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}>
-                  Message *
-                </label>
-                <textarea
-                  placeholder="Tell us how we can help..."
-                  style={{
-                    width: '100%',
-                    padding: '12px 14px',
-                    border: '1px solid #e0e0e0',
-                    borderRadius: '8px',
-                    fontSize: '13px',
-                    fontFamily: 'Inter, sans-serif',
-                    backgroundColor: '#ffffff',
-                    color: '#1a1a1a',
-                    minHeight: '120px',
-                    resize: 'vertical',
-                  }}
-                />
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Message</label>
+                <textarea rows={4} placeholder="How can we help?" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-brand-orange focus:border-brand-orange outline-none transition-all dark:text-white resize-none" />
               </div>
-
-              {/* Submit Button */}
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                type="submit"
-                style={{
-                  padding: '14px 32px',
-                  background: '#FFA500',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontSize: '15px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  transition: 'all 0.3s',
-                }}
-              >
-                ✈️ Send Message
-              </motion.button>
+              
+              <button type="submit" className="w-full flex items-center justify-center gap-2 py-4 bg-gradient-brand hover:bg-gradient-brand-r text-white rounded-xl font-bold text-lg transition-all shadow-md hover:shadow-brand-glow active:scale-[0.98]">
+                <Mail className="w-5 h-5" />
+                Send Message
+              </button>
             </form>
           </motion.div>
 
-          {/* Right: FAQ & Social */}
-          <motion.div
+          {/* Right: FAQ */}
+          <motion.div 
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: false }}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '40px',
-            }}
+            viewport={{ once: true }}
+            className="flex flex-col justify-center"
           >
-            {/* Quick Answers */}
-            <div>
-              <h2 style={{
-                fontSize: 'clamp(24px, 5vw, 32px)',
-                fontWeight: 900,
-                color: '#1a1a1a',
-                margin: '0 0 12px',
-              }}>
-                Quick Answers
-              </h2>
-              <p style={{
-                fontSize: 14,
-                fontWeight: 700,
-                color: '#666',
-                margin: '0 0 24px',
-              }}>
-                Common questions from students
-              </p>
-
-              {/* FAQ Accordion */}
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '12px',
-              }}>
-                {[
-                  { q: 'How do I enroll in a course?', a: 'Click on any course and follow the enrollment process.' },
-                  { q: 'Are classes live or recorded?', a: 'We offer both live and recorded sessions for flexibility.' },
-                  { q: 'Do you provide placement support?', a: 'Yes, we have dedicated placement assistance.' },
-                  { q: 'Can I get a refund?', a: 'Refunds are available within 7 days of enrollment.' },
-                ].map((item, i) => (
-                  <motion.details
-                    key={i}
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.4, delay: i * 0.1 }}
-                    viewport={{ once: false }}
-                    style={{
-                      cursor: 'pointer',
-                      border: '1px solid #e0e0e0',
-                      borderRadius: '8px',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <summary style={{
-                      padding: '16px',
-                      background: '#ffffff',
-                      fontSize: '14px',
-                      fontWeight: '800',
-                      color: '#1a1a1a',
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      listStyle: 'none',
-                      userSelect: 'none',
-                    }}>
-                      <span>{item.q}</span>
-                      <span style={{ fontSize: '18px' }}>▼</span>
-                    </summary>
-                    <div style={{
-                      padding: '16px',
-                      background: '#f5f5f5',
-                      borderTop: '1px solid #e0e0e0',
-                      fontSize: '13px',
-                      fontWeight: '600',
-                      color: '#666',
-                      lineHeight: '1.6',
-                    }}>
-                      {item.a}
-                    </div>
-                  </motion.details>
-                ))}
-              </div>
+            <div className="mb-10">
+              <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-4 font-display">Quick Answers</h2>
+              <p className="text-gray-600 dark:text-gray-400">Everything you need to know about the platform.</p>
             </div>
 
-
+            <div className="space-y-4">
+              {[
+                { q: 'How do I enroll in a course?', a: 'Simply sign up for a free account, browse the curriculum, and click "Enroll" on any module. Most basic modules are free to start!' },
+                { q: 'Are classes live or pre-recorded?', a: 'We offer a hybrid approach! Core concepts are pre-recorded in high quality, while weekly doubt sessions and contest discussions are conducted live.' },
+                { q: 'Is there placement support?', a: 'Yes! Students who complete our advanced track get access to our dedicated placement portal, resume reviews, and mock interviews.' },
+                { q: 'Can I access the platform on mobile?', a: 'Absolutely. Our platform is fully responsive. You can solve MCQs, watch videos, and read materials on your phone. For coding, we recommend a desktop.' },
+              ].map((faq, i) => (
+                <details key={i} className="group bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between p-6 cursor-pointer font-bold text-gray-900 dark:text-white select-none">
+                    {faq.q}
+                    <ChevronDown className="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform duration-300" />
+                  </summary>
+                  <div className="px-6 pb-6 text-gray-600 dark:text-gray-400 leading-relaxed border-t border-gray-100 dark:border-gray-700/50 pt-4">
+                    {faq.a}
+                  </div>
+                </details>
+              ))}
+            </div>
+            
+            <div className="mt-12 flex items-center gap-6 p-6 bg-brand-orange/5 border border-brand-orange/20 rounded-2xl">
+              <div className="w-12 h-12 bg-brand-orange/20 rounded-full flex items-center justify-center flex-shrink-0">
+                <Phone className="w-6 h-6 text-brand-orange" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">Still have questions?</p>
+                <p className="text-lg font-bold text-gray-900 dark:text-white">+91 (800) 123-4567</p>
+              </div>
+            </div>
           </motion.div>
+
         </div>
       </section>
 

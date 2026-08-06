@@ -25,11 +25,14 @@ const AptitudeStudentPage  = lazy(() => import('../../pages/student/AptitudeStud
 const AptitudeQuizPage     = lazy(() => import('../../pages/student/AptitudeQuizPage'));
 const TestAttemptPage      = lazy(() => import('../../pages/student/TestAttemptPage'));
 const CodingTopicPage      = lazy(() => import('../../pages/student/CodingTopicPage'));
+const CourseSelectionPage  = lazy(() => import('../../pages/student/CourseSelectionPage'));
 
 // Admin
 const AdminDashboard     = lazy(() => import('../../pages/admin/DashboardPage'));
 const AdminUsersPage     = lazy(() => import('../../pages/admin/UsersPage'));
 const AdminProblemsPage  = lazy(() => import('../../pages/admin/ProblemsPage'));
+const AdminCoursesPage  = lazy(() => import('../../pages/admin/CoursesPage'));
+const AdminContestsPage = lazy(() => import('../../pages/admin/ContestsPage'));
 const AdminAnalyticsPage = lazy(() => import('../../pages/admin/AnalyticsPage'));
 const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
@@ -62,6 +65,7 @@ export default function AppRouter() {
           <Route path="/student" element={<ProtectedRoute><RoleRoute roles={['student']} /></ProtectedRoute>}>
             <Route index element={<Navigate to="/student/dashboard" replace />} />
             <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="select-course" element={<CourseSelectionPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="certificates" element={<CertificatesPage />} />
             
@@ -86,6 +90,8 @@ export default function AppRouter() {
             <Route index element={<AdminDashboard />} />
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="users" element={<AdminUsersPage />} />
+            <Route path="courses" element={<AdminCoursesPage />} />
+            <Route path="contests" element={<AdminContestsPage />} />
             <Route path="problems" element={<AdminProblemsPage />} />
             <Route path="aptitude" element={<AptitudeManagementPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
