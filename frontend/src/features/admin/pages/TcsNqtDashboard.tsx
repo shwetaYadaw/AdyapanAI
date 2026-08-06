@@ -56,7 +56,7 @@ export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqt
   const fetchTopics = async () => {
     try {
       setTopicsLoading(true);
-      const data = await topicAdminService.getTopics('tcs-nqt', false);
+      const data = await topicAdminService.getTopics('tcs-nqt', false, courseId);
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);
@@ -75,6 +75,7 @@ export default function TcsNqtDashboard({ onBack, courseId, courseName }: TcsNqt
       await topicAdminService.createTopic({
         name: newTopicName,
         system: 'tcs-nqt',
+        courseId: courseId || undefined,
         description: newTopicDescription || undefined
       });
       toast.success('Topic added!');
