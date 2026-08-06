@@ -115,7 +115,6 @@ router.post('/', async (req, res, next) => {
         slug,
         statement,
         difficulty,
-        courseId: courseId || null,
         topic,
         companies: companies || 'TCS',
         inputFormat: inputFormat || '',
@@ -124,7 +123,7 @@ router.post('/', async (req, res, next) => {
         referenceSolution: referenceSolution || '',
         testCases: testCases || [],
         xpReward: 10,
-        experienceLevel: experienceLevel || 'freshers',
+        // experienceLevel: experienceLevel || 'freshers',
         createdBy: req.user?.userId,
       },
     });
@@ -214,7 +213,7 @@ router.put('/:id', async (req, res, next) => {
         testCases: req.body.testCases !== undefined ? req.body.testCases : question.testCases,
         topic: req.body.topic || question.topic,
         companies: req.body.companies || question.companies,
-        experienceLevel: req.body.experienceLevel || question.experienceLevel || 'freshers',
+        // experienceLevel: req.body.experienceLevel || question.experienceLevel || 'freshers',
         updatedBy: req.user?.userId,
       },
     });

@@ -74,7 +74,6 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
         slug,
         statement,
         difficulty,
-        courseId: courseId || null,
         topics,  // Store the selected topic (e.g., "Arrays")
         companies: companies || 'MNC',
         inputFormat: inputFormat || '',
@@ -91,6 +90,7 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
         category: category || 'general',
         timeLimit: timeLimit || 2000,
         memoryLimit: memoryLimit || 256,
+        courseId: courseId || undefined, // Save courseId if provided (undefined = global)
         createdBy: req.user?.userId,
         isArchived: false
       },
@@ -143,7 +143,7 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     const search = req.query.search as string | undefined;
     const difficulty = req.query.difficulty as string | undefined;
     const topic = req.query.topic as string | undefined;
-    const courseId = req.query.courseId as string | undefined;
+    const courseId = req.query.courseId as string | undefined | null;
 
     const pageNum = Math.max(1, page);
     const limitNum = Math.max(1, Math.min(limit, 100)); // Cap at 100
@@ -151,11 +151,16 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
 
     // Build where clause
     const whereClause: any = {};
-    if (courseId === 'none') {
-      whereClause.courseId = null; // Only global DSA problems (not assigned to any course)
+
+    // Filter by courseId if provided
+    if (courseId === 'global') {
+      // Global/DSA problems only (where courseId is null)
+      whereClause.courseId = null;
     } else if (courseId) {
-      whereClause.courseId = courseId;
+      // Course-specific problems
+      whereClause.courseId = String(courseId);
     }
+    // If courseId is undefined, don't filter - fetch all (should not happen in normal flow)
 
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({
@@ -205,21 +210,18 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
       allProblems = allProblems.filter(p => p.difficulty === difficulty);
     }
 
-    // Filter by topic if provided
-    // Matches if: the full topic field equals the filter, OR any comma-separated part equals it,
-    // OR the topic field starts with the filter name (handles "Binary Search [1D, 2D Arrays]" matching "Binary Search")
+    // Filter by topic match if topic provided
     if (topic) {
       const topicLower = topic.toLowerCase().trim();
       allProblems = allProblems.filter(p => {
-        const pTopics = p.topics.toLowerCase().trim();
-        // Exact match on full field
-        if (pTopics === topicLower) return true;
-        // Check each comma-separated part for exact match
-        const parts = pTopics.split(',').map(t => t.trim());
-        if (parts.some(part => part === topicLower)) return true;
-        // Check if any part starts with the topic name (e.g., "binary search [1d, 2d arrays]" starts with "binary search")
-        if (parts.some(part => part.startsWith(topicLower + ' [') || part.startsWith(topicLower + '['))) return true;
-        return false;
+        // Don't split by comma if the topics field matches directly
+        const topicsRaw = p.topics.toLowerCase().trim();
+        if (topicsRaw === topicLower) return true;
+        if (topicsRaw.includes(topicLower)) return true;
+        if (topicLower.includes(topicsRaw)) return true;
+        // Also try splitting (for multi-topic problems) but avoid splitting inside brackets
+        const problemTopics = p.topics.split(/,(?![^[]*\])/).map(t => t.trim().toLowerCase());
+        return problemTopics.some(pt => pt === topicLower || pt.includes(topicLower) || topicLower.includes(pt));
       });
     }
 

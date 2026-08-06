@@ -140,7 +140,7 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
 
     // Determine if answer is correct
     const isCorrect = selectedOption === question.correctOption;
-    const xpGained = isCorrect ? question.xpReward : 0;
+    const xpEarned = isCorrect ? question.xpReward : 0;
 
     // Create submission record
     const submission = await prisma.aptitudeSubmission.create({
@@ -150,7 +150,7 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
         selectedOption,
         isCorrect,
         timeSpent: timeSpent || 0,
-        xpGained,
+        xpEarned: xpEarned,
       },
     });
 
@@ -160,10 +160,10 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
         where: { userId: req.user!.userId },
         data: {
           xp: {
-            increment: xpGained,
+            increment: xpEarned,
           },
           totalXP: {
-            increment: xpGained,
+            increment: xpEarned,
           },
         },
       });
@@ -175,7 +175,7 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
       data: {
         submission,
         isCorrect,
-        xpGained,
+        xpEarned,
         correctOption: question.correctOption,
         explanation: isCorrect ? null : question.explanation, // Show explanation only if wrong
       },
@@ -203,7 +203,7 @@ router.get('/progress', authenticate, async (req, res, next) => {
     const totalAttempted = submissions.length;
     const totalCorrect = submissions.filter((s) => s.isCorrect).length;
     const accuracy = totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
-    const totalXP = submissions.reduce((sum, s) => sum + s.xpGained, 0);
+    const totalXP = submissions.reduce((sum, s) => sum + s.xpEarned, 0);
 
     // Topic-wise breakdown
     const topicStats: Record<
@@ -242,7 +242,7 @@ router.get('/progress', authenticate, async (req, res, next) => {
         topic: s.question.chapter.topic.name,
         chapter: s.question.chapter.name,
         isCorrect: s.isCorrect,
-        xpGained: s.xpGained,
+        xpEarned: s.xpEarned,
         attemptedAt: s.createdAt,
       })),
     };
@@ -275,7 +275,7 @@ router.get('/progress/:topicId', authenticate, async (req, res, next) => {
     const totalAttempted = submissions.length;
     const totalCorrect = submissions.filter((s) => s.isCorrect).length;
     const accuracy = totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
-    const totalXP = submissions.reduce((sum, s) => sum + s.xpGained, 0);
+    const totalXP = submissions.reduce((sum, s) => sum + s.xpEarned, 0);
 
     // Chapter-wise breakdown
     const chapterStats: Record<
@@ -347,7 +347,7 @@ router.get('/submissions', authenticate, async (req, res, next) => {
         selectedOption: s.selectedOption,
         correctOption: s.question.correctOption,
         isCorrect: s.isCorrect,
-        xpGained: s.xpGained,
+        xpEarned: s.xpEarned,
         timeSpent: s.timeSpent,
         attemptedAt: s.createdAt,
       })),

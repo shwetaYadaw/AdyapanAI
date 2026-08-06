@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, ArrowLeft, Tag, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Trash2, Edit2, ArrowLeft, Tag, X, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../../../core/services/api';
 
@@ -35,6 +35,11 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const [showTopicModal, setShowTopicModal] = useState(false);
   const [newTopic, setNewTopic] = useState('');
   const [editingProblem, setEditingProblem] = useState<CourseProblem | null>(null);
+  const [search, setSearch] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState('');
+  const [topicFilter, setTopicFilter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 20;
 
   const [form, setForm] = useState<CourseProblem>({
     title: '', difficulty: 'easy', statement: '', inputFormat: '', outputFormat: '',
@@ -76,7 +81,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const handleDeleteTopic = async (topicName: string) => {
     if (!confirm(`Delete topic "${topicName}"?`)) return;
     try {
-      const { data } = await api.get(`/admin/topics?system=coding-arena&courseId=${courseId}`);
+      const { data } = await api.get(`/admin/topics?system=coding-arena`);
       const topic = (data.data || []).find((t: any) => t.name === topicName);
       if (topic) {
         await api.delete(`/admin/topics/${topic.id}`);
@@ -160,32 +165,94 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
           </div>
         )}
 
+        {/* Filters */}
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <div className="relative flex-1 max-w-xs">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input type="text" value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search problems..." className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <select value={difficultyFilter} onChange={e => { setDifficultyFilter(e.target.value); setCurrentPage(1); }} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">All Difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <select value={topicFilter} onChange={e => { setTopicFilter(e.target.value); setCurrentPage(1); }} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">All Categories ({topics.length})</option>
+            {topics.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+
         {/* Problems List */}
+        {(() => {
+          // Apply filters
+          let filtered = problems;
+          if (search) filtered = filtered.filter((p: any) => p.title?.toLowerCase().includes(search.toLowerCase()));
+          if (difficultyFilter) filtered = filtered.filter((p: any) => p.difficulty === difficultyFilter);
+          if (topicFilter) filtered = filtered.filter((p: any) => (p.topics || p.topic || '').toLowerCase().includes(topicFilter.toLowerCase()));
+          const totalPages = Math.ceil(filtered.length / perPage);
+          const paginated = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+          return (<>
         {loading ? <p className="text-center text-gray-400 py-8">Loading...</p> :
-        problems.length === 0 && !showAddForm ? (
+        paginated.length === 0 && !showAddForm ? (
           <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
-            <p className="text-gray-500 mb-4">No problems added yet for {courseName}</p>
-            <button onClick={() => setShowAddForm(true)} className="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm">+ Add First Problem</button>
+            <p className="text-gray-500 mb-4">{problems.length === 0 ? `No problems added yet for ${courseName}` : 'No problems match your filters'}</p>
+            {problems.length === 0 && <button onClick={() => setShowAddForm(true)} className="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm">+ Add First Problem</button>}
           </div>
         ) : (
-          <div className="space-y-3">
-            {problems.map((p: any) => (
-              <div key={p.id} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 flex items-center justify-between hover:shadow-sm transition">
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{p.title}</h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${p.difficulty === 'hard' ? 'bg-red-100 text-red-600' : p.difficulty === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>{p.difficulty}</span>
-                    {(p.topics || p.topic) && <span className="text-[10px] text-gray-400">{p.topics || p.topic}</span>}
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <button onClick={() => startEdit(p)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"><Edit2 size={15} /></button>
-                  <button onClick={() => handleDeleteProblem(p.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg"><Trash2 size={15} /></button>
-                </div>
-              </div>
-            ))}
+          <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                  <th className="text-left px-4 py-3 font-semibold text-gray-600 dark:text-gray-400">Title</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Difficulty</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Topic</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Success Rate</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Attempts</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Status</th>
+                  <th className="text-center px-3 py-3 font-semibold text-gray-600 dark:text-gray-400">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {paginated.map((p: any) => (
+                  <tr key={p.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition">
+                    <td className="px-4 py-3">
+                      <p className="font-semibold text-gray-900 dark:text-white">{p.title}</p>
+                    </td>
+                    <td className="text-center px-3 py-3">
+                      <span className={`text-xs px-2.5 py-1 rounded-full font-bold ${p.difficulty === 'hard' ? 'bg-red-100 text-red-600' : p.difficulty === 'medium' ? 'bg-amber-100 text-amber-600' : 'bg-green-100 text-green-600'}`}>{p.difficulty}</span>
+                    </td>
+                    <td className="text-center px-3 py-3 text-xs text-gray-600 dark:text-gray-400">{p.topics || p.topic || '-'}</td>
+                    <td className="text-center px-3 py-3 text-xs text-gray-600">{p.successRate || '0.0'}%</td>
+                    <td className="text-center px-3 py-3 text-xs text-gray-600">{p.totalAttempts || 0}</td>
+                    <td className="text-center px-3 py-3">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 font-medium">{p.isArchived ? 'Archived' : 'Active'}</span>
+                    </td>
+                    <td className="text-center px-3 py-3">
+                      <div className="flex items-center justify-center gap-1">
+                        <button onClick={() => startEdit(p)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded"><Edit2 size={14} /></button>
+                        <button onClick={() => handleDeleteProblem(p.id)} className="p-1.5 text-red-600 hover:bg-red-50 rounded"><Trash2 size={14} /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage <= 1} className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium disabled:opacity-40">← Prev</button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button key={i} onClick={() => setCurrentPage(i + 1)} className={`px-3.5 py-2 rounded-lg text-sm font-semibold ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700'}`}>{i + 1}</button>
+            ))}
+            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages} className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium disabled:opacity-40">Next →</button>
+          </div>
+        )}
+          </>); })()}
 
         {/* Add/Edit Problem Form */}
         {showAddForm && (

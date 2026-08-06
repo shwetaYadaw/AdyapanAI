@@ -44,11 +44,16 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     };
 
     // Filter by courseId if provided
-    if (req.query.courseId === 'none') {
-      where.courseId = null; // Only global topics
+    if (req.query.courseId === 'global') {
+      // Fetch ONLY global topics (where courseId is null)
+      where.courseId = null;
     } else if (req.query.courseId) {
+      // Fetch course-specific topics
       where.courseId = String(req.query.courseId);
-    }    if (activeOnly) {
+    }
+    // If courseId is not specified, don't filter - fetch all topics (should not happen in normal flow)
+
+    if (activeOnly) {
       where.isActive = true;
     }
 
@@ -90,34 +95,49 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
       throw new AppError('Invalid system. Must be one of: coding-arena, tcs-nqt, aptitude', 400);
     }
 
-    // Check if topic already exists for this system + course combination
+    // Check if topic already exists for this system and courseId combination
+    const whereClause: any = {
+      name,
+      system
+    };
+
+    // Only filter by courseId if it's provided, otherwise it's global (no courseId)
+    if (courseId) {
+      whereClause.courseId = courseId;
+    } else {
+      whereClause.courseId = null;
+    }
+
     const existingTopics = await prisma.topic.findMany({
-      where: {
-        name,
-        system,
-        courseId: courseId || null,
-      }
+      where: whereClause
     });
 
     if (existingTopics.length > 0) {
-      throw new AppError(`Topic "${name}" already exists`, 409);
+      throw new AppError(`Topic "${name}" already exists for this system`, 409);
     }
 
     // Get the highest order and add 1
+    const aggregateWhere: any = { system };
+    if (courseId) {
+      aggregateWhere.courseId = courseId;
+    } else {
+      aggregateWhere.courseId = null;
+    }
+
     const maxOrder = await prisma.topic.aggregate({
-      where: { system, courseId: courseId || null },
+      where: aggregateWhere,
       _max: { order: true }
     });
 
-    const newOrder = (maxOrder._max.order || 0) + 1;
+    const newOrder = ((maxOrder._max?.order) || 0) + 1;
 
     const topic = await prisma.topic.create({
       data: {
         name,
         system,
-        courseId: courseId || null,
         description,
         order: order || newOrder,
+        courseId: courseId || undefined, // Include courseId if provided
         isActive: true,
         createdBy: req.user?.userId
       }
@@ -150,16 +170,15 @@ router.put('/:id', authenticate, isAdmin, async (req: Request, res: Response, ne
 
     // Check for duplicate if changing name
     if (name && name !== existing.name) {
-      const duplicate = await prisma.topic.findUnique({
+      const duplicates = await prisma.topic.findMany({
         where: {
-          name_system: {
-            name,
-            system: existing.system
-          }
+          name,
+          system: existing.system,
+          courseId: existing.courseId || null
         }
       });
 
-      if (duplicate) {
+      if (duplicates.length > 0) {
         throw new AppError(`Topic "${name}" already exists for system "${existing.system}"`, 409);
       }
     }
@@ -248,17 +267,16 @@ router.post('/bulk/seed', authenticate, isAdmin, async (req: Request, res: Respo
 
     for (const topicData of initialTopics) {
       try {
-        // Check if already exists
-        const existing = await prisma.topic.findUnique({
+        // Check if already exists using findMany for safer null handling
+        const existing = await prisma.topic.findMany({
           where: {
-            name_system: {
-              name: topicData.name,
-              system: topicData.system
-            }
+            name: topicData.name,
+            system: topicData.system,
+            courseId: null // Global topics don't have courseId
           }
         });
 
-        if (existing) {
+        if (existing.length > 0) {
           skipped.push({
             name: topicData.name,
             system: topicData.system,

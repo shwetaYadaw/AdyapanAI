@@ -80,8 +80,10 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      // If courseId is set, filter by it. If not (DSA page), only show global problems (no courseId)
-      const queryFilters = courseId ? { ...filters, courseId } : { ...filters, courseId: 'none' };
+      // If courseId is set, filter by it. If not (DSA page), fetch only global problems
+      const queryFilters = courseId 
+        ? { ...filters, courseId } 
+        : { ...filters, courseId: 'global' }; // 'global' = fetch only global/DSA problems (where courseId is null in DB)
       const result = await problemAdminService.getProblems(queryFilters);
       setProblems(result.problems);
       setPagination(result.pagination);
@@ -165,11 +167,11 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchTopics = async () => {
     try {
       setTopicsLoading(true);
-      // If no courseId (DSA page), fetch only global topics (courseId=none)
-      const data = await topicAdminService.getTopics('coding-arena', false, courseId || 'none');
-      // Sort topics alphabetically by name
-      const sorted = (data || []).sort((a: Topic, b: Topic) => a.name.localeCompare(b.name));
-      setTopics(sorted);
+      // Fetch topics for coding-arena system
+      // If courseId is set, fetch course-specific topics. If not (DSA), fetch only global topics
+      // We pass the courseId explicitly - if it's undefined, we want global (null) topics
+      const data = await topicAdminService.getTopics('coding-arena', false, courseId);
+      setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);
       toast.error('Failed to fetch topics');
@@ -190,7 +192,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         name: newTopicName,
         system: 'coding-arena',
         description: newTopicDescription || undefined,
-        courseId: courseId || undefined,
+        courseId: courseId || undefined, // Include courseId if this is a course-specific arena
       });
       toast.success('Topic added successfully!');
       setNewTopicName('');

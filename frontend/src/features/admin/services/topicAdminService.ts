@@ -19,7 +19,13 @@ class TopicAdminService {
   async getTopics(system: 'coding-arena' | 'tcs-nqt' | 'aptitude', activeOnly = true, courseId?: string) {
     try {
       const params: any = { system, activeOnly };
-      if (courseId) params.courseId = courseId;
+      // If courseId is provided, filter by it
+      // If courseId is undefined, filter for global topics only (courseId should be null in DB)
+      if (courseId === undefined) {
+        params.courseId = 'global'; // Signal backend to fetch only global topics
+      } else if (courseId) {
+        params.courseId = courseId; // Course-specific topics
+      }
       const response = await api.get('/admin/topics', { params });
       return response.data?.data || [];
     } catch (error) {
