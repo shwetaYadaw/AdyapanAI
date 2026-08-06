@@ -91,12 +91,20 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
     }
 
     // Check if topic already exists for this system and courseId combination
+    const whereClause: any = {
+      name,
+      system
+    };
+
+    // Only filter by courseId if it's provided, otherwise it's global (no courseId)
+    if (courseId) {
+      whereClause.courseId = courseId;
+    } else {
+      whereClause.courseId = null;
+    }
+
     const existingTopics = await prisma.topic.findMany({
-      where: {
-        name,
-        system,
-        courseId: courseId || null
-      }
+      where: whereClause
     });
 
     if (existingTopics.length > 0) {
@@ -104,8 +112,15 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
     }
 
     // Get the highest order and add 1
+    const aggregateWhere: any = { system };
+    if (courseId) {
+      aggregateWhere.courseId = courseId;
+    } else {
+      aggregateWhere.courseId = null;
+    }
+
     const maxOrder = await prisma.topic.aggregate({
-      where: { system, courseId: courseId || null },
+      where: aggregateWhere,
       _max: { order: true }
     });
 
