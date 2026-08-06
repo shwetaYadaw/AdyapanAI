@@ -46,7 +46,6 @@ export default function CreateEditProblemModal({
   const [loading, setLoading] = useState(false);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
-  const [newTopicName, setNewTopicName] = useState('');
   const [newTestCase, setNewTestCase] = useState<ProblemTestCase>({
     input: '',
     expectedOutput: '',
@@ -122,40 +121,17 @@ export default function CreateEditProblemModal({
       return;
     }
 
-    // Use new topic name if provided, otherwise use dropdown selection
-    const finalTopicName = newTopicName.trim() || formData.topics;
-    if (!finalTopicName) {
-      toast.error('Please select or enter a topic');
+    // Topic must be selected from dropdown
+    if (!formData.topics) {
+      toast.error('Please select a topic');
       return;
     }
 
     try {
       setLoading(true);
 
-      // If a new topic was typed, auto-create it in the database
-      if (newTopicName.trim()) {
-        const existingTopic = topics.find(t => t.name.toLowerCase() === newTopicName.trim().toLowerCase());
-        if (!existingTopic) {
-          try {
-            await topicAdminService.createTopic({
-              name: newTopicName.trim(),
-              system: type === 'coding-arena' ? 'coding-arena' : 'tcs-nqt',
-              courseId: courseId || undefined,
-            });
-          } catch (err: any) {
-            // Ignore if topic already exists (409), continue with problem creation
-            if (err.response?.status !== 409) {
-              toast.error('Failed to create topic: ' + (err.response?.data?.message || err.message));
-              setLoading(false);
-              return;
-            }
-          }
-        }
-      }
-
-      // Save problem with the final topic name
-      const problemData = { ...formData, topics: finalTopicName };
-      await onSave(problemData, problem ? changeReason : undefined);
+      // Save problem with selected topic
+      await onSave(formData, problem ? changeReason : undefined);
     } catch (err) {
       console.error(err);
     } finally {
@@ -317,13 +293,9 @@ export default function CreateEditProblemModal({
                   {topics.length > 0 && (
                     <select
                       name="topics"
-                      value={newTopicName ? '' : formData.topics}
-                      onChange={(e) => {
-                        setNewTopicName('');
-                        handleInputChange(e);
-                      }}
-                      disabled={!!newTopicName}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+                      value={formData.topics}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">-- Select a Topic --</option>
                       {topics.map(topic => (
@@ -333,25 +305,6 @@ export default function CreateEditProblemModal({
                       ))}
                     </select>
                   )}
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={newTopicName}
-                      onChange={(e) => {
-                        setNewTopicName(e.target.value);
-                        if (e.target.value.trim()) {
-                          setFormData(prev => ({ ...prev, topics: '' }));
-                        }
-                      }}
-                      placeholder="Or type a new topic name..."
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                    {newTopicName && (
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-green-600 dark:text-green-400 font-medium">
-                        New topic
-                      </span>
-                    )}
-                  </div>
                 </div>
               )}
             </div>
