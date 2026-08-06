@@ -320,7 +320,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
         )}
 
         {/* Filters */}
-        <ProblemFilters filters={filters} onFiltersChange={setFilters} system="coding-arena" />
+        <ProblemFilters filters={filters} onFiltersChange={setFilters} system="coding-arena" courseId={courseId} />
 
         {/* Problems Table */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
