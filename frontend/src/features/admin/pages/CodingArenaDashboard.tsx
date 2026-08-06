@@ -63,10 +63,10 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      // If courseId is set, filter by it. If not (DSA page), fetch only global problems (courseId=null)
+      // If courseId is set, filter by it. If not (DSA page), fetch only global problems
       const queryFilters = courseId 
         ? { ...filters, courseId } 
-        : { ...filters, courseId: null }; // null = global/DSA only
+        : { ...filters, courseId: 'global' }; // 'global' = fetch only global/DSA problems (where courseId is null in DB)
       const result = await problemAdminService.getProblems(queryFilters);
       setProblems(result.problems);
       setPagination(result.pagination);
@@ -150,8 +150,9 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
     try {
       setTopicsLoading(true);
       // Fetch topics for coding-arena system
-      // If courseId is set, fetch course-specific topics. If not (DSA), fetch only global topics (courseId=null)
-      const data = await topicAdminService.getTopics('coding-arena', false, courseId || undefined);
+      // If courseId is set, fetch course-specific topics. If not (DSA), fetch only global topics
+      // We pass the courseId explicitly - if it's undefined, we want global (null) topics
+      const data = await topicAdminService.getTopics('coding-arena', false, courseId);
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);

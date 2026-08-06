@@ -153,14 +153,14 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     const whereClause: any = {};
 
     // Filter by courseId if provided
-    if (courseId === null || courseId === 'null') {
-      // Global/DSA problems only (no courseId)
+    if (courseId === 'global') {
+      // Global/DSA problems only (where courseId is null)
       whereClause.courseId = null;
     } else if (courseId) {
       // Course-specific problems
       whereClause.courseId = String(courseId);
     }
-    // If courseId is undefined, fetch all problems (both global and course-specific)
+    // If courseId is undefined, don't filter - fetch all (should not happen in normal flow)
 
     // Get ALL problems first
     let allProblems = await prisma.problem.findMany({
