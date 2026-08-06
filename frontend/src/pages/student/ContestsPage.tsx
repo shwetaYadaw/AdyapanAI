@@ -242,7 +242,25 @@ export default function ContestsPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between border-t border-gray-50 dark:border-gray-800/60 mt-5 pt-4">
+                  {/* Questions List (if contest has started) */}
+                  {!isUpcoming && Array.isArray(contest.questions) && contest.questions.length > 0 && typeof contest.questions[0] === 'object' && (
+                    <div className="mt-4 pt-3 border-t border-gray-50 dark:border-gray-800/60">
+                      <p className="text-xxs font-bold text-gray-500 uppercase tracking-wider mb-2">Contest Problems ({contest.questions.length})</p>
+                      <div className="space-y-1.5">
+                        {(contest.questions as any[]).map((q: any, i: number) => (
+                          <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xxs font-bold text-gray-400 w-5">{i + 1}.</span>
+                              <span className="text-xs font-medium text-gray-800 dark:text-gray-200">{q.title}</span>
+                              <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${q.difficulty === 'hard' ? 'bg-red-50 text-red-600' : q.difficulty === 'medium' ? 'bg-amber-50 text-amber-600' : 'bg-green-50 text-green-600'}`}>{q.difficulty}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center justify-between border-t border-gray-50 dark:border-gray-800/60 mt-4 pt-4">
                     <span className="text-xxs text-amber-500 font-bold flex items-center gap-1">
                       <Award className="w-4 h-4" />
                       XP Reward & Badges Eligible
@@ -259,11 +277,9 @@ export default function ContestsPage() {
                         </Button>
                       )
                     ) : (
-                      <Link to={`/student/challenges/${contest.questions[0] || ''}`}>
-                        <Button size="xs" leftIcon={<Play className="w-3 h-3" />}>
-                          Enter Contest
-                        </Button>
-                      </Link>
+                      <Button size="xs" leftIcon={<Play className="w-3 h-3" />} onClick={() => toast.success('Contest environment opening...', { position: 'top-center' })}>
+                        Enter Contest
+                      </Button>
                     )}
                   </div>
                 </Card>
