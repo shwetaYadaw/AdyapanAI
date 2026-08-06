@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import BadgeDisplay from '../components/common/BadgeDisplay';
+import BadgeDisplay from '../shared/components/BadgeDisplay';
 
 interface BadgeData {
   id: string;

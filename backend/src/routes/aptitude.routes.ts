@@ -298,11 +298,16 @@ router.get('/stats', authenticate, async (req, res, next) => {
     });
     const accuracy = totalAttempts > 0 ? ((correctAnswers / totalAttempts) * 100).toFixed(2) : '0';
 
-    const byDifficulty = await prisma.aptitudeSubmission.groupBy({
-      by: ['question'],
+    const allSubs = await prisma.aptitudeSubmission.findMany({
       where: { userId },
-      _count: true,
+      include: { question: { select: { difficulty: true } } }
     });
+    
+    const byDifficulty = allSubs.reduce((acc, sub) => {
+      const diff = sub.question?.difficulty || 'medium';
+      acc[diff] = (acc[diff] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
 
     const topicStats = await prisma.aptitudeSubmission.findMany({
       where: { userId },

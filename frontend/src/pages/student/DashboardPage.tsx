@@ -87,7 +87,7 @@ export default function StudentDashboard() {
       </motion.div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[
           { label: 'XP Points', value: profile?.totalXP ?? profile?.xp ?? 0, icon: Zap, color: 'from-yellow-500 to-amber-400', href: '/student/profile' },
           { label: 'Problems Solved', value: (codingStats?.solvedCount ?? 0) + (placementStats?.solvedCount ?? 0), icon: Code2, color: 'from-purple-500 to-violet-400', href: '/student/challenges' },
@@ -106,7 +106,7 @@ export default function StudentDashboard() {
       </div>
 
       {/* 3-column main grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
         {/* COL 1 — Daily Challenge spans 2 rows */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="lg:row-span-2">
@@ -251,11 +251,11 @@ export default function StudentDashboard() {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
         <Card padding="md">
           <h3 className="font-semibold text-sm text-gray-900 dark:text-white mb-4">Quick Start</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
             {QUICK_START.map(item => (
               <Link key={item.href} to={item.href}>
                 <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                  className="rounded-xl p-3 border border-gray-100 dark:border-gray-800 hover:border-primary-200 dark:hover:border-primary-800 hover:shadow-sm transition-all group cursor-pointer text-center">
+                  className="h-full rounded-2xl p-4 border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all group cursor-pointer text-center flex flex-col items-center justify-center">
                   <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center mx-auto mb-2`}>
                     <item.icon className="w-4 h-4 text-white" />
                   </div>

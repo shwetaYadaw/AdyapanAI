@@ -24,7 +24,7 @@ export interface AptitudeChapter {
   name: string;
   description?: string;
   order: number;
-  questions: AptitudeQuestion[];
+  questions?: AptitudeQuestion[];
 }
 
 export interface AptitudeTopic {
@@ -77,7 +77,7 @@ class AptitudeService {
   /**
    * Get chapters in topic
    */
-  async getChapters(topicId: string): Promise<AptitudeChapter['chapters']> {
+  async getChapters(topicId: string): Promise<AptitudeChapter[]> {
     const topic = await this.getTopic(topicId);
     return topic.chapters || [];
   }

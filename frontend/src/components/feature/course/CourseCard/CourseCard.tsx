@@ -4,9 +4,9 @@ import { motion } from 'framer-motion';
 import { Clock, Users, Star, PlayCircle } from 'lucide-react';
 import { ICourse } from '@adyapan/shared';
 import { formatCourseDuration, formatNumber, formatPrice } from '@adyapan/shared';
-import Badge from '../../../common/Badge/Badge';
-import Avatar from '../../../common/Avatar/Avatar';
-import { api } from '../../../../services/api';
+import Badge from '../../../../shared/components/Badge/Badge';
+import Avatar from '../../../../shared/components/Avatar/Avatar';
+import { api } from '../../../../core/services/api';
 import toast from 'react-hot-toast';
 
 interface CourseCardProps {

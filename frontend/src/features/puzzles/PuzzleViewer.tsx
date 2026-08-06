@@ -150,7 +150,7 @@ export const PuzzleViewer: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-semibold mb-4">Select Your Answer</h2>
           <div className="space-y-3">
-            {currentPuzzle.options.map((option) => (
+            {currentPuzzle.options.map((option: any) => (
               <label
                 key={option.id}
                 className={`flex items-center p-4 rounded-lg border-2 cursor-pointer transition-all ${
@@ -306,7 +306,7 @@ export const PuzzleViewer: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-4">Your Attempts</h3>
           <div className="space-y-2">
-            {attempts.map((attempt) => (
+            {attempts.map((attempt: any) => (
               <div key={attempt.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                 <div>
                   <span className={`font-medium ${attempt.isCorrect ? 'text-green-600' : 'text-red-600'}`}>

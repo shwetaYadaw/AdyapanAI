@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { api } from '../../../../core/services/api';
 import Card from '../../../../shared/components/Card/Card';
 import Button from '../../../../shared/components/Button/Button';
-import AptitudeQuestionsList from './AptitudeQuestionsList';
+
 
 interface Chapter {
   id: string;
@@ -87,14 +87,7 @@ export default function AptitudeChaptersList({
       {/* Expanded Content */}
       {isExpanded && (
         <div className="border-t border-gray-200 dark:border-gray-700 p-6">
-          <AptitudeQuestionsList
-            topicId={topicId}
-            chapterId={chapter.id}
-            questions={questions}
-            onRefresh={() => {
-              onRefresh();
-            }}
-          />
+          <div className="text-gray-500">Manage questions from the topics view.</div>
         </div>
       )}
     </Card>

@@ -15,6 +15,7 @@ export interface AptitudeQuestion {
   statement: string;
   difficulty: 'easy' | 'medium' | 'hard';
   options: AptitudeOption[];
+  correctOption?: string;
   explanation?: string;
   xpReward?: number;
   companies?: string;

@@ -24,7 +24,7 @@ export default function AptitudeTopicsGrid({
   };
 
   const getLastUpdated = (topic: AptitudeTopic) => {
-    const date = new Date(topic.updatedAt || topic.createdAt);
+    const date = new Date((topic as any).updatedAt || topic.createdAt);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 

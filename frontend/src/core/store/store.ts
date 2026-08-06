@@ -5,6 +5,7 @@ import enrollmentReducer from '../../features/enrollment/enrollmentSlice';
 import aiReducer from '../../features/ai/aiSlice';
 import notificationsReducer from '../../features/notifications/notificationsSlice';
 import uiReducer from '../../features/ui/uiSlice';
+import puzzlesReducer from '../../features/puzzles/puzzleSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     ai: aiReducer,
     notifications: notificationsReducer,
     ui: uiReducer,
+    puzzles: puzzlesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

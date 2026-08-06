@@ -23,7 +23,7 @@ export default function CreateEditTcsQuestionModal({
     inputFormat: '',
     outputFormat: '',
     referenceSolution: '',
-    topic: '',
+    topics: '',
     companies: '',
     timeLimit: 2000,
     memoryLimit: 256,
@@ -215,8 +215,8 @@ export default function CreateEditTcsQuestionModal({
                 </div>
               ) : (
                 <select
-                  name="topic"
-                  value={formData.topic}
+                  name="topics"
+                  value={formData.topics}
                   onChange={handleInputChange}
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 >

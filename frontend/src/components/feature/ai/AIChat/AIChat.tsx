@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Bot, User, Sparkles, RefreshCw } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../../../../shared/hooks/hooks';
 import { sendChatMessageThunk, addUserMessage, clearChat } from '../../../../features/ai/aiSlice';
-import Button from '../../../common/Button/Button';
+import Button from '../../../../shared/components/Button/Button';
 import { clsx } from 'clsx';
 
 export default function AIChat() {

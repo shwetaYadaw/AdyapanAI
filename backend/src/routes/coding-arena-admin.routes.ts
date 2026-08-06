@@ -20,7 +20,7 @@ router.get('/', async (req, res, next) => {
 
     // Filter by topic if provided
     if (req.query.topic) {
-      where.topic = String(req.query.topic);
+      where.topics = { contains: String(req.query.topic) };
     }
 
     if (req.query.difficulty) {
@@ -33,13 +33,13 @@ router.get('/', async (req, res, next) => {
 
     // Fetch from CodingArenaProblem table
     const [problems, total] = await Promise.all([
-      prisma.codingArenaProblem.findMany({
+      prisma.problem.findMany({
         where,
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
       }),
-      prisma.codingArenaProblem.count({ where }),
+      prisma.problem.count({ where }),
     ]);
 
     sendPaginated({ res, data: problems, total, page, limit });
@@ -51,7 +51,7 @@ router.get('/', async (req, res, next) => {
 // GET /admin/coding-arena/:id - Get single Coding Arena problem
 router.get('/:id', async (req, res, next) => {
   try {
-    const problem = await prisma.codingArenaProblem.findUnique({
+    const problem = await prisma.problem.findUnique({
       where: { id: req.params.id },
     });
 
@@ -97,29 +97,36 @@ router.post('/', async (req, res, next) => {
       .replace(/^-+|-+$/g, '') + '-arena';
 
     // Check if slug already exists
-    const existing = await prisma.codingArenaProblem.findUnique({ where: { slug } });
+    const existing = await prisma.problem.findUnique({ where: { slug } });
     if (existing) {
       throw new AppError('Problem with this title already exists', 409);
     }
 
-    // Create in CodingArenaProblem table
-    const problem = await prisma.codingArenaProblem.create({
+    // Create in Problem table
+    const problem = await prisma.problem.create({
       data: {
         title,
         slug,
         statement,
         difficulty,
-        topic,  // Store the selected topic (e.g., "Arrays")
+        topics: topic,  // Store the selected topic
         companies: companies || 'MNC',
         inputFormat: inputFormat || '',
         outputFormat: outputFormat || '',
         constraints: constraints || '',
         referenceSolution: referenceSolution || '',
-        testCases: testCases || [],
+        starterCode: {}, // mandatory field
         timeLimit: timeLimit || 2000,
         memoryLimit: memoryLimit || 256,
-        xpReward: xpReward || 10,
         createdBy: req.user?.userId,
+        testCases: testCases && testCases.length > 0 ? {
+          create: testCases.map((tc: any, index: number) => ({
+            input: tc.input || '',
+            expectedOutput: tc.expectedOutput || '',
+            isHidden: tc.isHidden ?? true,
+            order: index
+          }))
+        } : undefined,
       },
     });
 
@@ -132,7 +139,7 @@ router.post('/', async (req, res, next) => {
 // PUT /admin/coding-arena/:id - Update Coding Arena problem
 router.put('/:id', async (req, res, next) => {
   try {
-    const problem = await prisma.codingArenaProblem.findUnique({
+    const problem = await prisma.problem.findUnique({
       where: { id: req.params.id },
     });
 
@@ -140,7 +147,7 @@ router.put('/:id', async (req, res, next) => {
       throw new AppError('Coding Arena problem not found', 404);
     }
 
-    const updated = await prisma.codingArenaProblem.update({
+    const updated = await prisma.problem.update({
       where: { id: req.params.id },
       data: {
         title: req.body.title || problem.title,
@@ -150,12 +157,10 @@ router.put('/:id', async (req, res, next) => {
         outputFormat: req.body.outputFormat || problem.outputFormat,
         constraints: req.body.constraints || problem.constraints,
         referenceSolution: req.body.referenceSolution || problem.referenceSolution,
-        testCases: req.body.testCases !== undefined ? req.body.testCases : problem.testCases,
-        topic: req.body.topic || problem.topic,
+        topics: req.body.topic || problem.topics,
         companies: req.body.companies || problem.companies,
         timeLimit: req.body.timeLimit || problem.timeLimit,
         memoryLimit: req.body.memoryLimit || problem.memoryLimit,
-        xpReward: req.body.xpReward || problem.xpReward,
         updatedBy: req.user?.userId,
       },
     });
@@ -169,7 +174,7 @@ router.put('/:id', async (req, res, next) => {
 // DELETE /admin/coding-arena/:id - Delete Coding Arena problem (HARD DELETE)
 router.delete('/:id', async (req, res, next) => {
   try {
-    const problem = await prisma.codingArenaProblem.findUnique({
+    const problem = await prisma.problem.findUnique({
       where: { id: req.params.id },
     });
 
@@ -178,7 +183,7 @@ router.delete('/:id', async (req, res, next) => {
     }
 
     // Hard delete from CodingArenaProblem table
-    await prisma.codingArenaProblem.delete({
+    await prisma.problem.delete({
       where: { id: req.params.id },
     });
 
@@ -195,15 +200,15 @@ router.delete('/:id', async (req, res, next) => {
 // GET /admin/coding-arena/stats - Get Coding Arena statistics
 router.get('/admin/stats', async (_req, res, next) => {
   try {
-    const total = await prisma.codingArenaProblem.count();
+    const total = await prisma.problem.count();
 
-    const byDifficulty = await prisma.codingArenaProblem.groupBy({
+    const byDifficulty = await prisma.problem.groupBy({
       by: ['difficulty'],
       _count: true,
     });
 
-    const byTopic = await prisma.codingArenaProblem.groupBy({
-      by: ['topic'],
+    const byTopic = await prisma.problem.groupBy({
+      by: ['topics'],
       _count: true,
     });
 
@@ -214,7 +219,7 @@ router.get('/admin/stats', async (_req, res, next) => {
         return acc;
       }, {}),
       byTopic: byTopic.reduce((acc: any, item: any) => {
-        acc[item.topic] = item._count;
+        acc[item.topics] = item._count;
         return acc;
       }, {}),
     };

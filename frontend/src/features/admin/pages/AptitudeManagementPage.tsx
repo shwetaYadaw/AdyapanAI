@@ -179,7 +179,7 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
     setExpandedChapters(newExpanded);
   };
 
-  const currentTopic = topics.find(t => t.id === selectedTopic);
+  const currentTopic = topics.find((t: any) => t.id === selectedTopic);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-8">
@@ -223,7 +223,7 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
               </div>
             ) : (
               <div className="space-y-3">
-                {topics.map(topic => (
+                {topics.map((topic: any) => (
                   <div key={topic.id} className="bg-white dark:bg-gray-800 rounded-lg p-4 flex items-center justify-between">
                     <button
                       onClick={() => setSelectedTopic(topic.id)}
@@ -262,7 +262,7 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
 
             {/* Chapters */}
             <div className="space-y-3">
-              {currentTopic?.chapters?.map(chapter => (
+              {currentTopic?.chapters?.map((chapter: any) => (
                 <div key={chapter.id} className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
                   {/* Chapter Header */}
                   <button
@@ -296,13 +296,13 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
                         Add Question
                       </button>
 
-                      {chapter.questions?.map(question => (
+                      {chapter.questions?.map((question: any) => (
                         <div key={question.id} className="bg-white dark:bg-gray-800 p-3 rounded border border-gray-200 dark:border-gray-700">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
                               <p className="text-sm text-gray-900 dark:text-white font-medium">{question.statement}</p>
                               <div className="mt-2 flex gap-2 flex-wrap">
-                                {question.options?.map(opt => (
+                                {question.options?.map((opt: any) => (
                                   <span
                                     key={opt.optionKey}
                                     className={`text-xs px-2 py-1 rounded ${

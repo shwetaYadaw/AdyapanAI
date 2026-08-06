@@ -101,9 +101,9 @@ export default function Navbar() {
   const dashboardPath = user ? (DASHBOARD_LINKS[user.role] ?? '/') : '/';
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-gray-950/80 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800">
+    <header className="sticky top-0 z-40 w-full bg-white/70 dark:bg-gray-950/70 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-800/50 transition-colors duration-200">
       <div className="px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-[60px]">
 
           {/* Left Side: Menu + Logo */}
           <div className="flex items-center gap-3">
@@ -119,7 +119,7 @@ export default function Navbar() {
                   setMobileOpen(!mobileOpen);
                 }
               }}
-              className="p-2 -ml-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              className="md:hidden p-2 -ml-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Toggle menu"
             >
               {(!isAuthenticated && mobileOpen) ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
