@@ -14,7 +14,7 @@ export default function CertificatesPage() {
   });
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper bg-brand-cream min-h-screen">
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
         <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
           <Award className="w-96 h-96 text-white" />

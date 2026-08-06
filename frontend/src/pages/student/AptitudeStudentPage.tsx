@@ -363,7 +363,7 @@ export default function AptitudeStudentPage() {
   // MAIN TOPICS VIEW
   // ═══════════════════════════════════════════════════════════════════
   return (
-    <div className="page-wrapper space-y-5">
+    <div className="page-wrapper space-y-5 bg-brand-cream min-h-screen">
       {/* Hero */}
       <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 p-6 text-white shadow-md">
         <div className="absolute right-0 top-0 opacity-10 pointer-events-none translate-x-8 -translate-y-8">

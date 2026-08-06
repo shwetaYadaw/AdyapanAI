@@ -76,7 +76,7 @@ export default function StudentDashboard() {
   const goalPct = Math.min(100, Math.round((totalSolved / weeklyGoal) * 100));
 
   return (
-    <div className="page-wrapper space-y-6">
+    <div className="page-wrapper space-y-6 bg-brand-cream min-h-screen">
 
       {/* Welcome */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>

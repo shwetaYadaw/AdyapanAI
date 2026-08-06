@@ -174,7 +174,7 @@ export default function ContestsPage() {
   if (isLoading) return <PageLoader />;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen bg-brand-cream dark:bg-gray-950">
 
       {/* Hero */}
       <div className="page-container pt-8">

@@ -105,7 +105,7 @@ export default function CodingChallengesPage() {
   });
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
+    <div className="min-h-screen bg-brand-cream dark:bg-gray-950">
 
       {/* Search bar — above the hero */}
       <div className="page-container pt-6">
