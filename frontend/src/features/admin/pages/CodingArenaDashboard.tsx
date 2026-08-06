@@ -146,7 +146,7 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
   const fetchTopics = async () => {
     try {
       setTopicsLoading(true);
-      const data = await topicAdminService.getTopics('coding-arena', false);
+      const data = await topicAdminService.getTopics('coding-arena', false, courseId);
       setTopics(data || []);
     } catch (err: any) {
       console.error('Failed to fetch topics:', err);
@@ -167,7 +167,8 @@ export default function CodingArenaDashboard({ onBack, courseId, courseName }: C
       await topicAdminService.createTopic({
         name: newTopicName,
         system: 'coding-arena',
-        description: newTopicDescription || undefined
+        description: newTopicDescription || undefined,
+        courseId: courseId || undefined,
       });
       toast.success('Topic added successfully!');
       setNewTopicName('');

@@ -43,7 +43,13 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
       system
     };
 
-    if (activeOnly) {
+    // Filter by courseId if provided
+    if (req.query.courseId) {
+      where.courseId = String(req.query.courseId);
+    } else if (req.query.courseId === '') {
+      // If courseId is explicitly empty, show only global topics (null courseId)
+      where.courseId = null;
+    }    if (activeOnly) {
       where.isActive = true;
     }
 
@@ -74,7 +80,7 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
 // POST /api/admin/topics - Create new topic
 router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { name, system, description, order } = req.body;
+    const { name, system, description, order, courseId } = req.body;
 
     if (!name || !system) {
       throw new AppError('name and system are required', 400);
@@ -85,23 +91,22 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
       throw new AppError('Invalid system. Must be one of: coding-arena, tcs-nqt, aptitude', 400);
     }
 
-    // Check if topic already exists for this system
-    const existing = await prisma.topic.findUnique({
+    // Check if topic already exists for this system + course combination
+    const existingTopics = await prisma.topic.findMany({
       where: {
-        name_system: {
-          name,
-          system
-        }
+        name,
+        system,
+        courseId: courseId || null,
       }
     });
 
-    if (existing) {
-      throw new AppError(`Topic "${name}" already exists for system "${system}"`, 409);
+    if (existingTopics.length > 0) {
+      throw new AppError(`Topic "${name}" already exists`, 409);
     }
 
     // Get the highest order and add 1
     const maxOrder = await prisma.topic.aggregate({
-      where: { system },
+      where: { system, courseId: courseId || null },
       _max: { order: true }
     });
 
@@ -111,6 +116,7 @@ router.post('/', authenticate, isAdmin, async (req: Request, res: Response, next
       data: {
         name,
         system,
+        courseId: courseId || null,
         description,
         order: order || newOrder,
         isActive: true,

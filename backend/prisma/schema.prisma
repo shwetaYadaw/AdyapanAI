@@ -366,6 +366,7 @@ model Topic {
   id          String   @id @default(uuid())
   name        String
   system      String   // "coding-arena" | "tcs-nqt" | "aptitude"
+  courseId     String?  // Links topic to a specific course (null = global)
   description String?
   isActive    Boolean  @default(true)
   order       Int      @default(0)
@@ -373,8 +374,9 @@ model Topic {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@unique([name, system])
+  @@unique([name, system, courseId])
   @@index([system])
+  @@index([courseId])
 }
 
 // ─── Contests ────────────────────────────────────────────────────────────────

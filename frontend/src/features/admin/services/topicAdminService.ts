@@ -6,6 +6,7 @@ export interface Topic {
   id?: string;
   name: string;
   system: 'coding-arena' | 'tcs-nqt' | 'aptitude';
+  courseId?: string;
   description?: string;
   isActive?: boolean;
   order?: number;
@@ -14,15 +15,12 @@ export interface Topic {
 }
 
 class TopicAdminService {
-  // Get all topics for a specific system
-  async getTopics(system: 'coding-arena' | 'tcs-nqt' | 'aptitude', activeOnly = true) {
+  // Get all topics for a specific system (optionally filtered by courseId)
+  async getTopics(system: 'coding-arena' | 'tcs-nqt' | 'aptitude', activeOnly = true, courseId?: string) {
     try {
-      const response = await api.get('/admin/topics', {
-        params: {
-          system,
-          activeOnly
-        }
-      });
+      const params: any = { system, activeOnly };
+      if (courseId) params.courseId = courseId;
+      const response = await api.get('/admin/topics', { params });
       return response.data?.data || [];
     } catch (error) {
       throw error;
