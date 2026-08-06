@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, ArrowLeft, Tag, X, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plus, Trash2, Edit2, ArrowLeft, Tag, X, ChevronDown, ChevronUp, Search } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../../../core/services/api';
 
@@ -35,6 +35,11 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const [showTopicModal, setShowTopicModal] = useState(false);
   const [newTopic, setNewTopic] = useState('');
   const [editingProblem, setEditingProblem] = useState<CourseProblem | null>(null);
+  const [search, setSearch] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState('');
+  const [topicFilter, setTopicFilter] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const perPage = 20;
 
   const [form, setForm] = useState<CourseProblem>({
     title: '', difficulty: 'easy', statement: '', inputFormat: '', outputFormat: '',
@@ -160,16 +165,44 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
           </div>
         )}
 
+        {/* Filters */}
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <div className="relative flex-1 max-w-xs">
+            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input type="text" value={search} onChange={e => { setSearch(e.target.value); setCurrentPage(1); }} placeholder="Search problems..." className="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          </div>
+          <select value={difficultyFilter} onChange={e => { setDifficultyFilter(e.target.value); setCurrentPage(1); }} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">All Difficulties</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+          <select value={topicFilter} onChange={e => { setTopicFilter(e.target.value); setCurrentPage(1); }} className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">All Categories ({topics.length})</option>
+            {topics.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+
         {/* Problems List */}
+        {(() => {
+          // Apply filters
+          let filtered = problems;
+          if (search) filtered = filtered.filter((p: any) => p.title?.toLowerCase().includes(search.toLowerCase()));
+          if (difficultyFilter) filtered = filtered.filter((p: any) => p.difficulty === difficultyFilter);
+          if (topicFilter) filtered = filtered.filter((p: any) => (p.topics || p.topic || '').toLowerCase().includes(topicFilter.toLowerCase()));
+          const totalPages = Math.ceil(filtered.length / perPage);
+          const paginated = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+          return (<>
         {loading ? <p className="text-center text-gray-400 py-8">Loading...</p> :
-        problems.length === 0 && !showAddForm ? (
+        paginated.length === 0 && !showAddForm ? (
           <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
-            <p className="text-gray-500 mb-4">No problems added yet for {courseName}</p>
-            <button onClick={() => setShowAddForm(true)} className="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm">+ Add First Problem</button>
+            <p className="text-gray-500 mb-4">{problems.length === 0 ? `No problems added yet for ${courseName}` : 'No problems match your filters'}</p>
+            {problems.length === 0 && <button onClick={() => setShowAddForm(true)} className="px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm">+ Add First Problem</button>}
           </div>
         ) : (
           <div className="space-y-3">
-            {problems.map((p: any) => (
+            {paginated.map((p: any) => (
               <div key={p.id} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 flex items-center justify-between hover:shadow-sm transition">
                 <div>
                   <h3 className="font-semibold text-gray-900 dark:text-white text-sm">{p.title}</h3>
@@ -186,6 +219,18 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
             ))}
           </div>
         )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <button onClick={() => setCurrentPage(p => Math.max(1, p - 1))} disabled={currentPage <= 1} className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium disabled:opacity-40">← Prev</button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button key={i} onClick={() => setCurrentPage(i + 1)} className={`px-3.5 py-2 rounded-lg text-sm font-semibold ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700'}`}>{i + 1}</button>
+            ))}
+            <button onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} disabled={currentPage >= totalPages} className="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm font-medium disabled:opacity-40">Next →</button>
+          </div>
+        )}
+          </>); })()}
 
         {/* Add/Edit Problem Form */}
         {showAddForm && (
