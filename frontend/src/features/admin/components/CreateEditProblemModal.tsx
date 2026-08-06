@@ -44,7 +44,6 @@ export default function CreateEditProblemModal({
   const [loading, setLoading] = useState(false);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(true);
-  const [seeding, setSeeding] = useState(false);
   const [newTopicName, setNewTopicName] = useState('');
   const [newTestCase, setNewTestCase] = useState<ProblemTestCase>({
     input: '',
@@ -106,28 +105,6 @@ export default function CreateEditProblemModal({
     }));
   };
 
-  const handleSeedTopics = async () => {
-    // Seed topics for the specific context only (global DSA or course-specific)
-    // This is controlled by the courseId prop passed from parent component
-    if (!confirm(`This will create initial topics for ${props.courseId ? 'this course' : 'the Coding Arena'}. Continue?`)) {
-      return;
-    }
-
-    try {
-      setSeeding(true);
-      // Call backend endpoint with courseId context
-      const response = await api.post('/admin/topics/bulk/seed', { 
-        courseId: props.courseId || undefined // Pass courseId if exists, undefined for global
-      });
-      toast.success(`Successfully seeded ${response.data?.data?.created || 0} topics!`);
-      // Refresh topics
-      await fetchTopics();
-    } catch (err: any) {
-      console.error('Seed error:', err);
-      toast.error(err.response?.data?.message || 'Failed to seed topics');
-    } finally {
-      setSeeding(false);
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -368,16 +345,6 @@ export default function CreateEditProblemModal({
                       </span>
                     )}
                   </div>
-                  {topics.length === 0 && !newTopicName && (
-                    <button
-                      type="button"
-                      onClick={handleSeedTopics}
-                      disabled={seeding}
-                      className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-semibold text-sm transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {seeding ? 'Seeding Topics...' : 'Seed Initial Topics'}
-                    </button>
-                  )}
                 </div>
               )}
             </div>
