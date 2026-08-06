@@ -375,31 +375,60 @@ router.get('/:id', async (req, res, next) => {
 router.post('/:id/run', authenticate, async (req, res, next) => {
   try {
     const { code, language } = req.body;
-    const problem = await prisma.problem.findUnique({
-      where: { id: req.params.id },
-      include: { testCases: { where: { isHidden: false } } },
-    });
+    const paramId = req.params.id;
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(paramId);
+    
+    let problem;
+    if (isUUID) {
+      problem = await prisma.problem.findUnique({
+        where: { id: paramId },
+        include: { testCases: { where: { isHidden: false } } },
+      });
+    } else {
+      // Try by slug
+      problem = await prisma.problem.findUnique({
+        where: { slug: paramId },
+        include: { testCases: { where: { isHidden: false } } },
+      });
+      // Fallback: search by title
+      if (!problem) {
+        const searchQuery = paramId.replace(/-/g, ' ');
+        const problems = await prisma.$queryRaw<any[]>`
+          SELECT id FROM "Problem" WHERE LOWER(title) = LOWER(${searchQuery}) LIMIT 1
+        `;
+        if (problems.length > 0) {
+          problem = await prisma.problem.findUnique({
+            where: { id: problems[0].id },
+            include: { testCases: { where: { isHidden: false } } },
+          });
+        }
+      }
+    }
 
     if (!problem) throw new AppError('Problem not found', 404);
 
+    // Use custom input from request body, or fall back to first sample test case
+    const customInput = req.body.input;
     const sampleTestCase = problem.testCases[0];
-    if (!sampleTestCase) throw new AppError('No sample testcase found for this problem', 400);
+    const inputToUse = customInput || (sampleTestCase ? sampleTestCase.input : '');
+    
+    if (!inputToUse) throw new AppError('No input provided and no sample testcase found', 400);
 
     const result = await judge.runTestCase(
       code,
       language,
-      sampleTestCase.input,
-      sampleTestCase.expectedOutput,
+      inputToUse,
+      sampleTestCase?.expectedOutput,
       problem.timeLimit
     );
 
     sendSuccess({
       res,
       data: {
-        passed: result.passed,
+        passed: sampleTestCase ? result.passed : undefined,
         actualOutput: result.actualOutput,
-        expectedOutput: sampleTestCase.expectedOutput,
-        input: sampleTestCase.input,
+        expectedOutput: sampleTestCase?.expectedOutput || 'N/A (no test case)',
+        input: inputToUse,
         runtime: result.runtime,
         errorMessage: result.errorMessage,
       },
@@ -411,10 +440,33 @@ router.post('/:id/run', authenticate, async (req, res, next) => {
 router.post('/:id/submit', authenticate, async (req, res, next) => {
   try {
     const { code, language } = req.body;
-    const problem = await prisma.problem.findUnique({
-      where: { id: req.params.id },
-      include: { testCases: true },
-    });
+    const paramId = req.params.id;
+    const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(paramId);
+    
+    let problem;
+    if (isUUID) {
+      problem = await prisma.problem.findUnique({
+        where: { id: paramId },
+        include: { testCases: true },
+      });
+    } else {
+      problem = await prisma.problem.findUnique({
+        where: { slug: paramId },
+        include: { testCases: true },
+      });
+      if (!problem) {
+        const searchQuery = paramId.replace(/-/g, ' ');
+        const problems = await prisma.$queryRaw<any[]>`
+          SELECT id FROM "Problem" WHERE LOWER(title) = LOWER(${searchQuery}) LIMIT 1
+        `;
+        if (problems.length > 0) {
+          problem = await prisma.problem.findUnique({
+            where: { id: problems[0].id },
+            include: { testCases: true },
+          });
+        }
+      }
+    }
 
     if (!problem) throw new AppError('Problem not found', 404);
 
