@@ -177,7 +177,11 @@ router.get('/', async (req, res, next) => {
         const problemTopics = p.topics
           .split(',')
           .map(t => t.trim().toLowerCase());
-        return problemTopics.includes(topicStr);
+        // Match both "problems on arrays" and "problems-on-arrays" (hyphenated URL key)
+        return problemTopics.some(t => {
+          const tKey = t.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+          return t === topicStr || tKey === topicStr;
+        });
       });
     }
 

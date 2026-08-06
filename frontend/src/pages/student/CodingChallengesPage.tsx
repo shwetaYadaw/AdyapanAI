@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Search, Trophy, Code2, Flame, BrainCircuit, Target, ArrowRight } from 'lucide-react';
 import { api } from '../../core/services/api';
 import Card from '../../shared/components/Card/Card';
@@ -113,7 +114,7 @@ export default function CodingChallengesPage() {
       </div>
 
       {/* Hero */}
-      <div className="page-container pt-3">
+      <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="page-container pt-3">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 p-8 text-white shadow-lg">
           <div className="absolute right-0 top-0 opacity-15 pointer-events-none transform translate-x-12 -translate-y-12 scale-150">
             <Code2 className="w-96 h-96 text-white" />
@@ -127,52 +128,29 @@ export default function CodingChallengesPage() {
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className="page-container pb-16">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center text-amber-500">
-              <Trophy className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Total Solved</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">
-                {stats?.solvedCount ?? 0} / {stats?.totalQuestions ?? 0}
-              </h3>
-            </div>
-          </Card>
-          
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-orange-50 dark:bg-orange-950/30 flex items-center justify-center text-orange-500">
-              <Flame className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Current Streak</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">5 Days</h3>
-            </div>
-          </Card>
-
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-950/30 flex items-center justify-center text-blue-500">
-              <BrainCircuit className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Placement Score</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">85 / 100</h3>
-            </div>
-          </Card>
-
-          <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
-            <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/30 flex items-center justify-center text-purple-500">
-              <Target className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-xs text-gray-400">Active Contests</p>
-              <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">1 Live</h3>
-            </div>
-          </Card>
+          {[
+            { icon: Trophy, color: 'text-amber-500', bgColor: 'bg-amber-50 dark:bg-amber-950/30', label: 'Total Solved', value: `${stats?.solvedCount ?? 0} / ${stats?.totalQuestions ?? 0}` },
+            { icon: Flame, color: 'text-orange-500', bgColor: 'bg-orange-50 dark:bg-orange-950/30', label: 'Current Streak', value: '5 Days' },
+            { icon: BrainCircuit, color: 'text-blue-500', bgColor: 'bg-blue-50 dark:bg-blue-950/30', label: 'Placement Score', value: '85 / 100' },
+            { icon: Target, color: 'text-purple-500', bgColor: 'bg-purple-50 dark:bg-purple-950/30', label: 'Active Contests', value: '1 Live' },
+          ].map((stat, i) => (
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.08 }}>
+              <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
+                <div className={`w-12 h-12 rounded-2xl ${stat.bgColor} flex items-center justify-center ${stat.color}`}>
+                  <stat.icon className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-400">{stat.label}</p>
+                  <h3 className="font-display font-bold text-xl text-gray-900 dark:text-white mt-0.5">{stat.value}</h3>
+                </div>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
         {/* Main Content Split */}
@@ -200,12 +178,19 @@ export default function CodingChallengesPage() {
                   !search || g.title.toLowerCase().includes(search.toLowerCase())
                 ).map((group, idx) => {
                   const topicCount = (questions ?? []).filter((q) =>
-                    q.topics.some((t) => t.toLowerCase() === group.key || t.toLowerCase().replace(/\s+/g, '-') === group.key)
+                    q.topics.some((t) => {
+                      const tKey = t.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                      return tKey === group.key || t.toLowerCase() === group.key;
+                    })
                   ).length;
 
                   return (
-                    <button
+                    <motion.button
                       key={group.key}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.15 + idx * 0.04 }}
+                      whileHover={{ scale: 1.01, x: 4 }}
                       onClick={() => navigate(`/student/challenges/topic/${group.key}`)}
                       className="w-full text-left border border-gray-100 dark:border-gray-800 rounded-2xl bg-white dark:bg-gray-900 shadow-sm hover:shadow-md hover:border-primary-200 dark:hover:border-primary-800 transition-all duration-200 group overflow-hidden"
                     >
@@ -225,7 +210,7 @@ export default function CodingChallengesPage() {
                           </div>
                         </div>
                       </div>
-                    </button>
+                    </motion.button>
                   );
                 })
               )}

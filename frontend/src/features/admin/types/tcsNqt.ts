@@ -1,18 +1,27 @@
+export interface TestCase {
+  input: string;
+  output: string;
+  isHidden: boolean;
+  explanation?: string;
+}
+
 export interface TcsQuestion {
   id?: string;
-  title: string;
   slug?: string;
+  title: string;
   difficulty: 'easy' | 'medium' | 'hard';
   statement: string;
-  constraints: string;
   inputFormat: string;
   outputFormat: string;
+  constraints: string;
+  referenceSolution: string;
+  topic?: string;
+  companies?: string;
+  experienceLevel?: 'freshers' | 'experienced';
+  testCases?: TestCase[];
   timeLimit?: number;
   memoryLimit?: number;
-  referenceSolution: string;
-  topics?: string;
-  companies?: string;
-  testCases?: any[];
+  xpReward?: number;
   createdAt?: string;
   updatedAt?: string;
 }

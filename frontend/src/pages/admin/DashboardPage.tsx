@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Users, Code2, FileText, TrendingUp, BarChart3, BookOpen, Brain, Shield, Settings, ChevronRight, Activity, Clock } from 'lucide-react';
 import { api } from '../../core/services/api';
 
@@ -34,7 +35,7 @@ export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 p-6 lg:p-8">
       {/* Welcome Header */}
-      <div className="mb-8">
+      <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
@@ -49,46 +50,24 @@ export default function AdminDashboardPage() {
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-        <StatsCard
-          icon={<Users size={22} />}
-          label="Total Students"
-          value={stats?.totalStudents || 0}
-          trend="+12% this month"
-          color="blue"
-          loading={loading}
-        />
-        <StatsCard
-          icon={<Code2 size={22} />}
-          label="Coding Problems"
-          value={stats?.totalProblems || 0}
-          trend="Active in arena"
-          color="cyan"
-          loading={loading}
-        />
-        <StatsCard
-          icon={<FileText size={22} />}
-          label="Total Submissions"
-          value={stats?.totalSubmissions || 0}
-          trend="All time"
-          color="emerald"
-          loading={loading}
-        />
-        <StatsCard
-          icon={<TrendingUp size={22} />}
-          label="Today's Submissions"
-          value={stats?.submissionsToday || 0}
-          trend="Last 24 hours"
-          color="purple"
-          loading={loading}
-        />
+        {[
+          { icon: <Users size={22} />, label: 'Total Students', value: stats?.totalStudents || 0, trend: '+12% this month', color: 'blue' },
+          { icon: <Code2 size={22} />, label: 'Coding Problems', value: stats?.totalProblems || 0, trend: 'Active in arena', color: 'cyan' },
+          { icon: <FileText size={22} />, label: 'Total Submissions', value: stats?.totalSubmissions || 0, trend: 'All time', color: 'emerald' },
+          { icon: <TrendingUp size={22} />, label: "Today's Submissions", value: stats?.submissionsToday || 0, trend: 'Last 24 hours', color: 'purple' },
+        ].map((stat, i) => (
+          <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 + i * 0.08 }}>
+            <StatsCard {...stat} loading={loading} />
+          </motion.div>
+        ))}
       </div>
 
       {/* Quick Actions Grid */}
-      <div className="mb-8">
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mb-8">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <QuickActionCard
@@ -134,10 +113,10 @@ export default function AdminDashboardPage() {
             onClick={() => navigate('/admin/settings')}
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* Activity & Overview Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Activity */}
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
           <div className="flex items-center justify-between mb-5">
@@ -177,7 +156,7 @@ export default function AdminDashboardPage() {
             <OverviewItem label="Active Contests" value={stats?.activeContests || 0} color="purple" />
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -230,7 +209,9 @@ function QuickActionCard({ icon, title, description, color, onClick }: {
   };
 
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.02, y: -2 }}
+      whileTap={{ scale: 0.98 }}
       onClick={onClick}
       className="group flex items-center gap-4 bg-white dark:bg-gray-900 rounded-2xl p-5 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 hover:shadow-md transition-all text-left w-full"
     >
@@ -242,7 +223,7 @@ function QuickActionCard({ icon, title, description, color, onClick }: {
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate">{description}</p>
       </div>
       <ChevronRight size={16} className="text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors shrink-0" />
-    </button>
+    </motion.button>
   );
 }
 

@@ -18,17 +18,18 @@ interface NavItem {
 
 const STUDENT_NAV: NavItem[] = [
   { label: 'Dashboard',    href: '/student/dashboard',  icon: LayoutDashboard },
-  { label: 'Certificates', href: '/student/certificates', icon: Award },
-  { label: 'Coding Arena', href: '/student/challenges',  icon: Code2 },
-  { label: 'Placement Prep', href: '/student/tcs-nqt',    icon: Trophy },
-  { label: 'Aptitude Prep',href: '/student/aptitude',   icon: BookOpen },
+  { label: 'DSA',          href: '/student/challenges', icon: Code2 },
+  { label: 'Placement Prep', href: '/student/tcs-nqt',  icon: Trophy },
+  { label: 'Aptitude',     href: '/student/aptitude',   icon: BookOpen },
   { label: 'Contests',     href: '/student/contests',   icon: Trophy },
+  { label: 'Certificates', href: '/student/certificates', icon: Award },
 ];
 
 const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { label: 'Users', href: '/admin/users', icon: Users },
-  { label: 'Problems', href: '/admin/problems', icon: Code2 },
+  { label: 'DSA', href: '/admin/problems', icon: Code2 },
+  { label: 'Aptitude', href: '/admin/aptitude', icon: BookOpen },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2 },
   { label: 'Settings', href: '/admin/settings', icon: Settings },
 ];

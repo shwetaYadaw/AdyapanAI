@@ -49,16 +49,15 @@ export default function TcsQuestionFilters({ filters, onFiltersChange }: TcsQues
         <option value="hard">Hard</option>
       </select>
 
-      {/* Items per page */}
+      {/* Topic Filter */}
       <select
-        value={filters.limit || 20}
-        onChange={(e) => onFiltersChange({ ...filters, limit: parseInt(e.target.value), page: 1 })}
+        value={filters.topic || ''}
+        onChange={(e) => onFiltersChange({ ...filters, topic: e.target.value || undefined, page: 1 })}
         className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
       >
-        <option value={10}>10 per page</option>
-        <option value={20}>20 per page</option>
-        <option value={50}>50 per page</option>
-        <option value={100}>100 per page</option>
+        <option value="">All Topics</option>
+        <option value="Problems on Arrays">Arrays</option>
+        <option value="Strings">Strings</option>
       </select>
     </div>
   );

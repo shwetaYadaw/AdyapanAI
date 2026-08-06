@@ -79,7 +79,10 @@ export default function CodingTopicPage() {
   });
 
   const topicQuestions = (questions ?? []).filter((q) =>
-    q.topics.some((t: string) => t.toLowerCase() === topicKey)
+    q.topics.some((t: string) => {
+      const tKey = t.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      return tKey === topicKey || t.toLowerCase() === topicKey;
+    })
   );
 
   const columns = [
