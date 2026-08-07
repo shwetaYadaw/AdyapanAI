@@ -18,9 +18,7 @@ router.use(authenticate, authorize('admin'));
 router.get('/topics', async (req, res, next) => {
   try {
     const { page, limit, skip } = getPaginationParams(req.query as Record<string, unknown>);
-    const { section } = req.query;
     const where: any = { isActive: true };
-    if (section) where.section = section;
 
     const [topics, total] = await Promise.all([
       prisma.aptitudeTopic.findMany({
@@ -38,7 +36,7 @@ router.get('/topics', async (req, res, next) => {
             },
           },
         },
-        orderBy: [{ section: 'asc' }, { order: 'asc' }, { name: 'asc' }],
+        orderBy: [{ order: 'asc' }, { name: 'asc' }],
         skip,
         take: limit,
       }),
@@ -87,13 +85,10 @@ router.get('/topics/:topicId', async (req, res, next) => {
 // POST /admin/aptitude/topics - Create new topic
 router.post('/topics', async (req, res, next) => {
   try {
-    const { name, section, description, icon, order } = req.body;
+    const { name, description, icon, order } = req.body;
 
     if (!name) {
       throw new AppError('Topic name is required', 400);
-    }
-    if (!section) {
-      throw new AppError('Section is required', 400);
     }
 
     // Check if topic already exists
@@ -105,7 +100,6 @@ router.post('/topics', async (req, res, next) => {
     const topic = await prisma.aptitudeTopic.create({
       data: {
         name,
-        section,
         description: description || null,
         icon: icon || null,
         order: order || 0,
@@ -122,7 +116,7 @@ router.post('/topics', async (req, res, next) => {
 // PUT /admin/aptitude/topics/:topicId - Update topic
 router.put('/topics/:topicId', async (req, res, next) => {
   try {
-    const { name, section, description, icon, order, isActive } = req.body;
+    const { name, description, icon, order, isActive } = req.body;
 
     const topic = await prisma.aptitudeTopic.findUnique({
       where: { id: req.params.topicId },
@@ -144,7 +138,6 @@ router.put('/topics/:topicId', async (req, res, next) => {
       where: { id: req.params.topicId },
       data: {
         name: name || topic.name,
-        section: section || topic.section,
         description: description !== undefined ? description : topic.description,
         icon: icon !== undefined ? icon : topic.icon,
         order: order !== undefined ? order : topic.order,
