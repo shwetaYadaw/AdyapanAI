@@ -18,17 +18,15 @@ router.get('/stats', async (req, res, next) => {
   try {
     const [
       totalStudents,
-      totalCourses,
       totalProblems,
       totalSubmissions,
       todaySubmissions,
       activeStudents,
     ] = await Promise.all([
       prisma.user.count({ where: { role: 'student' } }),
-      prisma.course.count({ where: { isPublished: true } }),
       prisma.problem.count(),
-      prisma.submission.count(),
-      prisma.submission.count({
+      prisma.problemSubmission.count(),
+      prisma.problemSubmission.count({
         where: {
           createdAt: {
             gte: new Date(new Date().setHours(0, 0, 0, 0)),
@@ -40,7 +38,7 @@ router.get('/stats', async (req, res, next) => {
           role: 'student',
           isActive: true,
           lastLogin: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // Last 7 days
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
           },
         },
       }),
@@ -50,7 +48,6 @@ router.get('/stats', async (req, res, next) => {
       res,
       data: {
         totalStudents,
-        totalCourses,
         totalProblems,
         totalSubmissions,
         submissionsToday: todaySubmissions,
@@ -208,10 +205,10 @@ router.get('/analytics/overview', async (_req, res, next) => {
     ] = await Promise.all([
       prisma.user.count(),
       prisma.user.count({ where: { role: 'student', isActive: true } }),
-      prisma.course.count(),
-      prisma.course.count({ where: { isPublished: true, isApproved: true } }),
-      prisma.enrollment.count(),
-      prisma.enrollment.count({ where: { isCompleted: true } }),
+      Promise.resolve(0),
+      Promise.resolve(0),
+      Promise.resolve(0),
+      Promise.resolve(0),
       prisma.payment.aggregate({ where: { status: 'completed' }, _sum: { amount: true } }),
     ]);
 
@@ -300,10 +297,10 @@ router.get('/analytics/summary', async (_req, res, next) => {
       prisma.user.count({ where: { role: 'student', isActive: true, lastLogin: { gte: sevenAgo } } }),
       prisma.user.count({ where: { role: 'student', createdAt: { gte: thirtyAgo } } }),
       prisma.problem.count(),
-      prisma.question.count(),
-      prisma.submission.count(),
-      prisma.submission.count({ where: { status: 'accepted' } }),
-      prisma.submission.count({ where: { createdAt: { gte: sevenAgo } } }),
+      prisma.tcsNqtQuestion.count(),
+      prisma.problemSubmission.count(),
+      prisma.problemSubmission.count({ where: { status: 'accepted' } }),
+      prisma.problemSubmission.count({ where: { createdAt: { gte: sevenAgo } } }),
       prisma.aptitudeQuestion.count(),
       prisma.contest.count(),
     ]);
@@ -330,7 +327,7 @@ router.get('/analytics/submission-trends', async (req, res, next) => {
     const days = Math.min(90, Math.max(7, parseInt(String(req.query.days ?? '30'), 10)));
     const since = new Date(Date.now() - days * 86400000);
 
-    const subs = await prisma.submission.findMany({
+    const subs = await prisma.problemSubmission.findMany({
       where: { createdAt: { gte: since } },
       select: { createdAt: true, status: true },
     });
@@ -370,7 +367,7 @@ router.get('/analytics/topic-breakdown', async (_req, res, next) => {
       }
     }
 
-    const accepted = await prisma.submission.findMany({
+    const accepted = await prisma.problemSubmission.findMany({
       where: { status: 'accepted', problemId: { not: null } },
       select: { problemId: true }, distinct: ['problemId'],
     });
@@ -421,7 +418,7 @@ router.get('/analytics/students', async (req, res, next) => {
     ]);
 
     const enriched = await Promise.all(users.map(async u => {
-      const accepted = await prisma.submission.count({ where: { userId: u.id, status: 'accepted' } });
+      const accepted = await prisma.problemSubmission.count({ where: { userId: u.id, status: 'accepted' } });
       return {
         id: u.id,
         name: `${u.firstName} ${u.lastName}`,
@@ -458,9 +455,9 @@ router.get('/analytics/students/:id', async (req, res, next) => {
 
     const since30 = new Date(Date.now() - 30 * 86400000);
     const [allSubs, acceptedSubs, recent] = await Promise.all([
-      prisma.submission.count({ where: { userId: user.id } }),
-      prisma.submission.count({ where: { userId: user.id, status: 'accepted' } }),
-      prisma.submission.findMany({
+      prisma.problemSubmission.count({ where: { userId: user.id } }),
+      prisma.problemSubmission.count({ where: { userId: user.id, status: 'accepted' } }),
+      prisma.problemSubmission.findMany({
         where: { userId: user.id, createdAt: { gte: since30 } },
         select: { createdAt: true, status: true, language: true, problemId: true },
         orderBy: { createdAt: 'asc' },
@@ -485,7 +482,7 @@ router.get('/analytics/students/:id', async (req, res, next) => {
       .map(([lang, count]) => ({ lang, count })).sort((a, b) => b.count - a.count);
 
     // Topic stats
-    const solvedProblems = await prisma.submission.findMany({
+    const solvedProblems = await prisma.problemSubmission.findMany({
       where: { userId: user.id, status: 'accepted', problemId: { not: null } },
       select: { problemId: true }, distinct: ['problemId'],
     });
@@ -532,8 +529,8 @@ router.get('/analytics/leaderboard', async (req, res, next) => {
 
     const data = await Promise.all(profiles.map(async (p, i) => {
       const [total, accepted] = await Promise.all([
-        prisma.submission.count({ where: { userId: p.userId } }),
-        prisma.submission.count({ where: { userId: p.userId, status: 'accepted' } }),
+        prisma.problemSubmission.count({ where: { userId: p.userId } }),
+        prisma.problemSubmission.count({ where: { userId: p.userId, status: 'accepted' } }),
       ]);
       return {
         rank: i + 1,
@@ -555,7 +552,7 @@ router.get('/analytics/leaderboard', async (req, res, next) => {
 router.get('/analytics/difficulty-distribution', async (_req, res, next) => {
   try {
     const problems = await prisma.problem.findMany({ select: { difficulty: true } });
-    const questions = await prisma.question.findMany({ select: { difficulty: true } });
+    const questions = await prisma.tcsNqtQuestion.findMany({ select: { difficulty: true } });
 
     const count = (arr: { difficulty: string }[]) => {
       const m: Record<string, number> = { easy: 0, medium: 0, hard: 0 };

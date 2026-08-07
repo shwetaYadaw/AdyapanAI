@@ -177,7 +177,7 @@ router.post('/questions/:questionId/submit', authenticate, async (req, res, next
         isCorrect,
         xpGained,
         correctOption: question.correctOption,
-        explanation: isCorrect ? null : question.explanation, // Show explanation only if wrong
+        explanation: question.explanation, // Always show explanation
       },
       message: isCorrect ? 'Correct answer!' : 'Incorrect answer. Check the explanation.',
     });

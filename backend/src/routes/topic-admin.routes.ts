@@ -32,11 +32,19 @@ async function isAdmin(req: Request, res: Response, next: NextFunction) {
 // GET /api/admin/topics - Get all topics (filtered by system and active status)
 router.get('/', authenticate, async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const system = req.query.system as string | undefined; // 'coding-arena', 'tcs-nqt', 'aptitude'
+    const system = req.query.system as string | undefined;
     const activeOnly = req.query.activeOnly === 'true';
 
     if (!system) {
-      throw new AppError('system query parameter is required', 400);
+      // Default to coding-arena if system not specified
+      const defaultSystem = 'coding-arena';
+      const where: any = { system: defaultSystem };
+      if (req.query.courseId === 'global') where.courseId = null;
+      else if (req.query.courseId) where.courseId = String(req.query.courseId);
+      if (activeOnly) where.isActive = true;
+      const topics = await prisma.topic.findMany({ where, orderBy: [{ order: 'asc' }, { name: 'asc' }] });
+      sendSuccess({ res, data: topics });
+      return;
     }
 
     const where: any = {

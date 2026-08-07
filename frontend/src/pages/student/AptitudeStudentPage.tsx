@@ -216,7 +216,7 @@ export default function AptitudeStudentPage() {
                       ? isCorrect ? 'bg-green-100 dark:bg-green-900/40 text-green-600' : 'bg-red-100 dark:bg-red-900/40 text-red-600'
                       : 'bg-gray-100 dark:bg-gray-800 text-gray-500'
                   }`}>{qIdx + 1}</span>
-                  <p className="text-[15px] text-gray-800 dark:text-gray-200 font-medium leading-relaxed">{q.statement}</p>
+                  <div className="text-[15px] text-gray-800 dark:text-gray-200 font-medium leading-relaxed [&_table]:text-xs [&_table]:my-3 [&_table]:w-full [&_td]:px-3 [&_td]:py-2 [&_td]:border [&_td]:border-gray-300 dark:[&_td]:border-gray-600 [&_tr:first-child]:bg-gray-100 dark:[&_tr:first-child]:bg-gray-800 [&_tr:first-child]:font-bold" dangerouslySetInnerHTML={{ __html: q.statement.replace(/\n/g, '<br/>') }} />
                 </div>
 
                 {/* Options - 2 column grid */}
@@ -281,12 +281,18 @@ export default function AptitudeStudentPage() {
                       animate={{ height: 'auto', opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="overflow-hidden ml-10 mt-2.5"
+                      className="overflow-hidden ml-10 mt-2.5 space-y-2"
                     >
                       <div className="flex items-center gap-2 px-4 py-2.5 bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg">
                         <CheckCircle2 size={15} className="text-green-500" />
                         <p className="text-sm text-green-700 dark:text-green-300 font-medium">Correct! +{answer.result?.xpGained} XP</p>
                       </div>
+                      {(q.explanation || answer.result?.explanation) && (
+                        <div className="flex items-start gap-2.5 px-4 py-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                          <Lightbulb size={14} className="text-blue-500 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">{answer.result?.explanation || q.explanation}</p>
+                        </div>
+                      )}
                     </motion.div>
                   )}
                 </AnimatePresence>
