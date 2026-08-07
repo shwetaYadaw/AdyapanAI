@@ -31,7 +31,7 @@ const ADMIN_NAV: NavItem[] = [
   { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, color: 'text-primary-400' },
   { label: 'Users', href: '/admin/users', icon: Users, color: 'text-cyan-400' },
   { label: 'Courses', href: '/admin/courses', icon: Briefcase, color: 'text-blue-400' },
-  { label: 'Problems', href: '/admin/problems', icon: Code2, color: 'text-violet-400' },
+  { label: 'DSA', href: '/admin/problems', icon: Code2, color: 'text-violet-400' },
   { label: 'Aptitude', href: '/admin/aptitude', icon: Brain, color: 'text-primary-400' },
   { label: 'Contests', href: '/admin/contests', icon: Trophy, color: 'text-amber-400' },
   { label: 'Analytics', href: '/admin/analytics', icon: BarChart2, color: 'text-emerald-400' },
