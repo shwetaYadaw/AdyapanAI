@@ -45,13 +45,17 @@ export default function CodingChallengesPage() {
   });
   const studentCourseId = profileData?.course;
 
-  // Fetch topics from public API - NO FALLBACK, must be dynamic
+  // Fetch topics from public API - filtered by student's course
   const { data: topicsData, isLoading: topicsLoading, error: topicsError } = useQuery<Topic[]>({
-    queryKey: ['codingTopics'],
+    queryKey: ['codingTopics', studentCourseId],
     queryFn: async () => {
-      const { data } = await api.get('/topics', {
-        params: { system: 'coding-arena' }
-      });
+      const params: any = { system: 'coding-arena' };
+      if (studentCourseId) {
+        params.courseId = studentCourseId;
+      } else {
+        params.courseId = 'none'; // Only global DSA topics
+      }
+      const { data } = await api.get('/topics', { params });
       return data.data ?? [];
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -73,10 +77,10 @@ export default function CodingChallengesPage() {
 
   // Fetch all problems from Problem table (Coding Arena) - filtered by student's course
   const { data: questions, isLoading } = useQuery<Question[]>({
-    queryKey: ['codingArenaProblems', studentCourseId || ''],
+    queryKey: ['codingArenaProblems', studentCourseId || 'none'],
     queryFn: async () => {
-      const params = studentCourseId ? `?limit=500&courseId=${studentCourseId}` : '?limit=500';
-      const { data } = await api.get(`/problems${params}`);
+      const courseParam = studentCourseId || 'none';
+      const { data } = await api.get(`/problems?limit=500&courseId=${courseParam}`);
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,
