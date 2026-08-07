@@ -47,6 +47,7 @@ type AnswerState = Record<string, {
 
 export default function AptitudeStudentPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeSection, setActiveSection] = useState<string>('Verbal Ability');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
   const [answers, setAnswers] = useState<AnswerState>({});
@@ -80,8 +81,10 @@ export default function AptitudeStudentPage() {
 
   // ─── Computed ────────────────────────────────────────────────────
   const filteredTopics = useMemo(
-    () => topics.filter(t => t.name.toLowerCase().includes(searchQuery.toLowerCase())),
-    [topics, searchQuery]
+    () => topics
+      .filter((t: any) => t.section === activeSection)
+      .filter(t => t.name.toLowerCase().includes(searchQuery.toLowerCase())),
+    [topics, searchQuery, activeSection]
   );
   const currentTopic = topics.find(t => t.id === selectedTopic);
   const chapterQuestions: Question[] = chapterData?.questions ?? [];
@@ -402,6 +405,34 @@ export default function AptitudeStudentPage() {
           placeholder="Search topics..."
           className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-400 focus:border-transparent outline-none transition"
         />
+      </div>
+
+      {/* Section Tabs */}
+      <div className="flex flex-wrap gap-2">
+        {[
+          { key: 'Verbal Ability', label: 'Verbal Ability', icon: '🔤' },
+          { key: 'Numerical Ability', label: 'Numerical Ability', icon: '🔢' },
+          { key: 'Logical Reasoning', label: 'Logical Reasoning', icon: '🧠' },
+        ].map((section) => {
+          const count = topics.filter((t: any) => t.section === section.key).length;
+          return (
+            <button
+              key={section.key}
+              onClick={() => setActiveSection(section.key)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all ${
+                activeSection === section.key
+                  ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/20'
+                  : 'bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-orange-300'
+              }`}
+            >
+              <span>{section.icon}</span>
+              <span>{section.label}</span>
+              <span className={`ml-1 px-2 py-0.5 rounded-full text-xs font-bold ${
+                activeSection === section.key ? 'bg-white/20 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'
+              }`}>{count}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Topics */}
