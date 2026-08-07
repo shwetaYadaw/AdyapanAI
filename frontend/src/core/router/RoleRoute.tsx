@@ -1,8 +1,9 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import { useAppSelector } from '../../shared/hooks/hooks';
 import { selectUserRole } from '../../features/auth/authSlice';
-import type { UserRole } from '@adyapan/shared';
 import DashboardLayout from '../../shared/components/DashboardLayout/DashboardLayout';
+
+type UserRole = 'student' | 'teacher' | 'mentor' | 'recruiter' | 'admin' | 'superadmin';
 
 interface RoleRouteProps {
   roles: UserRole[];

@@ -126,7 +126,7 @@ export default function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <Link to={user?.role === 'admin' ? '/admin/dashboard' : isAuthenticated ? '/student/dashboard' : '/'} className="flex items-center gap-2.5 flex-shrink-0">
               <img
                 src="/logo.svg"
                 alt="ADYAPAN"
@@ -306,7 +306,7 @@ export default function Navbar() {
                             <LayoutDashboard className="w-4 h-4" /> Dashboard
                           </Link>
                           <Link
-                            to="/student/profile"
+                            to={user?.role === 'admin' ? '/admin/profile' : '/student/profile'}
                             onClick={() => setProfileOpen(false)}
                             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
                           >
