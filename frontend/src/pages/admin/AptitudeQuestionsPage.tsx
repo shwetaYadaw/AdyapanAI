@@ -16,6 +16,7 @@ export default function AptitudeQuestionsPage() {
   const [loading, setLoading] = useState(true);
   const [topicName, setTopicName] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [newQuestion, setNewQuestion] = useState({
     statement: '',
@@ -126,6 +127,81 @@ export default function AptitudeQuestionsPage() {
     }
   };
 
+  const handleEditClick = (q: AptitudeQuestion) => {
+    setEditingId(q.id!);
+    setNewQuestion({
+      statement: q.statement || '',
+      difficulty: q.difficulty || 'medium',
+      explanation: q.explanation || '',
+      options: q.options?.map(o => ({
+        optionKey: o.optionKey,
+        text: o.text,
+        isCorrect: o.optionKey === q.correctOption,
+      })) || [
+        { optionKey: 'A', text: '', isCorrect: false },
+        { optionKey: 'B', text: '', isCorrect: false },
+        { optionKey: 'C', text: '', isCorrect: false },
+        { optionKey: 'D', text: '', isCorrect: false },
+      ],
+    });
+    setShowAddForm(true);
+  };
+
+  const handleSaveQuestion = async () => {
+    if (!newQuestion.statement.trim()) {
+      toast.error('Question statement is required');
+      return;
+    }
+    if (!newQuestion.options.every(o => o.text.trim())) {
+      toast.error('All options must have text');
+      return;
+    }
+    if (!newQuestion.options.some(o => o.isCorrect)) {
+      toast.error('Mark one option as correct');
+      return;
+    }
+    try {
+      setSaving(true);
+      if (editingId) {
+        // Update existing
+        await aptitudeAdminService.updateQuestion(topicId!, selectedChapter, editingId, {
+          statement: newQuestion.statement,
+          difficulty: newQuestion.difficulty,
+          explanation: newQuestion.explanation || undefined,
+          options: newQuestion.options,
+        } as any);
+        toast.success('Question updated!');
+      } else {
+        // Create new
+        await aptitudeAdminService.createQuestion(topicId!, selectedChapter, {
+          statement: newQuestion.statement,
+          difficulty: newQuestion.difficulty,
+          explanation: newQuestion.explanation || undefined,
+          options: newQuestion.options,
+        } as any);
+        toast.success('Question added!');
+      }
+      setShowAddForm(false);
+      setEditingId(null);
+      setNewQuestion({
+        statement: '',
+        difficulty: 'medium',
+        explanation: '',
+        options: [
+          { optionKey: 'A', text: '', isCorrect: false },
+          { optionKey: 'B', text: '', isCorrect: false },
+          { optionKey: 'C', text: '', isCorrect: false },
+          { optionKey: 'D', text: '', isCorrect: false },
+        ],
+      });
+      fetchQuestions();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Failed to save question');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
@@ -145,7 +221,7 @@ export default function AptitudeQuestionsPage() {
               </div>
             </div>
             <button
-              onClick={() => setShowAddForm(true)}
+              onClick={() => { setEditingId(null); setNewQuestion({ statement: '', difficulty: 'medium', explanation: '', options: [{ optionKey: 'A', text: '', isCorrect: false }, { optionKey: 'B', text: '', isCorrect: false }, { optionKey: 'C', text: '', isCorrect: false }, { optionKey: 'D', text: '', isCorrect: false }] }); setShowAddForm(true); }}
               className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium text-sm"
             >
               <Plus size={16} />
@@ -233,12 +309,22 @@ export default function AptitudeQuestionsPage() {
                     </div>
                   </div>
                   {/* Actions */}
-                  <button
-                    onClick={() => handleDelete(q)}
-                    className="p-2 text-gray-400 hover:text-red-500 transition"
-                  >
-                    <Trash2 size={16} />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleEditClick(q)}
+                      className="p-2 text-gray-400 hover:text-blue-500 transition"
+                      title="Edit"
+                    >
+                      <Edit size={16} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(q)}
+                      className="p-2 text-gray-400 hover:text-red-500 transition"
+                      title="Delete"
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -251,8 +337,8 @@ export default function AptitudeQuestionsPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
             <div className="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Add Question</h2>
-              <button onClick={() => setShowAddForm(false)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">{editingId ? 'Edit Question' : 'Add Question'}</h2>
+              <button onClick={() => { setShowAddForm(false); setEditingId(null); }} className="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
             </div>
             <div className="p-5 space-y-4">
               {/* Statement */}
@@ -334,17 +420,17 @@ export default function AptitudeQuestionsPage() {
               {/* Actions */}
               <div className="flex justify-end gap-3 pt-2">
                 <button
-                  onClick={() => setShowAddForm(false)}
+                  onClick={() => { setShowAddForm(false); setEditingId(null); }}
                   className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={handleAddQuestion}
+                  onClick={handleSaveQuestion}
                   disabled={saving}
                   className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition font-medium text-sm"
                 >
-                  {saving ? 'Saving...' : 'Add Question'}
+                  {saving ? 'Saving...' : editingId ? 'Update Question' : 'Add Question'}
                 </button>
               </div>
             </div>
