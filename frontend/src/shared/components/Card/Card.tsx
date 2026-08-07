@@ -25,8 +25,8 @@ export default function Card({
     glass
       ? 'glass-card'
       : 'bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800',
-    hover && 'shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer hover:-translate-y-0.5',
-    !hover && 'shadow-md',
+    hover && 'shadow-card hover:shadow-card-hover transition-shadow duration-300 cursor-pointer',
+    !hover && 'shadow-card',
     paddingMap[padding],
     className
   );

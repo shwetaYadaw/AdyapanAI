@@ -33,7 +33,7 @@ export default function AdminDashboardPage() {
   const greeting = new Date().getHours() < 12 ? 'Good Morning' : new Date().getHours() < 18 ? 'Good Afternoon' : 'Good Evening';
 
   return (
-    <div className="min-h-screen bg-brand-cream dark:bg-gray-950 p-5 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50/40 via-white to-amber-50/30 dark:bg-gray-950 p-5 lg:p-8">
       {/* Welcome Header with Gradient */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
         <div className="relative overflow-hidden bg-gradient-to-r from-primary-600 via-primary-500 to-brand-amber rounded-2xl p-6 lg:p-8 shadow-brand-lg">
