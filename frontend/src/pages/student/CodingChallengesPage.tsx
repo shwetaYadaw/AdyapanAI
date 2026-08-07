@@ -77,10 +77,10 @@ export default function CodingChallengesPage() {
 
   // Fetch all problems from Problem table (Coding Arena) - filtered by student's course
   const { data: questions, isLoading } = useQuery<Question[]>({
-    queryKey: ['codingArenaProblems', studentCourseId || ''],
+    queryKey: ['codingArenaProblems', studentCourseId || 'none'],
     queryFn: async () => {
-      const params = studentCourseId ? `?limit=500&courseId=${studentCourseId}` : '?limit=500';
-      const { data } = await api.get(`/problems${params}`);
+      const courseParam = studentCourseId || 'none';
+      const { data } = await api.get(`/problems?limit=500&courseId=${courseParam}`);
       return (data.data ?? []).map((q: any) => ({
         ...q,
         _id: q._id ?? q.id,
