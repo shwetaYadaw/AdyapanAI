@@ -15,6 +15,19 @@ export default function AptitudeQuestionsPage() {
   const [selectedChapter, setSelectedChapter] = useState<string>(chapterIdFromUrl || '');
   const [loading, setLoading] = useState(true);
   const [topicName, setTopicName] = useState('');
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [newQuestion, setNewQuestion] = useState({
+    statement: '',
+    difficulty: 'medium',
+    explanation: '',
+    options: [
+      { optionKey: 'A', text: '', isCorrect: false },
+      { optionKey: 'B', text: '', isCorrect: false },
+      { optionKey: 'C', text: '', isCorrect: false },
+      { optionKey: 'D', text: '', isCorrect: false },
+    ],
+  });
 
   useEffect(() => {
     if (topicId) {
@@ -71,6 +84,48 @@ export default function AptitudeQuestionsPage() {
     }
   };
 
+  const handleAddQuestion = async () => {
+    if (!newQuestion.statement.trim()) {
+      toast.error('Question statement is required');
+      return;
+    }
+    if (!newQuestion.options.every(o => o.text.trim())) {
+      toast.error('All options must have text');
+      return;
+    }
+    if (!newQuestion.options.some(o => o.isCorrect)) {
+      toast.error('Mark one option as correct');
+      return;
+    }
+    try {
+      setSaving(true);
+      await aptitudeAdminService.createQuestion(topicId!, selectedChapter, {
+        statement: newQuestion.statement,
+        difficulty: newQuestion.difficulty,
+        explanation: newQuestion.explanation || undefined,
+        options: newQuestion.options,
+      } as any);
+      toast.success('Question added!');
+      setShowAddForm(false);
+      setNewQuestion({
+        statement: '',
+        difficulty: 'medium',
+        explanation: '',
+        options: [
+          { optionKey: 'A', text: '', isCorrect: false },
+          { optionKey: 'B', text: '', isCorrect: false },
+          { optionKey: 'C', text: '', isCorrect: false },
+          { optionKey: 'D', text: '', isCorrect: false },
+        ],
+      });
+      fetchQuestions();
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || 'Failed to add question');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
       {/* Header */}
@@ -89,6 +144,13 @@ export default function AptitudeQuestionsPage() {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white">Questions</h1>
               </div>
             </div>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium text-sm"
+            >
+              <Plus size={16} />
+              Add Question
+            </button>
           </div>
         </div>
       </div>
@@ -183,6 +245,112 @@ export default function AptitudeQuestionsPage() {
           </div>
         )}
       </div>
+
+      {/* Add Question Modal */}
+      {showAddForm && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="flex justify-between items-center p-5 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white">Add Question</h2>
+              <button onClick={() => setShowAddForm(false)} className="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            <div className="p-5 space-y-4">
+              {/* Statement */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Question Statement *</label>
+                <textarea
+                  value={newQuestion.statement}
+                  onChange={(e) => setNewQuestion(prev => ({ ...prev, statement: e.target.value }))}
+                  rows={3}
+                  placeholder="Enter the question..."
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none"
+                />
+              </div>
+
+              {/* Difficulty */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Difficulty</label>
+                <select
+                  value={newQuestion.difficulty}
+                  onChange={(e) => setNewQuestion(prev => ({ ...prev, difficulty: e.target.value }))}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none"
+                >
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+
+              {/* Options */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Options * (click radio to mark correct)</label>
+                <div className="space-y-2">
+                  {newQuestion.options.map((opt, idx) => (
+                    <div key={opt.optionKey} className="flex items-center gap-2">
+                      <input
+                        type="radio"
+                        name="correctOption"
+                        checked={opt.isCorrect}
+                        onChange={() => {
+                          setNewQuestion(prev => ({
+                            ...prev,
+                            options: prev.options.map((o, i) => ({ ...o, isCorrect: i === idx })),
+                          }));
+                        }}
+                        className="w-4 h-4 text-green-600"
+                      />
+                      <span className="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-xs font-bold text-gray-600 dark:text-gray-300">
+                        {opt.optionKey}
+                      </span>
+                      <input
+                        type="text"
+                        value={opt.text}
+                        onChange={(e) => {
+                          setNewQuestion(prev => ({
+                            ...prev,
+                            options: prev.options.map((o, i) => i === idx ? { ...o, text: e.target.value } : o),
+                          }));
+                        }}
+                        placeholder={`Option ${opt.optionKey}`}
+                        className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none text-sm"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Explanation */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Explanation (optional)</label>
+                <textarea
+                  value={newQuestion.explanation}
+                  onChange={(e) => setNewQuestion(prev => ({ ...prev, explanation: e.target.value }))}
+                  rows={2}
+                  placeholder="Explain the correct answer..."
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none"
+                />
+              </div>
+
+              {/* Actions */}
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  onClick={() => setShowAddForm(false)}
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition text-sm"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleAddQuestion}
+                  disabled={saving}
+                  className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition font-medium text-sm"
+                >
+                  {saving ? 'Saving...' : 'Add Question'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
