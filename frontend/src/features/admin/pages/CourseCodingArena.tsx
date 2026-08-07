@@ -238,10 +238,12 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
             <button onClick={() => { setSelectedTopicView(null); setTopicFilter(''); }} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium mb-4">
               <ArrowLeft size={16} /> Back to All Topics
             </button>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{selectedTopicView} - Subcategories & Datasets</h2>
-            <p className="text-sm text-gray-500 mb-4">Add datasets (table schemas) and group questions under them. Each dataset applies to a set number of questions.</p>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{selectedTopicView}</h2>
+            <p className="text-sm text-gray-500 mb-4">Manage questions for {selectedTopicView} topic.</p>
 
-            {/* Add Dataset for this topic */}
+            {/* Add Dataset section - for SQL, Pandas, and NumPy topics */}
+            {['sql', 'pandas', 'numpy'].includes(selectedTopicView.toLowerCase()) && (
+            <>
             <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
               <h3 className="font-semibold text-sm mb-3 flex items-center gap-2"><Database size={16} className="text-blue-500" /> Add New Dataset for {selectedTopicView}</h3>
               <div className="grid grid-cols-2 gap-3 mb-3">
@@ -281,7 +283,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
                             </tr>
                           </thead>
                           <tbody>
-                            {rows.slice(0, 5).map((row, ri) => (
+                            {rows.map((row, ri) => (
                               <tr key={ri} className="border-b border-gray-100 dark:border-gray-800 last:border-none">
                                 {row.split(',').map((cell, ci) => <td key={ci} className="px-3 py-1.5 text-gray-700 dark:text-gray-300">{cell.trim()}</td>)}
                               </tr>
@@ -304,6 +306,8 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
               </div>
             ) : (
               <p className="text-sm text-gray-400 mb-4">No datasets yet for {selectedTopicView}. Add one above to group questions.</p>
+            )}
+            </>
             )}
 
             {/* Questions under this topic */}
