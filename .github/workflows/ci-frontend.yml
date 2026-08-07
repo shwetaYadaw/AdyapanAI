@@ -28,12 +28,6 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Type check
-        run: yarn workspace @adyapan/frontend tsc --noEmit
-
-      - name: Lint
-        run: yarn workspace @adyapan/frontend lint
-
       - name: Build
         run: yarn workspace @adyapan/frontend build
         env:

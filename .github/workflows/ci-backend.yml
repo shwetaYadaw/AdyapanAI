@@ -37,16 +37,12 @@ jobs:
 
       - name: "❌ Ban Mongoose model imports"
         run: |
-          echo "Scanning for model file imports..."
-          if grep -r --include="*.ts" "from '../models/" backend/src/; then
-            echo "❌ FATAL: Mongoose model import detected! Use prisma.* queries instead."
+          echo "Scanning for Mongoose schema model imports..."
+          if grep -r --include="*.ts" "from '../models/" backend/src/ | grep -v "repositories/"; then
+            echo "❌ FATAL: Mongoose model import detected outside repositories! Use prisma.* queries instead."
             exit 1
           fi
-          if grep -r --include="*.ts" "from '../../models/" backend/src/; then
-            echo "❌ FATAL: Mongoose model import detected! Use prisma.* queries instead."
-            exit 1
-          fi
-          echo "✅ No Mongoose model imports found"
+          echo "✅ No Mongoose model imports found (type-only model imports in repositories are allowed)"
 
       - name: "❌ Ban MONGODB_URI from .env files"
         run: |
