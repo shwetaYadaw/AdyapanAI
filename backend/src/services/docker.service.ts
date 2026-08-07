@@ -78,7 +78,17 @@ export class DockerService {
       // Write source code file
       const fileName = this.getFileName(language, code);
       const filePath = path.join(workDir, fileName);
-      await fs.writeFile(filePath, code, 'utf-8');
+      
+      // For SQL: wrap in Python with SQLite
+      let finalCode = code;
+      if (language.id === 'sql') {
+        finalCode = `import sqlite3, sys\nconn = sqlite3.connect(':memory:')\ncursor = conn.cursor()\n# Read dataset from input if provided\ninput_data = open('/app/input.txt').read().strip()\nif input_data:\n    for line in input_data.split(';'):\n        line = line.strip()\n        if line:\n            try:\n                cursor.execute(line)\n            except: pass\n    conn.commit()\n# Execute the student's query\nquery = """${code.replace(/"/g, '\\"')}"""\ntry:\n    cursor.execute(query)\n    rows = cursor.fetchall()\n    if cursor.description:\n        cols = [d[0] for d in cursor.description]\n        print(', '.join(cols))\n    for row in rows:\n        print(', '.join(str(x) for x in row))\nexcept Exception as e:\n    print(f"SQL Error: {e}", file=sys.stderr)\n    sys.exit(1)\nconn.close()\n`;
+      } else if (language.id === 'python-ds') {
+        // Python Data Science: prepend pip install
+        finalCode = `import subprocess, sys\nsubprocess.run([sys.executable, '-m', 'pip', 'install', 'pandas', 'numpy', '-q'], capture_output=True)\n${code}`;
+      }
+      
+      await fs.writeFile(filePath, finalCode, 'utf-8');
 
       // Write input file
       const inputPath = path.join(workDir, 'input.txt');

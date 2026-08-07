@@ -48,6 +48,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const [newTopic, setNewTopic] = useState('');
   const [editingProblem, setEditingProblem] = useState<CourseProblem | null>(null);
   const [search, setSearch] = useState('');
+  const [selectedTopicView, setSelectedTopicView] = useState<string | null>(null);
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [topicFilter, setTopicFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -101,7 +102,8 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
       columns: datasetForm.columns,
       sampleData: datasetForm.sampleData,
       questionLimit: parseInt((datasetForm as any).questionLimit) || 20,
-    };
+      topic: (datasetForm as any).topic || '',
+    } as any;
     const updated = [...datasets, newDataset];
     setDatasets(updated);
     localStorage.setItem(`datasets_${courseId}`, JSON.stringify(updated));
@@ -210,29 +212,108 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
         </div>
 
         {/* Topics as Cards */}
-        {topics.length > 0 && (
+        {topics.length > 0 && !selectedTopicView && (
           <div className="mb-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {topics.map(t => {
               const count = problems.filter((p: any) => (p.topics || p.topic || '').toLowerCase().includes(t.toLowerCase())).length;
+              const topicDatasets = datasets.filter(d => (d as any).topic === t);
               return (
                 <button
                   key={t}
-                  onClick={() => setTopicFilter(topicFilter === t ? '' : t)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    topicFilter === t
-                      ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-md'
-                      : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:shadow-sm'
-                  }`}
+                  onClick={() => setSelectedTopicView(t)}
+                  className="p-4 rounded-xl border-2 text-left transition-all bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-blue-400 hover:shadow-md"
                 >
-                  <p className={`font-semibold text-sm ${topicFilter === t ? 'text-blue-700 dark:text-blue-300' : 'text-gray-900 dark:text-white'}`}>{t}</p>
-                  <p className={`text-xs mt-1 ${topicFilter === t ? 'text-blue-500' : 'text-gray-400'}`}>{count} {count === 1 ? 'Question' : 'Questions'}</p>
+                  <p className="font-semibold text-sm text-gray-900 dark:text-white">{t}</p>
+                  <p className="text-xs mt-1 text-gray-400">{count} Questions</p>
+                  {topicDatasets.length > 0 && <p className="text-[10px] mt-0.5 text-blue-500">{topicDatasets.length} Datasets</p>}
                 </button>
               );
             })}
           </div>
         )}
 
-        {/* Filters */}
+        {/* Topic Detail View - Datasets & Questions */}
+        {selectedTopicView && (
+          <div className="mb-6">
+            <button onClick={() => { setSelectedTopicView(null); setTopicFilter(''); }} className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm font-medium mb-4">
+              <ArrowLeft size={16} /> Back to All Topics
+            </button>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{selectedTopicView} - Subcategories & Datasets</h2>
+            <p className="text-sm text-gray-500 mb-4">Add datasets (table schemas) and group questions under them. Each dataset applies to a set number of questions.</p>
+
+            {/* Add Dataset for this topic */}
+            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
+              <h3 className="font-semibold text-sm mb-3 flex items-center gap-2"><Database size={16} className="text-blue-500" /> Add New Dataset for {selectedTopicView}</h3>
+              <div className="grid grid-cols-2 gap-3 mb-3">
+                <input value={datasetForm.name} onChange={e => setDatasetForm({ ...datasetForm, name: e.target.value })} placeholder="Dataset name (e.g., Employees Table)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input value={datasetForm.tableName} onChange={e => setDatasetForm({ ...datasetForm, tableName: e.target.value })} placeholder="Table name (e.g., employees)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+              </div>
+              <input value={datasetForm.columns} onChange={e => setDatasetForm({ ...datasetForm, columns: e.target.value })} placeholder="Columns: employee_id, first_name, last_name, department, salary, manager_id" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
+              <textarea value={datasetForm.sampleData} onChange={e => setDatasetForm({ ...datasetForm, sampleData: e.target.value })} placeholder={"Sample rows (one per line):\n101, Alice, Johnson, HR, 45000, NULL\n102, Bob, Smith, IT, 60000, 101\n103, Charlie, Brown, Finance, 55000, 101"} rows={4} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
+              <div className="flex items-center gap-3">
+                <input type="number" min={1} value={(datasetForm as any).questionLimit || 20} onChange={e => setDatasetForm({ ...datasetForm, questionLimit: e.target.value } as any)} className="w-32 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                <span className="text-xs text-gray-500">questions will use this dataset</span>
+                <button onClick={() => { (datasetForm as any).topic = selectedTopicView; saveDataset(); }} className="ml-auto px-5 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700">+ Create Dataset</button>
+              </div>
+            </div>
+
+            {/* Existing Datasets for this topic */}
+            {datasets.filter(d => (d as any).topic === selectedTopicView).length > 0 ? (
+              <div className="space-y-3 mb-6">
+                {datasets.filter(d => (d as any).topic === selectedTopicView).map((d, idx) => {
+                  const cols = d.columns.split(',').map(c => c.trim());
+                  const rows = d.sampleData.split('\n').filter(r => r.trim());
+                  return (
+                    <div key={d.id} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h4 className="font-bold text-sm text-gray-900 dark:text-white">{d.name}</h4>
+                          <p className="text-[10px] text-gray-500">Table: <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded">{d.tableName}</code> · {d.questionLimit} questions · Dataset #{idx + 1}</p>
+                        </div>
+                        <button onClick={() => deleteDataset(d.id)} className="p-2 text-red-500 hover:bg-red-50 rounded-lg"><Trash2 size={14} /></button>
+                      </div>
+                      {/* Table Preview */}
+                      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
+                        <table className="w-full text-xs">
+                          <thead>
+                            <tr className="bg-gray-50 dark:bg-gray-800">
+                              {cols.map(c => <th key={c} className="px-3 py-2 text-left font-semibold text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">{c}</th>)}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {rows.slice(0, 5).map((row, ri) => (
+                              <tr key={ri} className="border-b border-gray-100 dark:border-gray-800 last:border-none">
+                                {row.split(',').map((cell, ci) => <td key={ci} className="px-3 py-1.5 text-gray-700 dark:text-gray-300">{cell.trim()}</td>)}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                      {/* Add Question under this dataset */}
+                      <div className="mt-4">
+                        <button
+                          onClick={() => { resetForm(); setForm({ ...form, topic: selectedTopicView!, dataset: d.name, inputFormat: `Use table: ${d.tableName}\nColumns: ${d.columns}`, outputFormat: 'Return the result set as a table' }); setShowAddForm(true); }}
+                          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-semibold hover:bg-blue-700"
+                        >
+                          <Plus size={14} /> Add SQL Question under "{d.name}"
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-sm text-gray-400 mb-4">No datasets yet for {selectedTopicView}. Add one above to group questions.</p>
+            )}
+
+            {/* Questions under this topic */}
+            <h3 className="font-semibold text-sm text-gray-900 dark:text-white mb-3">Questions in {selectedTopicView} ({problems.filter((p: any) => (p.topics || p.topic || '').toLowerCase().includes(selectedTopicView.toLowerCase())).length})</h3>
+            <button onClick={() => { resetForm(); setForm({ ...form, topic: selectedTopicView }); setShowAddForm(true); }} className="mb-4 flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700"><Plus size={16} /> Add Question to {selectedTopicView}</button>
+          </div>
+        )}
+
+        {/* Filters - show when NOT in topic detail view OR when in detail view */}
+        {!selectedTopicView && (
         <div className="mb-4 flex flex-wrap items-center gap-3">
           <div className="relative flex-1 max-w-xs">
             <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -249,11 +330,15 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
             {topics.map(t => <option key={t} value={t}>{t}</option>)}
           </select>
         </div>
+        )}
 
         {/* Problems List */}
         {(() => {
           // Apply filters
           let filtered = problems;
+          if (selectedTopicView) {
+            filtered = filtered.filter((p: any) => (p.topics || p.topic || '').toLowerCase().includes(selectedTopicView.toLowerCase()));
+          }
           if (search) filtered = filtered.filter((p: any) => p.title?.toLowerCase().includes(search.toLowerCase()));
           if (difficultyFilter) filtered = filtered.filter((p: any) => p.difficulty === difficultyFilter);
           if (topicFilter) filtered = filtered.filter((p: any) => (p.topics || p.topic || '').toLowerCase().includes(topicFilter.toLowerCase()));
@@ -330,32 +415,51 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
                 <button onClick={resetForm} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
               </div>
               <div className="p-5 space-y-4 overflow-y-auto flex-1">
+              {/* Title & Difficulty */}
               <div className="grid grid-cols-3 gap-3">
-                <div className="col-span-2"><label className="text-xs font-semibold text-gray-500 mb-1 block">Title *</label><input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g., Two Sum" /></div>
+                <div className="col-span-2"><label className="text-xs font-semibold text-gray-500 mb-1 block">Title *</label><input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder={form.dataset ? "e.g., Find employees with salary > 50000" : "e.g., Two Sum"} /></div>
                 <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Difficulty</label><select value={form.difficulty} onChange={e => setForm({ ...form, difficulty: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div>
               </div>
               <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Topic</label><select value={form.topic} onChange={e => setForm({ ...form, topic: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"><option value="">-- No Topic --</option>{topics.map(t => <option key={t} value={t}>{t}</option>)}</select></div>
               {datasets.length > 0 && (
                 <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Dataset (for SQL questions)</label><select value={form.dataset || ''} onChange={e => setForm({ ...form, dataset: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"><option value="">-- No Dataset --</option>{datasets.map(d => <option key={d.id} value={d.name}>{d.name} ({d.tableName})</option>)}</select></div>
               )}
-              <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Problem Statement *</label><textarea value={form.statement} onChange={e => setForm({ ...form, statement: e.target.value })} rows={4} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Describe the problem..." /></div>
-              <div className="grid grid-cols-2 gap-3">
-                <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Input Format</label><textarea value={form.inputFormat} onChange={e => setForm({ ...form, inputFormat: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" /></div>
-                <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Output Format</label><textarea value={form.outputFormat} onChange={e => setForm({ ...form, outputFormat: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" /></div>
-              </div>
-              <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Constraints</label><textarea value={form.constraints} onChange={e => setForm({ ...form, constraints: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="1 <= N <= 10^5" /></div>
-              <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Reference Solution</label><textarea value={form.referenceSolution} onChange={e => setForm({ ...form, referenceSolution: e.target.value })} rows={3} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" /></div>
+
+              {/* SQL-specific form */}
+              {(form.dataset || (form.topic || '').toLowerCase() === 'sql') ? (
+                <>
+                  <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                    <p className="text-xs font-semibold text-blue-700 dark:text-blue-300 mb-1">📊 SQL Question Mode</p>
+                    <p className="text-[10px] text-blue-600 dark:text-blue-400">This question will be solved by writing SQL queries against the dataset table.</p>
+                  </div>
+                  <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Problem Statement * (What should the student query?)</label><textarea value={form.statement} onChange={e => setForm({ ...form, statement: e.target.value })} rows={3} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Write a SQL query to find all employees whose salary is greater than 50000." /></div>
+                  <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Expected SQL Query (Correct Answer)</label><textarea value={form.referenceSolution} onChange={e => setForm({ ...form, referenceSolution: e.target.value })} rows={3} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="SELECT * FROM employees WHERE salary > 50000;" /></div>
+                  <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Expected Output (Result Table - one row per line, comma-separated)</label><textarea value={form.outputFormat} onChange={e => setForm({ ...form, outputFormat: e.target.value })} rows={4} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder={"employee_id, first_name, last_name, department, salary, manager_id\n102, Bob, Smith, IT, 60000, 101\n103, Charlie, Brown, Finance, 55000, 101"} /></div>
+                  <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Hints / Notes (optional)</label><textarea value={form.constraints} onChange={e => setForm({ ...form, constraints: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Use WHERE clause for filtering. Consider using ORDER BY for sorted results." /></div>
+                </>
+              ) : (
+                <>
+                  {/* Regular coding question form */}
+                  <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Problem Statement *</label><textarea value={form.statement} onChange={e => setForm({ ...form, statement: e.target.value })} rows={4} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Describe the problem..." /></div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Input Format</label><textarea value={form.inputFormat} onChange={e => setForm({ ...form, inputFormat: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" /></div>
+                    <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Output Format</label><textarea value={form.outputFormat} onChange={e => setForm({ ...form, outputFormat: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" /></div>
+                  </div>
+                  <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Constraints</label><textarea value={form.constraints} onChange={e => setForm({ ...form, constraints: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="1 <= N <= 10^5" /></div>
+                  <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Reference Solution</label><textarea value={form.referenceSolution} onChange={e => setForm({ ...form, referenceSolution: e.target.value })} rows={3} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" /></div>
+                </>
+              )}
 
               {/* Test Cases */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-semibold text-gray-500">Test Cases ({form.testCases.length})</label>
+                  <label className="text-xs font-semibold text-gray-500">{form.dataset ? 'Test Queries' : 'Test Cases'} ({form.testCases.length})</label>
                   <button onClick={() => setForm({ ...form, testCases: [...form.testCases, { input: '', expectedOutput: '' }] })} className="text-xs px-2 py-1 bg-green-600 text-white rounded font-medium">+ Add</button>
                 </div>
                 {form.testCases.map((tc, i) => (
                   <div key={i} className="grid grid-cols-2 gap-2 mb-2">
-                    <div><label className="text-[9px] text-gray-400">Input</label><textarea value={tc.input} onChange={e => { const tcs = [...form.testCases]; tcs[i].input = e.target.value; setForm({ ...form, testCases: tcs }); }} rows={2} className="w-full px-2 py-1.5 rounded border border-gray-200 dark:border-gray-700 text-xs font-mono bg-white dark:bg-gray-800" placeholder="5\n1 2 3 4 5" /></div>
-                    <div><label className="text-[9px] text-gray-400">Expected Output</label><textarea value={tc.expectedOutput} onChange={e => { const tcs = [...form.testCases]; tcs[i].expectedOutput = e.target.value; setForm({ ...form, testCases: tcs }); }} rows={2} className="w-full px-2 py-1.5 rounded border border-gray-200 dark:border-gray-700 text-xs font-mono bg-white dark:bg-gray-800" placeholder="15" /></div>
+                    <div><label className="text-[9px] text-gray-400">{form.dataset ? 'SQL Query' : 'Input'}</label><textarea value={tc.input} onChange={e => { const tcs = [...form.testCases]; tcs[i].input = e.target.value; setForm({ ...form, testCases: tcs }); }} rows={2} className="w-full px-2 py-1.5 rounded border border-gray-200 dark:border-gray-700 text-xs font-mono bg-white dark:bg-gray-800" placeholder={form.dataset ? "SELECT * FROM employees WHERE salary > 50000;" : "5\n1 2 3 4 5"} /></div>
+                    <div><label className="text-[9px] text-gray-400">{form.dataset ? 'Expected Result' : 'Expected Output'}</label><textarea value={tc.expectedOutput} onChange={e => { const tcs = [...form.testCases]; tcs[i].expectedOutput = e.target.value; setForm({ ...form, testCases: tcs }); }} rows={2} className="w-full px-2 py-1.5 rounded border border-gray-200 dark:border-gray-700 text-xs font-mono bg-white dark:bg-gray-800" placeholder={form.dataset ? "102, Bob, Smith, IT, 60000, 101" : "15"} /></div>
                   </div>
                 ))}
               </div>

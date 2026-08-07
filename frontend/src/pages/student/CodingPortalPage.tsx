@@ -304,6 +304,9 @@ export default function CodingPortalPage() {
           python: `# Write your solution here\n\n`,
           cpp: `#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n    // Write your solution here\n    \n    return 0;\n}\n`,
           java: `import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Write your solution here\n        \n    }\n}\n`,
+          sql: `-- Write your SQL query here\nSELECT * FROM table_name\nWHERE condition;\n`,
+          r: `# Write your R solution here\n\n# Read input\ndata <- read.csv(stdin())\n\n# Your solution\n\n`,
+          'python-ds': `# Python with Pandas & NumPy\nimport pandas as pd\nimport numpy as np\n\n# Write your solution here\n\n`,
         };
         
         setEditorCode(defaultTemplates[selectedLanguage] || defaultTemplates.javascript);
@@ -829,6 +832,9 @@ export default function CodingPortalPage() {
                 <option value="python">Python 3</option>
                 <option value="cpp">C++</option>
                 <option value="java">Java</option>
+                <option value="sql">SQL</option>
+                <option value="r">R</option>
+                <option value="python-ds">Python (Pandas/NumPy)</option>
               </select>
 
               <div className="flex items-center gap-1.5 text-gray-500">
@@ -849,9 +855,11 @@ export default function CodingPortalPage() {
               height="100%"
               theme="vs-dark"
               language={
-                selectedLanguage === 'python' ? 'python' :
+                selectedLanguage === 'python' || selectedLanguage === 'python-ds' ? 'python' :
                 selectedLanguage === 'cpp' ? 'cpp' :
-                selectedLanguage === 'java' ? 'java' : 'javascript'
+                selectedLanguage === 'java' ? 'java' :
+                selectedLanguage === 'sql' ? 'sql' :
+                selectedLanguage === 'r' ? 'r' : 'javascript'
               }
               value={editorCode}
               onChange={(v) => setEditorCode(v || '')}

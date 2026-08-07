@@ -817,6 +817,9 @@ export default function TcsNqtCompilerPage() {
                 <option value="python">Python 3</option>
                 <option value="cpp">C++</option>
                 <option value="java">Java</option>
+                <option value="sql">SQL</option>
+                <option value="r">R</option>
+                <option value="python-ds">Python (Pandas/NumPy)</option>
               </select>
 
               <div className="flex items-center gap-1.5 text-gray-500">
