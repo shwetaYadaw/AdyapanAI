@@ -24,7 +24,9 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
       isActive: true,
     };
 
-    if (courseId) {
+    if (courseId === 'none') {
+      where.courseId = null; // Only global topics
+    } else if (courseId) {
       where.courseId = courseId;
     }
 
