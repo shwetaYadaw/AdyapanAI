@@ -32,7 +32,8 @@ router.get('/topics', async (req, res, next) => {
             include: {
               questions: {
                 where: { isActive: true },
-                select: { id: true },
+                orderBy: { createdAt: 'asc' },
+                select: { id: true, statement: true, difficulty: true, correctOption: true, explanation: true, xpReward: true, options: { select: { optionKey: true, text: true }, orderBy: { optionKey: 'asc' } } },
               },
             },
           },

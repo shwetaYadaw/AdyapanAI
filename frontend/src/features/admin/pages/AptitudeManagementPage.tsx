@@ -176,7 +176,7 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
     setSelectedChapter(chapterId);
     setEditingQuestion(q);
     setQuestionForm({
-      statement: q.statement,
+      statement: q.statement || '',
       difficulty: q.difficulty || 'medium',
       options: q.options?.map((o: any) => ({ optionKey: o.optionKey, text: o.text })) || [
         { optionKey: 'A', text: '' }, { optionKey: 'B', text: '' },
@@ -778,7 +778,7 @@ export default function AptitudeManagementPage({ onBack }: AptitudeManagementPag
                     className="px-4 py-2 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition font-medium">Cancel</button>
                   <button
                     onClick={() => saveQuestionMut.mutate()}
-                    disabled={!questionForm.statement.trim() || questionForm.options.some(o => !o.text.trim()) || saveQuestionMut.isPending}
+                    disabled={!questionForm.statement?.trim() || questionForm.options.some(o => !o.text?.trim()) || saveQuestionMut.isPending}
                     className="px-5 py-2 text-sm bg-primary-600 text-white rounded-xl hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition"
                   >
                     {saveQuestionMut.isPending ? 'Saving...' : editingQuestion ? 'Update Question' : 'Create Question'}
