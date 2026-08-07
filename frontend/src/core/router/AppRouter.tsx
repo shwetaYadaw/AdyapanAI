@@ -36,6 +36,7 @@ const AdminContestsPage = lazy(() => import('../../pages/admin/ContestsPage'));
 const AdminAnalyticsPage = lazy(() => import('../../pages/admin/AnalyticsPage'));
 const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
+const AdminProfilePage  = lazy(() => import('../../pages/admin/ProfilePage'));
 const DualAdminDashboard = lazy(() => import('../../features/admin/pages/AdminDashboard'));
 const AptitudeManagementPage = lazy(() => import('../../features/admin/pages/AptitudeManagementPage'));
 const AptitudeTopicPracticePage = lazy(() => import('../../pages/admin/AptitudeTopicPracticePage'));
@@ -101,6 +102,7 @@ export default function AppRouter() {
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="security" element={<AdminSecurityPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
+            <Route path="profile" element={<AdminProfilePage />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />

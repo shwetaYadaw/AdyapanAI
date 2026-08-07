@@ -68,8 +68,9 @@ router.get('/users', async (req, res, next) => {
     if (req.query.isActive !== undefined) where.isActive = req.query.isActive === 'true';
     if (req.query.search) {
       where.OR = [
-        { firstName: { contains: String(req.query.search) } },
-        { email: { contains: String(req.query.search) } },
+        { firstName: { contains: String(req.query.search), mode: 'insensitive' } },
+        { lastName: { contains: String(req.query.search), mode: 'insensitive' } },
+        { email: { contains: String(req.query.search), mode: 'insensitive' } },
       ];
     }
 
@@ -209,7 +210,7 @@ router.get('/analytics/overview', async (_req, res, next) => {
       Promise.resolve(0),
       Promise.resolve(0),
       Promise.resolve(0),
-      prisma.payment.aggregate({ where: { status: 'completed' }, _sum: { amount: true } }),
+      Promise.resolve({ _sum: { amount: 0 } }),
     ]);
 
     sendSuccess({
@@ -225,26 +226,7 @@ router.get('/analytics/overview', async (_req, res, next) => {
   } catch (err) { next(err); }
 });
 
-// GET /admin/analytics/revenue
-router.get('/analytics/revenue', async (req, res, next) => {
-  try {
-    const days = parseInt(String(req.query.days ?? '30'), 10);
-    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000);
-
-    // Group daily revenue via raw SQL for MySQL
-    const revenueData = await prisma.$queryRaw<{ date: string; revenue: number; count: number }[]>`
-      SELECT DATE_FORMAT(createdAt, '%Y-%m-%d') as date,
-             SUM(amount) as revenue,
-             COUNT(*) as count
-      FROM Payment
-      WHERE status = 'completed' AND createdAt >= ${since}
-      GROUP BY DATE_FORMAT(createdAt, '%Y-%m-%d')
-      ORDER BY date ASC
-    `;
-
-    sendSuccess({ res, data: revenueData });
-  } catch (err) { next(err); }
-});
+router.get("/analytics/revenue", async (_req, res, next) => { try { sendSuccess({ res, data: [] }); } catch (err) { next(err); } });
 
 // POST /admin/enrollments — Enroll a student manually
 router.post('/enrollments', async (req, res, next) => {
@@ -276,7 +258,7 @@ router.post('/enrollments', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
-export default router;
+// (export moved to end of file)
 
 // ─── Extended Analytics Endpoints ──────────────────────────────────────────
 
@@ -397,9 +379,9 @@ router.get('/analytics/students', async (req, res, next) => {
     const where: any = { role: 'student' };
     if (search) {
       where.OR = [
-        { firstName: { contains: String(search) } },
-        { lastName:  { contains: String(search) } },
-        { email:     { contains: String(search) } },
+        { firstName: { contains: String(search), mode: 'insensitive' } },
+        { lastName:  { contains: String(search), mode: 'insensitive' } },
+        { email:     { contains: String(search), mode: 'insensitive' } },
       ];
     }
 
@@ -411,7 +393,7 @@ router.get('/analytics/students', async (req, res, next) => {
           id: true, firstName: true, lastName: true, email: true,
           avatar: true, isActive: true, lastLogin: true, createdAt: true,
           studentProfile: { select: { xp: true, level: true, streak: true } },
-          _count: { select: { submissions: true } },
+          _count: { select: { problemSubmissions: true } },
         },
       }),
       prisma.user.count({ where }),
@@ -427,9 +409,9 @@ router.get('/analytics/students', async (req, res, next) => {
         xp: u.studentProfile?.xp ?? 0,
         level: u.studentProfile?.level ?? 1,
         streak: u.studentProfile?.streak ?? 0,
-        totalSubmissions: u._count.submissions,
+        totalSubmissions: u._count.problemSubmissions,
         acceptedSubmissions: accepted,
-        accuracy: u._count.submissions > 0 ? Math.round((accepted / u._count.submissions) * 100) : 0,
+        accuracy: u._count.problemSubmissions > 0 ? Math.round((accepted / u._count.problemSubmissions) * 100) : 0,
       };
     }));
 
@@ -551,7 +533,7 @@ router.get('/analytics/leaderboard', async (req, res, next) => {
 // GET /admin/analytics/difficulty-distribution
 router.get('/analytics/difficulty-distribution', async (_req, res, next) => {
   try {
-    const problems = await prisma.problem.findMany({ select: { difficulty: true } });
+    const problems = await prisma.problem.findMany({ where: { isArchived: false }, select: { difficulty: true } });
     const questions = await prisma.tcsNqtQuestion.findMany({ select: { difficulty: true } });
 
     const count = (arr: { difficulty: string }[]) => {
@@ -563,3 +545,100 @@ router.get('/analytics/difficulty-distribution', async (_req, res, next) => {
     sendSuccess({ res, data: { codingArena: count(problems), challenges: count(questions) } });
   } catch (err) { next(err); }
 });
+
+// GET /admin/analytics/students-list
+router.get('/analytics/students-list', async (_req, res, next) => {
+  try {
+    const students = await prisma.user.findMany({
+      where: { role: 'student' },
+      select: { id: true, firstName: true, lastName: true, email: true, isActive: true, lastLogin: true, createdAt: true },
+      orderBy: { createdAt: 'desc' },
+    });
+    sendSuccess({ res, data: students });
+  } catch (err) { next(err); }
+});
+
+// GET /admin/analytics/active-students
+router.get('/analytics/active-students', async (_req, res, next) => {
+  try {
+    const sevenAgo = new Date(Date.now() - 7 * 86400000);
+    const students = await prisma.user.findMany({
+      where: { role: 'student', isActive: true, lastLogin: { gte: sevenAgo } },
+      select: { id: true, firstName: true, lastName: true, email: true, lastLogin: true },
+      orderBy: { lastLogin: 'desc' },
+    });
+    sendSuccess({ res, data: students });
+  } catch (err) { next(err); }
+});
+
+// GET /admin/analytics/problems-breakdown
+router.get('/analytics/problems-breakdown', async (req, res, next) => {
+  try {
+    const courseId = req.query.courseId as string | undefined;
+    const where: any = { isArchived: false };
+    if (courseId === 'global') where.courseId = null;
+    else if (courseId) where.courseId = courseId;
+
+    const problems = await prisma.problem.findMany({ where, select: { topics: true, difficulty: true } });
+    const topicMap: Record<string, { topic: string; total: number; easy: number; medium: number; hard: number }> = {};
+    for (const p of problems) {
+      const topic = p.topics?.trim() || 'Uncategorized';
+      if (!topicMap[topic]) topicMap[topic] = { topic, total: 0, easy: 0, medium: 0, hard: 0 };
+      topicMap[topic].total++;
+      const diff = (p.difficulty || '').toLowerCase();
+      if (diff === 'easy') topicMap[topic].easy++;
+      else if (diff === 'medium') topicMap[topic].medium++;
+      else if (diff === 'hard') topicMap[topic].hard++;
+    }
+    sendSuccess({ res, data: Object.values(topicMap).sort((a, b) => b.total - a.total) });
+  } catch (err) { next(err); }
+});
+
+// GET /admin/analytics/courses-with-problems
+router.get('/analytics/courses-with-problems', async (_req, res, next) => {
+  try {
+    const results = await prisma.problem.groupBy({ by: ['courseId'], where: { isArchived: false }, _count: true });
+    const courses = results.map(r => ({
+      courseId: r.courseId || 'global',
+      label: r.courseId ? r.courseId.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'DSA (Global)',
+      count: r._count,
+    })).sort((a, b) => b.count - a.count);
+    sendSuccess({ res, data: courses });
+  } catch (err) { next(err); }
+});
+
+// GET /admin/analytics/aptitude-breakdown
+router.get('/analytics/aptitude-breakdown', async (_req, res, next) => {
+  try {
+    const topics = await prisma.aptitudeTopic.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true, chapters: { select: { id: true, name: true, _count: { select: { questions: true } } } } },
+      orderBy: { order: 'asc' },
+    });
+    const breakdown = topics.map(t => ({
+      topic: t.name,
+      total: t.chapters.reduce((sum, ch) => sum + ch._count.questions, 0),
+      chapters: t.chapters.map(ch => ({ name: ch.name, count: ch._count.questions })),
+    })).sort((a, b) => b.total - a.total);
+    sendSuccess({ res, data: breakdown });
+  } catch (err) { next(err); }
+});
+
+// GET /admin/analytics/student-submissions?userId=xxx
+router.get('/analytics/student-submissions', async (req, res, next) => {
+  try {
+    const userId = req.query.userId as string | undefined;
+    if (!userId) throw new AppError('userId is required', 400);
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, firstName: true, lastName: true, email: true } });
+    if (!user) throw new AppError('User not found', 404);
+    const sevenAgo = new Date(Date.now() - 7 * 86400000);
+    const [total, accepted, thisWeek] = await Promise.all([
+      prisma.problemSubmission.count({ where: { userId } }),
+      prisma.problemSubmission.count({ where: { userId, status: 'accepted' } }),
+      prisma.problemSubmission.count({ where: { userId, createdAt: { gte: sevenAgo } } }),
+    ]);
+    sendSuccess({ res, data: { student: user, total, accepted, rejected: total - accepted, thisWeek, acceptanceRate: total > 0 ? +((accepted / total) * 100).toFixed(1) : 0 } });
+  } catch (err) { next(err); }
+});
+
+export default router;

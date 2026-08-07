@@ -131,8 +131,8 @@ export default function StudentDashboard() {
         </motion.div>
 
         {/* COL 2 TOP — Weekly Goal */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}>
-          <Card padding="md">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="h-full">
+          <Card padding="md" className="h-full">
             <div className="flex items-center justify-between mb-3">
               <h3 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2"><Target className="w-4 h-4 text-primary-500" /> Weekly Goal</h3>
               <button onClick={() => setEditingGoal(e => !e)} className="text-xs text-primary-500 font-semibold">{editingGoal ? 'Cancel' : 'Edit'}</button>
@@ -165,8 +165,8 @@ export default function StudentDashboard() {
         </motion.div>
 
         {/* COL 3 TOP — My Progress */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <Card padding="md">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="h-full">
+          <Card padding="md" className="h-full">
             <h3 className="font-semibold text-sm text-gray-900 dark:text-white flex items-center gap-2 mb-3"><TrendingUp className="w-4 h-4 text-primary-500" /> My Progress</h3>
             <div className="space-y-3">
               {[
