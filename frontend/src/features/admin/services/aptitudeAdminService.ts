@@ -176,11 +176,10 @@ class AptitudeAdminService {
   async getQuestions(
     topicId: string,
     chapterId: string,
-    page = 1,
-    limit = 20
+    params?: { page?: number; limit?: number; search?: string; difficulty?: string }
   ): Promise<{ questions: AptitudeQuestion[]; pagination: any }> {
     const { data } = await this.api.get(`/topics/${topicId}/chapters/${chapterId}/questions`, {
-      params: { page, limit },
+      params: { limit: 20, ...params },
     });
     return {
       questions: data.data || [],
