@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Edit2, ArrowLeft, Tag, X, ChevronDown, ChevronUp, Search } from 'lucide-react';
+import { Plus, Trash2, Edit2, ArrowLeft, Tag, X, ChevronDown, ChevronUp, Search, Database } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { api } from '../../../core/services/api';
 
 interface TestCase {
   input: string;
   expectedOutput: string;
+}
+
+interface Dataset {
+  id: string;
+  name: string;
+  description: string;
+  tableName: string;
+  columns: string;
+  sampleData: string;
+  questionLimit: number;
 }
 
 interface CourseProblem {
@@ -18,6 +28,7 @@ interface CourseProblem {
   constraints: string;
   referenceSolution: string;
   topic: string;
+  dataset?: string; // dataset ID or name
   testCases: TestCase[];
 }
 
@@ -33,6 +44,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [showTopicModal, setShowTopicModal] = useState(false);
+  const [showDatasetModal, setShowDatasetModal] = useState(false);
   const [newTopic, setNewTopic] = useState('');
   const [editingProblem, setEditingProblem] = useState<CourseProblem | null>(null);
   const [search, setSearch] = useState('');
@@ -41,13 +53,17 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const [currentPage, setCurrentPage] = useState(1);
   const perPage = 20;
 
+  // Dataset management
+  const [datasets, setDatasets] = useState<Dataset[]>([]);
+  const [datasetForm, setDatasetForm] = useState({ name: '', description: '', tableName: '', columns: '', sampleData: '' });
+
   const [form, setForm] = useState<CourseProblem>({
     title: '', difficulty: 'easy', statement: '', inputFormat: '', outputFormat: '',
     constraints: '', referenceSolution: '', topic: '',
     testCases: [{ input: '', expectedOutput: '' }],
   });
 
-  useEffect(() => { fetchProblems(); fetchTopics(); }, [courseId]);
+  useEffect(() => { fetchProblems(); fetchTopics(); fetchDatasets(); }, [courseId]);
 
   const fetchProblems = async () => {
     try {
@@ -64,6 +80,40 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
       const { data } = await api.get(`/admin/topics?system=coding-arena&courseId=${courseId}`);
       setTopics((data.data || []).map((t: any) => t.name));
     } catch { setTopics([]); }
+  };
+
+  // Datasets are stored in localStorage per course (simple approach without new DB model)
+  const fetchDatasets = () => {
+    const stored = localStorage.getItem(`datasets_${courseId}`);
+    setDatasets(stored ? JSON.parse(stored) : []);
+  };
+
+  const saveDataset = () => {
+    if (!datasetForm.name || !datasetForm.tableName || !datasetForm.columns) {
+      toast.error('Name, table name, and columns are required');
+      return;
+    }
+    const newDataset: Dataset = {
+      id: Date.now().toString(),
+      name: datasetForm.name,
+      description: datasetForm.description,
+      tableName: datasetForm.tableName,
+      columns: datasetForm.columns,
+      sampleData: datasetForm.sampleData,
+      questionLimit: parseInt((datasetForm as any).questionLimit) || 20,
+    };
+    const updated = [...datasets, newDataset];
+    setDatasets(updated);
+    localStorage.setItem(`datasets_${courseId}`, JSON.stringify(updated));
+    setDatasetForm({ name: '', description: '', tableName: '', columns: '', sampleData: '' });
+    toast.success('Dataset created!', { position: 'top-center' });
+  };
+
+  const deleteDataset = (id: string) => {
+    const updated = datasets.filter(d => d.id !== id);
+    setDatasets(updated);
+    localStorage.setItem(`datasets_${courseId}`, JSON.stringify(updated));
+    toast.success('Dataset deleted!', { position: 'top-center' });
   };
 
   const handleAddTopic = async () => {
@@ -136,9 +186,12 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-extrabold text-white">{courseName} - Coding Arena</h1>
-              <p className="text-cyan-100 text-sm mt-1">Manage coding problems for {courseName} students</p>
+              <p className="text-cyan-100 text-sm mt-1">Manage coding problems for {courseName} students · <strong>{problems.length} Questions</strong> added</p>
             </div>
             <div className="flex gap-3">
+              <button onClick={() => setShowDatasetModal(true)} className="flex items-center gap-2 px-4 py-2 bg-white/20 border border-white/30 text-white rounded-xl hover:bg-white/30 transition font-medium text-sm">
+                <Database size={16} /> Datasets ({datasets.length})
+              </button>
               <button onClick={() => setShowTopicModal(true)} className="flex items-center gap-2 px-5 py-2.5 bg-white/20 border-2 border-white/40 text-white rounded-xl hover:bg-white/30 transition font-semibold text-sm">
                 <Tag size={18} /> Add / Manage Topics ({topics.length})
               </button>
@@ -151,17 +204,31 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-6">
-        {/* Topics Display */}
+        {/* Total Questions Count */}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-900 dark:text-white">Total Questions: {problems.length}</h2>
+        </div>
+
+        {/* Topics as Cards */}
         {topics.length > 0 && (
-          <div className="mb-6 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Topics:</span>
-            {topics.map(t => (
-              <span key={t} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-full text-xs font-medium border border-blue-200 dark:border-blue-800">
-                {t}
-                <button onClick={() => handleDeleteTopic(t)} className="text-blue-400 hover:text-red-500 transition" title="Delete topic">×</button>
-              </span>
-            ))}
-            <button onClick={() => setShowTopicModal(true)} className="px-3 py-1.5 text-xs text-blue-600 hover:bg-blue-50 rounded-full border border-dashed border-blue-300 font-medium">+ Add More</button>
+          <div className="mb-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            {topics.map(t => {
+              const count = problems.filter((p: any) => (p.topics || p.topic || '').toLowerCase().includes(t.toLowerCase())).length;
+              return (
+                <button
+                  key={t}
+                  onClick={() => setTopicFilter(topicFilter === t ? '' : t)}
+                  className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    topicFilter === t
+                      ? 'bg-blue-50 dark:bg-blue-950/40 border-blue-500 shadow-md'
+                      : 'bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700 hover:border-blue-300 hover:shadow-sm'
+                  }`}
+                >
+                  <p className={`font-semibold text-sm ${topicFilter === t ? 'text-blue-700 dark:text-blue-300' : 'text-gray-900 dark:text-white'}`}>{t}</p>
+                  <p className={`text-xs mt-1 ${topicFilter === t ? 'text-blue-500' : 'text-gray-400'}`}>{count} {count === 1 ? 'Question' : 'Questions'}</p>
+                </button>
+              );
+            })}
           </div>
         )}
 
@@ -268,6 +335,9 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
                 <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Difficulty</label><select value={form.difficulty} onChange={e => setForm({ ...form, difficulty: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div>
               </div>
               <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Topic</label><select value={form.topic} onChange={e => setForm({ ...form, topic: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"><option value="">-- No Topic --</option>{topics.map(t => <option key={t} value={t}>{t}</option>)}</select></div>
+              {datasets.length > 0 && (
+                <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Dataset (for SQL questions)</label><select value={form.dataset || ''} onChange={e => setForm({ ...form, dataset: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"><option value="">-- No Dataset --</option>{datasets.map(d => <option key={d.id} value={d.name}>{d.name} ({d.tableName})</option>)}</select></div>
+              )}
               <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Problem Statement *</label><textarea value={form.statement} onChange={e => setForm({ ...form, statement: e.target.value })} rows={4} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Describe the problem..." /></div>
               <div className="grid grid-cols-2 gap-3">
                 <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Input Format</label><textarea value={form.inputFormat} onChange={e => setForm({ ...form, inputFormat: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" /></div>
@@ -301,6 +371,56 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
           </div>
         )}
       </div>
+
+      {/* Dataset Management Modal */}
+      {showDatasetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-lg shadow-2xl my-8">
+            <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="font-bold text-lg flex items-center gap-2"><Database size={20} className="text-blue-500" /> Manage Datasets</h2>
+              <button onClick={() => setShowDatasetModal(false)}><X size={20} className="text-gray-400" /></button>
+            </div>
+            <div className="p-5 space-y-4">
+              {/* Create Dataset Form */}
+              <div className="space-y-3 pb-4 border-b border-gray-200 dark:border-gray-700">
+                <p className="text-xs font-semibold text-gray-500 uppercase">Create New Dataset</p>
+                <input value={datasetForm.name} onChange={e => setDatasetForm({ ...datasetForm, name: e.target.value })} placeholder="Dataset name (e.g., Employee Database)" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input value={datasetForm.tableName} onChange={e => setDatasetForm({ ...datasetForm, tableName: e.target.value })} placeholder="Table name (e.g., employees)" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+                <input value={datasetForm.columns} onChange={e => setDatasetForm({ ...datasetForm, columns: e.target.value })} placeholder="Columns (comma-separated): id, name, salary, department" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+                <textarea value={datasetForm.sampleData} onChange={e => setDatasetForm({ ...datasetForm, sampleData: e.target.value })} placeholder={"Sample data (one row per line):\n1, John, 50000, Engineering\n2, Jane, 60000, Marketing\n3, Bob, 45000, Engineering"} rows={4} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-[10px] text-gray-500 mb-1 block">Questions Limit (how many Qs use this dataset)</label>
+                    <input type="number" min={1} value={(datasetForm as any).questionLimit || 20} onChange={e => setDatasetForm({ ...datasetForm, questionLimit: e.target.value } as any)} placeholder="20" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                  </div>
+                  <div>
+                    <label className="text-[10px] text-gray-500 mb-1 block">Description (optional)</label>
+                    <input value={datasetForm.description} onChange={e => setDatasetForm({ ...datasetForm, description: e.target.value })} placeholder="Brief description..." className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                  </div>
+                </div>
+                <button onClick={saveDataset} className="w-full py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700">+ Create Dataset</button>
+              </div>
+
+              {/* Existing Datasets */}
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {datasets.length === 0 ? <p className="text-center text-gray-400 text-sm py-4">No datasets yet. Create one above.</p> :
+                datasets.map(d => (
+                  <div key={d.id} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-semibold text-sm text-gray-900 dark:text-white">{d.name}</span>
+                      <button onClick={() => deleteDataset(d.id)} className="p-1 text-red-500 hover:bg-red-50 rounded"><Trash2 size={14} /></button>
+                    </div>
+                    <p className="text-[10px] text-gray-500 font-mono">Table: {d.tableName} | Columns: {d.columns}</p>
+                    <p className="text-[10px] text-blue-600 font-semibold mt-0.5">Limit: {d.questionLimit} questions</p>
+                    {d.description && <p className="text-[10px] text-gray-400 mt-0.5">{d.description}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="p-4 border-t"><button onClick={() => setShowDatasetModal(false)} className="w-full py-2 bg-gray-100 dark:bg-gray-800 rounded-lg font-medium text-sm">Done</button></div>
+          </div>
+        </div>
+      )}
 
       {/* Topic Management Modal */}
       {showTopicModal && (

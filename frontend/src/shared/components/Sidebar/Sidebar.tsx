@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+﻿import { useCallback, useEffect, useRef } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx } from 'clsx';
 import {
@@ -87,7 +87,7 @@ export default function Sidebar() {
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-            className="md:hidden fixed inset-y-0 left-0 z-50 w-72 flex flex-col h-full bg-gray-900 shadow-2xl shadow-black/40 overflow-hidden"
+            className="md:hidden fixed inset-y-0 left-0 z-50 w-72 flex flex-col h-full bg-white dark:bg-gray-900 shadow-2xl shadow-black/10 dark:shadow-black/40 overflow-hidden border-r border-gray-200 dark:border-gray-800"
           >
             {/* Logo Header */}
             <div className="flex items-center justify-between px-5 h-16 border-b border-gray-800/50">
@@ -99,7 +99,7 @@ export default function Sidebar() {
               </div>
               <button
                 onClick={closeMobileSidebar}
-                className="p-2 rounded-xl text-gray-500 hover:bg-gray-800 hover:text-white transition-colors"
+                className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5" />
@@ -118,7 +118,7 @@ export default function Sidebar() {
                       'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
                       isActive
                         ? 'bg-primary-600/20 text-primary-400 border border-primary-600/30'
-                        : 'text-gray-400 hover:bg-gray-800/60 hover:text-white'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-white'
                     )
                   }
                 >
@@ -146,7 +146,7 @@ export default function Sidebar() {
         initial={false}
         animate={{ width: sidebarOpen ? 240 : 72 }}
         transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-        className="hidden md:flex flex-col h-full bg-gray-900 overflow-hidden flex-shrink-0 relative"
+        className="hidden md:flex flex-col h-full bg-white dark:bg-gray-900 overflow-hidden flex-shrink-0 relative border-r border-gray-200 dark:border-gray-800"
       >
         {/* Logo area */}
         {sidebarOpen && (
@@ -171,7 +171,7 @@ export default function Sidebar() {
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group',
                   isActive
                     ? 'bg-primary-600/20 text-primary-400 border border-primary-600/30 shadow-sm'
-                    : 'text-gray-400 hover:bg-gray-800/60 hover:text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800/60 hover:text-gray-900 dark:hover:text-white'
                 )
               }
               title={!sidebarOpen ? item.label : undefined}
@@ -199,3 +199,5 @@ export default function Sidebar() {
     </>
   );
 }
+
+

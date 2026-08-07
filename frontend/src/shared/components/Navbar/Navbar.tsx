@@ -101,7 +101,7 @@ export default function Navbar() {
   const dashboardPath = user ? (DASHBOARD_LINKS[user.role] ?? '/') : '/';
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-brand-cream dark:bg-gray-900 shadow-sm border-b border-primary-100/50 dark:border-gray-800">
+    <header className="sticky top-0 z-40 w-full bg-brand-cream dark:bg-gray-900 shadow-sm dark:border-b dark:border-gray-800">
       <div className="px-4 sm:px-6 lg:px-8 w-full">
         <div className="flex items-center justify-between h-16">
 
