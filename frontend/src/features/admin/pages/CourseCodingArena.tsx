@@ -254,14 +254,15 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
         )}
           </>); })()}
 
-        {/* Add/Edit Problem Form */}
+        {/* Add/Edit Problem Modal */}
         {showAddForm && (
-          <div className="mt-6 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-lg text-gray-900 dark:text-white">{editingProblem ? 'Edit Problem' : 'Add New Problem'}</h2>
-              <button onClick={resetForm} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
-            </div>
-            <div className="space-y-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 overflow-y-auto">
+            <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-2xl shadow-2xl border border-gray-200 dark:border-gray-800 my-8 max-h-[90vh] flex flex-col">
+              <div className="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700 shrink-0">
+                <h2 className="font-bold text-lg text-gray-900 dark:text-white">{editingProblem ? 'Edit Problem' : 'Add New Problem'}</h2>
+                <button onClick={resetForm} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
+              </div>
+              <div className="p-5 space-y-4 overflow-y-auto flex-1">
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-2"><label className="text-xs font-semibold text-gray-500 mb-1 block">Title *</label><input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g., Two Sum" /></div>
                 <div><label className="text-xs font-semibold text-gray-500 mb-1 block">Difficulty</label><select value={form.difficulty} onChange={e => setForm({ ...form, difficulty: e.target.value })} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 outline-none"><option value="easy">Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div>
@@ -296,6 +297,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
                 </button>
               </div>
             </div>
+          </div>
           </div>
         )}
       </div>

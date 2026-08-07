@@ -70,11 +70,11 @@ class AptitudeAdminService {
   /**
    * Get all topics
    */
-  async getTopics(page = 1, limit = 20): Promise<{ topics: AptitudeTopic[]; pagination: any }> {
-    const { data } = await this.api.get('/topics', { params: { page, limit } });
+  async getTopics(params?: { page?: number; limit?: number; section?: string }): Promise<{ topics: AptitudeTopic[]; pagination: any }> {
+    const { data } = await this.api.get('/topics', { params: { limit: 200, ...params } });
     return {
-      topics: data.data || [],
-      pagination: data.pagination || { total: 0, page, limit },
+      topics: (data.data || []) as AptitudeTopic[],
+      pagination: data.pagination || { total: 0, page: 1, limit: 200 },
     };
   }
 
@@ -89,7 +89,7 @@ class AptitudeAdminService {
   /**
    * Create new topic
    */
-  async createTopic(topic: { name: string; description?: string; icon?: string; order?: number }): Promise<AptitudeTopic> {
+  async createTopic(topic: { name: string; section: string; description?: string; icon?: string; order?: number }): Promise<AptitudeTopic> {
     const { data } = await this.api.post('/topics', topic);
     return data.data;
   }
@@ -176,11 +176,10 @@ class AptitudeAdminService {
   async getQuestions(
     topicId: string,
     chapterId: string,
-    page = 1,
-    limit = 20
+    params?: { page?: number; limit?: number; search?: string; difficulty?: string }
   ): Promise<{ questions: AptitudeQuestion[]; pagination: any }> {
     const { data } = await this.api.get(`/topics/${topicId}/chapters/${chapterId}/questions`, {
-      params: { page, limit },
+      params: { limit: 20, ...params },
     });
     return {
       questions: data.data || [],

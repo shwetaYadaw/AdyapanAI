@@ -264,6 +264,7 @@ model AptitudeAdminQuestion {
 model AptitudeTopic {
   id          String                @id @default(uuid())
   name        String                @unique
+  section     String                @default("Numerical Ability") // "Verbal Ability" | "Numerical Ability" | "Logical Reasoning"
   description String?               @db.Text
   icon        String?
   order       Int                   @default(0)
@@ -273,6 +274,8 @@ model AptitudeTopic {
   createdAt   DateTime              @default(now())
 
   chapters    AptitudeChapter[]
+
+  @@index([section])
 }
 
 model AptitudeChapter {
@@ -301,6 +304,12 @@ model AptitudeQuestion {
   difficulty     String                @default("medium")
   correctOption  String                // "A" | "B" | "C" | "D"
   explanation    String?               @db.Text
+  stepSolution   String?               @db.Text
+  formula        String?               @db.Text
+  hints          String?               @db.Text
+  questionType   String                @default("MCQ")
+  imageUrl       String?
+  tags           String?
   xpReward       Int                   @default(10)
   companies      String?
   timeLimit      Int                   @default(30)

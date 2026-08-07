@@ -18,7 +18,9 @@ router.use(authenticate, authorize('admin'));
 router.get('/topics', async (req, res, next) => {
   try {
     const { page, limit, skip } = getPaginationParams(req.query as Record<string, unknown>);
+    const { section } = req.query;
     const where: any = { isActive: true };
+    if (section) where.section = section;
 
     const [topics, total] = await Promise.all([
       prisma.aptitudeTopic.findMany({
@@ -30,25 +32,26 @@ router.get('/topics', async (req, res, next) => {
             include: {
               questions: {
                 where: { isActive: true },
-                orderBy: { createdAt: 'desc' },
-                include: {
-                  options: { orderBy: { order: 'asc' } },
-                },
+                select: { id: true },
               },
             },
           },
         },
-        orderBy: { order: 'asc' },
+        orderBy: [{ section: 'asc' }, { order: 'asc' }, { name: 'asc' }],
         skip,
         take: limit,
       }),
       prisma.aptitudeTopic.count({ where }),
     ]);
 
-    sendPaginated({ res, data: topics, total, page, limit });
-  } catch (err) {
-    next(err);
-  }
+    // Attach questionCount to each topic
+    const enriched = topics.map((t) => ({
+      ...t,
+      questionCount: t.chapters.reduce((sum, ch) => sum + ch.questions.length, 0),
+    }));
+
+    sendPaginated({ res, data: enriched, total, page, limit });
+  } catch (err) { next(err); }
 });
 
 // GET /admin/aptitude/topics/:topicId - Get specific topic with chapters
@@ -83,10 +86,13 @@ router.get('/topics/:topicId', async (req, res, next) => {
 // POST /admin/aptitude/topics - Create new topic
 router.post('/topics', async (req, res, next) => {
   try {
-    const { name, description, icon, order } = req.body;
+    const { name, section, description, icon, order } = req.body;
 
     if (!name) {
       throw new AppError('Topic name is required', 400);
+    }
+    if (!section) {
+      throw new AppError('Section is required', 400);
     }
 
     // Check if topic already exists
@@ -98,6 +104,7 @@ router.post('/topics', async (req, res, next) => {
     const topic = await prisma.aptitudeTopic.create({
       data: {
         name,
+        section,
         description: description || null,
         icon: icon || null,
         order: order || 0,
@@ -114,7 +121,7 @@ router.post('/topics', async (req, res, next) => {
 // PUT /admin/aptitude/topics/:topicId - Update topic
 router.put('/topics/:topicId', async (req, res, next) => {
   try {
-    const { name, description, icon, order, isActive } = req.body;
+    const { name, section, description, icon, order, isActive } = req.body;
 
     const topic = await prisma.aptitudeTopic.findUnique({
       where: { id: req.params.topicId },
@@ -136,6 +143,7 @@ router.put('/topics/:topicId', async (req, res, next) => {
       where: { id: req.params.topicId },
       data: {
         name: name || topic.name,
+        section: section || topic.section,
         description: description !== undefined ? description : topic.description,
         icon: icon !== undefined ? icon : topic.icon,
         order: order !== undefined ? order : topic.order,
@@ -168,7 +176,7 @@ router.delete('/topics/:topicId', async (req, res, next) => {
     res.setHeader('X-Cache-Invalidate', 'aptitude-topics');
     res.setHeader('X-Entity-ID', req.params.topicId);
 
-    sendSuccess({ res, statusCode: 204, message: 'Topic deleted successfully' });
+    sendSuccess({ res, statusCode: 200, message: 'Topic deleted successfully' });
   } catch (err) {
     next(err);
   }

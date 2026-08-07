@@ -38,6 +38,8 @@ const AdminSecurityPage  = lazy(() => import('../../pages/admin/SecurityPage'));
 const AdminSettingsPage  = lazy(() => import('../../pages/admin/SettingsPage'));
 const DualAdminDashboard = lazy(() => import('../../features/admin/pages/AdminDashboard'));
 const AptitudeManagementPage = lazy(() => import('../../features/admin/pages/AptitudeManagementPage'));
+const AptitudeTopicPracticePage = lazy(() => import('../../pages/admin/AptitudeTopicPracticePage'));
+const AptitudeQuestionsPage = lazy(() => import('../../pages/admin/AptitudeQuestionsPage'));
 
 // Public
 const CertVerifyPage     = lazy(() => import('../../pages/public/CertificateVerifyPage'));
@@ -94,6 +96,8 @@ export default function AppRouter() {
             <Route path="contests" element={<AdminContestsPage />} />
             <Route path="problems" element={<AdminProblemsPage />} />
             <Route path="aptitude" element={<AptitudeManagementPage />} />
+            <Route path="aptitude/topics/:topicId/practice" element={<AptitudeTopicPracticePage />} />
+            <Route path="aptitude/topics/:topicId/questions" element={<AptitudeQuestionsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="security" element={<AdminSecurityPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />
