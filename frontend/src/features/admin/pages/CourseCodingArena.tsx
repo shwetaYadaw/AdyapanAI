@@ -258,12 +258,50 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
             <>
             <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-5 mb-4">
               <h3 className="font-semibold text-sm mb-3 flex items-center gap-2"><Database size={16} className="text-blue-500" /> Add New Dataset for {selectedTopicView}</h3>
-              <div className="grid grid-cols-2 gap-3 mb-3">
-                <input value={datasetForm.name} onChange={e => setDatasetForm({ ...datasetForm, name: e.target.value })} placeholder="Dataset name (e.g., Employees Table)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
-                <input value={datasetForm.tableName} onChange={e => setDatasetForm({ ...datasetForm, tableName: e.target.value })} placeholder="Table name (e.g., employees)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
-              </div>
-              <input value={datasetForm.columns} onChange={e => setDatasetForm({ ...datasetForm, columns: e.target.value })} placeholder="Columns: employee_id, first_name, last_name, department, salary, manager_id" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
-              <textarea value={datasetForm.sampleData} onChange={e => setDatasetForm({ ...datasetForm, sampleData: e.target.value })} placeholder={"Sample rows (one per line):\n101, Alice, Johnson, HR, 45000, NULL\n102, Bob, Smith, IT, 60000, 101\n103, Charlie, Brown, Finance, 55000, 101"} rows={4} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
+              
+              {selectedTopicView.toLowerCase() === 'sql' ? (
+                <>
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <input value={datasetForm.name} onChange={e => setDatasetForm({ ...datasetForm, name: e.target.value })} placeholder="Dataset name (e.g., Employees Table)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                    <input value={datasetForm.tableName} onChange={e => setDatasetForm({ ...datasetForm, tableName: e.target.value })} placeholder="Table name (e.g., employees)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+                  </div>
+                  <input value={datasetForm.columns} onChange={e => setDatasetForm({ ...datasetForm, columns: e.target.value })} placeholder="Columns: employee_id, first_name, last_name, department, salary, manager_id" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
+                  <textarea value={datasetForm.sampleData} onChange={e => setDatasetForm({ ...datasetForm, sampleData: e.target.value })} placeholder={"Sample rows (one per line):\n101, Alice, Johnson, HR, 45000, NULL\n102, Bob, Smith, IT, 60000, 101\n103, Charlie, Brown, Finance, 55000, 101"} rows={5} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
+                </>
+              ) : (
+                <>
+                  <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-3 mb-3">
+                    <p className="text-xs font-semibold text-green-700 dark:text-green-300">📁 CSV Format — Upload or paste your dataset</p>
+                    <p className="text-[10px] text-green-600 dark:text-green-400">Students will load this using pd.read_csv() / np.loadtxt() / read.csv()</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <input value={datasetForm.name} onChange={e => setDatasetForm({ ...datasetForm, name: e.target.value })} placeholder="Dataset name (e.g., Sales Data)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
+                    <input value={datasetForm.tableName} onChange={e => setDatasetForm({ ...datasetForm, tableName: e.target.value })} placeholder="File name (e.g., sales_data.csv)" className="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none" />
+                  </div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <label className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold cursor-pointer hover:bg-green-700 transition">
+                      📤 Import CSV File
+                      <input type="file" accept=".csv,.xlsx,.xls" className="hidden" onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                          const content = ev.target?.result as string;
+                          const lines = content.trim().split('\n');
+                          if (lines.length > 0) {
+                            setDatasetForm({ ...datasetForm, columns: lines[0], sampleData: lines.slice(1).join('\n'), tableName: datasetForm.tableName || file.name } as any);
+                            toast.success(`Loaded ${lines.length - 1} rows from ${file.name}`, { position: 'top-center' });
+                          }
+                        };
+                        reader.readAsText(file);
+                      }} />
+                    </label>
+                    <span className="text-xs text-gray-400">or paste CSV data below</span>
+                  </div>
+                  <input value={datasetForm.columns} onChange={e => setDatasetForm({ ...datasetForm, columns: e.target.value })} placeholder="CSV Header: id,name,age,city,salary,department" className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
+                  <textarea value={datasetForm.sampleData} onChange={e => setDatasetForm({ ...datasetForm, sampleData: e.target.value })} placeholder={"CSV Data rows:\n1,Alice,25,Mumbai,50000,Engineering\n2,Bob,30,Delhi,60000,Marketing\n3,Charlie,28,Bangalore,55000,Engineering"} rows={6} className="w-full px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-mono focus:ring-2 focus:ring-blue-500 outline-none mb-3" />
+                </>
+              )}
               <div className="flex items-center gap-3">
                 <input type="number" min={1} value={(datasetForm as any).questionLimit || 20} onChange={e => setDatasetForm({ ...datasetForm, questionLimit: e.target.value } as any)} className="w-32 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm focus:ring-2 focus:ring-blue-500 outline-none" />
                 <span className="text-xs text-gray-500">questions will use this dataset</span>
