@@ -83,9 +83,21 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
     } catch { setTopics([]); }
   };
 
-  // Datasets are stored in localStorage per course (simple approach without new DB model)
+  // Datasets are stored in localStorage per course
   const fetchDatasets = () => {
-    const stored = localStorage.getItem(`datasets_${courseId}`);
+    const key = `datasets_${courseId}`;
+    let stored = localStorage.getItem(key);
+    
+    // Auto-seed datasets for data-science SQL if empty
+    if (!stored && courseId === 'data-science') {
+      const seed = [
+        { id: 'ds1', name: 'Employees Table', topic: 'SQL', tableName: 'employees', columns: 'employee_id INT PRIMARY KEY, first_name VARCHAR(100), last_name VARCHAR(100), department VARCHAR(50), salary INT, manager_id INT', sampleData: '101, Alice, Johnson, HR, 45000, NULL\n102, Bob, Smith, IT, 60000, 101\n103, Charlie, Brown, Finance, 55000, 101\n104, Diana, Williams, IT, 65000, 101\n105, Eve, Davis, HR, 48000, NULL\n106, Frank, Miller, Finance, 52000, 103\n107, Grace, Wilson, IT, 70000, 102\n108, Henry, Moore, HR, 47000, 105\n109, Ivy, Taylor, Finance, 58000, 103\n110, Jack, Anderson, IT, 62000, 102\n111, Kate, Thomas, HR, 46000, 105\n112, Leo, Jackson, Finance, 54000, 103\n113, Mia, White, IT, 68000, 107\n114, Noah, Harris, HR, 49000, 105\n115, Olivia, Martin, Finance, 51000, 103', questionLimit: 20 },
+        { id: 'ds2', name: 'Online Retail Store Dataset', topic: 'SQL', tableName: 'orders', columns: 'order_id INT PRIMARY KEY, customer_name VARCHAR(100), product_name VARCHAR(100), category VARCHAR(50), quantity INT, price DECIMAL(10,2), order_date DATE, city VARCHAR(50), payment_method VARCHAR(30)', sampleData: '1001, Alice, Laptop, Electronics, 1, 45000, 2024-01-15, Mumbai, Credit Card\n1002, Bob, Mouse, Electronics, 2, 500, 2024-01-16, Delhi, UPI\n1003, Charlie, Office Chair, Furniture, 1, 8000, 2024-01-17, Bangalore, Debit Card\n1004, David, Keyboard, Electronics, 1, 1500, 2024-01-18, Chennai, UPI\n1005, Emma, Sofa, Furniture, 1, 25000, 2024-01-19, Mumbai, Credit Card\n1006, Frank, Monitor, Electronics, 1, 12000, 2024-01-20, Delhi, Net Banking\n1007, Grace, Desk Lamp, Home, 2, 800, 2024-01-21, Pune, UPI\n1008, Henry, Headphones, Electronics, 1, 2000, 2024-01-22, Bangalore, Credit Card\n1009, Ivy, Bookshelf, Furniture, 1, 5000, 2024-01-23, Chennai, Debit Card\n1010, Jack, Tablet, Electronics, 1, 18000, 2024-01-24, Mumbai, UPI\n1011, Kate, Curtains, Home, 3, 1200, 2024-01-25, Delhi, Credit Card\n1012, Leo, Webcam, Electronics, 1, 3000, 2024-01-26, Pune, UPI\n1013, Mia, Dining Table, Furniture, 1, 15000, 2024-01-27, Bangalore, Net Banking\n1014, Noah, Speaker, Electronics, 2, 4000, 2024-01-28, Chennai, Credit Card\n1015, Olivia, Pillow Set, Home, 4, 600, 2024-01-29, Mumbai, UPI', questionLimit: 20 },
+      ];
+      localStorage.setItem(key, JSON.stringify(seed));
+      stored = JSON.stringify(seed);
+    }
+    
     setDatasets(stored ? JSON.parse(stored) : []);
   };
 
