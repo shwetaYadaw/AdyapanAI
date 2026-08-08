@@ -1,6 +1,6 @@
 ﻿// ─── Analytics Dashboard ─────────────────────────────────────────────────
 // Sections: Overall Progress | Individual Student | Comparative Overview
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
   Users, Zap, Code2, Activity, Target, Trophy, TrendingUp, TrendingDown,
@@ -264,7 +264,7 @@ function OverallSection() {
                     <stop offset="95%" stopColor={C.green} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" strokeOpacity={0.6} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" strokeOpacity={0.5} />
                 <XAxis dataKey="date" tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
                 <Tooltip content={<ChartTooltip />} />
@@ -311,7 +311,7 @@ function OverallSection() {
           </div>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={topicChartData} barSize={18} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" strokeOpacity={0.6} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" strokeOpacity={0.5} />
               <XAxis dataKey="topic" tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} tickLine={false} axisLine={false} />
               <Tooltip content={<ChartTooltip />} />
@@ -505,18 +505,21 @@ function IndividualSection() {
     queryFn: async () => { const { data } = await api.get(`/admin/analytics/students?limit=50&search=${search}`); return data.data ?? []; },
   });
 
-  const { data: studentDetail } = useQuery({
+  const { data: studentDetail, isLoading: detailLoading } = useQuery({
     queryKey: ['analytics-student-detail', selectedId],
     queryFn: async () => { const { data } = await api.get(`/admin/analytics/students/${selectedId}`); return data.data; },
     enabled: !!selectedId,
+    retry: 1,
   });
 
   const students = studentsData ?? [];
 
-  // Auto-select first student
-  if (students.length > 0 && !selectedId) {
-    setSelectedId(students[0].id);
-  }
+  // Auto-select first student when data loads
+  useEffect(() => {
+    if (students.length > 0 && !selectedId) {
+      setSelectedId(students[0].id);
+    }
+  }, [students]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
@@ -552,7 +555,11 @@ function IndividualSection() {
 
       {/* Right: Student Detail */}
       <div className="lg:col-span-2 space-y-4">
-        {!studentDetail ? (
+        {detailLoading && selectedId ? (
+          <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-8 text-center">
+            <p className="text-gray-400">Loading student data...</p>
+          </div>
+        ) : !studentDetail ? (
           <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-8 text-center">
             <p className="text-gray-400">Select a student to view their progress</p>
           </div>
@@ -793,7 +800,7 @@ export default function AdminAnalyticsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('overall');
 
   return (
-    <div className="page-wrapper pb-12 space-y-5 bg-brand-cream min-h-screen">
+    <div className="page-wrapper pb-12 space-y-5 bg-brand-cream dark:bg-gray-950 min-h-screen">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-brand-amber px-6 sm:px-8 py-6 rounded-2xl shadow-brand">
         <div className="flex items-center gap-3">

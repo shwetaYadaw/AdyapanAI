@@ -126,7 +126,7 @@ export default function AdminCoursesPage() {
 
   // === MAIN COURSES LIST ===
   return (
-    <div className="page-wrapper space-y-6 bg-brand-cream min-h-screen">
+    <div className="page-wrapper space-y-6 bg-brand-cream dark:bg-gray-950 min-h-screen">
       {/* Header */}
       <div className="bg-gradient-to-r from-primary-600 via-primary-500 to-brand-amber rounded-2xl p-6 shadow-brand">
         <div className="flex items-center justify-between">
@@ -144,7 +144,7 @@ export default function AdminCoursesPage() {
       </div>
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center gap-3 bg-white p-4 rounded-xl border border-gray-100 shadow-md">
+      <div className="flex flex-wrap items-center gap-3 bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-100 dark:border-gray-800 shadow-md">
         <div className="relative">
           <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} className="appearance-none pl-3 pr-8 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-400">
             {categories.map(cat => <option key={cat} value={cat}>{cat === 'all' ? 'All Categories' : cat}</option>)}

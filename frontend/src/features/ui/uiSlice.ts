@@ -11,13 +11,10 @@ function getInitialDarkMode(): boolean {
   try {
     const saved = localStorage.getItem('darkMode');
     if (saved !== null) return saved === 'true';
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
   } catch {
     // localStorage not available
   }
-  return false;
+  return false; // Default to light mode
 }
 
 const initialState: UIState = {

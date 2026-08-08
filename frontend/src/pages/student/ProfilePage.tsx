@@ -116,7 +116,7 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="page-wrapper space-y-5 bg-brand-cream min-h-screen">
+    <div className="page-wrapper space-y-5 bg-brand-cream dark:bg-gray-950 min-h-screen">
 
       {/* Hero Banner */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}

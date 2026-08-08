@@ -143,15 +143,15 @@ export default function CodingChallengesPage() {
 
       <div className="page-container pb-16 pt-5">
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-5 mb-8">
           {[
             { icon: Trophy, color: 'text-amber-500', bgColor: 'bg-amber-50 dark:bg-amber-950/30', label: 'Total Solved', value: `${stats?.solvedCount ?? 0} / ${stats?.totalQuestions ?? 0}` },
             { icon: Flame, color: 'text-orange-500', bgColor: 'bg-orange-50 dark:bg-orange-950/30', label: 'Current Streak', value: '5 Days' },
             { icon: BrainCircuit, color: 'text-blue-500', bgColor: 'bg-blue-50 dark:bg-blue-950/30', label: 'Placement Score', value: '85 / 100' },
             { icon: Target, color: 'text-purple-500', bgColor: 'bg-purple-50 dark:bg-purple-950/30', label: 'Active Contests', value: '1 Live' },
           ].map((stat, i) => (
-            <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.08 }}>
-              <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800">
+            <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 + i * 0.08 }} className="h-full">
+              <Card padding="md" className="flex items-center gap-4 border border-gray-100 dark:border-gray-800 h-full">
                 <div className={`w-12 h-12 rounded-2xl ${stat.bgColor} flex items-center justify-center ${stat.color}`}>
                   <stat.icon className="w-6 h-6" />
                 </div>
