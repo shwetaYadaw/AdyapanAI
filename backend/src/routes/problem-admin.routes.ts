@@ -146,7 +146,7 @@ router.get('/', authenticate, async (req: Request, res: Response, next: NextFunc
     const courseId = req.query.courseId as string | undefined | null;
 
     const pageNum = Math.max(1, page);
-    const limitNum = Math.max(1, Math.min(limit, 100)); // Cap at 100
+    const limitNum = Math.max(1, Math.min(limit, 1000)); // Cap at 1000 to support fetching all course problems
     const skip = (pageNum - 1) * limitNum;
 
     // Build where clause
