@@ -350,7 +350,7 @@ router.get('/analytics/topic-breakdown', async (_req, res, next) => {
     }
 
     const accepted = await prisma.problemSubmission.findMany({
-      where: { status: 'accepted', problemId: { not: null } },
+      where: { status: 'accepted', problemId: { not: '' } },
       select: { problemId: true }, distinct: ['problemId'],
     });
     const solvedIds = new Set(accepted.map(s => s.problemId));
@@ -389,31 +389,30 @@ router.get('/analytics/students', async (req, res, next) => {
       prisma.user.findMany({
         where, skip, take: limitNum,
         orderBy: { createdAt: 'desc' },
-        select: {
-          id: true, firstName: true, lastName: true, email: true,
-          avatar: true, isActive: true, lastLogin: true, createdAt: true,
-          studentProfile: { select: { xp: true, level: true, streak: true } },
-          _count: { select: { problemSubmissions: true } },
-        },
+        include: { studentProfile: true, _count: { select: { problemSubmissions: true } } },
       }),
       prisma.user.count({ where }),
     ]);
 
     const enriched = await Promise.all(users.map(async u => {
       const accepted = await prisma.problemSubmission.count({ where: { userId: u.id, status: 'accepted' } });
+      const profile = await prisma.studentProfile.findFirst({ where: { userId: u.id } });
       return {
         id: u.id,
         name: `${u.firstName} ${u.lastName}`,
         email: u.email, avatar: u.avatar,
         isActive: u.isActive, lastLogin: u.lastLogin, joinedAt: u.createdAt,
-        xp: u.studentProfile?.xp ?? 0,
-        level: u.studentProfile?.level ?? 1,
-        streak: u.studentProfile?.streak ?? 0,
-        totalSubmissions: u._count.problemSubmissions,
+        xp: profile?.xp ?? 0,
+        level: profile?.level ?? 1,
+        streak: profile?.streak ?? 0,
+        totalSubmissions: u._count?.problemSubmissions ?? 0,
         acceptedSubmissions: accepted,
-        accuracy: u._count.problemSubmissions > 0 ? Math.round((accepted / u._count.problemSubmissions) * 100) : 0,
+        accuracy: (u._count?.problemSubmissions ?? 0) > 0 ? Math.round((accepted / u._count.problemSubmissions) * 100) : 0,
       };
     }));
+
+    // Sort by XP descending
+    enriched.sort((a: any, b: any) => b.xp - a.xp);
 
     sendSuccess({
       res, data: enriched,
@@ -428,10 +427,7 @@ router.get('/analytics/students/:id', async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.params.id },
-      select: {
-        id: true, firstName: true, lastName: true, email: true, avatar: true,
-        isActive: true, lastLogin: true, createdAt: true, studentProfile: true,
-      },
+      include: { studentProfile: true },
     });
     if (!user) throw new AppError('Student not found', 404);
 
@@ -465,7 +461,7 @@ router.get('/analytics/students/:id', async (req, res, next) => {
 
     // Topic stats
     const solvedProblems = await prisma.problemSubmission.findMany({
-      where: { userId: user.id, status: 'accepted', problemId: { not: null } },
+      where: { userId: user.id, status: 'accepted', problemId: { not: '' } },
       select: { problemId: true }, distinct: ['problemId'],
     });
     const solvedIds = solvedProblems.map(s => s.problemId).filter(Boolean) as string[];
@@ -486,7 +482,7 @@ router.get('/analytics/students/:id', async (req, res, next) => {
         id: user.id, name: `${user.firstName} ${user.lastName}`,
         email: user.email, avatar: user.avatar,
         isActive: user.isActive, lastLogin: user.lastLogin, joinedAt: user.createdAt,
-        profile: user.studentProfile,
+        profile: user.studentProfile || { xp: 0, level: 1, streak: 0 },
         stats: {
           totalSubmissions: allSubs, acceptedSubmissions: acceptedSubs,
           accuracy: allSubs > 0 ? Math.round((acceptedSubs / allSubs) * 100) : 0,

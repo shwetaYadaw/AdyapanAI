@@ -76,7 +76,7 @@ export default function StudentDashboard() {
   const goalPct = Math.min(100, Math.round((totalSolved / weeklyGoal) * 100));
 
   return (
-    <div className="page-wrapper space-y-6 bg-brand-cream min-h-screen">
+    <div className="page-wrapper space-y-6 bg-brand-cream dark:bg-gray-950 min-h-screen">
 
       {/* Welcome */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}>
@@ -87,15 +87,15 @@ export default function StudentDashboard() {
       </motion.div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
         {[
           { label: 'XP Points', value: profile?.totalXP ?? profile?.xp ?? 0, icon: Zap, color: 'from-yellow-500 to-amber-400', href: '/student/profile' },
           { label: 'Problems Solved', value: (codingStats?.solvedCount ?? 0) + (placementStats?.solvedCount ?? 0), icon: Code2, color: 'from-purple-500 to-violet-400', href: '/student/challenges' },
           { label: 'Day Streak', value: profile?.streak ?? 0, icon: Flame, color: 'from-orange-500 to-red-400', href: '/student/profile' },
         ].map((stat, i) => (
-          <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}>
-            <Link to={stat.href}>
-              <Card hover padding="md">
+          <motion.div key={stat.label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }} className="h-full">
+            <Link to={stat.href} className="block h-full">
+              <Card hover padding="md" className="h-full">
                 <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center mb-3`}><stat.icon className="w-5 h-5 text-white" /></div>
                 <p className="font-display font-bold text-2xl text-gray-900 dark:text-white">{stat.value.toLocaleString()}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{stat.label}</p>

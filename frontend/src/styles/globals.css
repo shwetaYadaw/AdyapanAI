@@ -345,3 +345,17 @@
 .animate-pulse-glow {
   animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* Fix Monaco Editor keyboard input in Chrome */
+.monaco-editor .inputarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+  pointer-events: auto !important;
+}
+.monaco-editor textarea {
+  user-select: text !important;
+  -webkit-user-select: text !important;
+}
+.monaco-editor .overflow-guard {
+  user-select: text !important;
+}

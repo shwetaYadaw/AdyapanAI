@@ -69,7 +69,7 @@ export default function CourseCodingArena({ onBack, courseId, courseName }: Prop
   const fetchProblems = async () => {
     try {
       setLoading(true);
-      const { data } = await api.get(`/admin/problems?courseId=${courseId}&limit=100`);
+      const { data } = await api.get(`/admin/problems?courseId=${courseId}&limit=1000`);
       const inner = data.data?.problems || data.data || [];
       setProblems(Array.isArray(inner) ? inner : []);
     } catch { setProblems([]); }

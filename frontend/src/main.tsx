@@ -7,8 +7,8 @@ import './styles/globals.css';
 const savedDark = localStorage.getItem('darkMode');
 if (savedDark === 'true') {
   document.documentElement.classList.add('dark');
-} else if (savedDark === null && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  document.documentElement.classList.add('dark');
+} else {
+  document.documentElement.classList.remove('dark');
 }
 
 const root = document.getElementById('root');

@@ -64,31 +64,17 @@ export default function Sidebar() {
   return (
     <>
       {/* Mobile Sidebar Overlay */}
-      <AnimatePresence>
-        {mobileSidebarOpen && (
-          <motion.div
-            key="mobile-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={closeMobileSidebar}
-            className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-          />
-        )}
-      </AnimatePresence>
+      {mobileSidebarOpen && (
+        <div
+          onClick={closeMobileSidebar}
+          className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity"
+        />
+      )}
 
       {/* Mobile Drawer */}
-      <AnimatePresence>
-        {mobileSidebarOpen && (
-          <motion.aside
-            key="mobile-drawer"
-            initial={{ x: '-100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 35 }}
-            className="md:hidden fixed inset-y-0 left-0 z-50 w-72 flex flex-col h-full bg-white dark:bg-gray-900 shadow-2xl shadow-black/10 dark:shadow-black/40 overflow-hidden border-r border-gray-200 dark:border-gray-800"
-          >
+      <aside
+        className={`md:hidden fixed inset-y-0 left-0 z-50 w-72 flex flex-col h-full bg-white dark:bg-gray-900 shadow-2xl overflow-hidden border-r border-gray-200 dark:border-gray-800 transition-transform duration-300 ${mobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}
+      >
             {/* Logo Header */}
             <div className="flex items-center justify-between px-5 h-16 border-b border-gray-800/50">
               <div className="flex items-center gap-2.5">
@@ -98,8 +84,8 @@ export default function Sidebar() {
                 <span className="font-bold text-lg text-primary-400">ADYAPAN</span>
               </div>
               <button
-                onClick={closeMobileSidebar}
-                className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors"
+                onClick={(e) => { e.stopPropagation(); closeMobileSidebar(); }}
+                className="p-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors z-50"
                 aria-label="Close menu"
               >
                 <X className="w-5 h-5" />
@@ -112,7 +98,8 @@ export default function Sidebar() {
                 <NavLink
                   key={item.href}
                   to={item.href}
-                  onClick={closeMobileSidebar}
+                  end={item.href === '/admin' || item.href === '/student/dashboard'}
+                  onClick={() => dispatch(setMobileSidebar(false))}
                   className={({ isActive }) =>
                     clsx(
                       'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
@@ -136,9 +123,7 @@ export default function Sidebar() {
             <div className="px-5 py-3 border-t border-gray-800/50">
               <p className="text-[10px] text-gray-600 font-medium">Powered by Adyapan AI</p>
             </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
+          </aside>
 
       {/* Desktop Sidebar */}
       <motion.aside
@@ -166,6 +151,7 @@ export default function Sidebar() {
             <NavLink
               key={item.href}
               to={item.href}
+              end={item.href === '/admin' || item.href === '/student/dashboard'}
               className={({ isActive }) =>
                 clsx(
                   'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group',

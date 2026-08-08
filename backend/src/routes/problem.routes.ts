@@ -205,13 +205,13 @@ router.get('/stats', authenticate, async (req, res, next) => {
   try {
     const userId = req.user?.userId;
     
-    // Count only non-archived problems
-    const total = await prisma.problem.count({ where: { isArchived: { not: true } } });
+    // Count only non-archived global DSA problems (courseId = null)
+    const total = await prisma.problem.count({ where: { isArchived: { not: true }, courseId: null } });
 
     const byDifficulty = await prisma.problem.groupBy({
       by: ['difficulty'],
       _count: true,
-      where: { isArchived: { not: true } } // Only count non-archived
+      where: { isArchived: { not: true }, courseId: null } // Only count global DSA
     });
 
     let solvedCount = 0;
